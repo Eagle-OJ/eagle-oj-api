@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.controller;
 
+import org.inlighting.oj.judge.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ public class TestController {
     @GetMapping("/hello")
     public String hello() {
         //LOGGER.error("error");
+        HttpUtil.get("ef", "fe");
         return "hello";
     }
 }
