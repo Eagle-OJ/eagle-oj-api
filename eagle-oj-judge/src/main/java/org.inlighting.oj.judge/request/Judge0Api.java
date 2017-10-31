@@ -1,12 +1,15 @@
 package org.inlighting.oj.judge.request;
 
+import org.inlighting.oj.config.GlobalConfigHelper;
+
 import java.util.HashMap;
 import java.util.Map;
 
 class Judge0Api implements RequestBase {
 
-    private final String API_URL = "http://localhost:3000/submissions?wait=true";
-    //private final String API_URL = "https://api.judge0.com/submissions?wait=true";
+    private final String API_URL = GlobalConfigHelper.JUDGE_API_URL;
+    // private final String API_URL = "http://localhost:3000/submissions?wait=true";
+    // private final String API_URL = "https://api.judge0.com/submissions?wait=true";
 
     private String SOURCE_CODE;
 

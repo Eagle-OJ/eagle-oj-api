@@ -12,6 +12,7 @@
     <modules>
         <module>eagle-oj-web</module>
         <module>eagle-oj-judge</module>
+        <module>eagle-oj-config</module>
     </modules>
 
     <dependencyManagement>
