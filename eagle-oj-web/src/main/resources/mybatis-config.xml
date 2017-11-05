@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    
+    <typeAliases>
+        <typeAlias type="org.inlighting.oj.web.entity.UserEntity" alias="UserEntity"/>
+    </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="org.inlighting.oj.web.data.JsonArrayTypeHandler"
+                     javaType="com.alibaba.fastjson.JSONArray" jdbcType="VARCHAR"/>
+
+        <typeHandler handler="org.inlighting.oj.web.data.JsonObjectTypeHandler"
+                     javaType="com.alibaba.fastjson.JSONObject" jdbcType="VARCHAR"/>
+    </typeHandlers>
+
+    <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 使用下面的方式配置参数，后面会有所有的参数介绍 -->
+            <property name="helperDialect" value="mysql"/>
+        </plugin>
+    </plugins>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/eagle_oj?useUnicode=true&amp;characterEncoding=UTF8&amp;serverTimezone=UTC"/>
+                <property name="username" value="eagle"/>
+                <property name="password" value="eagle"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="mapping/UserMapper.xml"/>
+    </mappers>
+</configuration>

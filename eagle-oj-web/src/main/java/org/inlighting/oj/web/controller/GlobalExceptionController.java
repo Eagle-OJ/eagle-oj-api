@@ -1,5 +1,7 @@
 package org.inlighting.oj.web.controller;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,8 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalExceptionController {
 
+    private final Logger LOGGER = LogManager.getLogger(this.getClass());
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity globalException(HttpServletRequest request, Throwable ex) {
+        LOGGER.info(ex.getMessage(), ex);
         return new ResponseEntity(getStatus(request).value(), ex.getMessage(), null);
     }
 

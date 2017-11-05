@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+    <insert id="insertUser">
+        INSERT INTO `user` (`email`,`nickname`,`password`,`permission`,`register_time`)
+        VALUES (#{email}, #{nickname}, #{password}, #{permission}, #{registerTime})
+    </insert>
+
+    <select id="selectUserByUid" resultMap="userEntityResultMap">
+        SELECT * FROM `user` WHERE `uid` = #{uid}
+    </select>
+
+    <select id="selectUserByEmail" resultMap="userEntityResultMap">
+        SELECT * FROM `user` WHERE `email` = #{email}
+    </select>
+
+    <select id="selectUserByLogin" resultMap="userEntityResultMap">
+        SELECT * FROM `user` WHERE `email` = #{email} AND `password` = #{password}
+    </select>
+
+    <resultMap id="userEntityResultMap" type="UserEntity">
+        <id property="uid" column="uid"/>
+        <result property="email" column="email"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+        <result property="password" column="password"/>
+        <result property="role" column="role"/>
+        <result property="permission" column="permission"/>
+        <result property="submitTimes" column="submit_times"/>
+        <result property="acceptTimes" column="accept_times"/>
+        <result property="score" column="score"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="lastLogin" column="last_login"/>
+        <result property="verified" column="verified"/>
+    </resultMap>
+</mapper>

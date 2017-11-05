@@ -4,12 +4,10 @@ import org.inlighting.oj.judge.bean.LanguageEnum;
 import org.inlighting.oj.judge.bean.StdRequestBean;
 import org.inlighting.oj.judge.bean.StdResponseBean;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.function.Supplier;
 
 class JudgeTest {
 

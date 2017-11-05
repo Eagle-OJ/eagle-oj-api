@@ -1,14 +1,32 @@
 package org.inlighting.oj.web.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author Smith
  **/
 public class ResponseEntity {
+
+    @JSONField(ordinal = 0)
     private int status;
 
+    @JSONField(ordinal = 1)
     private String message;
 
+    @JSONField(ordinal = 2)
     private Object data;
+
+    public ResponseEntity(Object data) {
+        this(200, "success", data);
+    }
+
+    public ResponseEntity(String message) {
+        this(200, message, null);
+    }
+
+    public ResponseEntity(String message, Object data) {
+        this(200, message, data);
+    }
 
     public ResponseEntity(int status, String message, Object data) {
         this.status = status;
