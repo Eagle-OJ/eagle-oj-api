@@ -55,7 +55,7 @@ public class Realm extends AuthorizingRealm {
             // get user info from database
             int uid = JWTUtil.getUid(token);
             UserEntity userEntity = userService.getUserByUid(uid);
-            authCache.put(token, String.valueOf(userEntity.getUid()));
+            authCache.put(token, String.valueOf(userEntity.getPassword()));
         }
 
         String secret = authCache.get(token);
@@ -63,6 +63,6 @@ public class Realm extends AuthorizingRealm {
             throw new AuthenticationException("Token invalid");
         }
 
-        return new SimpleAuthenticationInfo(token, secret, "jwt_realm");
+        return new SimpleAuthenticationInfo(token, token, "jwt_realm");
     }
 }
