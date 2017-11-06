@@ -23,16 +23,8 @@ public class UserDao {
      * @param userEntity 注册用户数据
      * @return 是否成功
      */
-    public boolean addUser(UserEntity userEntity) {
-        SqlSession session = DataHelper.getSession();
-        try {
-            return session.insert("user.insertUser", userEntity) == 1;
-        } catch (Exception e) {
-            LOGGER.info(e.getMessage(), e);
-            return false;
-        } finally {
-            session.close();
-        }
+    public boolean addUser(SqlSession session, UserEntity userEntity) {
+        return session.insert("user.insertUser", userEntity) == 1;
     }
 
     /**
@@ -40,40 +32,19 @@ public class UserDao {
      * @param email 邮箱
      * @return 不存在则返回空
      */
-    public UserEntity getUserByEmail(String email) {
-        SqlSession session = DataHelper.getSession();
-        try {
-            return session.selectOne("user.selectUserByEmail", email);
-        } catch (Exception e) {
-            return null;
-        } finally {
-            session.close();
-        }
+    public UserEntity getUserByEmail(SqlSession session, String email) {
+        return session.selectOne("user.selectUserByEmail", email);
     }
 
-    public UserEntity getUserByUid(int uid) {
-        SqlSession session = DataHelper.getSession();
-        try {
-            return session.selectOne("user.selectUserByUid", uid);
-        } catch (Exception e) {
-            return null;
-        } finally {
-            session.close();
-        }
+    public UserEntity getUserByUid(SqlSession session, int uid) {
+        return session.selectOne("user.selectUserByUid", uid);
     }
 
-    public UserEntity getUserByLogin(String email, String password) {
-        SqlSession session = DataHelper.getSession();
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("email", email);
-            map.put("password", password);
-            return session.selectOne("user.selectUserByLogin", map);
-        } catch (Exception e) {
-            return null;
-        } finally {
-            session.close();
-        }
+    public UserEntity getUserByLogin(SqlSession session, String email, String password) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("email", email);
+        map.put("password", password);
+        return session.selectOne("user.selectUserByLogin", map);
     }
 
     public List<UserEntity> getUserList(int currentPage, int pageSize) {

@@ -1,9 +1,10 @@
 package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.inlighting.oj.web.dao.UserDao;
-import org.inlighting.oj.web.entity.ResponseEntity;
+import org.inlighting.oj.web.data.DataHelper;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ public class UserService {
     }
 
     public boolean addUser(String email, String nickname, String password) {
-        if (userDao.getUserByEmail(email)!=null) {
+        SqlSession session = DataHelper.getSession();
+        if (userDao.getUserByEmail(session, email)!=null) {
             throw new RuntimeException("用户已经存在");
         }
 
@@ -32,18 +34,25 @@ public class UserService {
         userEntity.setPassword(new Md5Hash(password).toString());
         userEntity.setPermission(new JSONArray());
         userEntity.setRegisterTime(System.currentTimeMillis());
-        if (userDao.addUser(userEntity)) {
-            return true;
-        } else {
+        if (! userDao.addUser(session, userEntity)) {
             throw new RuntimeException("用户注册失败");
         }
+        session.close();
+        return true;
     }
 
     public UserEntity getUserByLogin(String email, String password) {
-        return userDao.getUserByLogin(email, new Md5Hash(password).toString());
+        SqlSession session = DataHelper.getSession();
+        UserEntity userEntity = userDao.getUserByLogin(session, email, new Md5Hash(password).toString());
+        session.close();
+        return userEntity;
     }
 
     public UserEntity getUserByUid(int uid) {
-        return userDao.getUserByUid(uid);
+        SqlSession session = DataHelper.getSession();
+        UserEntity userEntity = userDao.getUserByUid(session, uid);
+        session.close();
+        return userEntity;
     }
+
 }

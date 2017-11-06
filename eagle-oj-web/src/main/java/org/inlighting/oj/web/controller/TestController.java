@@ -3,6 +3,8 @@ package org.inlighting.oj.web.controller;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.dao.UserDao;
+import org.inlighting.oj.web.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 /**
