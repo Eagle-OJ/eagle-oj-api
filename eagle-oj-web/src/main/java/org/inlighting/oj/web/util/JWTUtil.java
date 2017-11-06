@@ -3,6 +3,7 @@ package org.inlighting.oj.web.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.security.UserSession;
@@ -46,6 +47,15 @@ public class JWTUtil {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static int getUid(String token) {
+        try {
+            DecodedJWT decodedJWT = JWT.decode(token);
+            return decodedJWT.getClaim("uid").asInt();
+        } catch (JWTDecodeException e) {
+            return 0;
         }
     }
 

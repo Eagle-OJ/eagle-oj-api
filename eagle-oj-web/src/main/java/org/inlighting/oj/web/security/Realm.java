@@ -10,12 +10,24 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.ehcache.Cache;
 import org.inlighting.oj.web.cache.CacheController;
+import org.inlighting.oj.web.entity.UserEntity;
+import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Smith
  **/
+@Configuration
 public class Realm extends AuthorizingRealm {
+
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -40,7 +52,10 @@ public class Realm extends AuthorizingRealm {
         String token = (String) auth.getCredentials();
         Cache<String, String> authCache = CacheController.getAuthCache();
         if (! authCache.containsKey(token)) {
-            throw new AuthenticationException("Can't find in authCache");
+            // get user info from database
+            int uid = JWTUtil.getUid(token);
+            UserEntity userEntity = userService.getUserByUid(uid);
+            authCache.put(token, String.valueOf(userEntity.getUid()));
         }
 
         String secret = authCache.get(token);

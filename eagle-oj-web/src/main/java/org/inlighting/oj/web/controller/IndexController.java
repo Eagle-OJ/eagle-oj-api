@@ -51,21 +51,17 @@ public class IndexController {
         if (userEntity == null)
             throw new RuntimeException("用户名密码错误");
 
-        String token = null;
-        try {
-            JSONArray array = userEntity.getPermission();
-            Iterator<Object> it = array.iterator();
-            Set<String> permission = new HashSet<>();
-            while (it.hasNext()) {
-                permission.add(it.next().toString());
-            }
-            token = JWTUtil.sign(userEntity.getUid(), userEntity.getRole(), permission, userEntity.getPassword());
-            Cache<String, String> authCache = CacheController.getAuthCache();
-            authCache.put(token, userEntity.getPassword());
-        } catch (CacheWritingException e) {
-            e.printStackTrace();
+        JSONArray array = userEntity.getPermission();
+        Iterator<Object> it = array.iterator();
+        Set<String> permission = new HashSet<>();
+        while (it.hasNext()) {
+            permission.add(it.next().toString());
         }
-        return new ResponseEntity(token);
+        String token = JWTUtil.sign(userEntity.getUid(), userEntity.getRole(), permission, userEntity.getPassword());
+        Cache<String, String> authCache = CacheController.getAuthCache();
+        authCache.put(token, userEntity.getPassword());
+
+        return new ResponseEntity("登入成功", token);
     }
 
     @RequestMapping("/401")

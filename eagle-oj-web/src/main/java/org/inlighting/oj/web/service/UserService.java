@@ -42,4 +42,8 @@ public class UserService {
     public UserEntity getUserByLogin(String email, String password) {
         return userDao.getUserByLogin(email, new Md5Hash(password).toString());
     }
+
+    public UserEntity getUserByUid(int uid) {
+        return userDao.getUserByUid(uid);
+    }
 }
