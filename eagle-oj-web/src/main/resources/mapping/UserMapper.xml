@@ -30,6 +30,7 @@
         <result property="permission" column="permission"/>
         <result property="submitTimes" column="submit_times"/>
         <result property="acceptTimes" column="accept_times"/>
+        <result property="contestTimes" column="contest_times"/>
         <result property="score" column="score"/>
         <result property="registerTime" column="register_time"/>
         <result property="lastLogin" column="last_login"/>

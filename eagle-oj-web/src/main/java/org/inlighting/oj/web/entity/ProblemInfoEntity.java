@@ -5,7 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * @author Smith
  **/
-public class ProblemStatusEntity {
+public class ProblemInfoEntity {
     private int pid;
 
     private int belong;

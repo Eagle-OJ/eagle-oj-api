@@ -18,9 +18,9 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean("securityManager")
-    public DefaultWebSecurityManager getManager() {
+    public DefaultWebSecurityManager getManager(Realm realm) {
         DefaultWebSecurityManager  manager = new DefaultWebSecurityManager();
-        manager.setRealm(new Realm());
+        manager.setRealm(realm);
 
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator evaluator = new DefaultSessionStorageEvaluator();

@@ -27,6 +27,9 @@ public class UserEntity {
     @JSONField(name = "accept_times")
     private int acceptTimes;
 
+    @JSONField(name = "contest_times")
+    private int contestTimes;
+
     private int score;
 
     @JSONField(name = "register_time")
@@ -139,5 +142,13 @@ public class UserEntity {
 
     public void setVerified(int verified) {
         this.verified = verified;
+    }
+
+    public int getContestTimes() {
+        return contestTimes;
+    }
+
+    public void setContestTimes(int contestTimes) {
+        this.contestTimes = contestTimes;
     }
 }

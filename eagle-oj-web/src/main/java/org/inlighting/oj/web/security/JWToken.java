@@ -14,7 +14,7 @@ public class JWToken implements AuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return token;
     }
 
     @Override

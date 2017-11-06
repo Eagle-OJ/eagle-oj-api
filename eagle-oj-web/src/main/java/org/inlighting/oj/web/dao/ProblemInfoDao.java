@@ -7,20 +7,15 @@ import org.springframework.stereotype.Repository;
  * @author Smith
  **/
 @Repository
-public class ProblemDao {
+public class ProblemInfoDao {
 
-    public boolean addProblem(ProblemEntity problemEntity) {
+    public boolean add(ProblemEntity entity) {
         // todo
         return false;
     }
 
-    public ProblemEntity getProblemByPid(int pid) {
+    public ProblemEntity get(int pid) {
         // todo
         return null;
-    }
-
-    public boolean updateProblem(int pid, ProblemEntity entity) {
-        // todo
-        return false;
     }
 }
