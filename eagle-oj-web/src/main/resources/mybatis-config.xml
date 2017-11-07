@@ -5,7 +5,7 @@
 <configuration>
     
     <typeAliases>
-        <typeAlias type="org.inlighting.oj.web.entity.UserEntity" alias="UserEntity"/>
+        <package name="org.inlighting.oj.web.entity"></package>
     </typeAliases>
 
     <typeHandlers>
@@ -38,5 +38,6 @@
 
     <mappers>
         <mapper resource="mapping/UserMapper.xml"/>
+        <mapper resource="mapping/ProblemMapper.xml"/>
     </mappers>
 </configuration>

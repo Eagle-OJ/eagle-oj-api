@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.dao;
 
+import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.springframework.stereotype.Repository;
 
@@ -9,14 +10,21 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProblemDao {
 
-    public boolean addProblem(ProblemEntity problemEntity) {
-        // todo
-        return false;
+    public boolean addProblem(SqlSession sqlSession, ProblemEntity problemEntity) {
+        // 添加问题
+        int insertNum = sqlSession.insert("problem.insertProblem",problemEntity);
+        if(insertNum == 1){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public ProblemEntity getProblemByPid(int pid) {
-        // todo
-        return null;
+    public ProblemEntity getProblemByPid(SqlSession sqlSession,int pid) {
+        // 根据ID查找题目
+        ProblemEntity problemEntity =  sqlSession.selectOne("problem.getProblemByPid",pid);
+        return problemEntity;
     }
 
     public boolean updateProblem(int pid, ProblemEntity entity) {
