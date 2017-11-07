@@ -3,13 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="problem">
-    <insert id="insertProblem">
+    <insert id="insertProblem" parameterType="ProblemEntity">
+        INSERT INTO `problem` (`owner`,`code_language`,`title`,
+                               `description`,`difficult`,`input_format`,
+                               `output_format`,`constraint`,`sample`,`moderator`,
+                               `tag`,`share`,`create_time`)
+        VALUES (#{owner},#{codeLanguage},
+               #{title},#{description},#{difficult},#{inputFormat},
+               #{outputFormat},#{constraint},#{sample},#{moderator},#{tag},#{share},#{createTime})
 
     </insert>
-
-    <select id="getProblemByOwner" resultMap="">
-
+    <select id="getProblemByPid" resultMap="problemResultMap">
+        SELECT * from problem WHERE pid=#{pid}
     </select>
 
-
+    <resultMap id="problemResultMap" type="ProblemEntity">
+        <result column="owner" property="owner"/>
+        <result column="code_language" property="codeLanguage"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="difficult" property="difficult"/>
+        <result column="input_format" property="inputFormat"/>
+        <result column="output_format" property="outputFormat"/>
+        <result column="constraint" property="constraint"/>
+        <result column="sample" property="sample"/>
+        <result column="moderator" property="moderator"/>
+        <result column="tag" property="tag"/>
+        <result column="share" property="share"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
 </mapper>

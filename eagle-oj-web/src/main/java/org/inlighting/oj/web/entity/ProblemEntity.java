@@ -29,12 +29,15 @@ public class ProblemEntity {
 
     private JSONArray sample;
 
+    private JSONArray moderator;
+
     private JSONArray tag;
 
     private int share;
 
     @JSONField(name = "create_time")
     private long createTime;
+
 
     public int getPid() {
         return pid;
@@ -116,6 +119,14 @@ public class ProblemEntity {
         this.sample = sample;
     }
 
+    public JSONArray getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(JSONArray moderator) {
+        this.moderator = moderator;
+    }
+
     public JSONArray getTag() {
         return tag;
     }
@@ -139,4 +150,6 @@ public class ProblemEntity {
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
+
+
 }
