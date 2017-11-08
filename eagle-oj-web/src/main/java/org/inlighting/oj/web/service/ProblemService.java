@@ -51,9 +51,11 @@ public class ProblemService {
         problemEntity.setShare(share);
         problemEntity.setCreateTime(System.currentTimeMillis());
         if(problemDao.addProblem(sqlSession,problemEntity)) {
+            sqlSession.close();
             return true;
         }
         else {
+            sqlSession.close();
             return false;
         }
     }
@@ -61,42 +63,62 @@ public class ProblemService {
     public ProblemEntity getProblemByPid(int pid) {
         // 通过ID获得题目
         SqlSession sqlSession = DataHelper.getSession();
+        sqlSession.close();
         return problemDao.getProblemByPid(sqlSession,1);
     }
 
-    public boolean updateProblem(int pid, ProblemEntity entity) {
-        // todo
-        return false;
+    public boolean updateProblemById(ProblemEntity entity) {
+        //
+        SqlSession sqlSession = DataHelper.getSession();
+        sqlSession.close();
+        return  problemDao.updateProblemByPid(sqlSession,entity);
     }
 
     public static void main(String[] args) {
         ProblemService  problemService = new ProblemService();
-        System.out.println(problemService.getProblemByPid(1));
-//        List<Object> list = new ArrayList<>();
-//        list.add(1);
-//        list.add(2);
-//        JSONArray language = new JSONArray(list);
-//        String title = "test";
-//        String description = "test description";
-//        int difficult = 1;
-//        String input_format = "test input_format";
-//        String output_format = "test output_format";
-//        String constraint = "test constraint";
-//        ArrayList<Object> samples = new ArrayList<>();
-//        samples.add(1);
-//        samples.add(2);
-//        JSONArray sampleArray = new JSONArray(samples);
-//        ArrayList<Object> moderators = new ArrayList<>();
-//        moderators.add(1);
-//        moderators.add(2);
-//        JSONArray modeArray = new JSONArray(moderators);
-//        ArrayList<Object> tags = new ArrayList<>();
-//        tags.add(1);
-//        tags.add(2);
-//        JSONArray tagArray = new JSONArray(tags);
-//        int share = 1;
-//        long create_time = System.currentTimeMillis();
-//        problemService.addProblem(22, language,title,description,difficult,input_format,output_format,
+//        System.out.println(problemService.getProblemByPid(1));
+        int owner = 66;
+        List<Object> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        JSONArray language = new JSONArray(list);
+        String title = "test";
+        String description = "test description";
+        int difficult = 1;
+        String input_format = "test input_format";
+        String output_format = "test output_format";
+        String constraint = "test constraint";
+        ArrayList<Object> samples = new ArrayList<>();
+        samples.add(1);
+        samples.add(2);
+        JSONArray sampleArray = new JSONArray(samples);
+        ArrayList<Object> moderators = new ArrayList<>();
+        moderators.add(1);
+        moderators.add(2);
+        JSONArray modeArray = new JSONArray(moderators);
+        ArrayList<Object> tags = new ArrayList<>();
+        tags.add(1);
+        tags.add(2);
+        JSONArray tagArray = new JSONArray(tags);
+        int share = 1;
+        long create_time = System.currentTimeMillis();
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(2);
+        problemEntity.setOwner(owner);
+        problemEntity.setCodeLanguage(language);
+        problemEntity.setTitle(title);
+        problemEntity.setDescription(description);
+        problemEntity.setDifficult(difficult);
+        problemEntity.setInputFormat(input_format);
+        problemEntity.setOutputFormat(output_format);
+        problemEntity.setConstraint(constraint);
+        problemEntity.setSample(sampleArray);
+        problemEntity.setModerator(modeArray);
+        problemEntity.setTag(tagArray);
+        problemEntity.setShare(share);
+        problemEntity.setCreateTime(System.currentTimeMillis());
+        problemService.updateProblemById(problemEntity);
+//        problemService.addProblem(owner, language,title,description,difficult,input_format,output_format,
 //                constraint,sampleArray,modeArray,tagArray,share,create_time);
     }
 }
