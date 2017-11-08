@@ -20,7 +20,8 @@ public class TestCaseService {
 
     public boolean addTestCase(int pid,
                                String stdin,
-                               String stdout) {
+                               String stdout,
+                               long create_time) {
         // todo
         return false;
     }

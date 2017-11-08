@@ -1,18 +1,28 @@
-package org.inlighting.oj.web.entity;
+package org.inlighting.oj.web.controller.format.user;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Smith
  **/
-public class TestCaseEntity {
+public class AddProblemTestCaseFormat {
 
-    private int tid;
-
+    @NotNull
     private int pid;
 
+    @NotNull
+    @Length(max = 100)
     private String stdin;
 
+    @NotNull
+    @Length(max = 100)
     private String stdout;
 
+    @NotNull
+    @Range(min = 1, max = 10)
     private int strength;
 
     public int getPid() {
@@ -45,13 +55,5 @@ public class TestCaseEntity {
 
     public void setStrength(int strength) {
         this.strength = strength;
-    }
-
-    public int getTid() {
-        return tid;
-    }
-
-    public void setTid(int tid) {
-        this.tid = tid;
     }
 }

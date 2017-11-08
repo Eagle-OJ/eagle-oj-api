@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Smith
  **/
-public class ProblemAddProblemFormat {
+public class AddProblemFormat {
 
     @NotBlank
     @Length(max = 100)
