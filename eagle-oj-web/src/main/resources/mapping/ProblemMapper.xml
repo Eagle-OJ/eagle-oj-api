@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="problem">
-    <insert id="insertProblem" parameterType="ProblemEntity">
+    <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
         INSERT INTO `problem` (`owner`,`code_language`,`title`,
                                `description`,`difficult`,`input_format`,
                                `output_format`,`constraint`,`sample`,`moderator`,
@@ -13,6 +13,7 @@
                #{outputFormat},#{constraint},#{sample},#{moderator},#{tag},#{share},#{createTime})
 
     </insert>
+
     <select id="getProblemByPid" resultMap="problemResultMap">
         SELECT * from `problem` WHERE pid=#{pid}
     </select>

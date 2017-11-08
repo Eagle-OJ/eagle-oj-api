@@ -1,20 +1,20 @@
 package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import org.apache.ibatis.session.SqlSession;
 import org.ehcache.Cache;
-import org.ehcache.spi.loaderwriter.CacheWritingException;
 import org.inlighting.oj.web.cache.CacheController;
-import org.inlighting.oj.web.dao.UserDao;
-import org.inlighting.oj.web.data.DataHelper;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
+import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
+import org.inlighting.oj.web.controller.format.index.IndexRegisterFormat;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,6 +23,7 @@ import java.util.Set;
  * @author Smith
  **/
 @RestController
+@Validated
 @RequestMapping("/")
 public class IndexController {
 
@@ -33,11 +34,9 @@ public class IndexController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestParam("email") String email,
-                                   @RequestParam("nickname") String nickname,
-                                   @RequestParam("password") String password) {
-        if (userService.addUser(email, nickname, password)) {
+    @PostMapping(value = "/register")
+    public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
+        if (userService.addUser(format.getEmail(), format.getNickname(), format.getPassword())) {
             return new ResponseEntity("注册成功");
         } else {
             throw new RuntimeException("注册失败");
@@ -45,9 +44,8 @@ public class IndexController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestParam("email") String email,
-                                @RequestParam("password") String password) {
-        UserEntity userEntity = userService.getUserByLogin(email, password);
+    public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
+        UserEntity userEntity = userService.getUserByLogin(format.getEmail(), format.getPassword());
         if (userEntity == null)
             throw new RuntimeException("用户名密码错误");
 

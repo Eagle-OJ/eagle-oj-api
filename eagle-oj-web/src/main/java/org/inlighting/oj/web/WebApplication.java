@@ -6,6 +6,7 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -27,4 +28,5 @@ public class WebApplication {
             );
         };
     }
+
 }

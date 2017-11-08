@@ -1,60 +1,55 @@
-package org.inlighting.oj.web.entity;
+package org.inlighting.oj.web.controller.format.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Smith
  **/
-public class ProblemEntity {
-    private int pid;
+public class ProblemAddProblemFormat {
 
-    private int owner;
-
-    @JSONField(name = "code_language")
-    private JSONArray codeLanguage;
-
+    @NotBlank
+    @Length(max = 100)
+    @NotNull
     private String title;
 
+    @JSONField(name = "code_language")
+    @NotNull
+    private JSONArray codeLanguage;
+
+    @Length(max = 100)
+    @NotNull
     private String description;
 
+    @Range(min = 1, max = 4)
+    @NotNull
     private int difficult;
 
     @JSONField(name = "input_format")
+    @Length(max = 200)
+    @NotNull
     private String inputFormat;
 
     @JSONField(name = "output_format")
+    @Length(max = 200)
+    @NotNull
     private String outputFormat;
 
+    @Length(max = 100)
+    @NotNull
     private String constraint;
 
     private JSONArray sample;
 
-    private JSONArray moderator;
-
     private JSONArray tag;
 
+    @Range(min = 1, max = 3)
     private int share;
-
-    @JSONField(name = "create_time")
-    private long createTime;
-
-
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
-
-    public int getOwner() {
-        return owner;
-    }
-
-    public void setOwner(int owner) {
-        this.owner = owner;
-    }
 
     public JSONArray getCodeLanguage() {
         return codeLanguage;
@@ -120,14 +115,6 @@ public class ProblemEntity {
         this.sample = sample;
     }
 
-    public JSONArray getModerator() {
-        return moderator;
-    }
-
-    public void setModerator(JSONArray moderator) {
-        this.moderator = moderator;
-    }
-
     public JSONArray getTag() {
         return tag;
     }
@@ -143,14 +130,4 @@ public class ProblemEntity {
     public void setShare(int share) {
         this.share = share;
     }
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
-
 }
