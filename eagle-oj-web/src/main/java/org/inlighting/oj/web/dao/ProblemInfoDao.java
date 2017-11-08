@@ -1,6 +1,8 @@
 package org.inlighting.oj.web.dao;
 
+import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ProblemEntity;
+import org.inlighting.oj.web.entity.ProblemInfoEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,9 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProblemInfoDao {
 
-    public boolean add(ProblemEntity entity) {
-        // todo
-        return false;
+    public boolean add(SqlSession session, ProblemInfoEntity entity) {
+        return session.insert("problemInfo.insertProblemInfo", entity) == 1;
     }
 
     public ProblemEntity get(int pid) {

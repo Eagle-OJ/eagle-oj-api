@@ -3,8 +3,10 @@ package org.inlighting.oj.web.service;
 import com.alibaba.fastjson.JSONArray;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ProblemDao;
+import org.inlighting.oj.web.dao.ProblemInfoDao;
 import org.inlighting.oj.web.data.DataHelper;
 import org.inlighting.oj.web.entity.ProblemEntity;
+import org.inlighting.oj.web.entity.ProblemInfoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +20,18 @@ import java.util.List;
 @Service
 public class ProblemService {
 
-    private ProblemDao problemDao  = new ProblemDao();
+    private ProblemDao problemDao;
 
-
+    private ProblemInfoDao problemInfoDao;
 
     @Autowired
     public void setProblemDao(ProblemDao problemDao) {
         this.problemDao = problemDao;
+    }
+
+    @Autowired
+    public void setProblemInfoDao(ProblemInfoDao problemInfoDao) {
+        this.problemInfoDao = problemInfoDao;
     }
 
     /**
@@ -33,9 +40,9 @@ public class ProblemService {
     public boolean addProblem( int owner, JSONArray codeLanguage, String title,
                               String description, int difficult, String inputFormat,
                               String outputFormat, String constraint, JSONArray sample,
-                              JSONArray moderator, JSONArray tag, int share,long create_time) {
+                              JSONArray moderator, JSONArray tag, int share, long create_time) {
         // 添加题目
-        SqlSession sqlSession = DataHelper.getSession();
+        SqlSession sqlSession = DataHelper.getSession(true);
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
         problemEntity.setCodeLanguage(codeLanguage);
@@ -49,15 +56,21 @@ public class ProblemService {
         problemEntity.setModerator(moderator);
         problemEntity.setTag(tag);
         problemEntity.setShare(share);
-        problemEntity.setCreateTime(System.currentTimeMillis());
-        if(problemDao.addProblem(sqlSession,problemEntity)) {
-            sqlSession.close();
-            return true;
+        problemEntity.setCreateTime(create_time);
+
+        // 添加数据到problem_info
+        boolean result1 = problemDao.addProblem(sqlSession, problemEntity);
+        boolean result2 = false;
+        int pid = problemEntity.getPid();
+        if (pid > 0) {
+            ProblemInfoEntity entity = new ProblemInfoEntity();
+            entity.setPid(pid);
+            entity.setBelong(0);
+            result2 = problemInfoDao.add(sqlSession, entity);
         }
-        else {
-            sqlSession.close();
-            return false;
-        }
+        sqlSession.commit();
+        sqlSession.close();
+        return result1 && result2;
     }
 
     public ProblemEntity getProblemByPid(int pid) {
