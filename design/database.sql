@@ -28,14 +28,14 @@ CREATE TABLE `problem` (
   `title` varchar(100) NOT NULL,
   `code_language` json NOT NULL COMMENT 'json数组[1,2,3,4]',
   `description` varchar(1000) NOT NULL,
-  `difficult` tinyint(1) unsigned NOT NULL COMMENT '1:easy 2:middle 3:difficult 4:expert',
+  `difficult` tinyint(1) unsigned NOT NULL COMMENT '0:easy 1:middle 2:difficult 3:expert',
   `input_format` varchar(200) NOT NULL,
   `output_format` varchar(200) NOT NULL,
   `constraint` varchar(200) NOT NULL,
   `sample` json NOT NULL COMMENT 'json array\n[{input: 1, output:10}, {...}]',
   `moderator` json NOT NULL COMMENT 'json array\n[1,2,3,54]',
   `tag` json NOT NULL COMMENT 'json array\n[1,2,3,4,5,6]',
-  `share` tinyint(1) unsigned NOT NULL COMMENT '1 自己使用\n2 审核中\n3 全局使用',
+  `share` tinyint(1) unsigned NOT NULL COMMENT '0 自己使用\n1 审核中\n2 全局使用',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
@@ -112,7 +112,6 @@ DROP TABLE IF EXISTS `test_case`;
 CREATE TABLE `test_case` (
   `tid` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(10) unsigned NOT NULL,
-  `owner` int(10) unsigned NOT NULL,
   `stdin` varchar(100) NOT NULL,
   `stdout` varchar(100) NOT NULL,
   `strength` tinyint(2) unsigned NOT NULL COMMENT '介于1-10之间',
@@ -143,7 +142,7 @@ CREATE TABLE `user` (
   `nickname` varchar(20) NOT NULL,
   `avatar` int(10) unsigned DEFAULT '0',
   `password` varchar(32) NOT NULL,
-  `role` tinyint(1) unsigned DEFAULT '0',
+  `role` tinyint(1) unsigned DEFAULT '0' COMMENT '0 普通用户\n9 管理员',
   `permission` json NOT NULL,
   `submit_times` int(10) unsigned DEFAULT '0',
   `accept_times` int(10) unsigned DEFAULT '0',
@@ -151,7 +150,7 @@ CREATE TABLE `user` (
   `score` int(10) unsigned DEFAULT '0',
   `register_time` bigint(13) unsigned NOT NULL,
   `last_login` bigint(13) unsigned DEFAULT '0',
-  `verified` tinyint(1) unsigned DEFAULT '0',
+  `verified` tinyint(1) unsigned DEFAULT '0' COMMENT '0未验证\n1验证通过',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
@@ -176,4 +175,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-09 15:30:55
+-- Dump completed on 2017-11-09 16:25:20

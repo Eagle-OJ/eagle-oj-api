@@ -21,7 +21,7 @@ public class TestCaseService {
         this.testCaseDao = testCaseDao;
     }
 
-    public boolean addTestCase(int pid, int owner, String stdin, String stdout, int strength, long createTime) {
+    public boolean addTestCase(int pid, String stdin, String stdout, int strength, long createTime) {
         // todo
         return false;
     }
@@ -34,12 +34,12 @@ public class TestCaseService {
         return null;
     }
 
-    public boolean updateTestCaseByTidAndOwner(int tid, int owner, String stdin, String stdout, int strength, long createTime) {
+    public boolean updateTestCaseByTid(int tid, String stdin, String stdout, int strength, long createTime) {
         // todo
         return false;
     }
 
-    public boolean deleteTestCaseByTidAndOwner(int tid, int owner) {
+    public boolean deleteTestCaseByTid(int tid) {
 
         // todo
         return false;
