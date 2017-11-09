@@ -37,7 +37,7 @@ public class ProblemService {
     /**
      * 同时添加problem 和 problem_info
      */
-    public boolean addProblem( int owner, JSONArray codeLanguage, String title,
+    public boolean addProblem(int owner, JSONArray codeLanguage, String title,
                               String description, int difficult, String inputFormat,
                               String outputFormat, String constraint, JSONArray sample,
                               JSONArray moderator, JSONArray tag, int share, long create_time) {
@@ -81,10 +81,11 @@ public class ProblemService {
         return problemDao.getProblemByPid(sqlSession, pid);
     }
 
-    public boolean updateProblemById(ProblemEntity entity) {
-        //
-        SqlSession sqlSession = DataHelper.getSession();
-        sqlSession.close();
-        return  problemDao.updateProblemByPid(sqlSession,entity);
+    public boolean updateProblemByPid(int pid, JSONArray codeLanguage, String title,
+                                     String description, int difficult, String inputFormat,
+                                     String outputFormat, String constraint, JSONArray sample,
+                                     JSONArray tag, int share) {
+        // todo
+        return false;
     }
 }

@@ -18,6 +18,10 @@
         SELECT * from `problem` WHERE pid=#{pid}
     </select>
 
+    <select id="getAllProblem" resultMap="problemResultMap">
+        SELECT * FROM `problem`
+    </select>
+
     <update id="updateProblemByPid" parameterType="ProblemEntity">
         UPDATE `problem` SET  `owner` = #{owner},`code_language` =#{codeLanguage},
             `title`  = #{title},`description` = #{description},`difficult` = #{difficult},
