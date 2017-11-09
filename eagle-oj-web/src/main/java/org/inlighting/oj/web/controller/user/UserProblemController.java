@@ -3,7 +3,6 @@ package org.inlighting.oj.web.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.crypto.hash.Hash;
 import org.inlighting.oj.web.controller.exception.UnauthorizedException;
 import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
@@ -40,6 +39,12 @@ public class UserProblemController {
         this.problemService = problemService;
     }
 
+    @Autowired
+    public void setTestCaseService(TestCaseService testCaseService) {
+        this.testCaseService = testCaseService;
+    }
+
+    @ApiOperation("添加题目")
     @PostMapping
     public ResponseEntity addProblem(@RequestBody @Valid AddProblemFormat format) {
         int owner = SessionHelper.get().getUid();
@@ -83,9 +88,16 @@ public class UserProblemController {
         return new ResponseEntity("题目添加成功");
     }
 
-    @PutMapping
-    public ResponseEntity updateProblem() {
+    @ApiOperation("更新题目")
+    @PutMapping("/{pid}")
+    public ResponseEntity updateProblem(@PathVariable("pid") int pid,
+                                        @RequestBody @Valid AddProblemFormat format) {
+
         return null;
+    }
+
+    private void checkProblemFormat(AddProblemFormat format) {
+
     }
 
     @ApiOperation("获取题目和他所有的测试用例")
@@ -116,7 +128,7 @@ public class UserProblemController {
             throw new UnauthorizedException();
 
         // 添加test_case
-        if (!testCaseService.addTestCase(pid, owner, format.getStdin(),
+        if (!testCaseService.addTestCase(pid, format.getStdin(),
                 format.getStdout(), format.getStrength(), System.currentTimeMillis())) {
             throw new RuntimeException("添加失败");
         }
@@ -128,10 +140,10 @@ public class UserProblemController {
     @DeleteMapping("/{pid}/tid/{tid}")
     public ResponseEntity deleteProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid) {
-        // todo
+        // todo 校验权限 problem moderator
         int owner = SessionHelper.get().getUid();
         // 删除test_case
-        if (! testCaseService.deleteTestCaseByTidAndOwner(tid, owner)) {
+        if (! testCaseService.deleteTestCaseByTid(tid)) {
             throw new RuntimeException("删除失败");
         }
 
@@ -143,11 +155,10 @@ public class UserProblemController {
     public ResponseEntity updateProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
-        // todo
-        // 检验是否为本人
+        // todo 检验是否为本人
         int owner = SessionHelper.get().getUid();
 
-        if (! testCaseService.updateTestCaseByTidAndOwner(tid, owner, format.getStdin(), format.getStdout(),
+        if (! testCaseService.updateTestCaseByTid(tid, format.getStdin(), format.getStdout(),
                 format.getStrength(), System.currentTimeMillis())) {
             throw new RuntimeException("更新失败");
         }
