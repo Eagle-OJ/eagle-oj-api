@@ -11,9 +11,6 @@ import javax.validation.constraints.NotNull;
 public class AddProblemTestCaseFormat {
 
     @NotNull
-    private int pid;
-
-    @NotNull
     @Length(max = 100)
     private String stdin;
 
@@ -24,14 +21,6 @@ public class AddProblemTestCaseFormat {
     @NotNull
     @Range(min = 1, max = 10)
     private int strength;
-
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
-    }
 
     public String getStdin() {
         return stdin;

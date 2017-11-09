@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 public class TestCaseDao {
 
     public boolean add(SqlSession session, TestCaseEntity entity) {
-        // todo
         return false;
     }
 }

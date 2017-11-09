@@ -74,6 +74,7 @@ public class ProblemService {
     }
 
     public ProblemEntity getProblemByPid(int pid) {
+        // todo
         // 通过ID获得题目
         SqlSession sqlSession = DataHelper.getSession();
         sqlSession.close();
@@ -85,9 +86,5 @@ public class ProblemService {
         SqlSession sqlSession = DataHelper.getSession();
         sqlSession.close();
         return  problemDao.updateProblemByPid(sqlSession,entity);
-    }
-
-    public boolean addTestCase(int pid, String stdin, String stdout, int strength, long createTime) {
-        return false;
     }
 }

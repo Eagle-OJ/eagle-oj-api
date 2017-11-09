@@ -1,9 +1,12 @@
 package org.inlighting.oj.web.service;
 
+import junit.framework.TestCase;
 import org.inlighting.oj.web.dao.TestCaseDao;
 import org.inlighting.oj.web.entity.TestCaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Smith
@@ -18,25 +21,26 @@ public class TestCaseService {
         this.testCaseDao = testCaseDao;
     }
 
-    public boolean addTestCase(int pid,
-                               String stdin,
-                               String stdout,
-                               long create_time) {
+    public boolean addTestCase(int pid, int owner, String stdin, String stdout, int strength, long createTime) {
         // todo
         return false;
     }
 
     public int getTestCaseCount(int pid) {
-        // todo
         return 0;
     }
 
-    public boolean updateTestCase(int pid, TestCaseEntity entity) {
+    public List<TestCaseEntity> getTestCases(int pid) {
+        return null;
+    }
+
+    public boolean updateTestCaseByTidAndOwner(int tid, int owner, String stdin, String stdout, int strength, long createTime) {
         // todo
         return false;
     }
 
-    public boolean deleteTestCase(int tid) {
+    public boolean deleteTestCaseByTidAndOwner(int tid, int owner) {
+
         // todo
         return false;
     }

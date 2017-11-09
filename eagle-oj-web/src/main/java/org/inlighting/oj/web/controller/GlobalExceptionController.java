@@ -3,6 +3,7 @@ package org.inlighting.oj.web.controller;
 import com.alibaba.fastjson.JSON;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.inlighting.oj.web.controller.exception.UnauthorizedException;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -39,6 +40,13 @@ public class GlobalExceptionController {
     public ResponseEntity handle(ConstraintViolationException e) {
         String s = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toList()).get(0);
         return new ResponseEntity(400, s, null);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity handle(HttpServletRequest request, Throwable ex) {
+        LOGGER.info(ex.getMessage(), ex);
+        return new ResponseEntity(401, ex.getMessage(), null);
     }
 
     @ExceptionHandler(Exception.class)

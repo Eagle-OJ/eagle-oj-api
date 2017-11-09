@@ -9,6 +9,8 @@ public class TestCaseEntity {
 
     private int pid;
 
+    private int owner;
+
     private String stdin;
 
     private String stdout;
@@ -53,5 +55,13 @@ public class TestCaseEntity {
 
     public void setTid(int tid) {
         this.tid = tid;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
     }
 }
