@@ -28,7 +28,6 @@ public class ProblemDao {
     }
 
     public boolean updateProblemByPid(SqlSession sqlSession, ProblemEntity entity) {
-        // todo
         int updateNum = sqlSession.update("problem.updateProblemByPid",entity);
         if(updateNum == 1)
             return true;

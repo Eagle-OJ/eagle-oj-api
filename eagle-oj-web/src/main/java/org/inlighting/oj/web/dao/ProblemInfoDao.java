@@ -16,7 +16,6 @@ public class ProblemInfoDao {
     }
 
     public ProblemEntity get(int pid) {
-        // todo
         return null;
     }
 }

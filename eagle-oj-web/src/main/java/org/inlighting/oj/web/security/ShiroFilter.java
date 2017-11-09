@@ -14,7 +14,6 @@ public class ShiroFilter  extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         HttpServletRequest req = (HttpServletRequest) request;
-
         String authorization = req.getHeader("Authorization");
         if (authorization == null) {
             sendRedirect(request, response);

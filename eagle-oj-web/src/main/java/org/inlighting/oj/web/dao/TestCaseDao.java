@@ -1,5 +1,7 @@
 package org.inlighting.oj.web.dao;
 
+import org.apache.ibatis.session.SqlSession;
+import org.inlighting.oj.web.entity.TestCaseEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -8,4 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TestCaseDao {
 
+    public boolean add(SqlSession session, TestCaseEntity entity) {
+        return false;
+    }
 }

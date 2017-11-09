@@ -1,6 +1,8 @@
 package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
 import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.entity.ResponseEntity;
@@ -11,6 +13,7 @@ import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +27,7 @@ import java.util.Set;
  **/
 @RestController
 @Validated
-@RequestMapping("/")
+@RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class IndexController {
 
     private UserService userService;
@@ -34,18 +37,24 @@ public class IndexController {
         this.userService = userService;
     }
 
+    @ApiOperation("用户注册")
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
-        if (userService.addUser(format.getEmail(), format.getNickname(), format.getPassword())) {
+        if (userService.addUser(format.getEmail(),
+                format.getNickname(),
+                new Md5Hash(format.getPassword()).toString(),
+                System.currentTimeMillis())) {
             return new ResponseEntity("注册成功");
         } else {
             throw new RuntimeException("注册失败");
         }
     }
 
+    @ApiOperation("用户登入")
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
-        UserEntity userEntity = userService.getUserByLogin(format.getEmail(), format.getPassword());
+        UserEntity userEntity = userService.getUserByLogin(format.getEmail(),
+                new Md5Hash(format.getPassword()).toString());
         if (userEntity == null)
             throw new RuntimeException("用户名密码错误");
 
