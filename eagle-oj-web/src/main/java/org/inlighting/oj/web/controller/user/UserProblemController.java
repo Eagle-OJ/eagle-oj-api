@@ -3,6 +3,7 @@ package org.inlighting.oj.web.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.UnauthorizedException;
 import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
@@ -49,25 +50,8 @@ public class UserProblemController {
     public ResponseEntity addProblem(@RequestBody @Valid AddProblemFormat format) {
         int owner = SessionHelper.get().getUid();
         JSONArray moderator = new JSONArray();
-        // valid code_language
-        if (format.getCodeLanguage().size()==0)
-            throw new RuntimeException("编程语言不得为空");
 
-        // valid sample
-        if (format.getSample().size()==0)
-            throw new RuntimeException("样本不得为空");
-
-        for (Object obj: format.getSample()) {
-            //obj = (JSONObject) obj;
-            boolean input = !((JSONObject) obj).containsKey("input");
-            boolean output = !((JSONObject) obj).containsKey("output");
-            if (input || output)
-                throw new RuntimeException("样本格式不符");
-        }
-
-        // valid tag
-        if (format.getTag().size()==0)
-            throw new RuntimeException("标签不得为空");
+        checkProblemFormat(format);
 
         if (!problemService.addProblem(owner,
                 format.getCodeLanguage(),
@@ -92,12 +76,51 @@ public class UserProblemController {
     @PutMapping("/{pid}")
     public ResponseEntity updateProblem(@PathVariable("pid") int pid,
                                         @RequestBody @Valid AddProblemFormat format) {
+        // todo
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        if (problemEntity == null) {
+            throw new RuntimeException("题目不存在");
+        }
 
-        return null;
+        int owner = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+        JSONArray moderator = problemEntity.getModerator();
+        if (!moderator.contains(owner) && owner!=problemEntity.getOwner() && role!= DefaultConfig.ADMIN_ROLE)
+            throw new UnauthorizedException();
+
+        // 检验数据
+        checkProblemFormat(format);
+
+        // 更新数据
+        if (!problemService.updateProblemByPid(pid, format.getCodeLanguage(), format.getTitle(),
+                format.getDescription(), format.getDifficult(), format.getInputFormat(), format.getOutputFormat(),
+                format.getConstraint(), format.getSample(), format.getTag(), format.getShare())) {
+            throw new RuntimeException("题目更新失败");
+        }
+
+        return new ResponseEntity("题目更新成功");
     }
 
     private void checkProblemFormat(AddProblemFormat format) {
+        // valid code_language
+        if (format.getCodeLanguage().size()==0)
+            throw new RuntimeException("编程语言不得为空");
 
+        // valid sample
+        if (format.getSample().size()==0)
+            throw new RuntimeException("样本不得为空");
+
+        for (Object obj: format.getSample()) {
+            //obj = (JSONObject) obj;
+            boolean input = !((JSONObject) obj).containsKey("input");
+            boolean output = !((JSONObject) obj).containsKey("output");
+            if (input || output)
+                throw new RuntimeException("样本格式不符");
+        }
+
+        // valid tag
+        if (format.getTag().size()==0)
+            throw new RuntimeException("标签不得为空");
     }
 
     @ApiOperation("获取题目和他所有的测试用例")
@@ -122,9 +145,14 @@ public class UserProblemController {
             @PathVariable("pid") int pid,
             @RequestBody @Valid AddProblemTestCaseFormat format) {
         // todo
-        // 检验pid的归属者是否为本人
-        int owner = problemService.getProblemByPid(pid).getOwner();
-        if (owner != SessionHelper.get().getUid())
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        if (problemEntity == null) {
+            throw new RuntimeException("此题目不存在");
+        }
+        JSONArray moderator = problemEntity.getModerator();
+        int owner = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+        if (owner != problemEntity.getOwner() && !moderator.contains(owner) && role!=DefaultConfig.ADMIN_ROLE)
             throw new UnauthorizedException();
 
         // 添加test_case
@@ -140,8 +168,18 @@ public class UserProblemController {
     @DeleteMapping("/{pid}/tid/{tid}")
     public ResponseEntity deleteProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid) {
-        // todo 校验权限 problem moderator
+        // todo
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        if (problemEntity==null) {
+            throw new RuntimeException("题目不存在");
+        }
         int owner = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+        JSONArray moderator = problemEntity.getModerator();
+        if (owner!=problemEntity.getOwner() && !moderator.contains(owner) && role!=DefaultConfig.ADMIN_ROLE) {
+            throw new UnauthorizedException();
+        }
+
         // 删除test_case
         if (! testCaseService.deleteTestCaseByTid(tid)) {
             throw new RuntimeException("删除失败");
@@ -155,8 +193,17 @@ public class UserProblemController {
     public ResponseEntity updateProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
-        // todo 检验是否为本人
+        // todo
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        if (problemEntity==null) {
+            throw new RuntimeException("题目不存在");
+        }
+        JSONArray moderator = problemEntity.getModerator();
         int owner = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+        if (owner!=problemEntity.getOwner() && !moderator.contains(owner) && role!=DefaultConfig.ADMIN_ROLE) {
+            throw new UnauthorizedException();
+        }
 
         if (! testCaseService.updateTestCaseByTid(tid, format.getStdin(), format.getStdout(),
                 format.getStrength(), System.currentTimeMillis())) {

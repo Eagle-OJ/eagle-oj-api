@@ -21,6 +21,8 @@
         <plugin interceptor="com.github.pagehelper.PageInterceptor">
             <!-- 使用下面的方式配置参数，后面会有所有的参数介绍 -->
             <property name="helperDialect" value="mysql"/>
+            <property name="offsetAsPageNum" value="true"/>
+            <property name="rowBoundsWithCount" value="true"/>
         </plugin>
     </plugins>
 
