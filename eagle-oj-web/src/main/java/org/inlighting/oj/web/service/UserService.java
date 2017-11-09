@@ -22,7 +22,7 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public boolean addUser(String email, String nickname, String password) {
+    public boolean addUser(String email, String nickname, String password, long registerTime) {
         SqlSession session = DataHelper.getSession();
         if (userDao.getUserByEmail(session, email)!=null) {
             throw new RuntimeException("用户已经存在");
@@ -31,9 +31,9 @@ public class UserService {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
         userEntity.setNickname(nickname);
-        userEntity.setPassword(new Md5Hash(password).toString());
+        userEntity.setPassword(password);
         userEntity.setPermission(new JSONArray());
-        userEntity.setRegisterTime(System.currentTimeMillis());
+        userEntity.setRegisterTime(registerTime);
         if (! userDao.addUser(session, userEntity)) {
             throw new RuntimeException("用户注册失败");
         }
@@ -43,7 +43,7 @@ public class UserService {
 
     public UserEntity getUserByLogin(String email, String password) {
         SqlSession session = DataHelper.getSession();
-        UserEntity userEntity = userDao.getUserByLogin(session, email, new Md5Hash(password).toString());
+        UserEntity userEntity = userDao.getUserByLogin(session, email, password);
         session.close();
         return userEntity;
     }

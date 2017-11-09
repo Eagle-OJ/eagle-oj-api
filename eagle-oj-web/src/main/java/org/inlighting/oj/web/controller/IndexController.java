@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
 import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.entity.ResponseEntity;
@@ -36,7 +37,10 @@ public class IndexController {
 
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
-        if (userService.addUser(format.getEmail(), format.getNickname(), format.getPassword())) {
+        if (userService.addUser(format.getEmail(),
+                format.getNickname(),
+                new Md5Hash(format.getPassword()).toString(),
+                System.currentTimeMillis())) {
             return new ResponseEntity("注册成功");
         } else {
             throw new RuntimeException("注册失败");
@@ -45,7 +49,8 @@ public class IndexController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
-        UserEntity userEntity = userService.getUserByLogin(format.getEmail(), format.getPassword());
+        UserEntity userEntity = userService.getUserByLogin(format.getEmail(),
+                new Md5Hash(format.getPassword()).toString());
         if (userEntity == null)
             throw new RuntimeException("用户名密码错误");
 
