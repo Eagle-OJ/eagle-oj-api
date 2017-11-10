@@ -1,47 +1,49 @@
-package org.inlighting.oj.web.controller.format.user;
+package org.inlighting.oj.web.entity;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author Smith
  **/
-public class CreateContestFormat {
+public class ContestEntity {
+    private int cid;
 
-    @NotNull
-    @Length(min = 1, max = 50)
     private String name;
 
-    @NotNull
-    @Length(max = 100)
+    private int owner;
+
+    private JSONArray moderator;
+
     private String slogan;
 
-    @NotNull
-    @Length(max = 500)
     private String description;
 
     @JSONField(name = "start_time")
-    @NotNull
     private long startTime;
 
     @JSONField(name = "end_time")
-    @NotNull
     private long endTime;
 
     @JSONField(name = "total_time")
-    @NotNull
     private long totalTime;
 
-    @Length(max = 6)
     private String password;
 
-    @NotNull
-    @Range(max = 4)
+    private int official;
+
     private int type;
+
+    @JSONField(name = "create_time")
+    private long createTime;
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
 
     public String getName() {
         return name;
@@ -49,6 +51,22 @@ public class CreateContestFormat {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    public JSONArray getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(JSONArray moderator) {
+        this.moderator = moderator;
     }
 
     public String getSlogan() {
@@ -99,11 +117,27 @@ public class CreateContestFormat {
         this.password = password;
     }
 
+    public int getOfficial() {
+        return official;
+    }
+
+    public void setOfficial(int official) {
+        this.official = official;
+    }
+
     public int getType() {
         return type;
     }
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 }

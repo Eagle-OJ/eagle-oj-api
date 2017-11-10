@@ -34,7 +34,7 @@ public class TestCaseService {
         return null;
     }
 
-    public boolean updateTestCaseByTid(int tid, String stdin, String stdout, int strength, long createTime) {
+    public boolean updateTestCaseByTid(int tid, String stdin, String stdout, int strength) {
         // todo
         return false;
     }

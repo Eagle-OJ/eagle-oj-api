@@ -35,6 +35,8 @@ public class UserProblemController {
 
     private TestCaseService testCaseService;
 
+    //todo 添加moderator 功能忘记
+
     @Autowired
     public void setProblemService(ProblemService problemService) {
         this.problemService = problemService;
@@ -206,7 +208,7 @@ public class UserProblemController {
         }
 
         if (! testCaseService.updateTestCaseByTid(tid, format.getStdin(), format.getStdout(),
-                format.getStrength(), System.currentTimeMillis())) {
+                format.getStrength())) {
             throw new RuntimeException("更新失败");
         }
         return new ResponseEntity("更新成功");

@@ -16,6 +16,40 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `contest`
+--
+
+DROP TABLE IF EXISTS `contest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contest` (
+  `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '比赛名称',
+  `owner` int(10) unsigned NOT NULL,
+  `moderator` json NOT NULL,
+  `slogan` varchar(100) NOT NULL COMMENT '标语',
+  `description` varchar(500) NOT NULL,
+  `start_time` bigint(13) unsigned NOT NULL,
+  `end_time` bigint(13) unsigned NOT NULL,
+  `total_time` bigint(13) unsigned NOT NULL,
+  `password` varchar(32) DEFAULT NULL,
+  `official` tinyint(1) unsigned NOT NULL COMMENT '0非正式\n1官方',
+  `type` tinyint(1) unsigned NOT NULL COMMENT '模式\n0普通模式\n1ACM模式\n\n时间\n0 普通模式 开始到结束时间\n1 限时模式\n0: 0+0\n1:0+1\n2:1+0\n3:1+1',
+  `create_time` bigint(13) unsigned NOT NULL,
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contest`
+--
+
+LOCK TABLES `contest` WRITE;
+/*!40000 ALTER TABLE `contest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `problem`
 --
 
@@ -175,4 +209,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-09 16:25:20
+-- Dump completed on 2017-11-09 19:59:03
