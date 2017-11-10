@@ -132,7 +132,7 @@ public class UserProblemController {
         if (problemEntity == null)
             throw new RuntimeException("此题目不存在");
 
-        List<TestCaseEntity> testCaseEntityList = testCaseService.getTestCases(pid);
+        List<TestCaseEntity> testCaseEntityList = testCaseService.getAllTestCasesByPid(pid);
         Map<String, Object> map = new HashMap<>();
         map.put("problem", problemEntity);
         map.put("test_case", testCaseEntityList);
@@ -157,7 +157,7 @@ public class UserProblemController {
 
         // 添加test_case
         if (!testCaseService.addTestCase(pid, format.getStdin(),
-                format.getStdout(), format.getStrength(), System.currentTimeMillis())) {
+                format.getStdout(), format.getStrength())) {
             throw new RuntimeException("添加失败");
         }
 
@@ -206,7 +206,7 @@ public class UserProblemController {
         }
 
         if (! testCaseService.updateTestCaseByTid(tid, format.getStdin(), format.getStdout(),
-                format.getStrength(), System.currentTimeMillis())) {
+                format.getStrength())) {
             throw new RuntimeException("更新失败");
         }
         return new ResponseEntity("更新成功");
