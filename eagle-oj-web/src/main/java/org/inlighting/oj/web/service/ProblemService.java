@@ -40,7 +40,7 @@ public class ProblemService {
     public boolean addProblem(int owner, JSONArray codeLanguage, String title,
                               String description, int difficult, String inputFormat,
                               String outputFormat, String constraint, JSONArray sample,
-                              JSONArray moderator, JSONArray tag, int share, long create_time) {
+                              JSONArray moderator, JSONArray tag, int share,long createTime) {
         // 添加题目
         SqlSession sqlSession = DataHelper.getSession(true);
         ProblemEntity problemEntity = new ProblemEntity();
@@ -56,7 +56,7 @@ public class ProblemService {
         problemEntity.setModerator(moderator);
         problemEntity.setTag(tag);
         problemEntity.setShare(share);
-        problemEntity.setCreateTime(create_time);
+        problemEntity.setCreateTime(createTime);
 
         // 添加数据到problem_info
         boolean result1 = problemDao.addProblem(sqlSession, problemEntity);
@@ -74,7 +74,6 @@ public class ProblemService {
     }
 
     public ProblemEntity getProblemByPid(int pid) {
-        // todo
         // 通过ID获得题目
         SqlSession sqlSession = DataHelper.getSession();
         sqlSession.close();
@@ -85,7 +84,23 @@ public class ProblemService {
                                      String description, int difficult, String inputFormat,
                                      String outputFormat, String constraint, JSONArray sample,
                                      JSONArray tag, int share) {
-        // todo
-        return false;
+        //通过pid来更新题目
+        SqlSession sqlSession = DataHelper.getSession(true);
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setCodeLanguage(codeLanguage);
+        problemEntity.setTitle(title);
+        problemEntity.setDescription(description);
+        problemEntity.setDifficult(difficult);
+        problemEntity.setInputFormat(inputFormat);
+        problemEntity.setOutputFormat(outputFormat);
+        problemEntity.setConstraint(constraint);
+        problemEntity.setSample(sample);
+        problemEntity.setTag(tag);
+        problemEntity.setShare(share);
+        problemEntity.setCreateTime(System.currentTimeMillis());
+        boolean flag = problemDao.updateProblemByPid(sqlSession,problemEntity);
+        sqlSession.close();
+        return flag;
     }
+
 }
