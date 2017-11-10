@@ -42,5 +42,6 @@
         <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/ProblemMapper.xml"/>
         <mapper resource="mapping/ProblemInfoMapper.xml"/>
+        <mapper resource="mapping/TestCaseMapper.xml"/>
     </mappers>
 </configuration>

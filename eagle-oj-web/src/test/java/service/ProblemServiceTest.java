@@ -52,7 +52,7 @@ public class ProblemServiceTest {
 
         boolean result = problemService.addProblem(1, codeLanguage,  "A+B Test Problem", "这是一道很简单的测试题，做A+B",
                 1, "输入规范", "输出规范", "条件约束", sample,
-                moderator, tag, 1, System.currentTimeMillis());
+                moderator, tag, 1,System.currentTimeMillis());
 
         Assert.assertEquals(result, true);
     }

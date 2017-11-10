@@ -15,6 +15,19 @@ public class TestCaseEntity {
 
     private int strength;
 
+    private long createTime;
+
+
+    public TestCaseEntity() {
+    }
+
+    public TestCaseEntity(int tid, String stdin, String stdout, int strength) {
+        this.tid = tid;
+        this.stdin = stdin;
+        this.stdout = stdout;
+        this.strength = strength;
+    }
+
     public int getPid() {
         return pid;
     }
@@ -55,4 +68,11 @@ public class TestCaseEntity {
         this.tid = tid;
     }
 
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
 }

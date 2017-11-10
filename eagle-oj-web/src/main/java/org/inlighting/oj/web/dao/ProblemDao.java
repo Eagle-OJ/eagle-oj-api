@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.dao;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -16,15 +17,21 @@ import java.util.List;
 @Repository
 public class ProblemDao {
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         SqlSession session = DataHelper.getSession();
         PageRowBounds bounds = new PageRowBounds(1, 2);
 
         List<ProblemEntity> list = session.selectList("problem.getAllProblem", null, bounds);
-        System.out.println(bounds.getTotal());
 
         list.forEach(entity -> System.out.println(entity.getTitle()+";"+entity.getPid()));
-    }*/
+    }
+
+    public List<ProblemEntity> getAll(PageRowBounds bounds) {
+        SqlSession session = DataHelper.getSession();
+        List<ProblemEntity> list = session.selectList("problem.getAllProblem", null, bounds);
+        return list;
+    }
+
 
     public boolean addProblem(SqlSession sqlSession, ProblemEntity problemEntity) {
         // 添加问题
@@ -51,4 +58,5 @@ public class ProblemDao {
             return false;
         }
     }
+
 }
