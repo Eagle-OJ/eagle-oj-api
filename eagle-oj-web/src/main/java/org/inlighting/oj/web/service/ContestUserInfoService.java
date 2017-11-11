@@ -27,15 +27,16 @@ public class ContestUserInfoService {
         this.contestUserInfoDao = contestUserInfoDao;
     }
 
-    public boolean add(int cid, int uid) {
+    public boolean add(int cid, int uid, long joinTime) {
         //添加contestUserInfo
         SqlSession sqlSession = DataHelper.getSession();
-         ContestUserInfoEntity contestUserInfoEntity = new ContestUserInfoEntity();
-         contestUserInfoEntity.setCid(cid);
-         contestUserInfoEntity.setUid(uid);
-         boolean flag = contestUserInfoDao.add(sqlSession,contestUserInfoEntity);
-         sqlSession.close();
-         return flag;
+        ContestUserInfoEntity contestUserInfoEntity = new ContestUserInfoEntity();
+        contestUserInfoEntity.setCid(cid);
+        contestUserInfoEntity.setUid(uid);
+        contestUserInfoEntity.setJoinTime(joinTime);
+        boolean flag = contestUserInfoDao.add(sqlSession,contestUserInfoEntity);
+        sqlSession.close();
+        return flag;
     }
 
     public ContestUserInfoEntity getByCidAndUid(int cid, int uid) {

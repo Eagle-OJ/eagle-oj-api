@@ -23,7 +23,7 @@ public class ContestService {
         this.contestDao = contestDao;
     }
 
-    public int addContest(String name, int owner, JSONArray moderator, String slogan, String description,
+    public int addContest(String name, int owner, String slogan, String description,
                           long startTime, long endTime, long totalTime, String password, int official,
                           int type, long createTime) {
         // 添加比赛
@@ -31,7 +31,6 @@ public class ContestService {
         ContestEntity contestEntity = new ContestEntity();
         contestEntity.setName(name);
         contestEntity.setOwner(owner);
-        contestEntity.setModerator(moderator);
         contestEntity.setSlogan(slogan);
         contestEntity.setDescription(description);
         contestEntity.setStartTime(startTime);

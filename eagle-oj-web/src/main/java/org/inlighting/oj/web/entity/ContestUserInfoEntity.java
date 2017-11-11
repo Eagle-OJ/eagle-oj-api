@@ -18,6 +18,9 @@ public class ContestUserInfoEntity {
     @JSONField(name = "accept_times")
     private int acceptTimes;
 
+    @JSONField(name = "join_time")
+    private long joinTime;
+
     public int getCid() {
         return cid;
     }
@@ -56,5 +59,13 @@ public class ContestUserInfoEntity {
 
     public void setAcceptTimes(int acceptTimes) {
         this.acceptTimes = acceptTimes;
+    }
+
+    public long getJoinTime() {
+        return joinTime;
+    }
+
+    public void setJoinTime(long joinTime) {
+        this.joinTime = joinTime;
     }
 }

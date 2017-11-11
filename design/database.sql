@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `attachment`
+--
+
+DROP TABLE IF EXISTS `attachment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `attachment` (
+  `aid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `owner` int(10) unsigned NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `status` tinyint(1) unsigned DEFAULT '1' COMMENT '0 失效 待删除\n1 有效',
+  `upload_time` bigint(13) unsigned NOT NULL,
+  PRIMARY KEY (`aid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `attachment`
+--
+
+LOCK TABLES `attachment` WRITE;
+/*!40000 ALTER TABLE `attachment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `attachment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `contest`
 --
 
@@ -26,7 +52,6 @@ CREATE TABLE `contest` (
   `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '比赛名称',
   `owner` int(10) unsigned NOT NULL,
-  `moderator` json NOT NULL,
   `slogan` varchar(100) NOT NULL COMMENT '标语',
   `description` varchar(500) NOT NULL,
   `start_time` bigint(13) unsigned NOT NULL,
@@ -37,7 +62,7 @@ CREATE TABLE `contest` (
   `type` tinyint(1) unsigned NOT NULL COMMENT '模式\n0普通模式\n1ACM模式\n时间\n0 普通模式 开始到结束时间\n1 限时模式\n0: 0+0\n1:0+1\n2:1+0\n3:1+1',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,6 +71,7 @@ CREATE TABLE `contest` (
 
 LOCK TABLES `contest` WRITE;
 /*!40000 ALTER TABLE `contest` DISABLE KEYS */;
+INSERT INTO `contest` VALUES (3,'这是一个比赛',14,'检测大家的技巧','我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞',150000000000000,150000000000100,5,NULL,0,1,1510403394474),(4,'这是一个比赛',14,'检测大家的技巧','我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞',150000000000000,150000000000100,5,'1',0,1,1510403786772);
 /*!40000 ALTER TABLE `contest` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,11 +83,12 @@ DROP TABLE IF EXISTS `contest_user_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contest_user_info` (
-  `cid` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `score` int(11) DEFAULT '0',
-  `submit_times` int(11) DEFAULT '0',
-  `accept_times` int(11) DEFAULT '0',
+  `cid` int(11) unsigned NOT NULL,
+  `uid` int(11) unsigned NOT NULL,
+  `score` int(11) unsigned DEFAULT '0',
+  `submit_times` int(11) unsigned DEFAULT '0',
+  `accept_times` int(11) unsigned DEFAULT '0',
+  `join_time` bigint(13) unsigned NOT NULL,
   UNIQUE KEY `cid_uid_union` (`cid`,`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -72,7 +99,59 @@ CREATE TABLE `contest_user_info` (
 
 LOCK TABLES `contest_user_info` WRITE;
 /*!40000 ALTER TABLE `contest_user_info` DISABLE KEYS */;
+INSERT INTO `contest_user_info` VALUES (3,14,0,0,0,1510403705466),(4,14,0,0,0,1510403804620);
 /*!40000 ALTER TABLE `contest_user_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group`
+--
+
+DROP TABLE IF EXISTS `group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `group` (
+  `gid` int(11) NOT NULL,
+  `owner` int(11) NOT NULL,
+  `cover` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `password` varchar(6) DEFAULT NULL,
+  `create_time` bigint(13) NOT NULL,
+  PRIMARY KEY (`gid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `group`
+--
+
+LOCK TABLES `group` WRITE;
+/*!40000 ALTER TABLE `group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_user_info`
+--
+
+DROP TABLE IF EXISTS `group_user_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `group_user_info` (
+  `gid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `join_time` bigint(13) NOT NULL,
+  UNIQUE KEY `gid_uid_unique` (`gid`,`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `group_user_info`
+--
+
+LOCK TABLES `group_user_info` WRITE;
+/*!40000 ALTER TABLE `group_user_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `group_user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -236,4 +315,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-11 14:47:36
+-- Dump completed on 2017-11-11 20:37:45

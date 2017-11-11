@@ -330,6 +330,81 @@
 						}
 					],
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "contest",
+					"description": "",
+					"item": [
+						{
+							"name": "add_contest",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"这是一个比赛\",\n\t\"slogan\": \"检测大家的技巧\",\n\t\"description\": \"我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞\",\n\t\"start_time\": 150000000000000,\n\t\"end_time\": 150000000000100,\n\t\"total_time\": 5,\n\t\"password\": \"1\",\n\t\"type\": 1\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/contest",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"contest"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "join_contest",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"1\"\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/contest/4/enter",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"contest",
+										"4",
+										"enter"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
 				}
 			]
 		},

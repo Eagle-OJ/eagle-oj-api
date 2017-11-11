@@ -9,8 +9,8 @@
     </select>
 
     <insert id="add" parameterType="ContestUserInfoEntity">
-        INSERT INTO `contest_user_info`(`cid`,`uid`,`score`,`submit_times`,`accept_times`)
-            VALUES (#{cid},#{uid},#{score},#{submitTimes},#{acceptTimes})
+        INSERT INTO `contest_user_info`(`cid`,`uid`,`score`,`submit_times`,`accept_times`,`join_time`)
+            VALUES (#{cid},#{uid},#{score},#{submitTimes},#{acceptTimes},#{joinTime})
     </insert>
 
     <resultMap id="contestUserInfoMap" type="ContestUserInfoEntity">
@@ -19,5 +19,6 @@
         <result column="score" property="score"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="accept_times" property="acceptTimes"/>
+        <result column="join_time" property="joinTime"/>
     </resultMap>
 </mapper>

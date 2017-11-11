@@ -12,7 +12,7 @@ public class CreateGroupFormat {
 
     @NotNull
     @Range(min = 0)
-    private int cover;
+    private Integer cover;
 
     @NotNull
     @Length(min = 1, max = 20)
@@ -21,11 +21,11 @@ public class CreateGroupFormat {
     @Length(max = 6)
     private String password;
 
-    public int getCover() {
+    public Integer getCover() {
         return cover;
     }
 
-    public void setCover(int cover) {
+    public void setCover(Integer cover) {
         this.cover = cover;
     }
 
