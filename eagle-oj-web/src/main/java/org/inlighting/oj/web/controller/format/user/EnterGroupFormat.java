@@ -1,12 +1,13 @@
 package org.inlighting.oj.web.controller.format.user;
 
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 /**
  * @author Smith
  **/
-public class EnterContestFormat {
+public class EnterGroupFormat {
 
+    @Length(max = 6)
     private String password;
 
     public String getPassword() {

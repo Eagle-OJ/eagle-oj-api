@@ -13,10 +13,7 @@ import org.inlighting.oj.web.service.ContestUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -82,12 +79,12 @@ public class UserContestController {
     }
 
     @ApiOperation("参加比赛")
-    @PostMapping("/enter")
-    public ResponseEntity enterContest(@RequestBody @Valid EnterContestFormat format) {
-        // todo
+    @PostMapping("/{cid}/enter")
+    public ResponseEntity enterContest(@PathVariable("cid") int cid,
+                                       @RequestBody @Valid EnterContestFormat format) {
+        // todo 加入比赛时间，删除moderator
         // 判断是否已经加入比赛
         int uid = SessionHelper.get().getUid();
-        int cid = format.getCid();
         ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
         if (contestUserInfoEntity != null) {
             throw new RuntimeException("你已经加入比赛了");
