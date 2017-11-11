@@ -35,12 +35,7 @@ public class ProblemDao {
     public boolean addProblem(SqlSession sqlSession, ProblemEntity problemEntity) {
         // 添加问题
         int insertNum = sqlSession.insert("problem.insertProblem",problemEntity);
-        if(insertNum == 1){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return insertNum == 1;
     }
 
     public ProblemEntity getProblemByPid(SqlSession sqlSession, int pid) {

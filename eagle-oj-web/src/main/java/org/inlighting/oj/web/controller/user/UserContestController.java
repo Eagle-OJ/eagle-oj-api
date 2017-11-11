@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.controller.format.user.CreateContestFormat;
 import org.inlighting.oj.web.controller.format.user.EnterContestFormat;
 import org.inlighting.oj.web.entity.ContestEntity;
+import org.inlighting.oj.web.entity.ContestUserInfoEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ContestService;
+import org.inlighting.oj.web.service.ContestUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -28,9 +30,16 @@ public class UserContestController {
 
     private ContestService contestService;
 
+    private ContestUserInfoService contestUserInfoService;
+
     @Autowired
     public void setContestService(ContestService contestService) {
         this.contestService = contestService;
+    }
+
+    @Autowired
+    public void setContestUserInfoService(ContestUserInfoService contestUserInfoService) {
+        this.contestUserInfoService = contestUserInfoService;
     }
 
     @ApiOperation("创建比赛")
@@ -75,12 +84,28 @@ public class UserContestController {
     @ApiOperation("参加比赛")
     @PostMapping("/enter")
     public ResponseEntity enterContest(@RequestBody @Valid EnterContestFormat format) {
-        ContestEntity contestEntity = contestService.getContestByCid(format.getCid());
-        if (contestEntity.getPassword() != format.getPassword()) {
-            throw new RuntimeException("密码错误");
+        // todo
+        // 判断是否已经加入比赛
+        int uid = SessionHelper.get().getUid();
+        int cid = format.getCid();
+        ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
+        if (contestUserInfoEntity != null) {
+            throw new RuntimeException("你已经加入比赛了");
+        }
+
+        // 校验密码
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        if (contestEntity.getPassword() != null) {
+            String password = contestEntity.getPassword();
+            if (! password.equals(format.getPassword())) {
+                throw new RuntimeException("密码错误");
+            }
         }
 
         // 加入比赛
-        return null;
+        if (! contestUserInfoService.add(cid, uid)) {
+            throw new RuntimeException("加入比赛失败");
+        }
+        return new ResponseEntity("加入比赛成功");
     }
 }
