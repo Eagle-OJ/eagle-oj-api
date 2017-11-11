@@ -50,6 +50,32 @@ LOCK TABLES `contest` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `contest_user_info`
+--
+
+DROP TABLE IF EXISTS `contest_user_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contest_user_info` (
+  `cid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `score` int(11) DEFAULT '0',
+  `submit_times` int(11) DEFAULT '0',
+  `accept_times` int(11) DEFAULT '0',
+  UNIQUE KEY `cid_uid_union` (`cid`,`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contest_user_info`
+--
+
+LOCK TABLES `contest_user_info` WRITE;
+/*!40000 ALTER TABLE `contest_user_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contest_user_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `problem`
 --
 
@@ -210,4 +236,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-11 14:18:37
+-- Dump completed on 2017-11-11 14:47:36
