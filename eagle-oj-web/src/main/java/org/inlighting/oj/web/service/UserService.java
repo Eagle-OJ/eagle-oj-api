@@ -22,7 +22,7 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public boolean addUser(String email, String nickname, String password, long registerTime) {
+    public int addUser(String email, String nickname, String password, long registerTime) {
         SqlSession session = DataHelper.getSession();
         if (userDao.getUserByEmail(session, email)!=null) {
             throw new RuntimeException("用户已经存在");
@@ -34,11 +34,10 @@ public class UserService {
         userEntity.setPassword(password);
         userEntity.setPermission(new JSONArray());
         userEntity.setRegisterTime(registerTime);
-        if (! userDao.addUser(session, userEntity)) {
-            throw new RuntimeException("用户注册失败");
-        }
+
+        boolean result = userDao.addUser(session, userEntity);
         session.close();
-        return true;
+        return result ? userEntity.getUid() : 0;
     }
 
     public UserEntity getUserByLogin(String email, String password) {

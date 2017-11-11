@@ -23,7 +23,7 @@ public class TestCaseService {
         this.testCaseDao = testCaseDao;
     }
 
-    public boolean addTestCase(int pid, String stdin, String stdout, int strength) {
+    public int addTestCase(int pid, String stdin, String stdout, int strength) {
         // 添加一个TestCase
         SqlSession sqlSession = DataHelper.getSession();
         TestCaseEntity testCaseEntity = new TestCaseEntity();
@@ -34,7 +34,7 @@ public class TestCaseService {
         testCaseEntity.setCreateTime(System.currentTimeMillis());
         boolean flag = testCaseDao.addTestCase(sqlSession,testCaseEntity);
         sqlSession.close();
-        return flag;
+        return flag ? testCaseEntity.getTid() : 0;
     }
 
     public int getTestCaseCountByPid(int pid) {
@@ -47,7 +47,7 @@ public class TestCaseService {
     public List<TestCaseEntity> getAllTestCasesByPid(int pid){
         //通过pid来查询所有的TestCase
         SqlSession sqlSession = DataHelper.getSession();
-        List<TestCaseEntity> list = (List<TestCaseEntity>) testCaseDao.getAllTestCasesByPid(sqlSession,pid);
+        List<TestCaseEntity> list = testCaseDao.getAllTestCasesByPid(sqlSession,pid);
         sqlSession.close();
         return list;
     }

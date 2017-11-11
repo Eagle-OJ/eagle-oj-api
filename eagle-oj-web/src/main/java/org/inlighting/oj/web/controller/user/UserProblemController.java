@@ -49,12 +49,10 @@ public class UserProblemController {
     @PostMapping
     public ResponseEntity addProblem(@RequestBody @Valid AddProblemFormat format) {
         int owner = SessionHelper.get().getUid();
-        JSONArray moderator = new JSONArray();
 
         checkProblemFormat(format);
 
-        if (!problemService.addProblem(owner,
-                format.getCodeLanguage(),
+        int pid = problemService.addProblem(owner, format.getCodeLanguage(),
                 format.getTitle(),
                 format.getDescription(),
                 format.getDifficult(),
@@ -62,21 +60,22 @@ public class UserProblemController {
                 format.getOutputFormat(),
                 format.getConstraint(),
                 format.getSample(),
-                moderator,
+                format.getModerator(),
                 format.getTag(),
                 format.getShare(),
-                System.currentTimeMillis())) {
+                System.currentTimeMillis());
+
+        if (pid == 0) {
             throw new RuntimeException("添加题目失败");
         }
 
-        return new ResponseEntity("题目添加成功");
+        return new ResponseEntity("题目添加成功", pid);
     }
 
     @ApiOperation("更新题目")
     @PutMapping("/{pid}")
     public ResponseEntity updateProblem(@PathVariable("pid") int pid,
                                         @RequestBody @Valid AddProblemFormat format) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         if (problemEntity == null) {
             throw new RuntimeException("题目不存在");
@@ -94,7 +93,7 @@ public class UserProblemController {
         // 更新数据
         if (!problemService.updateProblemByPid(pid, format.getCodeLanguage(), format.getTitle(),
                 format.getDescription(), format.getDifficult(), format.getInputFormat(), format.getOutputFormat(),
-                format.getConstraint(), format.getSample(), format.getTag(), format.getShare())) {
+                format.getConstraint(), format.getSample(), format.getModerator(), format.getTag(), format.getShare())) {
             throw new RuntimeException("题目更新失败");
         }
 
@@ -123,10 +122,10 @@ public class UserProblemController {
             throw new RuntimeException("标签不得为空");
     }
 
+
     @ApiOperation("获取题目和他所有的测试用例")
     @GetMapping("/{pid}")
     public ResponseEntity getProblem(@PathVariable("pid") int pid) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
 
         if (problemEntity == null)
@@ -144,7 +143,6 @@ public class UserProblemController {
     public ResponseEntity addProblemTestCase(
             @PathVariable("pid") int pid,
             @RequestBody @Valid AddProblemTestCaseFormat format) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         if (problemEntity == null) {
             throw new RuntimeException("此题目不存在");
@@ -156,19 +154,19 @@ public class UserProblemController {
             throw new UnauthorizedException();
 
         // 添加test_case
-        if (!testCaseService.addTestCase(pid, format.getStdin(),
-                format.getStdout(), format.getStrength())) {
+        int tid = testCaseService.addTestCase(pid, format.getStdin(), format.getStdout(), format.getStrength());
+
+        if (tid == 0) {
             throw new RuntimeException("添加失败");
         }
 
-        return new ResponseEntity("添加成功");
+        return new ResponseEntity("添加成功", tid);
     }
 
     @ApiOperation("删除指定的test_case")
-    @DeleteMapping("/{pid}/tid/{tid}")
+    @DeleteMapping("/{pid}/test_case/{tid}")
     public ResponseEntity deleteProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         if (problemEntity==null) {
             throw new RuntimeException("题目不存在");
@@ -189,11 +187,10 @@ public class UserProblemController {
     }
 
     @ApiOperation("更新指定的test_case")
-    @PutMapping("/{pid}/tid/{tid}")
+    @PutMapping("/{pid}/test_case/{tid}")
     public ResponseEntity updateProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         if (problemEntity==null) {
             throw new RuntimeException("题目不存在");

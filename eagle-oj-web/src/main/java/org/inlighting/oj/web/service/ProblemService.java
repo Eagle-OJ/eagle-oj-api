@@ -37,7 +37,7 @@ public class ProblemService {
     /**
      * 同时添加problem 和 problem_info
      */
-    public boolean addProblem(int owner, JSONArray codeLanguage, String title,
+    public int addProblem(int owner, JSONArray codeLanguage, String title,
                               String description, int difficult, String inputFormat,
                               String outputFormat, String constraint, JSONArray sample,
                               JSONArray moderator, JSONArray tag, int share,long createTime) {
@@ -70,23 +70,25 @@ public class ProblemService {
         }
         sqlSession.commit();
         sqlSession.close();
-        return result1 && result2;
+        return (result1 && result2) ? pid : 0;
     }
 
     public ProblemEntity getProblemByPid(int pid) {
         // 通过ID获得题目
         SqlSession sqlSession = DataHelper.getSession();
+        ProblemEntity entity = problemDao.getProblemByPid(sqlSession, pid);
         sqlSession.close();
-        return problemDao.getProblemByPid(sqlSession, pid);
+        return entity;
     }
 
     public boolean updateProblemByPid(int pid, JSONArray codeLanguage, String title,
                                      String description, int difficult, String inputFormat,
                                      String outputFormat, String constraint, JSONArray sample,
-                                     JSONArray tag, int share) {
+                                     JSONArray moderator, JSONArray tag, int share) {
         //通过pid来更新题目
-        SqlSession sqlSession = DataHelper.getSession(true);
+        SqlSession sqlSession = DataHelper.getSession();
         ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
         problemEntity.setCodeLanguage(codeLanguage);
         problemEntity.setTitle(title);
         problemEntity.setDescription(description);
@@ -94,11 +96,12 @@ public class ProblemService {
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);
         problemEntity.setConstraint(constraint);
+        problemEntity.setModerator(moderator);
         problemEntity.setSample(sample);
         problemEntity.setTag(tag);
         problemEntity.setShare(share);
         problemEntity.setCreateTime(System.currentTimeMillis());
-        boolean flag = problemDao.updateProblemByPid(sqlSession,problemEntity);
+        boolean flag = problemDao.updateProblemByPid(sqlSession, problemEntity);
         sqlSession.close();
         return flag;
     }

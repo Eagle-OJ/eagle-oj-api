@@ -15,7 +15,7 @@
     </insert>
 
     <select id="getProblemByPid" resultMap="problemResultMap">
-        SELECT * from `problem` WHERE pid=#{pid}
+        SELECT * from `problem` WHERE `pid` = #{pid}
     </select>
 
     <select id="getAllProblem" resultMap="problemResultMap">
@@ -23,7 +23,7 @@
     </select>
 
     <update id="updateProblemByPid" parameterType="ProblemEntity">
-        UPDATE `problem` SET  `owner` = #{owner},`code_language` =#{codeLanguage},
+        UPDATE `problem` SET `code_language` =#{codeLanguage},
             `title`  = #{title},`description` = #{description},`difficult` = #{difficult},
             `input_format` = #{inputFormat},`output_format` = #{outputFormat},`constraint` = #{constraint},
             `sample` = #{sample},`moderator` = #{moderator},`tag` = #{tag},`share` = #{share},`create_time` = #{createTime}
