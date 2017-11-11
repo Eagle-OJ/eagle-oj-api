@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author = ygj
@@ -30,7 +29,7 @@ public class TestCaseServiceTest {
     @Before
     public void setUp() {
         currentTid = testCaseService.addTestCase(pid, "stdin", "stdout", 3);
-        Assert.assertEquals(currentTid > 0, true);
+        Assert.assertEquals(true, currentTid > 0);
     }
 
     @After
