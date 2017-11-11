@@ -1,0 +1,452 @@
+{
+	"info": {
+		"name": "eagle-oj",
+		"_postman_id": "75c4b0c5-05ff-64dd-55af-d065d7b3a808",
+		"description": "eagle-oj-web-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"description": "",
+			"item": [
+				{
+					"name": "problem",
+					"description": "",
+					"item": [
+						{
+							"name": "add_problem",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"title\": \"A+B problem\",\n\t\"code_language\": [1,3,4],\n\t\"description\": \"这是一道很简单的题目让你们练练手\",\n\t\"difficult\": 1,\n\t\"input_format\": \"不用输入\",\n\t\"output_format\": \"\",\n\t\"constraint\": \"\",\n\t\"sample\": [{\n\t\t\"input\": \"123\",\n\t\t\"output\": \"xxx\"\n\t}, {\n\t\t\"input\": \"11\",\n\t\t\"output\": \"xxx123123\"\n\t}],\n\t\"moderator\": [],\n\t\"tag\": [1,3,4,5],\n\t\"share\": 1\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/problem",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"problem"
+									],
+									"query": [
+										{
+											"key": "code_language",
+											"value": "1,2,3",
+											"equals": true,
+											"disabled": true
+										},
+										{
+											"key": "test",
+											"value": "{\"a\":1, \"b\":2}",
+											"equals": true,
+											"disabled": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "update_problem",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"title\": \"A+B problem updated\",\n\t\"code_language\": [1,3,4],\n\t\"description\": \"这是一道很简单的题目让你们练练手\",\n\t\"difficult\": 0,\n\t\"input_format\": \"不用输入\",\n\t\"output_format\": \"\",\n\t\"constraint\": \"\",\n\t\"sample\": [{\n\t\t\"input\": \"123\",\n\t\t\"output\": \"xxx\"\n\t}, {\n\t\t\"input\": \"11\",\n\t\t\"output\": \"xxx123123\"\n\t}],\n\t\"moderator\": [1,2,3],\n\t\"tag\": [1,3,4,5],\n\t\"share\": 1\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/problem/15",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"problem",
+										"15"
+									],
+									"query": [
+										{
+											"key": "code_language",
+											"value": "1,2,3",
+											"equals": true,
+											"disabled": true
+										},
+										{
+											"key": "test",
+											"value": "{\"a\":1, \"b\":2}",
+											"equals": true,
+											"disabled": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "get_problem",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"title\": \"A+B problem updated\",\n\t\"code_language\": [1,3,4],\n\t\"description\": \"这是一道很简单的题目让你们练练手\",\n\t\"difficult\": 0,\n\t\"input_format\": \"不用输入\",\n\t\"output_format\": \"\",\n\t\"constraint\": \"\",\n\t\"sample\": [{\n\t\t\"input\": \"123\",\n\t\t\"output\": \"xxx\"\n\t}, {\n\t\t\"input\": \"11\",\n\t\t\"output\": \"xxx123123\"\n\t}],\n\t\"moderator\": [1,2,3],\n\t\"tag\": [1,3,4,5],\n\t\"share\": 1\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/problem/15",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"problem",
+										"15"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "add_test_case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"stdin\": \"stdin\",\n\t\"stdout\": \"stdout\",\n\t\"strength\": 5\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/problem/15/test_case",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"problem",
+										"15",
+										"test_case"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "update_test_case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"stdin\": \"stdin\",\n\t\"stdout\": \"stdout\",\n\t\"strength\": 3\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/problem/15/test_case/10",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"problem",
+										"15",
+										"test_case",
+										"10"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "delete_test_case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"stdin\": \"stdin123\",\n\t\"stdout\": \"stdout123\",\n\t\"strength\": 3\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/problem/15/test_case/10",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"problem",
+										"15",
+										"test_case",
+										"10"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test@test.com\",\n\t\"nickname\": \"I am tester\",\n\t\"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/404",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"404"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=utf-8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test@test.com\",\n\t\"password\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -26,7 +26,7 @@ public class AddProblemFormat {
     @NotNull
     private String description;
 
-    @Range(min = 1, max = 4)
+    @Range(min = 0, max = 3)
     @NotNull
     private int difficult;
 
@@ -40,15 +40,20 @@ public class AddProblemFormat {
     @NotNull
     private String outputFormat;
 
-    @Length(max = 100)
+    @Length(max = 200)
     @NotNull
     private String constraint;
 
+    @NotNull
     private JSONArray sample;
 
+    @NotNull
+    private JSONArray moderator;
+
+    @NotNull
     private JSONArray tag;
 
-    @Range(min = 1, max = 3)
+    @Range(min = 0, max = 2)
     private int share;
 
     public JSONArray getCodeLanguage() {
@@ -129,5 +134,13 @@ public class AddProblemFormat {
 
     public void setShare(int share) {
         this.share = share;
+    }
+
+    public JSONArray getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(JSONArray moderator) {
+        this.moderator = moderator;
     }
 }

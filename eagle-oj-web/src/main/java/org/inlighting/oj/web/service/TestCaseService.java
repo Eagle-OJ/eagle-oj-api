@@ -23,7 +23,7 @@ public class TestCaseService {
         this.testCaseDao = testCaseDao;
     }
 
-    public boolean addTestCase(int pid, String stdin, String stdout, int strength) {
+    public int addTestCase(int pid, String stdin, String stdout, int strength) {
         // 添加一个TestCase
         SqlSession sqlSession = DataHelper.getSession();
         TestCaseEntity testCaseEntity = new TestCaseEntity();
@@ -34,7 +34,7 @@ public class TestCaseService {
         testCaseEntity.setCreateTime(System.currentTimeMillis());
         boolean flag = testCaseDao.addTestCase(sqlSession,testCaseEntity);
         sqlSession.close();
-        return flag;
+        return flag ? testCaseEntity.getTid() : 0;
     }
 
     public int getTestCaseCountByPid(int pid) {
@@ -47,23 +47,17 @@ public class TestCaseService {
     public List<TestCaseEntity> getAllTestCasesByPid(int pid){
         //通过pid来查询所有的TestCase
         SqlSession sqlSession = DataHelper.getSession();
-        List<TestCaseEntity> list = (List<TestCaseEntity>) testCaseDao.getAllTestCasesByPid(sqlSession,pid);
+        List<TestCaseEntity> list = testCaseDao.getAllTestCasesByPid(sqlSession,pid);
         sqlSession.close();
         return list;
     }
 
-<<<<<<< HEAD
-    public boolean updateTestCaseByTid(int tid, String stdin, String stdout, int strength) {
-        // todo
-        return false;
-=======
     public boolean updateTestCaseByTid(int tid,String stdin, String stdout, int strength) {
         //通过TestCase的ID来修改TestCase
         SqlSession sqlSession = DataHelper.getSession();
         boolean flag = testCaseDao.updateTestCaseByTid(sqlSession,new TestCaseEntity(tid,stdin,stdout,strength));
         sqlSession.close();
         return flag;
->>>>>>> 9defd169d65f4962c219148fb1218c11fbee0a5b
     }
 
     public boolean deleteTestCaseByTid(int tid) {

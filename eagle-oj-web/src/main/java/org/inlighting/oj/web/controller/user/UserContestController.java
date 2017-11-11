@@ -63,12 +63,13 @@ public class UserContestController {
             }
         }
 
-        if (! contestService.addContest(format.getName(), owner, moderator,format.getSlogan(),
+        int cid = contestService.addContest(format.getName(), owner, moderator,format.getSlogan(),
                 format.getDescription(), format.getStartTime(), format.getEndTime(),
-                format.getTotalTime(), format.getPassword(), official, format.getType(), currentTime)) {
+                format.getTotalTime(), format.getPassword(), official, format.getType(), currentTime);
+        if (cid == 0) {
             throw new RuntimeException("比赛创建失败");
         }
-        return new ResponseEntity("比赛创建成功");
+        return new ResponseEntity("比赛创建成功", cid);
     }
 
     @ApiOperation("参加比赛")

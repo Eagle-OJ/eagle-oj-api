@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContestService {
 
-    public boolean addContest(String name, int owner, JSONArray moderator, String slogan, String description,
+    public int addContest(String name, int owner, JSONArray moderator, String slogan, String description,
                               long startTime, long endTime, long totalTime, String password, int official,
                               int type, long createTime) {
         // todo
-        return false;
+        return 0;
     }
 
     public ContestEntity getContestByCid(int cid) {

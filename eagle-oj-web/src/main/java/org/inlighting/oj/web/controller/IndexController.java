@@ -40,14 +40,14 @@ public class IndexController {
     @ApiOperation("用户注册")
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
-        if (userService.addUser(format.getEmail(),
+        int uid = userService.addUser(format.getEmail(),
                 format.getNickname(),
                 new Md5Hash(format.getPassword()).toString(),
-                System.currentTimeMillis())) {
-            return new ResponseEntity("注册成功");
-        } else {
+                System.currentTimeMillis());
+        if (uid == 0) {
             throw new RuntimeException("注册失败");
         }
+        return new ResponseEntity("注册成功", uid);
     }
 
     @ApiOperation("用户登入")

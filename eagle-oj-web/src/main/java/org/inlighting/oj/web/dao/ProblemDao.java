@@ -28,8 +28,7 @@ public class ProblemDao {
 
     public List<ProblemEntity> getAll(PageRowBounds bounds) {
         SqlSession session = DataHelper.getSession();
-        List<ProblemEntity> list = session.selectList("problem.getAllProblem", null, bounds);
-        return list;
+        return session.selectList("problem.getAllProblem", null, bounds);
     }
 
 
@@ -44,19 +43,14 @@ public class ProblemDao {
         }
     }
 
-    public ProblemEntity getProblemByPid(SqlSession sqlSession,int pid) {
+    public ProblemEntity getProblemByPid(SqlSession sqlSession, int pid) {
         // 根据ID查找题目
-        ProblemEntity problemEntity =  sqlSession.selectOne("problem.getProblemByPid",pid);
-        return problemEntity;
+        return sqlSession.selectOne("problem.getProblemByPid", pid);
     }
 
     public boolean updateProblemByPid(SqlSession sqlSession, ProblemEntity entity) {
-        int updateNum = sqlSession.update("problem.updateProblemByPid",entity);
-        if(updateNum == 1)
-            return true;
-        else {
-            return false;
-        }
+        int updateNum = sqlSession.update("problem.updateProblemByPid", entity);
+        return updateNum == 1;
     }
 
 }
