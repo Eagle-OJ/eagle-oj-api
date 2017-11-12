@@ -3,7 +3,6 @@ package org.inlighting.oj.web.dao;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.inlighting.oj.web.data.DataHelper;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
