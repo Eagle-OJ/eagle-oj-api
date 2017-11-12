@@ -1,7 +1,9 @@
 package org.inlighting.oj.web.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.controller.format.user.AddContestProblemFormat;
 import org.inlighting.oj.web.controller.format.user.CreateContestFormat;
 import org.inlighting.oj.web.controller.format.user.EnterContestFormat;
 import org.inlighting.oj.web.entity.ContestEntity;
@@ -10,12 +12,15 @@ import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ContestService;
 import org.inlighting.oj.web.service.ContestUserInfoService;
+import org.inlighting.oj.web.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Smith
@@ -25,9 +30,16 @@ import javax.validation.Valid;
 @RequestMapping(value = "/user/contest", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class UserContestController {
 
+    private ProblemService problemService;
+
     private ContestService contestService;
 
     private ContestUserInfoService contestUserInfoService;
+
+    @Autowired
+    public void setProblemService(ProblemService problemService) {
+        this.problemService = problemService;
+    }
 
     @Autowired
     public void setContestService(ContestService contestService) {
@@ -101,5 +113,34 @@ public class UserContestController {
             throw new RuntimeException("加入比赛失败");
         }
         return new ResponseEntity("加入比赛成功");
+    }
+
+    @ApiOperation("向比赛添加题目")
+    @PostMapping("/{cid}/problem")
+    public ResponseEntity addContestProblem(@PathVariable("cid") int cid,
+                                            @RequestBody @Valid AddContestProblemFormat format) {
+        // todo
+        // 校验数据
+        JSONArray problems = format.getProblems();
+        if (problems.size() ==0) {
+            throw new RuntimeException("数据非法");
+        }
+
+        int uid = SessionHelper.get().getUid();
+
+        // 校验自己是否为比赛拥有者
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        if (contestEntity.getOwner() != uid) {
+            throw new RuntimeException("非法操作");
+        }
+
+        List<Integer> problemList = new ArrayList<>(10);
+        for (int i=0; i<problems.size(); i++) {
+            problemList.add(problems.getInteger(i));
+        }
+        if (! problemService.addContestProblem(problemList, cid)) {
+            throw new RuntimeException("题目添加失败");
+        }
+        return new ResponseEntity("题目添加成功");
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author ygj
  **/
@@ -72,6 +74,16 @@ public class ProblemService {
             result2 = problemInfoDao.add(sqlSession, entity);
         }
         return (result1 && result2) ? pid : 0;
+    }
+
+    /**
+     * 添加problem和contest之间的关系
+     * 开启事务
+     */
+    @Transactional
+    public boolean addContestProblem(List<Integer> problemList, int belong) {
+        // todo
+        return false;
     }
 
     public ProblemEntity getProblemByPid(int pid) {
