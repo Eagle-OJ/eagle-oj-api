@@ -13,8 +13,6 @@ public class ContestEntity {
 
     private int owner;
 
-    private JSONArray moderator;
-
     private String slogan;
 
     private String description;
@@ -59,14 +57,6 @@ public class ContestEntity {
 
     public void setOwner(int owner) {
         this.owner = owner;
-    }
-
-    public JSONArray getModerator() {
-        return moderator;
-    }
-
-    public void setModerator(JSONArray moderator) {
-        this.moderator = moderator;
     }
 
     public String getSlogan() {

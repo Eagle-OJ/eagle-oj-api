@@ -20,7 +20,7 @@ public class AddProblemTestCaseFormat {
 
     @NotNull
     @Range(min = 1, max = 10)
-    private int strength;
+    private Integer strength;
 
     public String getStdin() {
         return stdin;
@@ -38,11 +38,11 @@ public class AddProblemTestCaseFormat {
         this.stdout = stdout;
     }
 
-    public int getStrength() {
+    public Integer getStrength() {
         return strength;
     }
 
-    public void setStrength(int strength) {
+    public void setStrength(Integer strength) {
         this.strength = strength;
     }
 }

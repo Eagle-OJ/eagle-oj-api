@@ -13,10 +13,7 @@ import org.inlighting.oj.web.service.ContestUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -45,9 +42,7 @@ public class UserContestController {
     @ApiOperation("创建比赛")
     @PostMapping
     public ResponseEntity createContest(@RequestBody @Valid CreateContestFormat format) {
-        // todo
         int owner = SessionHelper.get().getUid();
-        JSONArray moderator = new JSONArray();
         int official = 0;
 
         long currentTime = System.currentTimeMillis();
@@ -57,7 +52,7 @@ public class UserContestController {
         }
 
         // endTime为0代表永远不结束
-        if (format.getEndTime()!=0 || format.getStartTime() >= format.getEndTime()) {
+        if (format.getEndTime()!=0 && format.getStartTime() >= format.getEndTime()) {
             throw new RuntimeException("非法结束时间");
         }
 
@@ -72,7 +67,7 @@ public class UserContestController {
             }
         }
 
-        int cid = contestService.addContest(format.getName(), owner, moderator,format.getSlogan(),
+        int cid = contestService.addContest(format.getName(), owner,format.getSlogan(),
                 format.getDescription(), format.getStartTime(), format.getEndTime(),
                 format.getTotalTime(), format.getPassword(), official, format.getType(), currentTime);
         if (cid == 0) {
@@ -82,12 +77,11 @@ public class UserContestController {
     }
 
     @ApiOperation("参加比赛")
-    @PostMapping("/enter")
-    public ResponseEntity enterContest(@RequestBody @Valid EnterContestFormat format) {
-        // todo
+    @PostMapping("/{cid}/enter")
+    public ResponseEntity enterContest(@PathVariable("cid") int cid,
+                                       @RequestBody @Valid EnterContestFormat format) {
         // 判断是否已经加入比赛
         int uid = SessionHelper.get().getUid();
-        int cid = format.getCid();
         ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
         if (contestUserInfoEntity != null) {
             throw new RuntimeException("你已经加入比赛了");
@@ -103,7 +97,7 @@ public class UserContestController {
         }
 
         // 加入比赛
-        if (! contestUserInfoService.add(cid, uid)) {
+        if (! contestUserInfoService.add(cid, uid, System.currentTimeMillis())) {
             throw new RuntimeException("加入比赛失败");
         }
         return new ResponseEntity("加入比赛成功");

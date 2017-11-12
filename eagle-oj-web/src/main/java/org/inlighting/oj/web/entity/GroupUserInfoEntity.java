@@ -5,8 +5,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * @author Smith
  **/
-public class ContestUserInfoEntity {
-    private int cid;
+public class GroupUserInfoEntity {
+
+    private int gid;
 
     private int uid;
 
@@ -21,12 +22,12 @@ public class ContestUserInfoEntity {
     @JSONField(name = "join_time")
     private long joinTime;
 
-    public int getCid() {
-        return cid;
+    public int getGid() {
+        return gid;
     }
 
-    public void setCid(int cid) {
-        this.cid = cid;
+    public void setGid(int gid) {
+        this.gid = gid;
     }
 
     public int getUid() {

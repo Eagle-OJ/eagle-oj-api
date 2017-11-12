@@ -28,7 +28,7 @@ public class AddProblemFormat {
 
     @Range(min = 0, max = 3)
     @NotNull
-    private int difficult;
+    private Integer difficult;
 
     @JSONField(name = "input_format")
     @Length(max = 200)
@@ -54,15 +54,7 @@ public class AddProblemFormat {
     private JSONArray tag;
 
     @Range(min = 0, max = 2)
-    private int share;
-
-    public JSONArray getCodeLanguage() {
-        return codeLanguage;
-    }
-
-    public void setCodeLanguage(JSONArray codeLanguage) {
-        this.codeLanguage = codeLanguage;
-    }
+    private Integer share;
 
     public String getTitle() {
         return title;
@@ -70,6 +62,14 @@ public class AddProblemFormat {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public JSONArray getCodeLanguage() {
+        return codeLanguage;
+    }
+
+    public void setCodeLanguage(JSONArray codeLanguage) {
+        this.codeLanguage = codeLanguage;
     }
 
     public String getDescription() {
@@ -80,11 +80,11 @@ public class AddProblemFormat {
         this.description = description;
     }
 
-    public int getDifficult() {
+    public Integer getDifficult() {
         return difficult;
     }
 
-    public void setDifficult(int difficult) {
+    public void setDifficult(Integer difficult) {
         this.difficult = difficult;
     }
 
@@ -120,6 +120,14 @@ public class AddProblemFormat {
         this.sample = sample;
     }
 
+    public JSONArray getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(JSONArray moderator) {
+        this.moderator = moderator;
+    }
+
     public JSONArray getTag() {
         return tag;
     }
@@ -128,19 +136,11 @@ public class AddProblemFormat {
         this.tag = tag;
     }
 
-    public int getShare() {
+    public Integer getShare() {
         return share;
     }
 
-    public void setShare(int share) {
+    public void setShare(Integer share) {
         this.share = share;
-    }
-
-    public JSONArray getModerator() {
-        return moderator;
-    }
-
-    public void setModerator(JSONArray moderator) {
-        this.moderator = moderator;
     }
 }

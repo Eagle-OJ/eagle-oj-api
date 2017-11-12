@@ -4,9 +4,9 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="contest">
         <insert id="addContest" parameterType="ContestEntity" useGeneratedKeys="true" keyProperty="cid">
-            INSERT INTO `contest`(`name`,`owner`,`moderator`,`slogan`,`description`,`start_time`,
+            INSERT INTO `contest`(`name`,`owner`,`slogan`,`description`,`start_time`,
             `end_time`,`total_time`,`password`,`official`,`type`,`create_time`)
-            VALUES (#{name},#{owner},#{moderator},#{slogan},#{description},#{startTime},
+            VALUES (#{name},#{owner},#{slogan},#{description},#{startTime},
             #{endTime},#{totalTime},#{password},#{official},#{type},#{createTime})
         </insert>
 

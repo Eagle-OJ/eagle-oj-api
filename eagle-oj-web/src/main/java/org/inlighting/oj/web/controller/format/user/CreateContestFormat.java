@@ -26,22 +26,22 @@ public class CreateContestFormat {
 
     @JSONField(name = "start_time")
     @NotNull
-    private long startTime;
+    private Long startTime;
 
     @JSONField(name = "end_time")
     @NotNull
-    private long endTime;
+    private Long endTime;
 
     @JSONField(name = "total_time")
     @NotNull
-    private long totalTime;
+    private Long totalTime;
 
     @Length(max = 6)
     private String password;
 
     @NotNull
     @Range(max = 4)
-    private int type;
+    private Integer type;
 
     public String getName() {
         return name;
@@ -67,27 +67,27 @@ public class CreateContestFormat {
         this.description = description;
     }
 
-    public long getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
-    public long getTotalTime() {
+    public Long getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(long totalTime) {
+    public void setTotalTime(Long totalTime) {
         this.totalTime = totalTime;
     }
 
@@ -99,11 +99,11 @@ public class CreateContestFormat {
         this.password = password;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 }

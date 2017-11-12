@@ -1,4 +1,4 @@
-package org.inlighting.oj.web.controller;
+package org.inlighting.oj.web.controller.exception;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.log4j.LogManager;

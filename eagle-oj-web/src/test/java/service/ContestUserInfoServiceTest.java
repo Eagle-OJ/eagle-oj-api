@@ -27,7 +27,7 @@ public class ContestUserInfoServiceTest {
     public void addTest(){
         int cid = 1;
         int uid = 12;
-        boolean flag = contestUserInfoService.add(cid,uid);
+        boolean flag = contestUserInfoService.add(cid,uid, System.currentTimeMillis());
         Assert.assertEquals(true,flag);
     }
 
