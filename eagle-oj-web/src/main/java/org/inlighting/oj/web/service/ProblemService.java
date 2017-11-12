@@ -4,15 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ProblemDao;
 import org.inlighting.oj.web.dao.ProblemInfoDao;
-import org.inlighting.oj.web.data.DataHelper;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.inlighting.oj.web.entity.ProblemInfoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ygj
@@ -20,9 +16,15 @@ import java.util.List;
 @Service
 public class ProblemService {
 
+    private final SqlSession sqlSession;
+
     private ProblemDao problemDao;
 
     private ProblemInfoDao problemInfoDao;
+
+    public ProblemService(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+    }
 
     @Autowired
     public void setProblemDao(ProblemDao problemDao) {
@@ -34,15 +36,16 @@ public class ProblemService {
         this.problemInfoDao = problemInfoDao;
     }
 
+
     /**
      * 同时添加problem 和 problem_info
      */
+    @Transactional
     public int addProblem(int owner, JSONArray codeLanguage, String title,
                               String description, int difficult, String inputFormat,
                               String outputFormat, String constraint, JSONArray sample,
                               JSONArray moderator, JSONArray tag, int share,long createTime) {
         // 添加题目
-        SqlSession sqlSession = DataHelper.getSession(true);
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
         problemEntity.setCodeLanguage(codeLanguage);
@@ -68,17 +71,12 @@ public class ProblemService {
             entity.setBelong(0);
             result2 = problemInfoDao.add(sqlSession, entity);
         }
-        sqlSession.commit();
-        sqlSession.close();
         return (result1 && result2) ? pid : 0;
     }
 
     public ProblemEntity getProblemByPid(int pid) {
         // 通过ID获得题目
-        SqlSession sqlSession = DataHelper.getSession();
-        ProblemEntity entity = problemDao.getProblemByPid(sqlSession, pid);
-        sqlSession.close();
-        return entity;
+        return problemDao.getProblemByPid(sqlSession, pid);
     }
 
     public boolean updateProblemByPid(int pid, JSONArray codeLanguage, String title,
@@ -86,7 +84,6 @@ public class ProblemService {
                                      String outputFormat, String constraint, JSONArray sample,
                                      JSONArray moderator, JSONArray tag, int share) {
         //通过pid来更新题目
-        SqlSession sqlSession = DataHelper.getSession();
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setPid(pid);
         problemEntity.setCodeLanguage(codeLanguage);
@@ -101,9 +98,7 @@ public class ProblemService {
         problemEntity.setTag(tag);
         problemEntity.setShare(share);
         problemEntity.setCreateTime(System.currentTimeMillis());
-        boolean flag = problemDao.updateProblemByPid(sqlSession, problemEntity);
-        sqlSession.close();
-        return flag;
+        return problemDao.updateProblemByPid(sqlSession, problemEntity);
     }
 
 }

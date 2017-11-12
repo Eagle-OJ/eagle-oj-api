@@ -1,9 +1,7 @@
 package org.inlighting.oj.web.service;
 
-import junit.framework.TestCase;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.TestCaseDao;
-import org.inlighting.oj.web.data.DataHelper;
 import org.inlighting.oj.web.entity.TestCaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,13 @@ import java.util.List;
 @Service
 public class TestCaseService {
 
+    private final SqlSession sqlSession;
+
     private TestCaseDao testCaseDao;
+
+    public TestCaseService(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+    }
 
     @Autowired
     public void setTestCaseDao(TestCaseDao testCaseDao) {
@@ -25,7 +29,6 @@ public class TestCaseService {
 
     public int addTestCase(int pid, String stdin, String stdout, int strength) {
         // 添加一个TestCase
-        SqlSession sqlSession = DataHelper.getSession();
         TestCaseEntity testCaseEntity = new TestCaseEntity();
         testCaseEntity.setPid(pid);
         testCaseEntity.setStdin(stdin);
@@ -33,39 +36,25 @@ public class TestCaseService {
         testCaseEntity.setStrength(strength);
         testCaseEntity.setCreateTime(System.currentTimeMillis());
         boolean flag = testCaseDao.addTestCase(sqlSession,testCaseEntity);
-        sqlSession.close();
         return flag ? testCaseEntity.getTid() : 0;
     }
 
     public int getTestCaseCountByPid(int pid) {
-        SqlSession sqlSession = DataHelper.getSession();
-        int updateNum = testCaseDao.getTestCaseCountByPid(sqlSession,pid);
-        sqlSession.close();
-        return updateNum ;
+        return testCaseDao.getTestCaseCountByPid(sqlSession,pid);
     }
 
     public List<TestCaseEntity> getAllTestCasesByPid(int pid){
         //通过pid来查询所有的TestCase
-        SqlSession sqlSession = DataHelper.getSession();
-        List<TestCaseEntity> list = testCaseDao.getAllTestCasesByPid(sqlSession,pid);
-        sqlSession.close();
-        return list;
+        return testCaseDao.getAllTestCasesByPid(sqlSession,pid);
     }
 
     public boolean updateTestCaseByTid(int tid,String stdin, String stdout, int strength) {
         //通过TestCase的ID来修改TestCase
-        SqlSession sqlSession = DataHelper.getSession();
-        boolean flag = testCaseDao.updateTestCaseByTid(sqlSession,new TestCaseEntity(tid,stdin,stdout,strength));
-        sqlSession.close();
-        return flag;
+        return testCaseDao.updateTestCaseByTid(sqlSession,new TestCaseEntity(tid,stdin,stdout,strength));
     }
 
     public boolean deleteTestCaseByTid(int tid) {
-
         //通过TestCase的ID删除TestCase
-        SqlSession sqlSession = DataHelper.getSession();
-        boolean flag  = testCaseDao.deleteOneTestCaseByTid(sqlSession,tid);
-        sqlSession.close();
-        return flag;
+        return testCaseDao.deleteOneTestCaseByTid(sqlSession,tid);
     }
 }

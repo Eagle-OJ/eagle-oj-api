@@ -6,9 +6,18 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class GroupUserInfoEntity {
+
     private int gid;
 
     private int uid;
+
+    private int score;
+
+    @JSONField(name = "submit_times")
+    private int submitTimes;
+
+    @JSONField(name = "accept_times")
+    private int acceptTimes;
 
     @JSONField(name = "join_time")
     private long joinTime;
@@ -27,6 +36,30 @@ public class GroupUserInfoEntity {
 
     public void setUid(int uid) {
         this.uid = uid;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getSubmitTimes() {
+        return submitTimes;
+    }
+
+    public void setSubmitTimes(int submitTimes) {
+        this.submitTimes = submitTimes;
+    }
+
+    public int getAcceptTimes() {
+        return acceptTimes;
+    }
+
+    public void setAcceptTimes(int acceptTimes) {
+        this.acceptTimes = acceptTimes;
     }
 
     public long getJoinTime() {

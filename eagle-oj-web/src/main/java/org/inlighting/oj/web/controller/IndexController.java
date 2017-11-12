@@ -40,6 +40,13 @@ public class IndexController {
     @ApiOperation("用户注册")
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
+        // 检查用户是否存在
+        UserEntity userEntity = userService.getUserByEmail(format.getEmail());
+        if (userEntity != null) {
+            throw new RuntimeException("用户已经注册");
+        }
+
+        // 注册用户
         int uid = userService.addUser(format.getEmail(),
                 format.getNickname(),
                 new Md5Hash(format.getPassword()).toString(),

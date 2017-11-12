@@ -5,6 +5,7 @@ import org.inlighting.oj.web.controller.format.user.CreateGroupFormat;
 import org.inlighting.oj.web.controller.format.user.EnterGroupFormat;
 import org.inlighting.oj.web.entity.GroupEntity;
 import org.inlighting.oj.web.entity.GroupUserInfoEntity;
+import org.inlighting.oj.web.entity.ProblemEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.GroupService;
@@ -82,5 +83,25 @@ public class UserGroupController {
         }
 
         return new ResponseEntity("小组加入成功");
+    }
+
+    @ApiOperation("踢出用户")
+    @PostMapping("/{gid}/user/{uid}/kick")
+    public ResponseEntity kickUser(@PathVariable int gid,
+                                   @PathVariable int uid) {
+        // todo
+        int owner = SessionHelper.get().getUid();
+
+        // 检验自己是否为小组长
+        GroupEntity groupEntity = groupService.getByGid(gid);
+        if (groupEntity.getOwner() != owner) {
+            throw new RuntimeException("你没有管理权限");
+        }
+
+        // 删除用户
+        if (! groupUserInfoService.deleteByGidAndUid(gid, uid)) {
+            throw new RuntimeException("删除用户失败");
+        }
+        return new ResponseEntity("用户删除成功");
     }
 }
