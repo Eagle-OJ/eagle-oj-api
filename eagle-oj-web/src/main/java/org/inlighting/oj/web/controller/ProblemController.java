@@ -28,7 +28,6 @@ public class ProblemController {
 
     @GetMapping("/{pid}")
     public ResponseEntity get(@PathVariable int pid) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         if (problemEntity == null) {
             throw new RuntimeException("此题不存在");

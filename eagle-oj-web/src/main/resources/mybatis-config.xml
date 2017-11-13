@@ -9,6 +9,12 @@
     </typeAliases>
 
     <typeHandlers>
+        <typeHandler handler="org.inlighting.oj.web.data.ProblemStatusTypeHandler"
+                     javaType="org.inlighting.oj.judge.config.ProblemStatusEnum" jdbcType="VARCHAR"/>
+
+        <typeHandler handler="org.inlighting.oj.web.data.CodeLanguageTypeHandler"
+                     javaType="org.inlighting.oj.judge.config.LanguageEnum" jdbcType="VARCHAR"/>
+
         <typeHandler handler="org.inlighting.oj.web.data.JsonArrayTypeHandler"
                      javaType="com.alibaba.fastjson.JSONArray" jdbcType="VARCHAR"/>
 
@@ -36,5 +42,6 @@
         <mapper resource="mapping/AttachmentMapper.xml"/>
         <mapper resource="mapping/GroupMapper.xml" />
         <mapper resource="mapping/GroupUserInfoMapper.xml"/>
+        <mapper resource="mapping/SubmissionMapper.xml"/>
     </mappers>
 </configuration>

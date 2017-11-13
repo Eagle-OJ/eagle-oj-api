@@ -405,6 +405,266 @@
 						}
 					],
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "group",
+					"description": "",
+					"item": [
+						{
+							"name": "add_group",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"cover\": 0,\n\t\"name\": \"我们是胜利之队\",\n\t\"password\": \"123sda\"\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/group",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"group"
+									],
+									"query": [
+										{
+											"key": "code_language",
+											"value": "1,2,3",
+											"equals": true,
+											"disabled": true
+										},
+										{
+											"key": "test",
+											"value": "{\"a\":1, \"b\":2}",
+											"equals": true,
+											"disabled": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "join_group",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"password\": \"123sda1\"\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/group/1/enter",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"group",
+										"1",
+										"enter"
+									],
+									"query": [
+										{
+											"key": "code_language",
+											"value": "1,2,3",
+											"equals": true,
+											"disabled": true
+										},
+										{
+											"key": "test",
+											"value": "{\"a\":1, \"b\":2}",
+											"equals": true,
+											"disabled": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "kick_user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "localhost:8080/user/group/1/user/14/kick",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"group",
+										"1",
+										"user",
+										"14",
+										"kick"
+									],
+									"query": [
+										{
+											"key": "code_language",
+											"value": "1,2,3",
+											"equals": true,
+											"disabled": true
+										},
+										{
+											"key": "test",
+											"value": "{\"a\":1, \"b\":2}",
+											"equals": true,
+											"disabled": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "attachment",
+					"description": "",
+					"item": [
+						{
+							"name": "upload",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json;charset=utf-8"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"url\": \"123123dse\"\n}"
+								},
+								"url": {
+									"raw": "localhost:8080/user/attachment",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"attachment"
+									],
+									"query": [
+										{
+											"key": "code_language",
+											"value": "1,2,3",
+											"equals": true,
+											"disabled": true
+										},
+										{
+											"key": "test",
+											"value": "{\"a\":1, \"b\":2}",
+											"equals": true,
+											"disabled": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
 				}
 			]
 		},
@@ -517,6 +777,45 @@
 					"port": "8080",
 					"path": [
 						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get_problem",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=utf-8"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/problem/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"problem",
+						"1"
 					]
 				},
 				"description": ""

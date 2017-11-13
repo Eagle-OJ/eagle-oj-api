@@ -33,7 +33,7 @@ public class ContestUserInfoServiceTest {
 
     @Test
     public void getTest(){
-        int cid = 1;
+        int cid = 4;
         int uid = 14;
         ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid,uid);
         Assert.assertEquals(true,contestUserInfoEntity!=null);

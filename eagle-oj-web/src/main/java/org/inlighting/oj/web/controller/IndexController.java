@@ -9,6 +9,7 @@ import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
 import org.inlighting.oj.web.controller.format.index.IndexRegisterFormat;
+import org.inlighting.oj.web.judger.Judger;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,16 @@ public class IndexController {
 
     private UserService userService;
 
+    private Judger judger;
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setJudger(Judger judger) {
+        this.judger = judger;
     }
 
     @ApiOperation("用户注册")
@@ -76,6 +84,12 @@ public class IndexController {
         authCache.put(token, userEntity.getPassword());
 
         return new ResponseEntity("登入成功", token);
+    }
+
+    @ApiOperation("编程语言配置默认文件")
+    @GetMapping("/language")
+    public ResponseEntity getLanguageConfig() {
+        return new ResponseEntity(judger.getConfiguration());
     }
 
     @RequestMapping("/401")

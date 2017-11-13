@@ -1,15 +1,17 @@
 package org.inlighting.oj.judge.bean;
 
+import org.inlighting.oj.judge.config.ProblemStatusEnum;
+
 public class StdResponseBean {
 
-    private boolean isAccept;
+    private ProblemStatusEnum problemStatusEnum;
 
     private int testCaseNumber;
 
     /**
-     * kb
+     * mb
      */
-    private int memory;
+    private double memory;
 
     /**
      * 程序耗时 单位 sec
@@ -17,36 +19,20 @@ public class StdResponseBean {
     private double realTime;
 
     /**
-     * Sandbox error
-     */
-    private String[] message;
-
-    /**
      * Compile error
      */
     private String[] stderr;
 
-    /**
-     * 返回结果，例如accepted，error之类
-     */
-    private String[] result;
+    private ProblemStatusEnum[] problemStatusEnums;
 
     private long dateline;
 
-    public String[] getResult() {
-        return result;
+    public ProblemStatusEnum getProblemStatusEnum() {
+        return problemStatusEnum;
     }
 
-    public void setResult(String[] result) {
-        this.result = result;
-    }
-
-    public boolean isAccept() {
-        return isAccept;
-    }
-
-    public void setAccept(boolean accept) {
-        isAccept = accept;
+    public void setProblemStatusEnum(ProblemStatusEnum problemStatusEnum) {
+        this.problemStatusEnum = problemStatusEnum;
     }
 
     public int getTestCaseNumber() {
@@ -57,11 +43,11 @@ public class StdResponseBean {
         this.testCaseNumber = testCaseNumber;
     }
 
-    public int getMemory() {
+    public double getMemory() {
         return memory;
     }
 
-    public void setMemory(int memory) {
+    public void setMemory(double memory) {
         this.memory = memory;
     }
 
@@ -71,14 +57,6 @@ public class StdResponseBean {
 
     public void setRealTime(double realTime) {
         this.realTime = realTime;
-    }
-
-    public String[] getMessage() {
-        return message;
-    }
-
-    public void setMessage(String[] message) {
-        this.message = message;
     }
 
     public String[] getStderr() {
@@ -97,4 +75,11 @@ public class StdResponseBean {
         this.dateline = dateline;
     }
 
+    public ProblemStatusEnum[] getProblemStatusEnums() {
+        return problemStatusEnums;
+    }
+
+    public void setProblemStatusEnums(ProblemStatusEnum[] problemStatusEnums) {
+        this.problemStatusEnums = problemStatusEnums;
+    }
 }

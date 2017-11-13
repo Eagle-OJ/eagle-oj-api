@@ -1,9 +1,8 @@
 package org.inlighting.oj.judge.bean;
 
-public class StdRequestBean {
+import org.inlighting.oj.judge.config.LanguageEnum;
 
-    @Deprecated
-    private JudgeServerEnum judgeServer;
+public class StdRequestBean {
 
     private int testCaseNumber;
 
@@ -15,19 +14,9 @@ public class StdRequestBean {
 
     private String[] expectResult = null;
 
-    private int timeLimit = 2;
+    private int timeLimit = 3;
 
-    private int memoryLimit = 128000;
-
-    @Deprecated
-    public JudgeServerEnum getJudgeServer() {
-        return judgeServer;
-    }
-
-    @Deprecated
-    public void setJudgeServer(JudgeServerEnum judgeServer) {
-        this.judgeServer = judgeServer;
-    }
+    private int memoryLimit = 128;
 
     public LanguageEnum getLanguage() {
         return language;

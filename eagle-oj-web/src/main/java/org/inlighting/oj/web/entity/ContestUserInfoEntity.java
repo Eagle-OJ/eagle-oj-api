@@ -18,6 +18,9 @@ public class ContestUserInfoEntity {
     @JSONField(name = "accept_times")
     private int acceptTimes;
 
+    @JSONField(name = "used_time")
+    private long usedTime;
+
     @JSONField(name = "join_time")
     private long joinTime;
 
@@ -67,5 +70,13 @@ public class ContestUserInfoEntity {
 
     public void setJoinTime(long joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public long getUsedTime() {
+        return usedTime;
+    }
+
+    public void setUsedTime(long usedTime) {
+        this.usedTime = usedTime;
     }
 }

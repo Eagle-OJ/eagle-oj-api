@@ -33,7 +33,6 @@ public class UserAttachmentController {
     @ApiOperation("上传附件")
     @PostMapping
     public ResponseEntity uploadAttachment(@RequestBody @Valid UploadAttachmentFormat format) {
-        // todo
         int uid = SessionHelper.get().getUid();
         int aid = attachmentService.add(uid, format.getUrl(), System.currentTimeMillis());
         if (aid == 0) {

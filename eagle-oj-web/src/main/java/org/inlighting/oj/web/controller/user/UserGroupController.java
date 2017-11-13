@@ -42,7 +42,6 @@ public class UserGroupController {
     @ApiOperation("创建小组")
     @PostMapping
     public ResponseEntity createGroup(@RequestBody @Valid CreateGroupFormat format) {
-        // todo
         int owner = SessionHelper.get().getUid();
         int gid = groupService.createGroup(owner, format.getCover(), format.getName(), format.getPassword(), System.currentTimeMillis());
 
@@ -56,7 +55,6 @@ public class UserGroupController {
     @PostMapping("/{gid}/enter")
     public ResponseEntity enterGroup(@PathVariable("gid") int gid,
                                      @RequestBody @Valid EnterGroupFormat format) {
-        // todo
         // 校对密码
         GroupEntity groupEntity = groupService.getByGid(gid);
         if (groupEntity == null) {
@@ -89,7 +87,6 @@ public class UserGroupController {
     @PostMapping("/{gid}/user/{uid}/kick")
     public ResponseEntity kickUser(@PathVariable int gid,
                                    @PathVariable int uid) {
-        // todo
         int owner = SessionHelper.get().getUid();
 
         // 检验自己是否为小组长

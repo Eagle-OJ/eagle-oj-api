@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="user">
+
     <insert id="insertUser" parameterType="UserEntity" useGeneratedKeys="true" keyProperty="uid">
         INSERT INTO `user` (`email`,`nickname`,`password`,`permission`,`register_time`)
         VALUES (#{email}, #{nickname}, #{password}, #{permission}, #{registerTime})
@@ -19,6 +20,22 @@
     <select id="selectUserByLogin" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `email` = #{email} AND `password` = #{password}
     </select>
+
+    <update id="addUserSubmitTimes">
+        UPDATE `user` SET `submit_times` = `submit_times`+1 WHERE `uid` = #{uid}
+    </update>
+
+    <update id="addUserAcceptTimes">
+        UPDATE `user` SET `accept_times` = `accept_times`+1 WHERE `uid` = #{uid}
+    </update>
+
+    <update id="addUserContestTimes">
+        UPDATE `user` SET `contest_times` = `contest_times` + 1 WHERE `uid` = #{uid}
+    </update>
+
+    <update id="addUserScore">
+        UPDATE `user` SET `score` = `score` + #{score} WHERE `uid` = #{uid}
+    </update>
 
     <resultMap id="userEntityResultMap" type="UserEntity">
         <id property="uid" column="uid"/>

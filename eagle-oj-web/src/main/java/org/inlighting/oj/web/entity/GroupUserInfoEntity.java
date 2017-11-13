@@ -69,4 +69,5 @@ public class GroupUserInfoEntity {
     public void setJoinTime(long joinTime) {
         this.joinTime = joinTime;
     }
+
 }

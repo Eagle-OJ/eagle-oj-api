@@ -74,7 +74,7 @@ class HttpUtil {
             bos.close();
             return bos.toString("utf-8");
         } catch (IOException e) {
-            LOGGER.warn("Send post request occurred in: "+URL+"?"+PARAM+" "+e.getMessage());
+            LOGGER.warn("Send post request occurred in: "+URL+"?"+PARAM+" "+e.getMessage(), e);
         } finally {
             close(pw);
         }

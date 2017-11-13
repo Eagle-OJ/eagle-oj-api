@@ -1,37 +1,37 @@
 package org.inlighting.oj.judge.request;
 
-import org.inlighting.oj.config.GlobalConfigHelper;
-
 import java.util.HashMap;
 import java.util.Map;
 
 class Judge0Api implements RequestBase {
 
-    private final String API_URL = GlobalConfigHelper.JUDGE_API_URL;
+    //private final String API_URL = GlobalConfigHelper.JUDGE_API_URL;
     // private final String API_URL = "http://localhost:3000/submissions?wait=true";
-    // private final String API_URL = "https://api.judge0.com/submissions?wait=true";
+    private final String API_URL;
 
-    private String SOURCE_CODE;
+    private final String SOURCE_CODE;
 
-    private int LANGUAGE_ID;
+    private final int LANGUAGE_ID;
 
-    private String STDIN;
+    private final String STDIN;
 
-    private String EXPECT_OUTPUT;
+    private final String EXPECT_OUTPUT;
 
     // second
-    private int TIME_LIMIT;
+    private final int TIME_LIMIT;
 
-    // kb
-    private int MEMORY_LIMIT;
+    // mb
+    private final int MEMORY_LIMIT;
 
-    Judge0Api(String sourceCode, int language, String stdin, String expectOutput, int timeLimit, int memoryLimit) {
+    Judge0Api(String apiUrl, String sourceCode,
+              int language, String stdin, String expectOutput, int timeLimit, int memoryLimit) {
+        API_URL = apiUrl;
         SOURCE_CODE = sourceCode;
         LANGUAGE_ID = language;
         STDIN = stdin;
         EXPECT_OUTPUT = expectOutput;
         TIME_LIMIT = timeLimit;
-        MEMORY_LIMIT = memoryLimit;
+        MEMORY_LIMIT = memoryLimit*1000;
     }
 
     @Override
