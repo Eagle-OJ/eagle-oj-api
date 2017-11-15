@@ -3,9 +3,9 @@ package org.inlighting.oj.web.service;
 import com.alibaba.fastjson.JSONArray;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ProblemDao;
-import org.inlighting.oj.web.dao.ProblemInfoDao;
+import org.inlighting.oj.web.dao.ProblemContestInfoDao;
 import org.inlighting.oj.web.entity.ProblemEntity;
-import org.inlighting.oj.web.entity.ProblemInfoEntity;
+import org.inlighting.oj.web.entity.ProblemContestInfoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class ProblemService {
 
     private ProblemDao problemDao;
 
-    private ProblemInfoDao problemInfoDao;
+    private ProblemContestInfoDao problemInfoDao;
 
     public ProblemService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
@@ -34,15 +34,11 @@ public class ProblemService {
     }
 
     @Autowired
-    public void setProblemInfoDao(ProblemInfoDao problemInfoDao) {
+    public void setProblemInfoDao(ProblemContestInfoDao problemInfoDao) {
         this.problemInfoDao = problemInfoDao;
     }
 
 
-    /**
-     * 同时添加problem 和 problem_info
-     */
-    @Transactional
     public int addProblem(int owner, JSONArray codeLanguage, String title,
                               String description, int difficult, String inputFormat,
                               String outputFormat, String constraint, JSONArray sample,
@@ -63,17 +59,7 @@ public class ProblemService {
         problemEntity.setShare(share);
         problemEntity.setCreateTime(createTime);
 
-        // 添加数据到problem_info
-        boolean result1 = problemDao.addProblem(sqlSession, problemEntity);
-        boolean result2 = false;
-        int pid = problemEntity.getPid();
-        if (pid > 0) {
-            ProblemInfoEntity entity = new ProblemInfoEntity();
-            entity.setPid(pid);
-            entity.setBelong(0);
-            result2 = problemInfoDao.add(sqlSession, entity);
-        }
-        return (result1 && result2) ? pid : 0;
+        return problemEntity.getPid();
     }
 
     /**
@@ -113,4 +99,11 @@ public class ProblemService {
         return problemDao.updateProblemByPid(sqlSession, problemEntity);
     }
 
+    public boolean addProblemSubmitTimes(int pid) {
+        return problemDao.addProblemSubmitTimes(sqlSession, pid);
+    }
+
+    public boolean addProblemAcceptTimes(int pid) {
+        return problemDao.addProblemAcceptTimes(sqlSession, pid);
+    }
 }

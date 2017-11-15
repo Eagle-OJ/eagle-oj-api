@@ -26,11 +26,9 @@ public class ContestDao {
         return deleteNum == 1;
     }
 
-    @Deprecated
     public boolean updateContestByCid(SqlSession sqlSession,ContestEntity contestEntity)
     {
-        int updateNum = sqlSession.update("contest.updateContestByCid",contestEntity);
-        return updateNum == 1;
+        return sqlSession.update("contest.updateContestByCid",contestEntity) == 1;
     }
 
     public ContestEntity getContestByCid(SqlSession sqlSession,int cid){

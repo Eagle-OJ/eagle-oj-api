@@ -1,12 +1,12 @@
-package org.inlighting.oj.judge.bean;
+package org.inlighting.oj.judge.config;
 
-import org.inlighting.oj.judge.config.LanguageEnum;
+import org.inlighting.oj.judge.config.CodeLanguageEnum;
 
-public class StdRequestBean {
+public class JudgerRequestBean {
 
     private int testCaseNumber;
 
-    private LanguageEnum language;
+    private CodeLanguageEnum codeLanguage;
 
     private String sourceCode;
 
@@ -18,12 +18,20 @@ public class StdRequestBean {
 
     private int memoryLimit = 128;
 
-    public LanguageEnum getLanguage() {
-        return language;
+    public int getTestCaseNumber() {
+        return testCaseNumber;
     }
 
-    public void setLanguage(LanguageEnum language) {
-        this.language = language;
+    public void setTestCaseNumber(int testCaseNumber) {
+        this.testCaseNumber = testCaseNumber;
+    }
+
+    public CodeLanguageEnum getCodeLanguage() {
+        return codeLanguage;
+    }
+
+    public void setCodeLanguage(CodeLanguageEnum codeLanguage) {
+        this.codeLanguage = codeLanguage;
     }
 
     public String getSourceCode() {
@@ -64,13 +72,5 @@ public class StdRequestBean {
 
     public void setMemoryLimit(int memoryLimit) {
         this.memoryLimit = memoryLimit;
-    }
-
-    public int getTestCaseNumber() {
-        return testCaseNumber;
-    }
-
-    public void setTestCaseNumber(int testCaseNumber) {
-        this.testCaseNumber = testCaseNumber;
     }
 }

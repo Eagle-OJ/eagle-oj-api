@@ -2,10 +2,10 @@ package org.inlighting.oj.judge.request;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.inlighting.oj.judge.config.ProblemStatusEnum;
-import org.inlighting.oj.judge.bean.StdRequestBean;
-import org.inlighting.oj.judge.bean.StdResponseBean;
-import org.inlighting.oj.judge.config.LanguageEnum;
+import org.inlighting.oj.judge.config.JudgerRequestBean;
+import org.inlighting.oj.judge.config.JudgeResponseBean;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,10 +13,11 @@ import java.util.Arrays;
 
 public class RequestController {
 
-    public static StdResponseBean judge(String judgerUrl, StdRequestBean request) {
+    public static JudgeResponseBean judge(String judgerUrl, JudgerRequestBean request) {
         double[] realTime = new double[request.getTestCaseNumber()];
         double[] memory = new double[request.getTestCaseNumber()];
         String[] stderr = new String[request.getTestCaseNumber()];
+        String[] output = new String[request.getTestCaseNumber()];
         ProblemStatusEnum[] statusEnums = new ProblemStatusEnum[request.getTestCaseNumber()];
 
         String[] tempResults = new String[request.getTestCaseNumber()];
@@ -37,16 +38,18 @@ public class RequestController {
                 realTime[i] = obj.getDouble("time");
                 memory[i] = obj.getDouble("memory")/1000;
                 stderr[i] = obj.getString("stderr");
+                output[i] = obj.getString("compile_output");
                 statusEnums[i] = convertStatus(obj.getJSONObject("status"));
             } catch (Exception e) {
                 realTime[i] = 0;
                 memory[i] = 0;
                 stderr[i] = "null";
+                output[i] = "";
                 statusEnums[i] = ProblemStatusEnum.CompileError;
             }
         }
 
-        StdResponseBean response = new StdResponseBean();
+        JudgeResponseBean response = new JudgeResponseBean();
         response.setProblemStatusEnum(ProblemStatusEnum.Accepted);
         for (ProblemStatusEnum statusEnum: statusEnums) {
             if (statusEnum != ProblemStatusEnum.Accepted) {
@@ -68,6 +71,7 @@ public class RequestController {
                 ).setScale(2, RoundingMode.HALF_UP).doubleValue()
         );
         response.setStderr(stderr);
+        response.setOutput(output);
         response.setProblemStatusEnums(statusEnums);
         response.setDateline(System.currentTimeMillis());
         return response;
@@ -92,9 +96,9 @@ public class RequestController {
         return statusEnum;
     }
 
-    private static String judgeEach(String judgeUrl, StdRequestBean requestBean, int offset) {
+    private static String judgeEach(String judgeUrl, JudgerRequestBean requestBean, int offset) {
         int languageId;
-        switch (requestBean.getLanguage()) {
+        switch (requestBean.getCodeLanguage()) {
             case JAVA8:
                 languageId = 27;
                 break;
@@ -119,11 +123,11 @@ public class RequestController {
     }
 
     public static void main(String[] args) {
-        StdRequestBean requestBean = new StdRequestBean();
+        JudgerRequestBean requestBean = new JudgerRequestBean();
         requestBean.setTestCaseNumber(2);
         requestBean.setMemoryLimit(128);
         requestBean.setTimeLimit(3);
-        requestBean.setLanguage(LanguageEnum.PYTHON36);
+        requestBean.setCodeLanguage(CodeLanguageEnum.PYTHON36);
         requestBean.setSourceCode("print(\"hello\")");
         requestBean.setStdin(new String[]{null, null});
         requestBean.setExpectResult(new String[]{null, null});

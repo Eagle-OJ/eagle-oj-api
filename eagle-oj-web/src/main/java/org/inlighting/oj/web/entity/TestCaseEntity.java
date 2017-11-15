@@ -21,11 +21,12 @@ public class TestCaseEntity {
     public TestCaseEntity() {
     }
 
-    public TestCaseEntity(int tid, String stdin, String stdout, int strength) {
-        this.tid = tid;
+    public TestCaseEntity(int pid, String stdin, String stdout, int strength, long createTime) {
+        this.pid = pid;
         this.stdin = stdin;
         this.stdout = stdout;
         this.strength = strength;
+        this.createTime = createTime;
     }
 
     public int getPid() {

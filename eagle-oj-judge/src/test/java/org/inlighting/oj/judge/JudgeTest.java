@@ -1,25 +1,20 @@
 package org.inlighting.oj.judge;
 
-import org.inlighting.oj.judge.bean.StdRequestBean;
-import org.inlighting.oj.judge.bean.StdResponseBean;
-import org.inlighting.oj.judge.config.LanguageEnum;
-import org.junit.jupiter.api.Assertions;
+import org.inlighting.oj.judge.config.JudgerRequestBean;
+import org.inlighting.oj.judge.config.JudgeResponseBean;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.time.Duration;
 
 class JudgeTest {
 
     private final int TIME_OUT = 5;
 
-    private StdRequestBean requestBean;
-    private StdResponseBean responseBean;
+    private JudgerRequestBean requestBean;
+    private JudgeResponseBean responseBean;
 
     @BeforeEach
     void init() {
-        requestBean = new StdRequestBean();
-        responseBean = new StdResponseBean();
+        requestBean = new JudgerRequestBean();
+        responseBean = new JudgeResponseBean();
     }
 
 /*

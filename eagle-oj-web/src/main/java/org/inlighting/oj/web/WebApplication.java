@@ -16,7 +16,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication
 @EnableSwagger2
-@EnableAsync
 public class WebApplication {
     public static void main(String[] args) {
         SpringApplication.run(WebApplication.class);

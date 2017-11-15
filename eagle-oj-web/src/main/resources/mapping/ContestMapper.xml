@@ -5,9 +5,9 @@
 <mapper namespace="contest">
         <insert id="addContest" parameterType="ContestEntity" useGeneratedKeys="true" keyProperty="cid">
             INSERT INTO `contest`(`name`,`owner`,`slogan`,`description`,`start_time`,
-            `end_time`,`total_time`,`password`,`official`,`type`,`create_time`)
+            `end_time`,`total_time`,`password`,`official`,`type`,`status`,`create_time`)
             VALUES (#{name},#{owner},#{slogan},#{description},#{startTime},
-            #{endTime},#{totalTime},#{password},#{official},#{type},#{createTime})
+            #{endTime},#{totalTime},#{password},#{official},#{type},#{status},#{createTime})
         </insert>
 
 
@@ -16,10 +16,10 @@
         </select>
 
         <update id="updateContestByCid" parameterType="ContestEntity">
-            UPDATE `contest` SET `name` = #{name},`owner`=#{owner},`moderator` = #{moderator},
+            UPDATE `contest` SET `name` = #{name},`owner`=#{owner},
                 `slogan` = #{slogan},`description` = #{description},`start_time` = #{startTime},
-                `end_time` = #{endTime},`total_time` = #{totalTime},`password` = #{official},
-                `type` = #{type},`create_time` = #{createTime} WHERE `cid` = #{cid}
+                `end_time` = #{endTime},`total_time` = #{totalTime},`password` = #{password},`official`=#{official},
+                `type` = #{type},`status`=#{status},`create_time` = #{createTime} WHERE `cid` = #{cid}
         </update>
 
         <delete id="deleteContestByCid">

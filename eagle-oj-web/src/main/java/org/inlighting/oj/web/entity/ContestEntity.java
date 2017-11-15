@@ -32,6 +32,8 @@ public class ContestEntity {
 
     private int type;
 
+    private int status;
+
     @JSONField(name = "create_time")
     private long createTime;
 
@@ -129,5 +131,13 @@ public class ContestEntity {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

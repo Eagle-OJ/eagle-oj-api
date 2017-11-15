@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="problemContestInfo">
+    <insert id="insertProblemContestInfo" parameterType="ProblemContestInfoEntity">
+        INSERT INTO `problem_contest_info` (`pid`, `cid`, `score`) VALUES (#{pid}, #{cid}, #{score})
+    </insert>
+
+    <select id="getProblemContestInfoByPidAndCid" resultMap="problemContestInfoResultMap">
+        SELECT * FROM `problem_contest_info` WHERE `pid`=#{pid} AND `cid`=#{cid}
+    </select>
+
+    <update id="addSubmitTimesByPidAndCid">
+        UPDATE `problem_contest_info` SET `submit_times` = `submit_times` +1 WHERE `pid` = #{pid} AND `cid` = #{cid}
+    </update>
+
+    <update id="addAcceptTimesByPidAndCid">
+        UPDATE `problem_contest_info` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid} AND `cid` = #{cid}
+    </update>
+
+    <resultMap id="problemContestInfoResultMap" type="ProblemContestInfoEntity">
+        <result column="pid" property="pid"/>
+        <result column="cid" property="cid"/>
+        <result column="score" property="score"/>
+    </resultMap>
+</mapper>

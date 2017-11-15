@@ -5,10 +5,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * @author Smith
  **/
-public class ProblemInfoEntity {
+public class ProblemContestInfoEntity {
     private int pid;
 
-    private int belong;
+    private int cid;
+
+    private int score;
 
     @JSONField(name = "submit_times")
     private int submitTimes;
@@ -16,20 +18,20 @@ public class ProblemInfoEntity {
     @JSONField(name = "accept_times")
     private int acceptTimes;
 
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
+
     public int getPid() {
         return pid;
     }
 
     public void setPid(int pid) {
         this.pid = pid;
-    }
-
-    public int getBelong() {
-        return belong;
-    }
-
-    public void setBelong(int belong) {
-        this.belong = belong;
     }
 
     public int getSubmitTimes() {
@@ -46,5 +48,13 @@ public class ProblemInfoEntity {
 
     public void setAcceptTimes(int acceptTimes) {
         this.acceptTimes = acceptTimes;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

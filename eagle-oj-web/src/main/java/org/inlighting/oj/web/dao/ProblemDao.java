@@ -23,8 +23,14 @@ public class ProblemDao {
     }
 
     public boolean updateProblemByPid(SqlSession sqlSession, ProblemEntity entity) {
-        int updateNum = sqlSession.update("problem.updateProblemByPid", entity);
-        return updateNum == 1;
+        return sqlSession.update("problem.updateProblemByPid", entity) == 1;
     }
 
+    public boolean addProblemSubmitTimes(SqlSession sqlSession, int pid) {
+        return sqlSession.update("problem.addProblemSubmitTimes", pid) == 1;
+    }
+
+    public boolean addProblemAcceptTimes(SqlSession sqlSession, int pid) {
+        return sqlSession.update("problem.addProblemAcceptTimes", pid) == 1;
+    }
 }

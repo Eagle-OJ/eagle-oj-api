@@ -81,7 +81,7 @@ public class UserContestController {
 
         int cid = contestService.addContest(format.getName(), owner,format.getSlogan(),
                 format.getDescription(), format.getStartTime(), format.getEndTime(),
-                format.getTotalTime(), format.getPassword(), official, format.getType(), currentTime);
+                format.getTotalTime(), format.getPassword(), official, format.getType(), 1, currentTime);
         if (cid == 0) {
             throw new RuntimeException("比赛创建失败");
         }

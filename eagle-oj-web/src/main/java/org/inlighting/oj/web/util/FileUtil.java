@@ -1,18 +1,14 @@
 package org.inlighting.oj.web.util;
 
-import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PutObjectResult;
-import org.inlighting.oj.judge.config.LanguageEnum;
+import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -34,7 +30,7 @@ public class FileUtil {
     }
 
 
-    public String uploadCode(LanguageEnum languageEnum, String code) {
+    public String uploadCode(CodeLanguageEnum languageEnum, String code) {
         InputStream is = new ByteArrayInputStream(code.getBytes());
         StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
         switch (languageEnum) {

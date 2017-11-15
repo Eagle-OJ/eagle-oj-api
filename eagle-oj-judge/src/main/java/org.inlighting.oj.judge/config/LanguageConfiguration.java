@@ -7,7 +7,7 @@ import java.util.Map;
  * @author Smith
  **/
 public class LanguageConfiguration {
-    private static Map<LanguageEnum, Map<String, Integer>> languageMap;
+    private static Map<CodeLanguageEnum, Map<String, Integer>> languageMap;
 
     private final static String LIMIT_TIME_FILED = "limit_time";
 
@@ -35,14 +35,14 @@ public class LanguageConfiguration {
         PYTHON36Configuration.put(LIMIT_TIME_FILED, 3);
         PYTHON36Configuration.put(LIMIT_MEMORY_FILED, 128);
 
-        languageMap.put(LanguageEnum.JAVA8, JAVA8Configuration);
-        languageMap.put(LanguageEnum.CPP, CPPConfiguration);
-        languageMap.put(LanguageEnum.C, CConfiguration);
-        languageMap.put(LanguageEnum.PYTHON27, PYTHON27Configuration);
-        languageMap.put(LanguageEnum.PYTHON36, PYTHON36Configuration);
+        languageMap.put(CodeLanguageEnum.JAVA8, JAVA8Configuration);
+        languageMap.put(CodeLanguageEnum.CPP, CPPConfiguration);
+        languageMap.put(CodeLanguageEnum.C, CConfiguration);
+        languageMap.put(CodeLanguageEnum.PYTHON27, PYTHON27Configuration);
+        languageMap.put(CodeLanguageEnum.PYTHON36, PYTHON36Configuration);
     }
 
-    public static Map<LanguageEnum, Map<String, Integer>> getLanguageMap() {
+    public static Map<CodeLanguageEnum, Map<String, Integer>> getLanguageMap() {
         return languageMap;
     }
 }

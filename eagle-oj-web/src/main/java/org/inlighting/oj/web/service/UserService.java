@@ -49,4 +49,12 @@ public class UserService {
     public UserEntity getUserByEmail(String email) {
         return userDao.getUserByEmail(sqlSession, email);
     }
+
+    public boolean addUserSubmitTimes(int uid) {
+        return userDao.addUserSubmitTimesByUid(sqlSession, uid);
+    }
+
+    public boolean addUserAcceptTimes(int uid) {
+        return userDao.addUserAcceptTimesByUid(sqlSession, uid);
+    }
 }

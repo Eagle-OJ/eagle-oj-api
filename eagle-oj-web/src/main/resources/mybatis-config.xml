@@ -13,7 +13,7 @@
                      javaType="org.inlighting.oj.judge.config.ProblemStatusEnum" jdbcType="VARCHAR"/>
 
         <typeHandler handler="org.inlighting.oj.web.data.CodeLanguageTypeHandler"
-                     javaType="org.inlighting.oj.judge.config.LanguageEnum" jdbcType="VARCHAR"/>
+                     javaType="org.inlighting.oj.judge.config.CodeLanguageEnum" jdbcType="VARCHAR"/>
 
         <typeHandler handler="org.inlighting.oj.web.data.JsonArrayTypeHandler"
                      javaType="com.alibaba.fastjson.JSONArray" jdbcType="VARCHAR"/>
@@ -35,7 +35,7 @@
     <mappers>
         <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/ProblemMapper.xml"/>
-        <mapper resource="mapping/ProblemInfoMapper.xml"/>
+        <mapper resource="mapping/ProblemContestInfoMapper.xml"/>
         <mapper resource="mapping/TestCaseMapper.xml"/>
         <mapper resource="mapping/ContestMapper.xml"/>
         <mapper resource="mapping/ContestUserInfoMapper.xml"/>

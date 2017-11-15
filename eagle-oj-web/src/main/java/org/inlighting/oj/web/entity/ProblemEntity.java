@@ -34,6 +34,12 @@ public class ProblemEntity {
 
     private JSONArray tag;
 
+    @JSONField(name = "submit_times")
+    private int submitTimes;
+
+    @JSONField(name = "accept_times")
+    private int acceptTimes;
+
     private int share;
 
     @JSONField(name = "create_time")
@@ -152,5 +158,19 @@ public class ProblemEntity {
         this.createTime = createTime;
     }
 
+    public int getSubmitTimes() {
+        return submitTimes;
+    }
 
+    public void setSubmitTimes(int submitTimes) {
+        this.submitTimes = submitTimes;
+    }
+
+    public int getAcceptTimes() {
+        return acceptTimes;
+    }
+
+    public void setAcceptTimes(int acceptTimes) {
+        this.acceptTimes = acceptTimes;
+    }
 }

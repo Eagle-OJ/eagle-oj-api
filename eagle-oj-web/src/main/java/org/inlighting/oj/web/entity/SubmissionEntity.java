@@ -2,7 +2,7 @@ package org.inlighting.oj.web.entity;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
-import org.inlighting.oj.judge.config.LanguageEnum;
+import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.inlighting.oj.judge.config.ProblemStatusEnum;
 
 /**
@@ -19,7 +19,7 @@ public class SubmissionEntity {
     private int codeSource;
 
     @JSONField(name = "code_language")
-    private LanguageEnum codeLanguage;
+    private CodeLanguageEnum codeLanguage;
 
     private int belong;
 
@@ -68,11 +68,11 @@ public class SubmissionEntity {
         this.codeSource = codeSource;
     }
 
-    public LanguageEnum getCodeLanguage() {
+    public CodeLanguageEnum getCodeLanguage() {
         return codeLanguage;
     }
 
-    public void setCodeLanguage(LanguageEnum codeLanguage) {
+    public void setCodeLanguage(CodeLanguageEnum codeLanguage) {
         this.codeLanguage = codeLanguage;
     }
 
@@ -92,22 +92,6 @@ public class SubmissionEntity {
         this.result = result;
     }
 
-    public ProblemStatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProblemStatusEnum status) {
-        this.status = status;
-    }
-
-    public long getSubmitTime() {
-        return submitTime;
-    }
-
-    public void setSubmitTime(long submitTime) {
-        this.submitTime = submitTime;
-    }
-
     public double getTimeUsed() {
         return timeUsed;
     }
@@ -122,5 +106,21 @@ public class SubmissionEntity {
 
     public void setMemoryUsed(double memoryUsed) {
         this.memoryUsed = memoryUsed;
+    }
+
+    public ProblemStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProblemStatusEnum status) {
+        this.status = status;
+    }
+
+    public long getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(long submitTime) {
+        this.submitTime = submitTime;
     }
 }

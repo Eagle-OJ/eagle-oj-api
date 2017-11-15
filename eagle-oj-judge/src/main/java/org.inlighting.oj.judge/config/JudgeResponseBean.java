@@ -1,11 +1,13 @@
-package org.inlighting.oj.judge.bean;
+package org.inlighting.oj.judge.config;
 
-import org.inlighting.oj.judge.config.ProblemStatusEnum;
+import com.alibaba.fastjson.annotation.JSONField;
 
-public class StdResponseBean {
+public class JudgeResponseBean {
 
+    @JSONField(name = "problem_status")
     private ProblemStatusEnum problemStatusEnum;
 
+    @JSONField(name = "test_case_number")
     private int testCaseNumber;
 
     /**
@@ -16,6 +18,7 @@ public class StdResponseBean {
     /**
      * 程序耗时 单位 sec
      */
+    @JSONField(name = "real_time")
     private double realTime;
 
     /**
@@ -23,6 +26,9 @@ public class StdResponseBean {
      */
     private String[] stderr;
 
+    private String[] output;
+
+    @JSONField(name = "problem_status_list")
     private ProblemStatusEnum[] problemStatusEnums;
 
     private long dateline;
@@ -81,5 +87,13 @@ public class StdResponseBean {
 
     public void setProblemStatusEnums(ProblemStatusEnum[] problemStatusEnums) {
         this.problemStatusEnums = problemStatusEnums;
+    }
+
+    public String[] getOutput() {
+        return output;
+    }
+
+    public void setOutput(String[] output) {
+        this.output = output;
     }
 }

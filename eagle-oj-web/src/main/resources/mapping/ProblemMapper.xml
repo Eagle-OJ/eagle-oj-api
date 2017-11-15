@@ -22,6 +22,14 @@
         SELECT * FROM `problem`
     </select>
 
+    <update id="addProblemSubmitTimes">
+        UPDATE `problem` SET `submit_times` = `submit_times` + 1 WHERE `pid` = #{pid}
+    </update>
+
+    <update id="addProblemAcceptTimes">
+        UPDATE `problem` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid}
+    </update>
+
     <update id="updateProblemByPid" parameterType="ProblemEntity">
         UPDATE `problem` SET `code_language` =#{codeLanguage},
             `title`  = #{title},`description` = #{description},`difficult` = #{difficult},
@@ -42,6 +50,8 @@
         <result column="sample" property="sample"/>
         <result column="moderator" property="moderator"/>
         <result column="tag" property="tag"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="accept_times" property="acceptTimes"/>
         <result column="share" property="share"/>
         <result column="create_time" property="createTime"/>
     </resultMap>

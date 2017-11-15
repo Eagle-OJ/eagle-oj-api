@@ -50,7 +50,12 @@ public class TestCaseService {
 
     public boolean updateTestCaseByTid(int tid,String stdin, String stdout, int strength) {
         //通过TestCase的ID来修改TestCase
-        return testCaseDao.updateTestCaseByTid(sqlSession,new TestCaseEntity(tid,stdin,stdout,strength));
+        TestCaseEntity testCaseEntity = new TestCaseEntity();
+        testCaseEntity.setTid(tid);
+        testCaseEntity.setStdin(stdin);
+        testCaseEntity.setStdout(stdout);
+        testCaseEntity.setStrength(strength);
+        return testCaseDao.updateTestCaseByTid(sqlSession, testCaseEntity);
     }
 
     public boolean deleteTestCaseByTid(int tid) {
