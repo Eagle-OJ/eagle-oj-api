@@ -22,6 +22,9 @@ public class JudgerTaskResultEntity {
     @JSONField(serialize = false)
     private int contestType;
 
+    @JSONField(name = "total_score")
+    private int totalScore;
+
     private int score;
 
     @JSONField(name = "status")
@@ -30,12 +33,12 @@ public class JudgerTaskResultEntity {
     public JudgerTaskResultEntity() {
     }
 
-    public JudgerTaskResultEntity(JudgerTaskEntity judgerTaskEntity, int owner, int contestId, int contestType, int score, JudgerTaskStatus status) {
+    public JudgerTaskResultEntity(JudgerTaskEntity judgerTaskEntity, int owner, int contestId, int contestType, int totalScore, JudgerTaskStatus status) {
         this.judgerTaskEntity = judgerTaskEntity;
         this.owner = owner;
         this.contestId = contestId;
         this.contestType = contestType;
-        this.score = score;
+        this.totalScore = totalScore;
         this.status = status;
     }
 
@@ -93,5 +96,13 @@ public class JudgerTaskResultEntity {
 
     public void setContestType(int contestType) {
         this.contestType = contestType;
+    }
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
     }
 }

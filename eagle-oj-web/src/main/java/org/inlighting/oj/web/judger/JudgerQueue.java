@@ -269,6 +269,7 @@ public class JudgerQueue {
             }
         } else {
             score = computeScore(testCaseEntities, problemStatuses, resultEntity.getScore());
+            resultEntity.setScore(score);
         }
 
         if (isAccepted) {
