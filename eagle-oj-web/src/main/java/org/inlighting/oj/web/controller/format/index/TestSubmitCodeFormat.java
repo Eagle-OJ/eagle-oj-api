@@ -12,10 +12,6 @@ import javax.validation.constraints.NotNull;
 public class TestSubmitCodeFormat {
 
     @NotNull
-    @JSONField(name = "problem_id")
-    private Integer problemId;
-
-    @NotNull
     @JSONField(name = "code_language")
     private CodeLanguageEnum codeLanguage;
 
@@ -26,14 +22,6 @@ public class TestSubmitCodeFormat {
     @NotNull
     @JSONField(name = "test_cases")
     private JSONArray testCases;
-
-    public Integer getProblemId() {
-        return problemId;
-    }
-
-    public void setProblemId(Integer problemId) {
-        this.problemId = problemId;
-    }
 
     public CodeLanguageEnum getCodeLanguage() {
         return codeLanguage;

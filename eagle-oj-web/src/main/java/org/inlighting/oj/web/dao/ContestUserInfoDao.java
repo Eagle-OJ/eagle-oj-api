@@ -1,9 +1,11 @@
 package org.inlighting.oj.web.dao;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ContestUserInfoEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,5 +22,16 @@ public class ContestUserInfoDao {
     public ContestUserInfoEntity getByUidAndUid(SqlSession sqlSession, Map<String ,Object> map)
     {
         return sqlSession.selectOne("contestUserInfo.getByUidAndUid",map);
+    }
+
+    public boolean updateData(SqlSession sqlSession, int cid, int uid, int submitTimes,
+                           int acceptTimes, long newlyAcceptTime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cid", cid);
+        map.put("uid", uid);
+        map.put("submitTimes", submitTimes);
+        map.put("acceptTimes", acceptTimes);
+        map.put("newlyAcceptTime", newlyAcceptTime);
+        return sqlSession.update("contestUserInfo.addData", map) == 1;
     }
 }

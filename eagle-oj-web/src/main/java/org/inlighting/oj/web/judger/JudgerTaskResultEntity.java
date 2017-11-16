@@ -16,7 +16,11 @@ public class JudgerTaskResultEntity {
 
     private int owner;
 
+    @JSONField(serialize = false)
     private int contestId;
+
+    @JSONField(serialize = false)
+    private int contestType;
 
     private int score;
 
@@ -26,10 +30,11 @@ public class JudgerTaskResultEntity {
     public JudgerTaskResultEntity() {
     }
 
-    public JudgerTaskResultEntity(JudgerTaskEntity judgerTaskEntity, int owner, int contestId, int score, JudgerTaskStatus status) {
+    public JudgerTaskResultEntity(JudgerTaskEntity judgerTaskEntity, int owner, int contestId, int contestType, int score, JudgerTaskStatus status) {
         this.judgerTaskEntity = judgerTaskEntity;
         this.owner = owner;
         this.contestId = contestId;
+        this.contestType = contestType;
         this.score = score;
         this.status = status;
     }
@@ -80,5 +85,13 @@ public class JudgerTaskResultEntity {
 
     public void setJudgeResponseBean(JudgeResponseBean judgeResponseBean) {
         this.judgeResponseBean = judgeResponseBean;
+    }
+
+    public int getContestType() {
+        return contestType;
+    }
+
+    public void setContestType(int contestType) {
+        this.contestType = contestType;
     }
 }

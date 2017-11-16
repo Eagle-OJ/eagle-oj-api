@@ -13,10 +13,26 @@
             VALUES (#{cid},#{uid},#{joinTime})
     </insert>
 
+
+    <update id="addData">
+        UPDATE `contest_user_info`
+        <set>
+            <if test="submitTimes > 0">
+                `submit_times` = `submit_times` + 1,
+            </if>
+            <if test="acceptTimes > 0">
+                `accept_times` = `accept_times` + 1,
+            </if>
+            <if test="newlyAcceptTime > 0">
+                `newly_accept_time` = #{newlyAcceptTime}
+            </if>
+        </set>
+        WHERE `cid` = #{cid} AND `uid` = #{uid}
+    </update>
+
     <resultMap id="contestUserInfoMap" type="ContestUserInfoEntity">
         <result column="cid" property="cid"/>
         <result column="uid" property="score"/>
-        <result column="score" property="score"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="accept_times" property="acceptTimes"/>
         <result column="used_time" property="usedTime"/>

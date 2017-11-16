@@ -38,7 +38,7 @@ public class RequestController {
                 realTime[i] = obj.getDouble("time");
                 memory[i] = obj.getDouble("memory")/1000;
                 stderr[i] = obj.getString("stderr");
-                output[i] = obj.getString("compile_output");
+                output[i] = obj.getString("stdout");
                 statusEnums[i] = convertStatus(obj.getJSONObject("status"));
             } catch (Exception e) {
                 realTime[i] = 0;
@@ -48,7 +48,6 @@ public class RequestController {
                 statusEnums[i] = ProblemStatusEnum.CompileError;
             }
         }
-
         JudgeResponseBean response = new JudgeResponseBean();
         response.setProblemStatusEnum(ProblemStatusEnum.Accepted);
         for (ProblemStatusEnum statusEnum: statusEnums) {

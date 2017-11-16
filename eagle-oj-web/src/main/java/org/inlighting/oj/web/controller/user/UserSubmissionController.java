@@ -2,7 +2,6 @@ package org.inlighting.oj.web.controller.user;
 
 import org.inlighting.oj.web.controller.format.user.SubmitCodeFormat;
 import org.inlighting.oj.web.entity.*;
-import org.inlighting.oj.web.judger.Judger;
 import org.inlighting.oj.web.judger.JudgerQueue;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.*;
@@ -22,42 +21,19 @@ import java.util.List;
 @RequestMapping(value = "/user/submission", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class UserSubmissionController {
 
-    private ProblemService problemService;
-
     private ContestService contestService;
 
     private ContestUserInfoService contestUserInfoService;
 
-    private GroupUserInfoService groupUserInfoService;
-
     private TestCaseService testCaseService;
 
-    private SubmissionService submissionService;
-
     private ProblemContestInfoService problemContestInfoService;
-
-    private UserService userService;
 
     private JudgerQueue judgerQueue;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
     public void setProblemContestInfoService(ProblemContestInfoService problemInfoService) {
         this.problemContestInfoService = problemInfoService;
-    }
-
-    @Autowired
-    public void setGroupUserInfoService(GroupUserInfoService groupUserInfoService) {
-        this.groupUserInfoService = groupUserInfoService;
-    }
-
-    @Autowired
-    public void setProblemService(ProblemService problemService) {
-        this.problemService = problemService;
     }
 
     @Autowired
@@ -80,15 +56,11 @@ public class UserSubmissionController {
         this.contestService = contestService;
     }
 
-    @Autowired
-    public void setSubmissionService(SubmissionService submissionService) {
-        this.submissionService = submissionService;
-    }
-
     @PostMapping
     public ResponseEntity submitCode(@RequestBody @Valid SubmitCodeFormat format) {
         int uid = SessionHelper.get().getUid();
         int contestId = format.getContestId();
+        int contestType = 0;
         int problemId = format.getProblemId();
         int score = 0;
 
@@ -105,6 +77,7 @@ public class UserSubmissionController {
             }
 
             ContestEntity contestEntity = contestService.getContestByCid(contestId, true);
+            contestType = contestEntity.getType();
             if (contestEntity.getType() == 1 || contestEntity.getType() ==3) {
                 if ((contestUserInfoEntity.getJoinTime()+contestEntity.getTotalTime()) > System.currentTimeMillis()) {
                     throw new RuntimeException("比赛时间超时");
@@ -118,7 +91,7 @@ public class UserSubmissionController {
             score = problemContestInfoEntity.getScore();
         }
 
-        String uuid = judgerQueue.addTask(1, problemId, uid, contestId, score, format.getCodeLanguage(),
+        String uuid = judgerQueue.addTask(1, problemId, uid, contestId, contestType ,score, format.getCodeLanguage(),
                 format.getCodeSource(), false, testCaseEntities);
 
         return new ResponseEntity("提交成功", uuid);

@@ -43,5 +43,6 @@
         <mapper resource="mapping/GroupMapper.xml" />
         <mapper resource="mapping/GroupUserInfoMapper.xml"/>
         <mapper resource="mapping/SubmissionMapper.xml"/>
+        <mapper resource="mapping/ContestProblemUserInfoMapper.xml"/>
     </mappers>
 </configuration>

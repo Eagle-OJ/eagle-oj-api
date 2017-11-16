@@ -59,7 +59,7 @@ public class ProblemService {
         problemEntity.setShare(share);
         problemEntity.setCreateTime(createTime);
 
-        return problemEntity.getPid();
+        return problemDao.addProblem(sqlSession, problemEntity)? problemEntity.getPid() : 0;
     }
 
     /**

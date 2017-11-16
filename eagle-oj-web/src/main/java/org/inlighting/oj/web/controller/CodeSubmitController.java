@@ -36,16 +36,16 @@ public class CodeSubmitController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity guestSubmit(@RequestBody @Valid TestSubmitCodeFormat format) {
-        return new ResponseEntity("提交成功", submit(format, 0));
+    public ResponseEntity guestSubmitTest(@RequestBody @Valid TestSubmitCodeFormat format) {
+        return new ResponseEntity("提交成功", submitTest(format, 0));
     }
 
     @PostMapping("/user/submit")
-    public ResponseEntity userSubmit(@RequestBody @Valid TestSubmitCodeFormat format) {
-        return new ResponseEntity("提交成功", submit(format, 1));
+    public ResponseEntity userSubmitTest(@RequestBody @Valid TestSubmitCodeFormat format) {
+        return new ResponseEntity("提交成功", submitTest(format, 1));
     }
 
-    private String submit(TestSubmitCodeFormat format, int priority) {
+    private String submitTest(TestSubmitCodeFormat format, int priority) {
         if (format.getTestCases().size() == 0) {
             throw new RuntimeException("没有测试用例");
         }
@@ -53,12 +53,12 @@ public class CodeSubmitController {
         List<TestCaseEntity> testCaseEntities = new ArrayList<>(3);
         for (int i=0; i<format.getTestCases().size(); i++) {
             JSONObject obj = format.getTestCases().getJSONObject(i);
-            TestCaseEntity testCaseEntity = new TestCaseEntity(format.getProblemId(), obj.getString("stdin"),
+            TestCaseEntity testCaseEntity = new TestCaseEntity(0, obj.getString("stdin"),
                     obj.getString("stdout"), 0, System.currentTimeMillis());
             testCaseEntities.add(testCaseEntity);
         }
 
-        String uuid = judgerQueue.addTask(priority, format.getProblemId(), 0, 0, 0,
+        String uuid = judgerQueue.addTask(priority, 0, 0, 0, 0,0,
                 format.getCodeLanguage(), format.getCodeSource(), true, testCaseEntities);
         return uuid;
     }

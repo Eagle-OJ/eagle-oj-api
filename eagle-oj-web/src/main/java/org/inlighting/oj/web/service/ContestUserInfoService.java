@@ -47,4 +47,8 @@ public class ContestUserInfoService {
         map.put("uid",uid);
         return contestUserInfoDao.getByUidAndUid(sqlSession,map);
     }
+
+    public boolean updateData(int cid, int uid, int submitTimes, int acceptTimes, long newlyAcceptTime) {
+        return contestUserInfoDao.updateData(sqlSession, cid, uid, submitTimes, acceptTimes, newlyAcceptTime);
+    }
 }
