@@ -349,20 +349,26 @@ CREATE TABLE `user` (
   `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `nickname` varchar(20) NOT NULL,
+  `real_name` varchar(20) DEFAULT NULL,
   `avatar` int(10) unsigned DEFAULT '0',
   `password` varchar(32) NOT NULL,
   `role` tinyint(1) unsigned DEFAULT '0' COMMENT '0 普通用户\n9 管理员',
-  `permission` json NOT NULL,
-  `submit_times` int(10) unsigned DEFAULT '0',
-  `accept_times` int(10) unsigned DEFAULT '0',
-  `contest_times` int(10) unsigned DEFAULT '0',
-  `score` int(10) unsigned DEFAULT '0',
+  `permission` json NOT NULL COMMENT '[''set'',''hello'']',
+  `submit_times` int(11) unsigned DEFAULT '0',
+  `contest_times` int(11) unsigned DEFAULT '0',
+  `ac_times` int(11) unsigned DEFAULT '0',
+  `wa_times` int(11) unsigned DEFAULT '0',
+  `rte_times` int(11) unsigned DEFAULT '0',
+  `tle_times` int(11) unsigned DEFAULT '0',
+  `ce_times` int(11) unsigned DEFAULT '0',
+  `finished_problems` int(10) unsigned DEFAULT '0',
+  `score` int(11) unsigned DEFAULT '0',
+  `gender` tinyint(1) unsigned DEFAULT '0' COMMENT '0保密\n1男\n2女',
   `register_time` bigint(13) unsigned NOT NULL,
-  `last_login` bigint(13) unsigned DEFAULT '0',
   `verified` tinyint(1) unsigned DEFAULT '0' COMMENT '0未验证\n1验证通过',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -371,7 +377,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'aef','aef',0,'aef',0,'[\"get\", \"ge\"]',0,0,0,0,12312,0,0),(3,'chen!@126.com','smith',0,'123456',0,'[]',0,0,0,0,1509625563796,0,0),(5,'chen!1@126.com','smith',0,'123456',0,'[]',0,0,0,0,1509625680241,0,0),(6,'chen!11@126.com','smith',0,'123456',0,'[]',0,0,0,0,1509625693663,0,0),(8,'che1n!11@126.com','smith',0,'123456',0,'[]',0,0,0,0,1509625797534,0,0),(9,'c1@126.com1','test',0,'123456',0,'[]',0,0,0,0,0,0,0),(10,'c1@126.com','test',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0),(11,'test@test.com2','I Am Test',0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0),(12,'test@test.com1','I Am Test',0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,1509886602210,0,0),(13,'test@test.com3','I Am Test',0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,1509964177613,0,0),(14,'test@test.com','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',14,2,0,0,1510129937075,0,0),(15,'1510157247573@126.com','1510157247573-TESTER',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510157248389,0,0),(16,'1510157414297@126.com','1510157414297-TESTER',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510157414311,0,0),(17,'1510200482152@126.com','1510200482152-TESTER',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510200482167,0,0),(18,'1510200639157@126.com','1510200639157-TESTER',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510200639171,0,0),(19,'test@test1.com','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510377927655,0,0),(21,'test@test2.com','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510377955548,0,0),(23,'test@test99.com','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510377967933,0,0),(25,'test@test9.com','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510378047399,0,0),(27,'test@test8.com','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510378179880,0,0),(28,'test@test.comx','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510462603114,0,0),(29,'test@test.comxb','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510462649043,0,0),(30,'test@test.com7','I am tester',0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,1510464192666,0,0);
+INSERT INTO `user` VALUES (1,'aef','aef',NULL,0,'aef',0,'[\"get\", \"ge\"]',0,0,0,0,0,0,0,0,0,0,12312,0),(3,'chen!@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,0,1509625563796,0),(5,'chen!1@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,0,1509625680241,0),(6,'chen!11@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,0,1509625693663,0),(8,'che1n!11@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,0,1509625797534,0),(9,'c1@126.com1','test',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,0,0,0),(10,'c1@126.com','test',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,0,0),(11,'test@test.com2','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,0,0,0),(12,'test@test.com1','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,0,1509886602210,0),(13,'test@test.com3','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,0,1509964177613,0),(14,'test@test.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',14,0,2,0,0,0,0,0,0,0,1510129937075,0),(15,'1510157247573@126.com','1510157247573-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510157248389,0),(16,'1510157414297@126.com','1510157414297-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510157414311,0),(17,'1510200482152@126.com','1510200482152-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510200482167,0),(18,'1510200639157@126.com','1510200639157-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510200639171,0),(19,'test@test1.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510377927655,0),(21,'test@test2.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510377955548,0),(23,'test@test99.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510377967933,0),(25,'test@test9.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510378047399,0),(27,'test@test8.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510378179880,0),(28,'test@test.comx','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510462603114,0),(29,'test@test.comxb','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510462649043,0),(30,'test@test.com7','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,0,1510464192666,0),(31,'fe@12.dth','asef',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,0,1511771980307,0),(32,'chen1@126.com','abc',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,0,1511772230886,0),(33,'chen@126.com','abc',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,0,1511772355487,0),(34,'1@126.com','aef',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,0,1511772618636,0),(35,'1@1.com','1123',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,0,1511772653407,0),(36,'12@1.com','aec',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,0,1511772836330,0),(37,'2@2.com','大海',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,0,1511772924348,0),(38,'danny@126.com','danny',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,0,1511774201713,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -384,4 +390,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-16 20:45:02
+-- Dump completed on 2017-11-27 20:42:16

@@ -13,6 +13,9 @@ public class UserEntity {
 
     private String nickname;
 
+    @JSONField(name = "real_name")
+    private String realName;
+
     private int avatar;
 
     private String password;
@@ -24,19 +27,33 @@ public class UserEntity {
     @JSONField(name = "submit_times")
     private int submitTimes;
 
-    @JSONField(name = "accept_times")
-    private int acceptTimes;
-
     @JSONField(name = "contest_times")
     private int contestTimes;
 
+    @JSONField(name = "ac_times")
+    private int ACTimes;
+
+    @JSONField(name = "wa_times")
+    private int WATimes;
+
+    @JSONField(name = "rte_times")
+    private int RTETimes;
+
+    @JSONField(name = "tle_times")
+    private int TLETimes;
+
+    @JSONField(name = "ce_times")
+    private int CETimes;
+
+    @JSONField(name = "finished_problems")
+    private int finishedProblems;
+
     private int score;
+
+    private int gender;
 
     @JSONField(name = "register_time")
     private long registerTime;
-
-    @JSONField(name = "last_login")
-    private long lastLogin;
 
     private int verified;
 
@@ -62,6 +79,14 @@ public class UserEntity {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public int getAvatar() {
@@ -104,12 +129,60 @@ public class UserEntity {
         this.submitTimes = submitTimes;
     }
 
-    public int getAcceptTimes() {
-        return acceptTimes;
+    public int getContestTimes() {
+        return contestTimes;
     }
 
-    public void setAcceptTimes(int acceptTimes) {
-        this.acceptTimes = acceptTimes;
+    public void setContestTimes(int contestTimes) {
+        this.contestTimes = contestTimes;
+    }
+
+    public int getACTimes() {
+        return ACTimes;
+    }
+
+    public void setACTimes(int ACTimes) {
+        this.ACTimes = ACTimes;
+    }
+
+    public int getWATimes() {
+        return WATimes;
+    }
+
+    public void setWATimes(int WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public int getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(int RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public int getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(int TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public int getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(int CETimes) {
+        this.CETimes = CETimes;
+    }
+
+    public int getFinishedProblems() {
+        return finishedProblems;
+    }
+
+    public void setFinishedProblems(int finishedProblems) {
+        this.finishedProblems = finishedProblems;
     }
 
     public int getScore() {
@@ -120,6 +193,14 @@ public class UserEntity {
         this.score = score;
     }
 
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
     public long getRegisterTime() {
         return registerTime;
     }
@@ -128,27 +209,11 @@ public class UserEntity {
         this.registerTime = registerTime;
     }
 
-    public long getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(long lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
     public int getVerified() {
         return verified;
     }
 
     public void setVerified(int verified) {
         this.verified = verified;
-    }
-
-    public int getContestTimes() {
-        return contestTimes;
-    }
-
-    public void setContestTimes(int contestTimes) {
-        this.contestTimes = contestTimes;
     }
 }

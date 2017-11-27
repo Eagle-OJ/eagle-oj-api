@@ -2,6 +2,7 @@ package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.inlighting.oj.web.dao.UserDao;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UserService {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
         userEntity.setNickname(nickname);
-        userEntity.setPassword(password);
+        userEntity.setPassword(new Md5Hash(password).toString());
         userEntity.setPermission(new JSONArray());
         userEntity.setRegisterTime(registerTime);
 
@@ -39,7 +40,7 @@ public class UserService {
     }
 
     public UserEntity getUserByLogin(String email, String password) {
-        return userDao.getUserByLogin(sqlSession, email, password);
+        return userDao.getUserByLogin(sqlSession, email, new Md5Hash(password).toString());
     }
 
     public UserEntity getUserByUid(int uid) {

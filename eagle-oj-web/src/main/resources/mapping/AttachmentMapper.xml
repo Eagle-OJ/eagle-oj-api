@@ -9,4 +9,15 @@
             VALUES (#{owner},#{url},#{uploadTime})
     </insert>
 
+    <select id="getAttachment" resultMap="attachmentMap">
+        SELECT * FROM `attachment` WHERE `aid` = #{aid}
+    </select>
+
+    <resultMap id="attachmentMap" type="AttachmentEntity">
+        <id property="aid" column="aid"/>
+        <result property="owner" column="owner"/>
+        <result property="url" column="url"/>
+        <result property="status" column="status"/>
+        <result property="uploadTime" column="upload_time"/>
+    </resultMap>
 </mapper>

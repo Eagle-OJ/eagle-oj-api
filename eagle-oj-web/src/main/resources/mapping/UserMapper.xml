@@ -41,16 +41,22 @@
         <id property="uid" column="uid"/>
         <result property="email" column="email"/>
         <result property="nickname" column="nickname"/>
+        <result property="realName" column="real_name"/>
         <result property="avatar" column="avatar"/>
         <result property="password" column="password"/>
         <result property="role" column="role"/>
         <result property="permission" column="permission"/>
         <result property="submitTimes" column="submit_times"/>
-        <result property="acceptTimes" column="accept_times"/>
         <result property="contestTimes" column="contest_times"/>
+        <result property="ACTimes" column="ac_times"/>
+        <result property="WATimes" column="wa_times"/>
+        <result property="RTETimes" column="rte_times"/>
+        <result property="TLETimes" column="tle_times"/>
+        <result property="CETimes" column="ce_times"/>
+        <result property="finishedProblems" column="finished_problems"/>
         <result property="score" column="score"/>
+        <result property="gender" column="gender"/>
         <result property="registerTime" column="register_time"/>
-        <result property="lastLogin" column="last_login"/>
         <result property="verified" column="verified"/>
     </resultMap>
 </mapper>

@@ -13,15 +13,14 @@ import org.inlighting.oj.web.judger.Judger;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Smith
@@ -34,6 +33,9 @@ public class IndexController {
     private UserService userService;
 
     private Judger judger;
+
+    @Value("${eagle-oj.oss.url}")
+    private String OSS_URL;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -51,7 +53,7 @@ public class IndexController {
         // 检查用户是否存在
         UserEntity userEntity = userService.getUserByEmail(format.getEmail());
         if (userEntity != null) {
-            throw new RuntimeException("用户已经注册");
+            throw new RuntimeException("邮箱已经注册");
         }
 
         // 注册用户
@@ -90,6 +92,13 @@ public class IndexController {
     @GetMapping("/language")
     public ResponseEntity getLanguageConfig() {
         return new ResponseEntity(judger.getConfiguration());
+    }
+
+    @GetMapping("/setting")
+    public ResponseEntity getWebConfig() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("oss_url", OSS_URL);
+        return new ResponseEntity(data);
     }
 
     @RequestMapping("/401")

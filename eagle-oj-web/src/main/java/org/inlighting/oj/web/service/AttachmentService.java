@@ -35,4 +35,7 @@ public class AttachmentService {
         return flag ? attachmentEntity.getAid():0;
     }
 
+    public AttachmentEntity get(int aid) {
+        return attachmentDao.getAttachment(sqlSession, aid);
+    }
 }
