@@ -21,6 +21,31 @@
         SELECT * FROM `user` WHERE `email` = #{email} AND `password` = #{password}
     </select>
 
+    <!--<update id="updateUserProfile">
+        UPDATE `user`
+        <set>
+            <if test="email != null">`email`=#{email}</if>
+            <if test="nickname != null"> `nickname`=#{nickname} </if>
+            <if test="realName != null"> `real_name`=#{realName} </if>
+            <if test="avatar != 0"> `avatar`=#{avatar} </if>
+            <if test="password != null"> `password`=#{password} </if>
+            <if test="role != 0"> `role`=#{role} </if>
+            <if test="permission != null"> `permission`=#{permission} </if>
+            <if test="gender != 0"> `gender`=#{gender} </if>
+            <if test="motto != null"> `motto`=#{motto} </if>
+            <if test="verified != 0"> `verified`=#{verified} </if>
+        </set>
+        WHERE `uid`=#{uid}
+    </update>-->
+    <update id="updateUserProfile">
+        UPDATE `user` SET `nickname`=#{nickname}, `real_name`=#{realName}, `motto`=#{motto}, `gender`=#{gender}
+        WHERE `uid`=#{uid}
+    </update>
+
+    <update id="updateUserAvatar">
+        UPDATE `user` SET `avatar`=#{avatar} WHERE `uid` = #{uid}
+    </update>
+
     <update id="addUserSubmitTimes">
         UPDATE `user` SET `submit_times` = `submit_times`+1 WHERE `uid` = #{uid}
     </update>
@@ -56,6 +81,7 @@
         <result property="finishedProblems" column="finished_problems"/>
         <result property="score" column="score"/>
         <result property="gender" column="gender"/>
+        <result property="motto" column="motto"/>
         <result property="registerTime" column="register_time"/>
         <result property="verified" column="verified"/>
     </resultMap>

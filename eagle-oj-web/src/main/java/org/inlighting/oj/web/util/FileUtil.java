@@ -52,7 +52,18 @@ public class FileUtil {
         String filePath = generateFilePath(fileName.toString());
         try {
             ossClient.putObject(BUCKET, filePath, is, metadata);
-            return filePath;
+            return "/"+filePath;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String uploadAvatar(InputStream is, String postfix) {
+        String file = UUID.randomUUID().toString()+"."+postfix;
+        String filePath = generateFilePath(file);
+        try {
+            ossClient.putObject(BUCKET, filePath, is);
+            return "/"+filePath;
         } catch (Exception e) {
             return null;
         }

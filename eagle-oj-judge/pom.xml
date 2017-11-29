@@ -24,10 +24,5 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.inlighting.oj</groupId>
-            <artifactId>eagle-oj-config</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>

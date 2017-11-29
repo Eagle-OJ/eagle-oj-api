@@ -52,6 +52,8 @@ public class UserEntity {
 
     private int gender;
 
+    private String motto;
+
     @JSONField(name = "register_time")
     private long registerTime;
 
@@ -199,6 +201,14 @@ public class UserEntity {
 
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
     }
 
     public long getRegisterTime() {

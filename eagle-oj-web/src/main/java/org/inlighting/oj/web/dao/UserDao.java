@@ -46,6 +46,7 @@ public class UserDao {
         return session.selectOne("user.selectUserByLogin", map);
     }
 
+
     public boolean addUserSubmitTimesByUid(SqlSession sqlSession, int uid) {
         return sqlSession.update("user.addUserSubmitTimes", uid) == 1;
     }
@@ -67,5 +68,13 @@ public class UserDao {
 
     public List<UserEntity> getUserList(int currentPage, int pageSize) {
         return null;
+    }
+
+    public boolean updateUserProfile(SqlSession sqlSession, UserEntity userEntity) {
+        return sqlSession.update("user.updateUserProfile", userEntity) == 1;
+    }
+
+    public boolean updateUserAvatar(SqlSession sqlSession, UserEntity userEntity) {
+        return sqlSession.update("user.updateUserAvatar", userEntity) == 1;
     }
 }

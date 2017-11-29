@@ -51,6 +51,23 @@ public class UserService {
         return userDao.getUserByEmail(sqlSession, email);
     }
 
+    public boolean updateUserProfile(int uid, String nickname, String realName, String motto, int gender) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUid(uid);
+        userEntity.setNickname(nickname);
+        userEntity.setRealName(realName);
+        userEntity.setMotto(motto);
+        userEntity.setGender(gender);
+        return userDao.updateUserProfile(sqlSession, userEntity);
+    }
+
+    public boolean updateUserAvatar(int uid, int avatar) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUid(uid);
+        userEntity.setAvatar(avatar);
+        return userDao.updateUserAvatar(sqlSession, userEntity);
+    }
+
     public boolean addUserSubmitTimes(int uid) {
         return userDao.addUserSubmitTimesByUid(sqlSession, uid);
     }
