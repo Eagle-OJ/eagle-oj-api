@@ -11,10 +11,10 @@ public class ProblemEntity {
 
     private int owner;
 
+    private String title;
+
     @JSONField(name = "code_language")
     private JSONArray codeLanguage;
-
-    private String title;
 
     private String description;
 
@@ -26,25 +26,37 @@ public class ProblemEntity {
     @JSONField(name = "output_format")
     private String outputFormat;
 
-    private String constraint;
+    private JSONArray samples;
 
-    private JSONArray sample;
+    private JSONArray moderators;
 
-    private JSONArray moderator;
-
-    private JSONArray tag;
+    private JSONArray tags;
 
     @JSONField(name = "submit_times")
     private int submitTimes;
 
-    @JSONField(name = "accept_times")
-    private int acceptTimes;
+    @JSONField(name = "used_times")
+    private int usedTimes;
 
-    private int share;
+    @JSONField(name = "ac_times")
+    private int ACTimes;
+
+    @JSONField(name = "wa_times")
+    private int WATimes;
+
+    @JSONField(name = "rte_times")
+    private int RTETimes;
+
+    @JSONField(name = "tle_times")
+    private int TLETimes;
+
+    @JSONField(name = "ce_times")
+    private int CETimes;
+
+    private int status;
 
     @JSONField(name = "create_time")
     private long createTime;
-
 
     public int getPid() {
         return pid;
@@ -62,20 +74,20 @@ public class ProblemEntity {
         this.owner = owner;
     }
 
-    public JSONArray getCodeLanguage() {
-        return codeLanguage;
-    }
-
-    public void setCodeLanguage(JSONArray codeLanguage) {
-        this.codeLanguage = codeLanguage;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public JSONArray getCodeLanguage() {
+        return codeLanguage;
+    }
+
+    public void setCodeLanguage(JSONArray codeLanguage) {
+        this.codeLanguage = codeLanguage;
     }
 
     public String getDescription() {
@@ -110,52 +122,28 @@ public class ProblemEntity {
         this.outputFormat = outputFormat;
     }
 
-    public String getConstraint() {
-        return constraint;
+    public JSONArray getSamples() {
+        return samples;
     }
 
-    public void setConstraint(String constraint) {
-        this.constraint = constraint;
+    public void setSamples(JSONArray samples) {
+        this.samples = samples;
     }
 
-    public JSONArray getSample() {
-        return sample;
+    public JSONArray getModerators() {
+        return moderators;
     }
 
-    public void setSample(JSONArray sample) {
-        this.sample = sample;
+    public void setModerators(JSONArray moderators) {
+        this.moderators = moderators;
     }
 
-    public JSONArray getModerator() {
-        return moderator;
+    public JSONArray getTags() {
+        return tags;
     }
 
-    public void setModerator(JSONArray moderator) {
-        this.moderator = moderator;
-    }
-
-    public JSONArray getTag() {
-        return tag;
-    }
-
-    public void setTag(JSONArray tag) {
-        this.tag = tag;
-    }
-
-    public int getShare() {
-        return share;
-    }
-
-    public void setShare(int share) {
-        this.share = share;
-    }
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
+    public void setTags(JSONArray tags) {
+        this.tags = tags;
     }
 
     public int getSubmitTimes() {
@@ -166,11 +154,67 @@ public class ProblemEntity {
         this.submitTimes = submitTimes;
     }
 
-    public int getAcceptTimes() {
-        return acceptTimes;
+    public int getUsedTimes() {
+        return usedTimes;
     }
 
-    public void setAcceptTimes(int acceptTimes) {
-        this.acceptTimes = acceptTimes;
+    public void setUsedTimes(int usedTimes) {
+        this.usedTimes = usedTimes;
+    }
+
+    public int getACTimes() {
+        return ACTimes;
+    }
+
+    public void setACTimes(int ACTimes) {
+        this.ACTimes = ACTimes;
+    }
+
+    public int getWATimes() {
+        return WATimes;
+    }
+
+    public void setWATimes(int WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public int getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(int RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public int getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(int TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public int getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(int CETimes) {
+        this.CETimes = CETimes;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 }

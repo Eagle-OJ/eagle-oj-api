@@ -4,14 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="problem">
     <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
-        INSERT INTO `problem` (`owner`,`code_language`,`title`,
-                               `description`,`difficult`,`input_format`,
-                               `output_format`,`constraint`,`sample`,`moderator`,
-                               `tag`,`share`,`create_time`)
-        VALUES (#{owner},#{codeLanguage},
-               #{title},#{description},#{difficult},#{inputFormat},
-               #{outputFormat},#{constraint},#{sample},#{moderator},#{tag},#{share},#{createTime})
-
+        INSERT INTO `problem` (owner, title, code_language, description,
+                               input_format, output_format, difficult, samples, moderators,
+                               tags, status, create_time) VALUES (#{owner}, #{title}, #{codeLanguage}, #{description},
+        #{inputFormat}, #{outputFormat}, #{difficult}, #{samples}, #{moderators}, #{tags}, #{status}, #{createTime})
     </insert>
 
     <select id="getProblemByPid" resultMap="problemResultMap">
@@ -30,29 +26,31 @@
         UPDATE `problem` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid}
     </update>
 
-    <update id="updateProblemByPid" parameterType="ProblemEntity">
-        UPDATE `problem` SET `code_language` =#{codeLanguage},
-            `title`  = #{title},`description` = #{description},`difficult` = #{difficult},
-            `input_format` = #{inputFormat},`output_format` = #{outputFormat},`constraint` = #{constraint},
-            `sample` = #{sample},`moderator` = #{moderator},`tag` = #{tag},`share` = #{share},`create_time` = #{createTime}
-            WHERE `pid` = #{pid}
+    <update id="updateProblemDescription" parameterType="ProblemEntity">
+        UPDATE `problem` SET `title`=#{title}, `description`=#{description}, `input_format`=#{inputFormat},
+            `output_format`=#{outputFormat}, `samples`=#{samples}, `difficult`=#{difficult}, `tags`=#{tags}
+        WHERE `pid`=#{pid}
     </update>
 
     <resultMap id="problemResultMap" type="ProblemEntity">
+        <id column="pid" property="pid"/>
         <result column="owner" property="owner"/>
-        <result column="code_language" property="codeLanguage"/>
         <result column="title" property="title"/>
+        <result column="code_language" property="codeLanguage"/>
         <result column="description" property="description"/>
-        <result column="difficult" property="difficult"/>
         <result column="input_format" property="inputFormat"/>
         <result column="output_format" property="outputFormat"/>
-        <result column="constraint" property="constraint"/>
-        <result column="sample" property="sample"/>
-        <result column="moderator" property="moderator"/>
-        <result column="tag" property="tag"/>
+        <result column="samples" property="samples"/>
+        <result column="moderators" property="moderators"/>
+        <result column="tags" property="tags"/>
         <result column="submit_times" property="submitTimes"/>
-        <result column="accept_times" property="acceptTimes"/>
-        <result column="share" property="share"/>
+        <result column="used_times" property="usedTimes"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
+        <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
 </mapper>

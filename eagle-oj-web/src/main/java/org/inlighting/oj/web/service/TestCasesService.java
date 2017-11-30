@@ -1,7 +1,7 @@
 package org.inlighting.oj.web.service;
 
 import org.apache.ibatis.session.SqlSession;
-import org.inlighting.oj.web.dao.TestCaseDao;
+import org.inlighting.oj.web.dao.TestCasesDao;
 import org.inlighting.oj.web.entity.TestCaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,18 +12,18 @@ import java.util.List;
  * @author Smith
  **/
 @Service
-public class TestCaseService {
+public class TestCasesService {
 
     private final SqlSession sqlSession;
 
-    private TestCaseDao testCaseDao;
+    private TestCasesDao testCaseDao;
 
-    public TestCaseService(SqlSession sqlSession) {
+    public TestCasesService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
 
     @Autowired
-    public void setTestCaseDao(TestCaseDao testCaseDao) {
+    public void setTestCaseDao(TestCasesDao testCaseDao) {
         this.testCaseDao = testCaseDao;
     }
 

@@ -22,8 +22,8 @@ public class ProblemDao {
         return sqlSession.selectOne("problem.getProblemByPid", pid);
     }
 
-    public boolean updateProblemByPid(SqlSession sqlSession, ProblemEntity entity) {
-        return sqlSession.update("problem.updateProblemByPid", entity) == 1;
+    public boolean updateProblemDescription(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemDescription", entity) == 1;
     }
 
     public boolean addProblemSubmitTimes(SqlSession sqlSession, int pid) {

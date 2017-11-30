@@ -1,5 +1,7 @@
 package org.inlighting.oj.web.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author Smith
  **/
@@ -15,6 +17,7 @@ public class TestCaseEntity {
 
     private int strength;
 
+    @JSONField(name = "create_time")
     private long createTime;
 
 

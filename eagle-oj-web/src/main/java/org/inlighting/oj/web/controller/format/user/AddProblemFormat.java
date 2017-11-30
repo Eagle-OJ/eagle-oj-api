@@ -18,43 +18,30 @@ public class AddProblemFormat {
     @NotNull
     private String title;
 
-    @JSONField(name = "code_language")
-    @NotNull
-    private JSONArray codeLanguage;
-
-    @Length(max = 100)
+    @Length(max = 10000)
+    @NotBlank
     @NotNull
     private String description;
+
+    @JSONField(name = "input_format")
+    @Length(max = 10000)
+    @NotNull
+    private String inputFormat;
+
+    @JSONField(name = "output_format")
+    @Length(max = 10000)
+    @NotNull
+    private String outputFormat;
 
     @Range(min = 0, max = 3)
     @NotNull
     private Integer difficult;
 
-    @JSONField(name = "input_format")
-    @Length(max = 200)
     @NotNull
-    private String inputFormat;
-
-    @JSONField(name = "output_format")
-    @Length(max = 200)
-    @NotNull
-    private String outputFormat;
-
-    @Length(max = 200)
-    @NotNull
-    private String constraint;
+    private JSONArray samples;
 
     @NotNull
-    private JSONArray sample;
-
-    @NotNull
-    private JSONArray moderator;
-
-    @NotNull
-    private JSONArray tag;
-
-    @Range(min = 0, max = 2)
-    private Integer share;
+    private JSONArray tags;
 
     public String getTitle() {
         return title;
@@ -64,28 +51,12 @@ public class AddProblemFormat {
         this.title = title;
     }
 
-    public JSONArray getCodeLanguage() {
-        return codeLanguage;
-    }
-
-    public void setCodeLanguage(JSONArray codeLanguage) {
-        this.codeLanguage = codeLanguage;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getDifficult() {
-        return difficult;
-    }
-
-    public void setDifficult(Integer difficult) {
-        this.difficult = difficult;
     }
 
     public String getInputFormat() {
@@ -104,43 +75,29 @@ public class AddProblemFormat {
         this.outputFormat = outputFormat;
     }
 
-    public String getConstraint() {
-        return constraint;
+    public Integer getDifficult() {
+        return difficult;
     }
 
-    public void setConstraint(String constraint) {
-        this.constraint = constraint;
+    public void setDifficult(Integer difficult) {
+        this.difficult = difficult;
     }
 
-    public JSONArray getSample() {
-        return sample;
+    public JSONArray getSamples() {
+        return samples;
     }
 
-    public void setSample(JSONArray sample) {
-        this.sample = sample;
+    public void setSamples(JSONArray samples) {
+        this.samples = samples;
     }
 
-    public JSONArray getModerator() {
-        return moderator;
+    public JSONArray getTags() {
+        return tags;
     }
 
-    public void setModerator(JSONArray moderator) {
-        this.moderator = moderator;
-    }
-
-    public JSONArray getTag() {
-        return tag;
-    }
-
-    public void setTag(JSONArray tag) {
-        this.tag = tag;
-    }
-
-    public Integer getShare() {
-        return share;
-    }
-
-    public void setShare(Integer share) {
-        this.share = share;
+    public void setTags(JSONArray tags) {
+        this.tags = tags;
     }
 }
+
+

@@ -8,7 +8,6 @@ import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.TestCaseEntity;
 import org.inlighting.oj.web.judger.JudgerQueue;
 import org.inlighting.oj.web.judger.JudgerTaskResultEntity;
-import org.inlighting.oj.web.service.TestCaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;

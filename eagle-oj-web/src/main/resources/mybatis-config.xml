@@ -36,7 +36,7 @@
         <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/ProblemMapper.xml"/>
         <mapper resource="mapping/ProblemContestInfoMapper.xml"/>
-        <mapper resource="mapping/TestCaseMapper.xml"/>
+        <mapper resource="mapping/TestCasesMapper.xml"/>
         <mapper resource="mapping/ContestMapper.xml"/>
         <mapper resource="mapping/ContestUserInfoMapper.xml"/>
         <mapper resource="mapping/AttachmentMapper.xml"/>
@@ -44,5 +44,6 @@
         <mapper resource="mapping/GroupUserInfoMapper.xml"/>
         <mapper resource="mapping/SubmissionMapper.xml"/>
         <mapper resource="mapping/ContestProblemUserInfoMapper.xml"/>
+        <mapper resource="mapping/TagsMapper.xml"/>
     </mappers>
 </configuration>

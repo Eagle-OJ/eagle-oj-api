@@ -39,24 +39,21 @@ public class ProblemService {
     }
 
 
-    public int addProblem(int owner, JSONArray codeLanguage, String title,
-                              String description, int difficult, String inputFormat,
-                              String outputFormat, String constraint, JSONArray sample,
-                              JSONArray moderator, JSONArray tag, int share,long createTime) {
+    public int addProblem(int owner, String title, String description, String inputFormat, String outputFormat,
+                          int difficult, JSONArray samples, JSONArray tags, long createTime) {
         // 添加题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
-        problemEntity.setCodeLanguage(codeLanguage);
         problemEntity.setTitle(title);
+        problemEntity.setCodeLanguage(new JSONArray());
         problemEntity.setDescription(description);
-        problemEntity.setDifficult(difficult);
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);
-        problemEntity.setConstraint(constraint);
-        problemEntity.setSample(sample);
-        problemEntity.setModerator(moderator);
-        problemEntity.setTag(tag);
-        problemEntity.setShare(share);
+        problemEntity.setDifficult(difficult);
+        problemEntity.setSamples(samples);
+        problemEntity.setModerators(new JSONArray());
+        problemEntity.setTags(tags);
+        problemEntity.setStatus(0);
         problemEntity.setCreateTime(createTime);
 
         return problemDao.addProblem(sqlSession, problemEntity)? problemEntity.getPid() : 0;
@@ -77,26 +74,19 @@ public class ProblemService {
         return problemDao.getProblemByPid(sqlSession, pid);
     }
 
-    public boolean updateProblemByPid(int pid, JSONArray codeLanguage, String title,
-                                     String description, int difficult, String inputFormat,
-                                     String outputFormat, String constraint, JSONArray sample,
-                                     JSONArray moderator, JSONArray tag, int share) {
+    public boolean updateProblemDescription(int pid, String title, String description, String inputFormat,
+                                            String outputFormat, JSONArray samples, int difficult, JSONArray tags) {
         //通过pid来更新题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setPid(pid);
-        problemEntity.setCodeLanguage(codeLanguage);
         problemEntity.setTitle(title);
         problemEntity.setDescription(description);
-        problemEntity.setDifficult(difficult);
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);
-        problemEntity.setConstraint(constraint);
-        problemEntity.setModerator(moderator);
-        problemEntity.setSample(sample);
-        problemEntity.setTag(tag);
-        problemEntity.setShare(share);
-        problemEntity.setCreateTime(System.currentTimeMillis());
-        return problemDao.updateProblemByPid(sqlSession, problemEntity);
+        problemEntity.setSamples(samples);
+        problemEntity.setDifficult(difficult);
+        problemEntity.setTags(tags);
+        return problemDao.updateProblemDescription(sqlSession, problemEntity);
     }
 
     public boolean addProblemSubmitTimes(int pid) {

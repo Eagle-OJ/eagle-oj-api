@@ -2,27 +2,27 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="testCase">
+<mapper namespace="testCases">
     <insert id="addTestCase" parameterType="TestCaseEntity" useGeneratedKeys="true" keyProperty="tid">
-        INSERT INTO `test_case` (`pid`,`stdin`,`stdout`,`strength`,`create_time`)
+        INSERT INTO `test_cases` (`pid`,`stdin`,`stdout`,`strength`,`create_time`)
         VALUES (#{pid},#{stdin},#{stdout},#{strength},#{createTime})
     </insert>
 
     <select id="getAllTestCaseByPid" resultMap="testCaseMap">
-        SELECT * FROM test_case WHERE `pid` = #{pid}
+        SELECT * FROM test_cases WHERE `pid` = #{pid}
     </select>
 
     <update id="updateTestCaseByTid" >
-        UPDATE `test_case` SET  `pid` = pid, `stdin` = #{stdin},
+        UPDATE `test_cases` SET  `pid` = pid, `stdin` = #{stdin},
             `stdout` = #{stdout}, `strength` = #{strength} WHERE  `tid` = #{tid}
     </update>
 
     <delete id="deleteOneTestCaseByTid">
-        DELETE From test_case WHERE  `tid` = #{tid}
+        DELETE From test_cases WHERE  `tid` = #{tid}
     </delete>
 
     <select id="getTestCaseCountByPid" resultType="java.lang.Integer">
-        SELECT  count(`pid`) FROM  `test_case` WHERE `pid` = #{pid}
+        SELECT  count(`pid`) FROM  `test_cases` WHERE `pid` = #{pid}
     </select>
     <resultMap id="testCaseMap" type="TestCaseEntity">
         <id column="tid" property="tid"/>

@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller.format.user;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -11,11 +12,12 @@ import javax.validation.constraints.NotNull;
 public class AddProblemTestCaseFormat {
 
     @NotNull
-    @Length(max = 100)
+    @Length(max = 1000)
     private String stdin;
 
     @NotNull
-    @Length(max = 100)
+    @NotBlank
+    @Length(max = 1000)
     private String stdout;
 
     @NotNull

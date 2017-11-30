@@ -25,7 +25,7 @@ public class UserSubmissionController {
 
     private ContestUserInfoService contestUserInfoService;
 
-    private TestCaseService testCaseService;
+    private TestCasesService testCaseService;
 
     private ProblemContestInfoService problemContestInfoService;
 
@@ -37,7 +37,7 @@ public class UserSubmissionController {
     }
 
     @Autowired
-    public void setTestCaseService(TestCaseService testCaseService) {
+    public void setTestCaseService(TestCasesService testCaseService) {
         this.testCaseService = testCaseService;
     }
 
