@@ -12,9 +12,9 @@
         SELECT * FROM test_cases WHERE `pid` = #{pid}
     </select>
 
-    <update id="updateTestCaseByTid" >
-        UPDATE `test_cases` SET  `pid` = pid, `stdin` = #{stdin},
-            `stdout` = #{stdout}, `strength` = #{strength} WHERE  `tid` = #{tid}
+    <update id="updateTestCaseByTidPid" >
+        UPDATE `test_cases` SET `stdin` = #{stdin}, `stdout` = #{stdout}, `strength` = #{strength}
+        WHERE  `tid` = #{tid} AND `pid`=#{pid}
     </update>
 
     <delete id="deleteOneTestCaseByTid">

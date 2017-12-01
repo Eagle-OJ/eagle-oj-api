@@ -10,17 +10,22 @@ import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.TestCaseEntity;
+import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ProblemService;
 import org.inlighting.oj.web.service.TagsService;
 import org.inlighting.oj.web.service.TestCasesService;
+import org.inlighting.oj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -35,6 +40,13 @@ public class UserProblemController {
     private TestCasesService testCasesService;
 
     private TagsService tagsService;
+
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
     public void setProblemService(ProblemService problemService) {
@@ -206,24 +218,52 @@ public class UserProblemController {
     public ResponseEntity updateProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         if (problemEntity==null) {
             throw new RuntimeException("题目不存在");
         }
-        JSONArray moderator = problemEntity.getModerators();
-        int owner = SessionHelper.get().getUid();
-        int role = SessionHelper.get().getRole();
-        if (owner!=problemEntity.getOwner() && !moderator.contains(owner) && role!=DefaultConfig.ADMIN_ROLE) {
-            throw new UnauthorizedException();
+
+        if(! checkProblemEditPermission(problemEntity)) {
+            throw new RuntimeException("非法操作");
         }
 
-        if (! testCasesService.updateTestCaseByTid(tid, format.getStdin(), format.getStdout(),
+        if (! testCasesService.updateTestCaseByTidPid(tid, pid, format.getStdin(), format.getStdout(),
                 format.getStrength())) {
             throw new RuntimeException("更新失败");
         }
         return new ResponseEntity("更新成功");
     }
+
+    @ApiOperation("获取该题目的problem的所有moderator")
+    @GetMapping("/{pid}/moderators")
+    public ResponseEntity getProblemModerators(@PathVariable("pid") int pid) {
+        // todo
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+
+        if (problemEntity == null) {
+            throw new RuntimeException("题目不存在");
+        }
+
+        if (! checkProblemEditPermission(problemEntity)) {
+            throw new RuntimeException("非法操作");
+        }
+
+        JSONArray moderators = problemEntity.getModerators();
+        List<Integer> uidList = new ArrayList<>(3);
+        for (int i=0; i<moderators.size(); i++) {
+            uidList.add(moderators.getInteger(i));
+        }
+        List<UserEntity> userList = userService.getUsersInUidList(uidList);
+        List<Map<String, Object>> moderatorList = new ArrayList<>(3);
+        for (UserEntity userEntity: userList) {
+            Map<String, Object> userObject = new HashMap<>(2);
+            userObject.put("nickname", userEntity.getNickname());
+            userObject.put("avatar", userEntity.getAvatar());
+            moderatorList.add(userObject);
+        }
+        return new ResponseEntity(moderatorList);
+    }
+
 
     private void checkProblemFormat(AddProblemFormat format) {
 

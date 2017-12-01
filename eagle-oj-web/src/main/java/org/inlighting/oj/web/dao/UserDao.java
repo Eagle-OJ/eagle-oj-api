@@ -46,6 +46,10 @@ public class UserDao {
         return session.selectOne("user.selectUserByLogin", map);
     }
 
+    public List<UserEntity> getUsersInUidList(SqlSession sqlSession, List<Integer> uidList) {
+        return sqlSession.selectList("user.selectUserInUidList", uidList);
+    }
+
 
     public boolean addUserSubmitTimesByUid(SqlSession sqlSession, int uid) {
         return sqlSession.update("user.addUserSubmitTimes", uid) == 1;

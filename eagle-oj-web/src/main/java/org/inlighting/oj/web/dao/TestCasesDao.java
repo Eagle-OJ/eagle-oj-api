@@ -26,8 +26,8 @@ public class TestCasesDao {
         return sqlsession.selectList("testCases.getAllTestCaseByPid", pid);
     }
 
-    public boolean updateTestCaseByTid(SqlSession sqlsession,TestCaseEntity testCaseEntity) {
-        int updateNum = sqlsession.update("testCases.updateTestCaseByTid", testCaseEntity);
+    public boolean updateTestCaseByTidPid(SqlSession sqlsession,TestCaseEntity testCaseEntity) {
+        int updateNum = sqlsession.update("testCases.updateTestCaseByTidPid", testCaseEntity);
         return updateNum == 1;
     }
 

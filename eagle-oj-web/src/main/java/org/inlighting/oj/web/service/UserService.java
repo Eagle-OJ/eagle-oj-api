@@ -8,6 +8,8 @@ import org.inlighting.oj.web.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Smith
  **/
@@ -49,6 +51,10 @@ public class UserService {
 
     public UserEntity getUserByEmail(String email) {
         return userDao.getUserByEmail(sqlSession, email);
+    }
+
+    public List<UserEntity> getUsersInUidList(List<Integer> uidList) {
+        return userDao.getUsersInUidList(sqlSession, uidList);
     }
 
     public boolean updateUserProfile(int uid, String nickname, String realName, String motto, int gender) {

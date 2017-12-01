@@ -21,6 +21,14 @@
         SELECT * FROM `user` WHERE `email` = #{email} AND `password` = #{password}
     </select>
 
+    <select id="selectUserInUidList" resultMap="userEntityResultMap">
+        SELECT * FROM `user` WHERE `uid` IN
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <!--<update id="updateUserProfile">
         UPDATE `user`
         <set>
