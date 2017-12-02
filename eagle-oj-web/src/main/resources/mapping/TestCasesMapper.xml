@@ -24,6 +24,7 @@
     <select id="getTestCaseCountByPid" resultType="java.lang.Integer">
         SELECT  count(`pid`) FROM  `test_cases` WHERE `pid` = #{pid}
     </select>
+
     <resultMap id="testCaseMap" type="TestCaseEntity">
         <id column="tid" property="tid"/>
         <result column="pid" property="pid"/>

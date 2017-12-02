@@ -29,6 +29,15 @@
         </foreach>
     </select>
 
+    <select id="selectModeratorsInUidList" resultMap="moderatorsMap">
+        SELECT attachment.url, user.uid, user.nickname FROM user LEFT JOIN attachment ON user.avatar=attachment.aid
+        WHERE uid IN
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <!--<update id="updateUserProfile">
         UPDATE `user`
         <set>
@@ -69,6 +78,12 @@
     <update id="addUserScore">
         UPDATE `user` SET `score` = `score` + #{score} WHERE `uid` = #{uid}
     </update>
+
+    <resultMap id="moderatorsMap" type="HashMap">
+        <id property="uid" column="uid"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="url"/>
+    </resultMap>
 
     <resultMap id="userEntityResultMap" type="UserEntity">
         <id property="uid" column="uid"/>

@@ -18,6 +18,14 @@
         SELECT * FROM `problem`
     </select>
 
+    <select id="getProblemsByUid" resultMap="problemResultMap">
+        SELECT * FROM `problem` WHERE owner=#{uid} ORDER BY create_time DESC
+    </select>
+
+    <update id="updateProblemModerators">
+        UPDATE problem SET moderators=#{moderators} WHERE pid=#{pid}
+    </update>
+
     <update id="addProblemSubmitTimes">
         UPDATE `problem` SET `submit_times` = `submit_times` + 1 WHERE `pid` = #{pid}
     </update>

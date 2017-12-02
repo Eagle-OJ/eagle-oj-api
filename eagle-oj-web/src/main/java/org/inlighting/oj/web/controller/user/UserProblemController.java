@@ -2,10 +2,12 @@ package org.inlighting.oj.web.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.DefaultConfig;
-import org.inlighting.oj.web.controller.exception.UnauthorizedException;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
+import org.inlighting.oj.web.controller.format.user.AddProblemModeratorFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
@@ -16,6 +18,7 @@ import org.inlighting.oj.web.service.ProblemService;
 import org.inlighting.oj.web.service.TagsService;
 import org.inlighting.oj.web.service.TestCasesService;
 import org.inlighting.oj.web.service.UserService;
+import org.inlighting.oj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -78,7 +81,7 @@ public class UserProblemController {
             }
         }
         if (tags.size() == 0) {
-            throw new RuntimeException("标签非法");
+            throw new WebErrorException("标签非法");
         }
 
         int pid = problemService.addProblem(owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
@@ -86,23 +89,28 @@ public class UserProblemController {
                 System.currentTimeMillis());
 
         if (pid == 0) {
-            throw new RuntimeException("添加题目失败");
+            throw new WebErrorException("添加题目失败");
         }
 
         return new ResponseEntity("题目添加成功", pid);
+    }
+
+    @ApiOperation("获取用户创建的题目")
+    @GetMapping
+    public ResponseEntity getProblems(@RequestParam(name = "page") int page,
+                                      @RequestParam(name = "page_size") int pageSize) {
+        int uid = SessionHelper.get().getUid();
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.getProblemsByUid(uid, pager)));
     }
 
     @GetMapping("/{pid}")
     public ResponseEntity getProblemDescription(@PathVariable("pid") int pid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
 
-        if (problemEntity == null) {
-            throw new RuntimeException("此题目不存在");
-        }
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
 
-        if (! checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
-        }
         return new ResponseEntity(problemEntity);
     }
 
@@ -114,13 +122,8 @@ public class UserProblemController {
         checkProblemFormat(format);
 
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-        if (problemEntity == null) {
-            throw new RuntimeException("题目不存在");
-        }
-
-        if (! checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
-        }
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
 
         // tags 过滤
         JSONArray originTags= problemEntity.getTags();
@@ -139,13 +142,13 @@ public class UserProblemController {
         }
 
         if (finalTags.size() == 0) {
-            throw new RuntimeException("非法标签");
+            throw new WebErrorException("非法标签");
         }
 
         // 更新数据
         if (!problemService.updateProblemDescription(pid, format.getTitle(), format.getDescription(), format.getInputFormat(),
                 format.getOutputFormat(), format.getSamples(), format.getDifficult(), finalTags)) {
-            throw new RuntimeException("题目更新失败");
+            throw new WebErrorException("题目更新失败");
         }
 
         return new ResponseEntity("题目更新成功");
@@ -156,13 +159,8 @@ public class UserProblemController {
     @GetMapping("/{pid}/test_cases")
     public ResponseEntity getProblemTestCase(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-        if (problemEntity == null) {
-            throw new RuntimeException("此题目不存在");
-        }
-
-        if (! checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
-        }
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
 
         List<TestCaseEntity> testCaseEntities = testCasesService.getAllTestCasesByPid(problemEntity.getPid());
         return new ResponseEntity(testCaseEntities);
@@ -174,19 +172,14 @@ public class UserProblemController {
             @PathVariable("pid") int pid,
             @RequestBody @Valid AddProblemTestCaseFormat format) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-        if (problemEntity == null) {
-            throw new RuntimeException("此题目不存在");
-        }
-
-        if (! checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
-        }
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
 
         // 添加test_case
         int tid = testCasesService.addTestCase(pid, format.getStdin(), format.getStdout(), format.getStrength());
 
         if (tid == 0) {
-            throw new RuntimeException("添加失败");
+            throw new WebErrorException("添加失败");
         }
 
         return new ResponseEntity("添加成功", tid);
@@ -197,17 +190,12 @@ public class UserProblemController {
     public ResponseEntity deleteProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-        if (problemEntity==null) {
-            throw new RuntimeException("题目不存在");
-        }
-
-        if (!checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
-        }
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
 
         // 删除test_case
         if (! testCasesService.deleteTestCaseByTid(tid)) {
-            throw new RuntimeException("删除失败");
+            throw new WebErrorException("删除失败");
         }
 
         return new ResponseEntity("删除成功");
@@ -219,74 +207,103 @@ public class UserProblemController {
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-        if (problemEntity==null) {
-            throw new RuntimeException("题目不存在");
-        }
-
-        if(! checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
-        }
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
 
         if (! testCasesService.updateTestCaseByTidPid(tid, pid, format.getStdin(), format.getStdout(),
                 format.getStrength())) {
-            throw new RuntimeException("更新失败");
+            throw new WebErrorException("更新失败");
         }
         return new ResponseEntity("更新成功");
     }
 
-    @ApiOperation("获取该题目的problem的所有moderator")
-    @GetMapping("/{pid}/moderators")
-    public ResponseEntity getProblemModerators(@PathVariable("pid") int pid) {
-        // todo
+    @ApiOperation("删除指定的moderator")
+    @DeleteMapping("/{pid}/moderator/{uid}")
+    public ResponseEntity deleteProblemModerator(@PathVariable("pid") int pid,
+                                                 @PathVariable("uid") int uid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
 
-        if (problemEntity == null) {
-            throw new RuntimeException("题目不存在");
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
+
+        JSONArray moderators = problemEntity.getModerators();
+        if (! moderators.contains(uid)) {
+            throw new WebErrorException("不存在此用户");
+        } else {
+            moderators.remove((Object) uid);
         }
 
-        if (! checkProblemEditPermission(problemEntity)) {
-            throw new RuntimeException("非法操作");
+        if (! problemService.updateProblemModerators(pid, moderators)) {
+            throw new WebErrorException("删除失败");
+        }
+
+        return new ResponseEntity("删除成功");
+    }
+
+    @ApiOperation("添加指定的moderator")
+    @PutMapping("/{pid}/moderators")
+    public ResponseEntity addProblemModerator(@PathVariable("pid") int pid,
+                                              @RequestBody @Valid AddProblemModeratorFormat format) {
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        haveProblem(problemEntity);
+        haveOwnPermission(problemEntity);
+
+        UserEntity userEntity = userService.getUserByEmail(format.getEmail());
+        if (userEntity == null) {
+            throw new WebErrorException("此用户不存在");
         }
 
         JSONArray moderators = problemEntity.getModerators();
-        List<Integer> uidList = new ArrayList<>(3);
-        for (int i=0; i<moderators.size(); i++) {
-            uidList.add(moderators.getInteger(i));
+        if (moderators.contains(userEntity.getUid())) {
+            throw new WebErrorException("此用户已经添加");
+        } else {
+            moderators.add(userEntity.getUid());
         }
-        List<UserEntity> userList = userService.getUsersInUidList(uidList);
-        List<Map<String, Object>> moderatorList = new ArrayList<>(3);
-        for (UserEntity userEntity: userList) {
-            Map<String, Object> userObject = new HashMap<>(2);
-            userObject.put("nickname", userEntity.getNickname());
-            userObject.put("avatar", userEntity.getAvatar());
-            moderatorList.add(userObject);
+        if (! problemService.updateProblemModerators(pid, moderators)) {
+            throw new WebErrorException("添加失败");
         }
-        return new ResponseEntity(moderatorList);
+        return new ResponseEntity("添加成功");
     }
-
 
     private void checkProblemFormat(AddProblemFormat format) {
 
         // valid sample
         if (format.getSamples().size()==0)
-            throw new RuntimeException("样本不得为空");
+            throw new WebErrorException("样本不得为空");
 
         for (Object obj: format.getSamples()) {
             boolean input = !((JSONObject) obj).containsKey("input");
             boolean output = !((JSONObject) obj).containsKey("output");
             if (input || output)
-                throw new RuntimeException("样本格式不符");
+                throw new WebErrorException("样本格式不符");
         }
 
         // valid tags
         if (format.getTags().size()==0) {
-            throw new RuntimeException("标签不得为空");
+            throw new WebErrorException("标签不得为空");
         }
     }
 
-    private boolean checkProblemEditPermission(ProblemEntity problemEntity) {
+    private void haveProblem(ProblemEntity problemEntity) {
+        if (problemEntity == null) {
+            throw new WebErrorException("题目不存在");
+        }
+    }
+
+    private void havePermission(ProblemEntity problemEntity) {
         int uid = SessionHelper.get().getUid();
         int role = SessionHelper.get().getRole();
-        return uid == problemEntity.getOwner() || problemEntity.getModerators().contains(uid) || role ==DefaultConfig.ADMIN_ROLE;
+        if (! (uid == problemEntity.getOwner() || problemEntity.getModerators().contains(uid) || role ==DefaultConfig.ADMIN_ROLE)) {
+            throw new WebErrorException("非法操作");
+        }
     }
+
+    private void haveOwnPermission(ProblemEntity problemEntity) {
+        int uid = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+        if (! (uid == problemEntity.getOwner() || role ==DefaultConfig.ADMIN_ROLE)) {
+            throw new WebErrorException("只允许本人操作");
+        }
+    }
+
 }

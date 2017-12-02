@@ -11,7 +11,6 @@
                 #{timeUsed}, #{memoryUsed}, #{status}, #{submitTime})
     </insert>
 
-
     <resultMap id="submissionEntity" type="SubmissionEntity">
         <id column="sid" property="sid"/>
         <result column="owner" property="owner"/>

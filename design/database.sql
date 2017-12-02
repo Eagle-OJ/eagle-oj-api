@@ -112,10 +112,10 @@ DROP TABLE IF EXISTS `contest_user_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contest_user_info` (
-  `cid` int(11) unsigned NOT NULL,
-  `uid` int(11) unsigned NOT NULL,
-  `submit_times` int(11) unsigned DEFAULT '0',
-  `accept_times` int(11) unsigned DEFAULT '0',
+  `cid` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
+  `submit_times` int(10) unsigned DEFAULT '0',
+  `accept_times` int(10) unsigned DEFAULT '0',
   `newly_accept_time` bigint(13) unsigned DEFAULT '0',
   `join_time` bigint(13) unsigned NOT NULL,
   UNIQUE KEY `cid_uid_union` (`cid`,`uid`)
@@ -140,14 +140,14 @@ DROP TABLE IF EXISTS `group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group` (
-  `gid` int(11) NOT NULL AUTO_INCREMENT,
-  `owner` int(11) NOT NULL,
-  `cover` int(11) NOT NULL,
+  `gid` int(10) NOT NULL,
+  `owner` int(10) NOT NULL,
+  `cover` int(10) NOT NULL,
   `name` varchar(20) NOT NULL,
   `password` varchar(6) DEFAULT NULL,
   `create_time` bigint(13) NOT NULL,
   PRIMARY KEY (`gid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,8 +168,8 @@ DROP TABLE IF EXISTS `group_user_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_user_info` (
-  `gid` int(11) unsigned NOT NULL,
-  `uid` int(11) unsigned NOT NULL,
+  `gid` int(10) unsigned NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
   `score` int(10) unsigned DEFAULT '0',
   `submit_times` int(10) unsigned DEFAULT '0',
   `accept_times` int(10) unsigned DEFAULT '0',
@@ -199,20 +199,24 @@ CREATE TABLE `problem` (
   `owner` int(10) unsigned NOT NULL,
   `title` varchar(100) NOT NULL,
   `code_language` json NOT NULL COMMENT 'json数组[1,2,3,4]',
-  `description` varchar(1000) NOT NULL,
+  `description` text NOT NULL,
+  `input_format` text NOT NULL,
+  `output_format` text NOT NULL,
   `difficult` tinyint(1) unsigned NOT NULL COMMENT '0:easy 1:middle 2:difficult 3:expert',
-  `input_format` varchar(200) NOT NULL,
-  `output_format` varchar(200) NOT NULL,
-  `constraint` varchar(200) NOT NULL,
-  `sample` json NOT NULL COMMENT 'json array\n[{input: 1, output:10}, {...}]',
-  `moderator` json NOT NULL COMMENT 'json array\n[1,2,3,54]',
-  `tag` json NOT NULL COMMENT 'json array\n[1,2,3,4,5,6]',
+  `samples` json NOT NULL COMMENT 'json array\n[{input: 1, output:10}, {...}]',
+  `moderators` json NOT NULL COMMENT 'json array\n[1,2,3,54]',
+  `tags` json NOT NULL COMMENT 'json array\n[1,2,3,4,5,6]',
   `submit_times` int(10) unsigned DEFAULT '0',
-  `accept_times` int(10) unsigned DEFAULT '0',
-  `share` tinyint(1) unsigned NOT NULL COMMENT '0 自己使用\n1 审核中\n2 全局使用',
+  `used_times` int(10) DEFAULT '0' COMMENT '被别人引用过的次数',
+  `ac_times` int(10) unsigned DEFAULT '0',
+  `wa_times` int(10) unsigned DEFAULT '0',
+  `rte_times` int(10) unsigned DEFAULT '0',
+  `tle_times` int(10) unsigned DEFAULT '0',
+  `ce_times` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '0 自己使用\n1 审核中\n2 全局使用',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,7 +225,7 @@ CREATE TABLE `problem` (
 
 LOCK TABLES `problem` WRITE;
 /*!40000 ALTER TABLE `problem` DISABLE KEYS */;
-INSERT INTO `problem` VALUES (1,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510133001856),(3,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510137594057),(4,1,'A+B Test Problem','[1, 2]','这是一道很简单的测试题，做A+B',1,'输入规范','输出规范','条件约束','[{\"input\": \"1,2,3\", \"output\": \"3,4,6\"}, {\"input\": \"1,2,3\", \"output\": \"3,4,6\"}]','[1, 2]','[\"链表\", \"data structure\"]',0,0,1,1510155806317),(5,1,'A+B Test Problem','[1, 2]','这是一道很简单的测试题，做A+B',1,'输入规范','输出规范','条件约束','[{\"input\": \"1,2,3\", \"output\": \"3,4,6\"}, {\"input\": \"1,2,3\", \"output\": \"3,4,6\"}]','[1, 2]','[\"链表\", \"data structure\"]',0,0,1,1510155937092),(6,1,'A+B Test Problem','[1, 2]','这是一道很简单的测试题，做A+B',1,'输入规范','输出规范','条件约束','[{\"input\": \"1,2,3\", \"output\": \"3,4,6\"}, {\"input\": \"1,2,3\", \"output\": \"3,4,6\"}]','[1, 2]','[\"链表\", \"data structure\"]',0,0,1,1510155974292),(7,1,'A+B Test Problem','[1, 2]','这是一道很简单的测试题，做A+B',1,'输入规范','输出规范','条件约束','[{\"input\": \"1,2,3\", \"output\": \"3,4,6\"}, {\"input\": \"1,2,3\", \"output\": \"3,4,6\"}]','[1, 2]','[\"链表\", \"data structure\"]',0,0,1,1510155974906),(8,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510203568179),(9,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510207430914),(10,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510207555221),(11,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510207578307),(12,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510208130947),(13,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510379347391),(14,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510379353632),(15,14,'A+B problem updated','[1, 3, 4]','这是一道很简单的题目让你们练练手',0,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[1, 2, 3]','[1, 3, 4, 5]',0,0,2,1510464328957),(16,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510462910373),(19,14,'A+B problemxx','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510463003126),(21,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464252616),(22,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464328801),(23,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464352016),(24,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464352748),(25,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464353151),(26,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464353514),(27,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464353833),(28,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464354119),(29,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464354529),(30,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464354753),(31,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464355256),(32,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464355572),(33,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464355997),(34,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464356215),(35,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464356483),(36,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464356664),(37,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464356957),(38,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464357246),(39,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464357562),(40,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464357881),(41,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464358221),(42,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464358577),(43,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464358812),(44,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464359094),(45,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464359277),(46,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464359531),(47,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464359751),(48,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464365334),(49,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464365742),(50,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464365982),(51,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464366273),(52,14,'A+B problem','[1, 3, 4]','这是一道很简单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',0,0,1,1510464384639),(53,1,'A+B Test Problem','[1, 2]','这是一道很简单的测试题，做A+B',1,'输入规范','输出规范','条件约束','[{\"input\": \"1,2,3\", \"output\": \"3,4,6\"}, {\"input\": \"1,2,3\", \"output\": \"3,4,6\"}]','[1, 2]','[\"链表\", \"data structure\"]',0,0,1,1510465276410),(54,14,'A+B problem','[1, 3, 4]','这是一道很简xx单的题目让你们练练手',1,'不用输入','','','[{\"input\": \"123\", \"output\": \"xxx\"}, {\"input\": \"11\", \"output\": \"xxx123123\"}]','[]','[1, 3, 4, 5]',14,2,1,1510832220276);
+INSERT INTO `problem` VALUES (1,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510133001856),(3,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510137594057),(4,1,'awefasefasef','[1, 2]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510155806317),(5,1,'awefasefasef','[1, 2]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510155937092),(6,1,'awefasefasef','[1, 2]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510155974292),(7,1,'awefasefasef','[1, 2]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510155974906),(8,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510203568179),(9,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510207430914),(10,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510207555221),(11,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510207578307),(12,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510208130947),(13,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510379347391),(14,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510379353632),(15,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2, 3]','[\"java\"]',0,NULL,0,0,0,0,0,2,1510464328957),(16,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510462910373),(19,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510463003126),(21,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464252616),(22,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464328801),(23,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464352016),(24,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464352748),(25,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464353151),(26,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464353514),(27,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464353833),(28,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464354119),(29,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464354529),(30,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464354753),(31,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464355256),(32,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464355572),(33,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464355997),(34,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464356215),(35,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464356483),(36,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464356664),(37,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464356957),(38,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464357246),(39,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464357562),(40,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464357881),(41,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464358221),(42,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464358577),(43,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464358812),(44,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464359094),(45,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464359277),(46,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464359531),(47,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464359751),(48,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464365334),(49,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464365742),(50,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464365982),(51,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464366273),(52,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510464384639),(53,1,'awefasefasef','[1, 2]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]','[\"java\"]',0,NULL,0,0,0,0,0,1,1510465276410),(54,14,'awefasefasef','[1, 3, 4]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',14,NULL,2,0,0,0,0,1,1510832220276),(55,35,'awefasefasef','[]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,0,0,0,0,0,0,0,1512032505885),(56,35,'WD','[]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,0,0,0,0,0,0,0,1512038335822),(57,35,'awefasefasef','[]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfas\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]','[\"java\"]',0,0,0,0,0,0,0,0,1512038425558),(58,35,'awefasefasef','[35, 36, 37]','{\"ops\":[{\"insert\":\"aefaesfasf\\n\"}]}','{\"ops\":[{\"insert\":\"aserfgawf\\n\"}]}','{\"ops\":[{\"insert\":\"asefasfasef\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[35, 37, 12]','[\"java\"]',0,0,0,0,0,0,0,0,1512039261743);
 /*!40000 ALTER TABLE `problem` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,56 +290,56 @@ INSERT INTO `submission` VALUES (1,14,15,5,'PYTHON36',0,'[{\"status\": \"Accepte
 UNLOCK TABLES;
 
 --
--- Table structure for table `tag`
+-- Table structure for table `tags`
 --
 
-DROP TABLE IF EXISTS `tag`;
+DROP TABLE IF EXISTS `tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tag` (
+CREATE TABLE `tags` (
   `name` varchar(20) NOT NULL,
   `used` int(10) unsigned DEFAULT '0',
-  `number` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`name`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tag`
+-- Dumping data for table `tags`
 --
 
-LOCK TABLES `tag` WRITE;
-/*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tag` ENABLE KEYS */;
+LOCK TABLES `tags` WRITE;
+/*!40000 ALTER TABLE `tags` DISABLE KEYS */;
+INSERT INTO `tags` VALUES ('C++',2),('java',2),('考点一',2),('链表',2);
+/*!40000 ALTER TABLE `tags` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `test_case`
+-- Table structure for table `test_cases`
 --
 
-DROP TABLE IF EXISTS `test_case`;
+DROP TABLE IF EXISTS `test_cases`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `test_case` (
-  `tid` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `test_cases` (
+  `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pid` int(10) unsigned NOT NULL,
-  `stdin` varchar(100) NOT NULL,
-  `stdout` varchar(100) NOT NULL,
-  `strength` tinyint(2) unsigned NOT NULL COMMENT '介于1-10之间',
+  `stdin` varchar(1000) NOT NULL,
+  `stdout` varchar(1000) NOT NULL,
+  `strength` tinyint(1) unsigned NOT NULL COMMENT '介于1-9之间',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `test_case`
+-- Dumping data for table `test_cases`
 --
 
-LOCK TABLES `test_case` WRITE;
-/*!40000 ALTER TABLE `test_case` DISABLE KEYS */;
-INSERT INTO `test_case` VALUES (8,15,'stdin','stdout',5,0),(9,15,'stdin','stdout',5,0),(11,15,'stdin','stdout',5,1510464329067),(15,54,'stdin','stdout',5,1510832251391),(16,54,'stdin','stdout',3,1510832262021);
-/*!40000 ALTER TABLE `test_case` ENABLE KEYS */;
+LOCK TABLES `test_cases` WRITE;
+/*!40000 ALTER TABLE `test_cases` DISABLE KEYS */;
+INSERT INTO `test_cases` VALUES (8,15,'stdin','stdout',5,0),(9,15,'stdin','stdout',5,0),(11,15,'stdin','stdout',5,1510464329067),(15,54,'stdin','stdout',5,1510832251391),(16,54,'stdin','stdout',3,1510832262021),(20,58,'大海','而发而非啊',9,1512096555464);
+/*!40000 ALTER TABLE `test_cases` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -346,7 +350,7 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
   `email` varchar(255) NOT NULL,
   `nickname` varchar(20) NOT NULL,
   `real_name` varchar(20) DEFAULT NULL,
@@ -354,22 +358,22 @@ CREATE TABLE `user` (
   `password` varchar(32) NOT NULL,
   `role` tinyint(1) unsigned DEFAULT '0' COMMENT '0 普通用户\n9 管理员',
   `permission` json NOT NULL COMMENT '[''set'',''hello'']',
-  `submit_times` int(11) unsigned DEFAULT '0',
-  `contest_times` int(11) unsigned DEFAULT '0',
-  `ac_times` int(11) unsigned DEFAULT '0',
-  `wa_times` int(11) unsigned DEFAULT '0',
-  `rte_times` int(11) unsigned DEFAULT '0',
-  `tle_times` int(11) unsigned DEFAULT '0',
-  `ce_times` int(11) unsigned DEFAULT '0',
+  `submit_times` int(10) unsigned DEFAULT '0',
+  `contest_times` int(10) unsigned DEFAULT '0',
+  `ac_times` int(10) unsigned DEFAULT '0',
+  `wa_times` int(10) unsigned DEFAULT '0',
+  `rte_times` int(10) unsigned DEFAULT '0',
+  `tle_times` int(10) unsigned DEFAULT '0',
+  `ce_times` int(10) unsigned DEFAULT '0',
   `finished_problems` int(10) unsigned DEFAULT '0',
-  `score` int(11) unsigned DEFAULT '0',
+  `score` int(10) unsigned DEFAULT '0',
   `gender` tinyint(1) unsigned DEFAULT '0' COMMENT '0保密\n1男\n2女',
   `motto` varchar(50) DEFAULT NULL,
   `register_time` bigint(13) unsigned NOT NULL,
   `verified` tinyint(1) unsigned DEFAULT '0' COMMENT '0未验证\n1验证通过',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -391,4 +395,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-29 20:10:54
+-- Dump completed on 2017-12-02 21:05:34

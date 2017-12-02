@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ProblemDao;
 import org.inlighting.oj.web.dao.ProblemContestInfoDao;
@@ -59,6 +60,10 @@ public class ProblemService {
         return problemDao.addProblem(sqlSession, problemEntity)? problemEntity.getPid() : 0;
     }
 
+    public List<ProblemEntity> getProblemsByUid(int uid, PageRowBounds page) {
+        return problemDao.getProblemsByUid(sqlSession, uid, page);
+    }
+
     /**
      * 添加problem和contest之间的关系
      * 开启事务
@@ -87,6 +92,13 @@ public class ProblemService {
         problemEntity.setDifficult(difficult);
         problemEntity.setTags(tags);
         return problemDao.updateProblemDescription(sqlSession, problemEntity);
+    }
+
+    public boolean updateProblemModerators(int pid, JSONArray moderators) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
+        problemEntity.setModerators(moderators);
+        return problemDao.updateModerators(sqlSession, problemEntity);
     }
 
     public boolean addProblemSubmitTimes(int pid) {

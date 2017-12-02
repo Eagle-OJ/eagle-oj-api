@@ -46,8 +46,8 @@ public class UserDao {
         return session.selectOne("user.selectUserByLogin", map);
     }
 
-    public List<UserEntity> getUsersInUidList(SqlSession sqlSession, List<Integer> uidList) {
-        return sqlSession.selectList("user.selectUserInUidList", uidList);
+    public List<HashMap<String, Object>> getModeratorsInUidList(SqlSession sqlSession, List<Integer> uidList) {
+        return sqlSession.selectList("user.selectModeratorsInUidList", uidList);
     }
 
 

@@ -1,8 +1,12 @@
 package org.inlighting.oj.web.dao;
 
+import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 /**
@@ -22,8 +26,16 @@ public class ProblemDao {
         return sqlSession.selectOne("problem.getProblemByPid", pid);
     }
 
+    public List<ProblemEntity> getProblemsByUid(SqlSession sqlSession, int uid, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getProblemsByUid", uid, pager);
+    }
+
     public boolean updateProblemDescription(SqlSession sqlSession, ProblemEntity entity) {
         return sqlSession.update("problem.updateProblemDescription", entity) == 1;
+    }
+
+    public boolean updateModerators(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemModerators", entity) == 1;
     }
 
     public boolean addProblemSubmitTimes(SqlSession sqlSession, int pid) {

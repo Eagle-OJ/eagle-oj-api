@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.UploadAttachmentFormat;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
@@ -36,7 +37,7 @@ public class UserAttachmentController {
         int uid = SessionHelper.get().getUid();
         int aid = attachmentService.add(uid, format.getUrl(), System.currentTimeMillis());
         if (aid == 0) {
-            throw new RuntimeException("上传失败");
+            throw new WebErrorException("上传失败");
         }
         return new ResponseEntity("上传成功");
     }

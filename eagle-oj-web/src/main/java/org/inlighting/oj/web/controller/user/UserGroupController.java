@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller.user;
 
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.CreateGroupFormat;
 import org.inlighting.oj.web.controller.format.user.EnterGroupFormat;
 import org.inlighting.oj.web.entity.GroupEntity;
@@ -46,7 +47,7 @@ public class UserGroupController {
         int gid = groupService.createGroup(owner, format.getCover(), format.getName(), format.getPassword(), System.currentTimeMillis());
 
         if (gid == 0) {
-            throw new RuntimeException("比赛创建失败");
+            throw new WebErrorException("比赛创建失败");
         }
         return new ResponseEntity("比赛创建成功", gid);
     }
@@ -58,26 +59,26 @@ public class UserGroupController {
         // 校对密码
         GroupEntity groupEntity = groupService.getByGid(gid);
         if (groupEntity == null) {
-            throw new RuntimeException("次小组不存在");
+            throw new WebErrorException("次小组不存在");
         }
 
         // 查看是否已经在小组里面
         int uid = SessionHelper.get().getUid();
         GroupUserInfoEntity groupUserInfoEntity = groupUserInfoService.getByGidAndUid(gid, uid);
         if (groupUserInfoEntity != null) {
-            throw new RuntimeException("已经在小组里面了");
+            throw new WebErrorException("已经在小组里面了");
         }
 
         // 密码校对
         if (groupEntity.getPassword() != null) {
             if (! format.getPassword().equals(groupEntity.getPassword())) {
-                throw new RuntimeException("密码错误");
+                throw new WebErrorException("密码错误");
             }
         }
 
         // 加入小组
         if (! groupUserInfoService.add(gid, uid, System.currentTimeMillis())) {
-            throw new RuntimeException("加入小组失败");
+            throw new WebErrorException("加入小组失败");
         }
 
         return new ResponseEntity("小组加入成功");
@@ -92,12 +93,12 @@ public class UserGroupController {
         // 检验自己是否为小组长
         GroupEntity groupEntity = groupService.getByGid(gid);
         if (groupEntity.getOwner() != owner) {
-            throw new RuntimeException("你没有管理权限");
+            throw new WebErrorException("你没有管理权限");
         }
 
         // 删除用户
         if (! groupUserInfoService.deleteByGidAndUid(gid, uid)) {
-            throw new RuntimeException("删除用户失败");
+            throw new WebErrorException("删除用户失败");
         }
         return new ResponseEntity("用户删除成功");
     }

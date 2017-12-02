@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
 import org.inlighting.oj.web.cache.CacheController;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
@@ -53,7 +54,7 @@ public class IndexController {
         // 检查用户是否存在
         UserEntity userEntity = userService.getUserByEmail(format.getEmail());
         if (userEntity != null) {
-            throw new RuntimeException("邮箱已经注册");
+            throw new WebErrorException("邮箱已经注册");
         }
 
         // 注册用户
@@ -62,7 +63,7 @@ public class IndexController {
                 new Md5Hash(format.getPassword()).toString(),
                 System.currentTimeMillis());
         if (uid == 0) {
-            throw new RuntimeException("注册失败");
+            throw new WebErrorException("注册失败");
         }
         return new ResponseEntity("注册成功", uid);
     }
@@ -73,7 +74,7 @@ public class IndexController {
         UserEntity userEntity = userService.getUserByLogin(format.getEmail(),
                 new Md5Hash(format.getPassword()).toString());
         if (userEntity == null)
-            throw new RuntimeException("用户名密码错误");
+            throw new WebErrorException("用户名密码错误");
 
         JSONArray array = userEntity.getPermission();
         Iterator<Object> it = array.iterator();

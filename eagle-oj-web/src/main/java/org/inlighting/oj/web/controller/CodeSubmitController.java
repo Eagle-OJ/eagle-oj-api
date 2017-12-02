@@ -3,6 +3,7 @@ package org.inlighting.oj.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.index.TestSubmitCodeFormat;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.TestCaseEntity;
@@ -46,7 +47,7 @@ public class CodeSubmitController {
 
     private String submitTest(TestSubmitCodeFormat format, int priority) {
         if (format.getTestCases().size() == 0) {
-            throw new RuntimeException("没有测试用例");
+            throw new WebErrorException("没有测试用例");
         }
         // 组装测试用例
         List<TestCaseEntity> testCaseEntities = new ArrayList<>(3);
@@ -66,7 +67,7 @@ public class CodeSubmitController {
     public ResponseEntity getStatus(@PathVariable String uuid) {
         JudgerTaskResultEntity resultEntity = judgerQueue.getResult(uuid);
         if (resultEntity == null) {
-            throw new RuntimeException("不存在任务");
+            throw new WebErrorException("不存在任务");
         }
 
         return new ResponseEntity("获取成功", resultEntity);

@@ -3,6 +3,7 @@ package org.inlighting.oj.web.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.AddContestProblemFormat;
 import org.inlighting.oj.web.controller.format.user.CreateContestFormat;
 import org.inlighting.oj.web.controller.format.user.EnterContestFormat;
@@ -60,22 +61,22 @@ public class UserContestController {
         long currentTime = System.currentTimeMillis();
         // valid time
         if (format.getStartTime() <= currentTime) {
-            throw new RuntimeException("非法开始时间");
+            throw new WebErrorException("非法开始时间");
         }
 
         // endTime为0代表永远不结束
         if (format.getEndTime()!=0 && format.getStartTime() >= format.getEndTime()) {
-            throw new RuntimeException("非法结束时间");
+            throw new WebErrorException("非法结束时间");
         }
 
         // 限时模式
         if (format.getType()==1 || format.getType()==3) {
             if (format.getTotalTime() == 0) {
-                throw new RuntimeException("非法总时间");
+                throw new WebErrorException("非法总时间");
             }
         } else {
             if (format.getTotalTime() != 0) {
-                throw new RuntimeException("非法总时间");
+                throw new WebErrorException("非法总时间");
             }
         }
 
@@ -83,7 +84,7 @@ public class UserContestController {
                 format.getDescription(), format.getStartTime(), format.getEndTime(),
                 format.getTotalTime(), format.getPassword(), official, format.getType(), 1, currentTime);
         if (cid == 0) {
-            throw new RuntimeException("比赛创建失败");
+            throw new WebErrorException("比赛创建失败");
         }
         return new ResponseEntity("比赛创建成功", cid);
     }
@@ -96,7 +97,7 @@ public class UserContestController {
         int uid = SessionHelper.get().getUid();
         ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
         if (contestUserInfoEntity != null) {
-            throw new RuntimeException("你已经加入比赛了");
+            throw new WebErrorException("你已经加入比赛了");
         }
 
         // 校验密码
@@ -104,13 +105,13 @@ public class UserContestController {
         if (contestEntity.getPassword() != null) {
             String password = contestEntity.getPassword();
             if (! password.equals(format.getPassword())) {
-                throw new RuntimeException("密码错误");
+                throw new WebErrorException("密码错误");
             }
         }
 
         // 加入比赛
         if (! contestUserInfoService.add(cid, uid, System.currentTimeMillis())) {
-            throw new RuntimeException("加入比赛失败");
+            throw new WebErrorException("加入比赛失败");
         }
         return new ResponseEntity("加入比赛成功");
     }
@@ -123,7 +124,7 @@ public class UserContestController {
         // 校验数据
         JSONArray problems = format.getProblems();
         if (problems.size() ==0) {
-            throw new RuntimeException("数据非法");
+            throw new WebErrorException("数据非法");
         }
 
         int uid = SessionHelper.get().getUid();
@@ -131,7 +132,7 @@ public class UserContestController {
         // 校验自己是否为比赛拥有者
         ContestEntity contestEntity = contestService.getContestByCid(cid);
         if (contestEntity.getOwner() != uid) {
-            throw new RuntimeException("非法操作");
+            throw new WebErrorException("非法操作");
         }
 
         List<Integer> problemList = new ArrayList<>(10);
@@ -139,7 +140,7 @@ public class UserContestController {
             problemList.add(problems.getInteger(i));
         }
         if (! problemService.addContestProblem(problemList, cid)) {
-            throw new RuntimeException("题目添加失败");
+            throw new WebErrorException("题目添加失败");
         }
         return new ResponseEntity("题目添加成功");
     }

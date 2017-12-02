@@ -6,8 +6,10 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.inlighting.oj.web.dao.UserDao;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,6 +21,9 @@ public class UserService {
     private final SqlSession sqlSession;
 
     private UserDao userDao;
+
+    @Value("${eagle-oj.default.avatar}")
+    private String DEFAULT_AVATAR;
 
     public UserService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
@@ -53,8 +58,14 @@ public class UserService {
         return userDao.getUserByEmail(sqlSession, email);
     }
 
-    public List<UserEntity> getUsersInUidList(List<Integer> uidList) {
-        return userDao.getUsersInUidList(sqlSession, uidList);
+    public List<HashMap<String, Object>> getModeratorsInUidList(List<Integer> uidList) {
+        List<HashMap<String, Object>> moderators = userDao.getModeratorsInUidList(sqlSession, uidList);
+        for (HashMap<String, Object> map: moderators) {
+            if (! map.containsKey("avatar")) {
+                map.put("avatar", DEFAULT_AVATAR);
+            }
+        }
+        return moderators;
     }
 
     public boolean updateUserProfile(int uid, String nickname, String realName, String motto, int gender) {
