@@ -32,16 +32,16 @@ public class ConTestServiceTest {
         this.contestService = contestService;
     }
 
-    @Before
+    /*@Before
     public void addContestTest(){
         ArrayList<Object> list = new ArrayList<>();
         list.add(1);
         list.add(2);
         needKey= contestService.addContest("第二次考试",1,"first","very difficult",
-                System.currentTimeMillis()+86400,System.currentTimeMillis()+86400*2,0,"123456",
-                0,2, 1,System.currentTimeMillis());
+                System.currentTimeMillis()+86400,System.currentTimeMillis()+86400*2,"123456",
+                0,2,System.currentTimeMillis());
         Assert.assertEquals(true,needKey>0);
-    }
+    }*/
 
     @Test
     public void getContestByCidTest(){

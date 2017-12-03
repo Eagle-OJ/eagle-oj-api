@@ -28,8 +28,8 @@ public class ContestService {
     }
 
     public int addContest(String name, int owner, String slogan, String description,
-                          long startTime, long endTime, long totalTime, String password, int official,
-                          int type, int status, long createTime) {
+                          long startTime, long endTime, Long totalTime, String password,
+                          int type, long createTime) {
         // 添加比赛
         ContestEntity contestEntity = new ContestEntity();
         contestEntity.setName(name);
@@ -40,9 +40,9 @@ public class ContestService {
         contestEntity.setEndTime(endTime);
         contestEntity.setTotalTime(totalTime);
         contestEntity.setPassword(password);
-        contestEntity.setOfficial(official);
+        contestEntity.setOfficial(0);
         contestEntity.setType(type);
-        contestEntity.setStatus(status);
+        contestEntity.setStatus(0);
         contestEntity.setCreateTime(createTime);
         boolean result = contestDao.addContest(sqlSession,contestEntity);
         return result ? contestEntity.getCid() : 0;
@@ -54,7 +54,7 @@ public class ContestService {
         if (valid) {
             if (contestEntity.getStatus()==1 && contestEntity.getEndTime()<System.currentTimeMillis()) {
                 contestEntity.setStatus(0);
-                updateContestByCid(cid, contestEntity);
+                //updateContestDescription(cid, contestEntity);
                 return contestEntity;
             }
         }
@@ -71,8 +71,19 @@ public class ContestService {
         return contestDao.deleteContestByCid(sqlSession,cid);
     }
 
-    public boolean updateContestByCid(int cid, ContestEntity contestEntity) {
-        return contestDao.updateContestByCid(sqlSession, contestEntity);
+    public boolean updateContestDescription(int cid, String name, String slogan, String description, long startTime,
+                                            long endTime, Long totalTime, String password, int type) {
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setCid(cid);
+        contestEntity.setName(name);
+        contestEntity.setSlogan(slogan);
+        contestEntity.setDescription(description);
+        contestEntity.setStartTime(startTime);
+        contestEntity.setEndTime(endTime);
+        contestEntity.setTotalTime(totalTime);
+        contestEntity.setPassword(password);
+        contestEntity.setType(type);
+        return contestDao.updateContestDescription(sqlSession, contestEntity);
     }
 
     public List<ContestEntity> getAll(){

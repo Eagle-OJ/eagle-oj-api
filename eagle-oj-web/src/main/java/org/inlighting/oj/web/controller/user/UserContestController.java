@@ -3,6 +3,7 @@ package org.inlighting.oj.web.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.AddContestProblemFormat;
 import org.inlighting.oj.web.controller.format.user.CreateContestFormat;
@@ -52,41 +53,40 @@ public class UserContestController {
         this.contestUserInfoService = contestUserInfoService;
     }
 
+    @ApiOperation("获取比赛信息")
+    @GetMapping("/{cid}")
+    public ResponseEntity getContestDescription(@PathVariable("cid") int cid) {
+        int owner = SessionHelper.get().getUid();
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        havePermission(contestEntity);
+        return new ResponseEntity(contestEntity);
+    }
+
     @ApiOperation("创建比赛")
     @PostMapping
     public ResponseEntity createContest(@RequestBody @Valid CreateContestFormat format) {
         int owner = SessionHelper.get().getUid();
-        int official = 0;
-
-        long currentTime = System.currentTimeMillis();
-        // valid time
-        if (format.getStartTime() <= currentTime) {
-            throw new WebErrorException("非法开始时间");
-        }
-
-        // endTime为0代表永远不结束
-        if (format.getEndTime()!=0 && format.getStartTime() >= format.getEndTime()) {
-            throw new WebErrorException("非法结束时间");
-        }
-
-        // 限时模式
-        if (format.getType()==1 || format.getType()==3) {
-            if (format.getTotalTime() == 0) {
-                throw new WebErrorException("非法总时间");
-            }
-        } else {
-            if (format.getTotalTime() != 0) {
-                throw new WebErrorException("非法总时间");
-            }
-        }
-
+        checkContest(format);
         int cid = contestService.addContest(format.getName(), owner,format.getSlogan(),
                 format.getDescription(), format.getStartTime(), format.getEndTime(),
-                format.getTotalTime(), format.getPassword(), official, format.getType(), 1, currentTime);
+                format.getTotalTime(), format.getPassword(), format.getType(), System.currentTimeMillis());
         if (cid == 0) {
             throw new WebErrorException("比赛创建失败");
         }
         return new ResponseEntity("比赛创建成功", cid);
+    }
+
+    @ApiOperation("编辑比赛")
+    @PutMapping("/{cid}")
+    public ResponseEntity editContest(@PathVariable("cid") int cid,
+                                      @RequestBody @Valid CreateContestFormat format) {
+        checkContest(format);
+
+        if (! contestService.updateContestDescription(cid, format.getName(), format.getSlogan(), format.getDescription(),
+                format.getStartTime(), format.getEndTime(), format.getTotalTime(), format.getPassword(), format.getType())) {
+            throw new WebErrorException("比赛更新失败");
+        }
+        return new ResponseEntity("比赛更新成功");
     }
 
     @ApiOperation("参加比赛")
@@ -143,5 +143,33 @@ public class UserContestController {
             throw new WebErrorException("题目添加失败");
         }
         return new ResponseEntity("题目添加成功");
+    }
+
+    private void checkContest(CreateContestFormat format) {
+        long currentTime = System.currentTimeMillis();
+        // valid time
+        if (format.getStartTime() <= currentTime) {
+            throw new WebErrorException("开始时间不得早于现在的时间");
+        }
+
+        // endTime为0代表永远不结束
+        if (format.getEndTime()!=0 && format.getStartTime() >= format.getEndTime()) {
+            throw new WebErrorException("非法结束时间");
+        }
+
+        // 限时模式
+        if (format.getType()==1 || format.getType()==3) {
+            if (format.getTotalTime() == null) {
+                throw new WebErrorException("非法总时间");
+            }
+        }
+    }
+
+    private void havePermission(ContestEntity contestEntity) {
+        int uid = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+        if (! (uid == contestEntity.getOwner() || role == DefaultConfig.ADMIN_ROLE)) {
+            throw new WebErrorException("只允许本人操作");
+        }
     }
 }

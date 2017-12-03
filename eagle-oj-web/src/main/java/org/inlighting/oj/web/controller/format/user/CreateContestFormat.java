@@ -17,11 +17,11 @@ public class CreateContestFormat {
     private String name;
 
     @NotNull
-    @Length(max = 100)
+    @Length(min = 1, max = 100)
     private String slogan;
 
     @NotNull
-    @Length(max = 500)
+    @Length(min = 1, max = 500)
     private String description;
 
     @JSONField(name = "start_time")
@@ -33,14 +33,13 @@ public class CreateContestFormat {
     private Long endTime;
 
     @JSONField(name = "total_time")
-    @NotNull
     private Long totalTime;
 
     @Length(max = 6)
     private String password;
 
     @NotNull
-    @Range(max = 4)
+    @Range(min = 0, max = 3)
     private Integer type;
 
     public String getName() {

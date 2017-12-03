@@ -13,8 +13,7 @@ import java.util.List;
 public class ContestDao {
 
     public boolean addContest(SqlSession sqlSession,ContestEntity contestEntity){
-        int addNum = sqlSession.insert("contest.addContest",contestEntity);
-        return addNum == 1;
+        return sqlSession.insert("contest.addContest",contestEntity) == 1;
     }
 
     public List<ContestEntity> getAll(SqlSession sqlSession){
@@ -26,9 +25,8 @@ public class ContestDao {
         return deleteNum == 1;
     }
 
-    public boolean updateContestByCid(SqlSession sqlSession,ContestEntity contestEntity)
-    {
-        return sqlSession.update("contest.updateContestByCid",contestEntity) == 1;
+    public boolean updateContestDescription(SqlSession sqlSession,ContestEntity contestEntity) {
+        return sqlSession.update("contest.updateContestDescription",contestEntity) == 1;
     }
 
     public ContestEntity getContestByCid(SqlSession sqlSession,int cid){

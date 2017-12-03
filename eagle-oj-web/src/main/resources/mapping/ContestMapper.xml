@@ -3,6 +3,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="contest">
+
         <insert id="addContest" parameterType="ContestEntity" useGeneratedKeys="true" keyProperty="cid">
             INSERT INTO `contest`(`name`,`owner`,`slogan`,`description`,`start_time`,
             `end_time`,`total_time`,`password`,`official`,`type`,`status`,`create_time`)
@@ -15,11 +16,10 @@
             SELECT * FROM `contest`
         </select>
 
-        <update id="updateContestByCid" parameterType="ContestEntity">
-            UPDATE `contest` SET `name` = #{name},`owner`=#{owner},
-                `slogan` = #{slogan},`description` = #{description},`start_time` = #{startTime},
-                `end_time` = #{endTime},`total_time` = #{totalTime},`password` = #{password},`official`=#{official},
-                `type` = #{type},`status`=#{status},`create_time` = #{createTime} WHERE `cid` = #{cid}
+        <update id="updateContestDescription" parameterType="ContestEntity">
+            UPDATE `contest` SET `name` = #{name}, `slogan` = #{slogan},`description` = #{description},
+                `start_time` = #{startTime},`end_time` = #{endTime},`total_time` = #{totalTime},
+                `password` = #{password}, `type` = #{type} WHERE `cid` = #{cid}
         </update>
 
         <delete id="deleteContestByCid">
