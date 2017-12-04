@@ -7,9 +7,20 @@
         INSERT INTO `problem_contest_info` (`pid`, `cid`, `score`) VALUES (#{pid}, #{cid}, #{score})
     </insert>
 
-    <select id="getProblemContestInfoByPidAndCid" resultMap="problemContestInfoResultMap">
+    <select id="getProblemContest" resultMap="problemContestInfoResultMap">
         SELECT * FROM `problem_contest_info` WHERE `pid`=#{pid} AND `cid`=#{cid}
     </select>
+
+    <select id="getContestProblems" resultType="HashMap">
+        SELECT problem.title, problem_contest_info.pid, problem_contest_info.score FROM problem_contest_info
+        LEFT JOIN problem ON problem_contest_info.pid=problem.pid
+        WHERE problem_contest_info.cid = #{cid}
+    </select>
+
+    <update id="updateContestProblem">
+        UPDATE `problem_contest_info` SET score = #{score} WHERE cid = #{cid} AND pid = #{pid}
+    </update>
+
 
     <update id="addSubmitTimesByPidAndCid">
         UPDATE `problem_contest_info` SET `submit_times` = `submit_times` +1 WHERE `pid` = #{pid} AND `cid` = #{cid}
@@ -19,9 +30,19 @@
         UPDATE `problem_contest_info` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid} AND `cid` = #{cid}
     </update>
 
+    <delete id="deleteContestProblem">
+        DELETE FROM problem_contest_info WHERE cid=#{cid} AND pid=#{pid}
+    </delete>
+
     <resultMap id="problemContestInfoResultMap" type="ProblemContestInfoEntity">
         <result column="pid" property="pid"/>
         <result column="cid" property="cid"/>
         <result column="score" property="score"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
     </resultMap>
 </mapper>

@@ -31,7 +31,7 @@ public class TagsService {
         return tagsDao.getTags(sqlSession);
     }
 
-    public boolean addUsedTimes(String name) {
-        return tagsDao.addUsedTimes(sqlSession, name);
+    public boolean addUsedTimes(int tid) {
+        return tagsDao.addUsedTimes(sqlSession, tid);
     }
 }

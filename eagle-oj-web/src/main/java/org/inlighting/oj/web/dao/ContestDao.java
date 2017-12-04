@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.dao;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ContestEntity;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,10 @@ public class ContestDao {
 
     public List<ContestEntity> getAll(SqlSession sqlSession){
         return sqlSession.selectList("contest.getAll");
+    }
+
+    public List<ContestEntity> getUserContests(SqlSession sqlSession, int uid, PageRowBounds pager) {
+        return sqlSession.selectList("contest.getUserContests", uid, pager);
     }
 
     public boolean deleteContestByCid(SqlSession sqlSession,int cid){

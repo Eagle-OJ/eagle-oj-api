@@ -85,7 +85,7 @@ public class UserSubmissionController {
                 }
             }
 
-            ProblemContestInfoEntity problemContestInfoEntity = problemContestInfoService.getByPidAndBelong(problemId, contestId);
+            ProblemContestInfoEntity problemContestInfoEntity = problemContestInfoService.getProblemContest(problemId, contestId);
             if (problemContestInfoEntity == null) {
                 throw new WebErrorException("问题不在比赛中");
             }

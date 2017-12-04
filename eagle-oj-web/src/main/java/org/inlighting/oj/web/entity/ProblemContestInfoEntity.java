@@ -15,8 +15,28 @@ public class ProblemContestInfoEntity {
     @JSONField(name = "submit_times")
     private int submitTimes;
 
-    @JSONField(name = "accept_times")
-    private int acceptTimes;
+    @JSONField(name = "ac_times")
+    private int ACTimes;
+
+    @JSONField(name = "wa_times")
+    private int WATimes;
+
+    @JSONField(name = "rte_times")
+    private int RTETimes;
+
+    @JSONField(name = "tle_times")
+    private int TLETimes;
+
+    @JSONField(name = "ce_times")
+    private int CETimes;
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
 
     public int getCid() {
         return cid;
@@ -26,12 +46,12 @@ public class ProblemContestInfoEntity {
         this.cid = cid;
     }
 
-    public int getPid() {
-        return pid;
+    public int getScore() {
+        return score;
     }
 
-    public void setPid(int pid) {
-        this.pid = pid;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public int getSubmitTimes() {
@@ -42,19 +62,43 @@ public class ProblemContestInfoEntity {
         this.submitTimes = submitTimes;
     }
 
-    public int getAcceptTimes() {
-        return acceptTimes;
+    public int getACTimes() {
+        return ACTimes;
     }
 
-    public void setAcceptTimes(int acceptTimes) {
-        this.acceptTimes = acceptTimes;
+    public void setACTimes(int ACTimes) {
+        this.ACTimes = ACTimes;
     }
 
-    public int getScore() {
-        return score;
+    public int getWATimes() {
+        return WATimes;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setWATimes(int WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public int getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(int RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public int getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(int TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public int getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(int CETimes) {
+        this.CETimes = CETimes;
     }
 }

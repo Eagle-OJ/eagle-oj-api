@@ -5,6 +5,7 @@ import org.inlighting.oj.web.entity.ProblemContestInfoEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,11 +18,15 @@ public class ProblemContestInfoDao {
         return session.insert("problemContestInfo.insertProblemContestInfo", entity) == 1;
     }
 
-    public ProblemContestInfoEntity getByPidAndCid(SqlSession sqlSession, int pid, int cid) {
+    public ProblemContestInfoEntity getProblemContest(SqlSession sqlSession, int pid, int cid) {
         Map<String, Integer> map = new HashMap<>();
         map.put("pid", pid);
         map.put("cid", cid);
-        return sqlSession.selectOne("problemContestInfo.getProblemContestInfoByPidAndCid", map);
+        return sqlSession.selectOne("problemContestInfo.getProblemContest", map);
+    }
+
+    public List<HashMap<String, Object>> getContestProblems(SqlSession sqlSession, int cid) {
+        return sqlSession.selectList("problemContestInfo.getContestProblems", cid);
     }
 
     public boolean addSubmitTimesByPidAndCid(SqlSession sqlSession, int pid, int cid) {
@@ -36,5 +41,13 @@ public class ProblemContestInfoDao {
         map.put("pid", pid);
         map.put("cid", cid);
         return sqlSession.update("problemContestInfo.addAcceptTimesByPidAndCid", map) == 1;
+    }
+
+    public boolean updateContestProblem(SqlSession sqlSession, ProblemContestInfoEntity entity) {
+        return sqlSession.update("problemContestInfo.updateContestProblem", entity) == 1;
+    }
+
+    public boolean deleteContestProblem(SqlSession sqlSession, ProblemContestInfoEntity entity) {
+        return sqlSession.delete("problemContestInfo.deleteContestProblem", entity) == 1;
     }
 }

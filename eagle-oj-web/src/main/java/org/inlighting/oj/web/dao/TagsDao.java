@@ -2,6 +2,7 @@ package org.inlighting.oj.web.dao;
 
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.TagEntity;
+import org.inlighting.oj.web.entity.TagProblemEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public class TagsDao {
         return sqlSession.selectList("tags.getAll");
     }
 
-    public boolean addUsedTimes(SqlSession sqlSession, String name) {
-        return sqlSession.update("tags.addUsedTimes", name) == 1;
+    public boolean addUsedTimes(SqlSession sqlSession, int tid) {
+        return sqlSession.update("tags.addUsedTimes", tid) == 1;
     }
+
 }

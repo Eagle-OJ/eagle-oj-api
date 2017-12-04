@@ -11,9 +11,12 @@
             #{endTime},#{totalTime},#{password},#{official},#{type},#{status},#{createTime})
         </insert>
 
-
         <select id="getAll" resultMap="contestMap">
             SELECT * FROM `contest`
+        </select>
+
+        <select id="getUserContests" resultMap="contestMap">
+            SELECT * FROM contest WHERE owner = #{uid} ORDER BY create_time DESC
         </select>
 
         <update id="updateContestDescription" parameterType="ContestEntity">

@@ -45,5 +45,6 @@
         <mapper resource="mapping/SubmissionMapper.xml"/>
         <mapper resource="mapping/ContestProblemUserInfoMapper.xml"/>
         <mapper resource="mapping/TagsMapper.xml"/>
+        <mapper resource="mapping/TagProblem.xml"/>
     </mappers>
 </configuration>

@@ -9,15 +9,9 @@ import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemModeratorFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
-import org.inlighting.oj.web.entity.ProblemEntity;
-import org.inlighting.oj.web.entity.ResponseEntity;
-import org.inlighting.oj.web.entity.TestCaseEntity;
-import org.inlighting.oj.web.entity.UserEntity;
+import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.security.SessionHelper;
-import org.inlighting.oj.web.service.ProblemService;
-import org.inlighting.oj.web.service.TagsService;
-import org.inlighting.oj.web.service.TestCasesService;
-import org.inlighting.oj.web.service.UserService;
+import org.inlighting.oj.web.service.*;
 import org.inlighting.oj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,10 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Smith
@@ -45,6 +37,13 @@ public class UserProblemController {
     private TagsService tagsService;
 
     private UserService userService;
+
+    private TagProblemService tagProblemService;
+
+    @Autowired
+    public void setTagProblemService(TagProblemService tagProblemService) {
+        this.tagProblemService = tagProblemService;
+    }
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -73,11 +72,11 @@ public class UserProblemController {
 
         checkProblemFormat(format);
 
-        JSONArray tags = new JSONArray(format.getTags().size());
+        List<Integer> tags = new ArrayList<>(format.getTags().size());
         for(int i=0; i<format.getTags().size(); i++) {
-            String name = format.getTags().getString(i);
-            if (tagsService.addUsedTimes(name)) {
-                tags.add(name);
+            int tid = format.getTags().getInteger(i);
+            if (tagsService.addUsedTimes(tid)) {
+                tags.add(tid);
             }
         }
         if (tags.size() == 0) {
@@ -85,11 +84,15 @@ public class UserProblemController {
         }
 
         int pid = problemService.addProblem(owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
-                format.getOutputFormat(), format.getDifficult(), format.getSamples(), tags,
-                System.currentTimeMillis());
+                format.getOutputFormat(), format.getDifficult(), format.getSamples(), System.currentTimeMillis());
 
         if (pid == 0) {
             throw new WebErrorException("添加题目失败");
+        }
+
+        // 添加题目和标签的关联
+        for(Integer tid: tags) {
+            tagProblemService.addTagProblem(tid, pid);
         }
 
         return new ResponseEntity("题目添加成功", pid);
@@ -126,17 +129,19 @@ public class UserProblemController {
         havePermission(problemEntity);
 
         // tags 过滤
-        JSONArray originTags= problemEntity.getTags();
+        List<Integer> originTags= tagProblemService.getProblemTags(pid)
+                .stream()
+                .map(TagProblemEntity::getTid).collect(Collectors.toList());
         JSONArray newTags = format.getTags();
-        JSONArray finalTags = new JSONArray(newTags.size());
+        List<Integer> finalTags = new ArrayList<>(newTags.size());
 
         for(int i=0; i<newTags.size(); i++) {
-            String name = newTags.getString(i);
-            if (originTags.contains(name)) {
-                finalTags.add(name);
+            int tid = newTags.getInteger(i);
+            if (originTags.contains(tid)) {
+                finalTags.add(tid);
             } else {
-                if (tagsService.addUsedTimes(name)) {
-                    finalTags.add(name);
+                if (tagsService.addUsedTimes(tid)) {
+                    finalTags.add(tid);
                 }
             }
         }
@@ -147,8 +152,14 @@ public class UserProblemController {
 
         // 更新数据
         if (!problemService.updateProblemDescription(pid, format.getTitle(), format.getDescription(), format.getInputFormat(),
-                format.getOutputFormat(), format.getSamples(), format.getDifficult(), finalTags)) {
+                format.getOutputFormat(), format.getSamples(), format.getDifficult())) {
             throw new WebErrorException("题目更新失败");
+        }
+
+        // 删除旧标签
+        tagProblemService.deleteTagProblems(pid);
+        for(Integer tid: finalTags) {
+            tagProblemService.addTagProblem(tid, pid);
         }
 
         return new ResponseEntity("题目更新成功");

@@ -7,6 +7,7 @@ import org.inlighting.oj.web.entity.ProblemEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,6 +29,14 @@ public class ProblemDao {
 
     public List<ProblemEntity> getProblemsByUid(SqlSession sqlSession, int uid, PageRowBounds pager) {
         return sqlSession.selectList("problem.getProblemsByUid", uid, pager);
+    }
+
+    public List<ProblemEntity> getSharedProblems(SqlSession sqlSession, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getSharedProblems", null, pager);
+    }
+
+    public List<Map<String, Object>> getProblemTags(SqlSession sqlSession, int pid) {
+        return sqlSession.selectList("problem.getProblemTags", pid);
     }
 
     public boolean updateProblemDescription(SqlSession sqlSession, ProblemEntity entity) {

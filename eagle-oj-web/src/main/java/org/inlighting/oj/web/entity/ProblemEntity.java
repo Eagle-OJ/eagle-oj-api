@@ -30,8 +30,6 @@ public class ProblemEntity {
 
     private JSONArray moderators;
 
-    private JSONArray tags;
-
     @JSONField(name = "submit_times")
     private int submitTimes;
 
@@ -136,14 +134,6 @@ public class ProblemEntity {
 
     public void setModerators(JSONArray moderators) {
         this.moderators = moderators;
-    }
-
-    public JSONArray getTags() {
-        return tags;
-    }
-
-    public void setTags(JSONArray tags) {
-        this.tags = tags;
     }
 
     public int getSubmitTimes() {

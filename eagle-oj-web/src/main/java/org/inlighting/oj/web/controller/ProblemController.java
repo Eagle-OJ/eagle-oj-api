@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.entity.ProblemEntity;
@@ -10,10 +11,7 @@ import org.inlighting.oj.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +38,15 @@ public class ProblemController {
         this.problemService = problemService;
     }
 
+    @ApiOperation("获取公开题目列表")
+    @GetMapping
+    public ResponseEntity getProblems(@RequestParam("page") int page,
+                                      @RequestParam("page_size") int pageSize) {
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        return new ResponseEntity(problemService.getSharedProblems(pager));
+    }
+
+
     @GetMapping("/{pid}")
     public ResponseEntity get(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
@@ -54,10 +61,7 @@ public class ProblemController {
     public ResponseEntity getProblemModerators(@PathVariable("pid") int pid) {
         // todo
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-
-        if (problemEntity == null) {
-            throw new WebErrorException("题目不存在");
-        }
+        haveProblem(problemEntity);
 
         JSONArray moderators = problemEntity.getModerators();
         if(moderators.size() == 0) {
@@ -70,5 +74,19 @@ public class ProblemController {
         }
 
         return new ResponseEntity(userService.getModeratorsInUidList(uidList));
+    }
+
+    @ApiOperation("获取该题的所有标签")
+    @GetMapping("/{pid}/tags")
+    public ResponseEntity getProblemTags(@PathVariable("pid") int pid) {
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        haveProblem(problemEntity);
+        return new ResponseEntity(problemService.getProblemTags(pid));
+    }
+
+    private void haveProblem(ProblemEntity entity) {
+        if (entity == null) {
+            throw new WebErrorException("题目不存在");
+        }
     }
 }

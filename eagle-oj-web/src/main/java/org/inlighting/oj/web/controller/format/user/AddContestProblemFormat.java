@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller.format.user;
 
 import com.alibaba.fastjson.JSONArray;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
@@ -9,14 +10,25 @@ import javax.validation.constraints.NotNull;
  **/
 public class AddContestProblemFormat {
 
-    @NotNull
-    private JSONArray problems;
+    @Range(min = 1)
+    private int pid;
 
-    public JSONArray getProblems() {
-        return problems;
+    @Range(min = 1)
+    private int score;
+
+    public int getPid() {
+        return pid;
     }
 
-    public void setProblems(JSONArray problems) {
-        this.problems = problems;
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

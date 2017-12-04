@@ -2,18 +2,19 @@ package org.inlighting.oj.web.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.AddContestProblemFormat;
 import org.inlighting.oj.web.controller.format.user.CreateContestFormat;
 import org.inlighting.oj.web.controller.format.user.EnterContestFormat;
-import org.inlighting.oj.web.entity.ContestEntity;
-import org.inlighting.oj.web.entity.ContestUserInfoEntity;
-import org.inlighting.oj.web.entity.ResponseEntity;
+import org.inlighting.oj.web.controller.format.user.UpdateContestProblemFormat;
+import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ContestService;
 import org.inlighting.oj.web.service.ContestUserInfoService;
+import org.inlighting.oj.web.service.ProblemContestInfoService;
 import org.inlighting.oj.web.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -38,6 +39,13 @@ public class UserContestController {
 
     private ContestUserInfoService contestUserInfoService;
 
+    private ProblemContestInfoService problemContestInfoService;
+
+    @Autowired
+    public void setProblemContestInfoService(ProblemContestInfoService problemContestInfoService) {
+        this.problemContestInfoService = problemContestInfoService;
+    }
+
     @Autowired
     public void setProblemService(ProblemService problemService) {
         this.problemService = problemService;
@@ -56,10 +64,19 @@ public class UserContestController {
     @ApiOperation("获取比赛信息")
     @GetMapping("/{cid}")
     public ResponseEntity getContestDescription(@PathVariable("cid") int cid) {
-        int owner = SessionHelper.get().getUid();
         ContestEntity contestEntity = contestService.getContestByCid(cid);
+        haveContest(contestEntity);
         havePermission(contestEntity);
         return new ResponseEntity(contestEntity);
+    }
+
+    @ApiOperation("获取用户管理的比赛")
+    @GetMapping
+    public ResponseEntity getContests(@RequestParam("page") int page,
+                                      @RequestParam("page_size") int pageSize) {
+        int owner = SessionHelper.get().getUid();
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        return new ResponseEntity(contestService.getUserContests(owner, pager));
     }
 
     @ApiOperation("创建比赛")
@@ -81,6 +98,10 @@ public class UserContestController {
     public ResponseEntity editContest(@PathVariable("cid") int cid,
                                       @RequestBody @Valid CreateContestFormat format) {
         checkContest(format);
+
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        haveContest(contestEntity);
+        havePermission(contestEntity);
 
         if (! contestService.updateContestDescription(cid, format.getName(), format.getSlogan(), format.getDescription(),
                 format.getStartTime(), format.getEndTime(), format.getTotalTime(), format.getPassword(), format.getType())) {
@@ -120,29 +141,69 @@ public class UserContestController {
     @PostMapping("/{cid}/problem")
     public ResponseEntity addContestProblem(@PathVariable("cid") int cid,
                                             @RequestBody @Valid AddContestProblemFormat format) {
-        // todo
         // 校验数据
-        JSONArray problems = format.getProblems();
-        if (problems.size() ==0) {
-            throw new WebErrorException("数据非法");
+        int pid = format.getPid();
+        int score = format.getScore();
+        if (pid < 1 || score < 1) {
+            throw new WebErrorException("数据格式错误");
         }
 
-        int uid = SessionHelper.get().getUid();
-
-        // 校验自己是否为比赛拥有者
+        // 校验比赛和权限
         ContestEntity contestEntity = contestService.getContestByCid(cid);
-        if (contestEntity.getOwner() != uid) {
-            throw new WebErrorException("非法操作");
+        haveContest(contestEntity);
+        havePermission(contestEntity);
+
+        ProblemContestInfoEntity problemContestInfoEntity = problemContestInfoService.getProblemContest(pid, cid);
+        if (problemContestInfoEntity != null) {
+            throw new WebErrorException("题目已经被添加");
         }
 
-        List<Integer> problemList = new ArrayList<>(10);
-        for (int i=0; i<problems.size(); i++) {
-            problemList.add(problems.getInteger(i));
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        if (problemEntity == null) {
+            throw new WebErrorException("此题不存在");
         }
-        if (! problemService.addContestProblem(problemList, cid)) {
+        if (problemEntity.getStatus() != 2) {
+            throw new WebErrorException("此题不能被添加");
+        }
+
+        if (! problemContestInfoService.addProblemInfo(pid, cid, score)) {
             throw new WebErrorException("题目添加失败");
         }
+
         return new ResponseEntity("题目添加成功");
+    }
+
+    @ApiOperation("获取比赛的题目列表")
+    @GetMapping("/{cid}/problem")
+    public ResponseEntity getContestProblems(@PathVariable("cid") int cid) {
+        return new ResponseEntity(problemContestInfoService.getContestProblems(cid));
+    }
+
+    @ApiOperation("更新比赛题目的分值")
+    @PutMapping("/{cid}/problem/{pid}")
+    public ResponseEntity updateContestProblem(@PathVariable("cid") int cid,
+                                               @PathVariable("pid") int pid,
+                                               @RequestBody @Valid UpdateContestProblemFormat format) {
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        haveContest(contestEntity);
+        havePermission(contestEntity);
+        if (! problemContestInfoService.updateContestProblem(cid, pid, format.getScore())) {
+            throw new WebErrorException("更新失败");
+        }
+        return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("删除比赛的题目")
+    @DeleteMapping("/{cid}/problem/{pid}")
+    public ResponseEntity deleteContestProblem(@PathVariable("cid") int cid,
+                                               @PathVariable("pid") int pid) {
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        haveContest(contestEntity);
+        havePermission(contestEntity);
+        if (! problemContestInfoService.deleteContestProblem(cid, pid)) {
+            throw new WebErrorException("删除失败");
+        }
+        return new ResponseEntity("删除成功");
     }
 
     private void checkContest(CreateContestFormat format) {
@@ -162,6 +223,12 @@ public class UserContestController {
             if (format.getTotalTime() == null) {
                 throw new WebErrorException("非法总时间");
             }
+        }
+    }
+
+    private void haveContest(ContestEntity contestEntity) {
+        if (contestEntity == null) {
+            throw new WebErrorException("比赛不存在");
         }
     }
 

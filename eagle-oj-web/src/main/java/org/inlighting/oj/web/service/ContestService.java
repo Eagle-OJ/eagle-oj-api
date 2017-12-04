@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.service;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ContestDao;
 import org.inlighting.oj.web.entity.ContestEntity;
@@ -46,6 +47,10 @@ public class ContestService {
         contestEntity.setCreateTime(createTime);
         boolean result = contestDao.addContest(sqlSession,contestEntity);
         return result ? contestEntity.getCid() : 0;
+    }
+
+    public List<ContestEntity> getUserContests(int uid, PageRowBounds pager) {
+        return contestDao.getUserContests(sqlSession, uid, pager);
     }
 
     // 进行比赛校验

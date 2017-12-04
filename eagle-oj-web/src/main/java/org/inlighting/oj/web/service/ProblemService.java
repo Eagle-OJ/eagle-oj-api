@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ygj
@@ -41,7 +42,7 @@ public class ProblemService {
 
 
     public int addProblem(int owner, String title, String description, String inputFormat, String outputFormat,
-                          int difficult, JSONArray samples, JSONArray tags, long createTime) {
+                          int difficult, JSONArray samples, long createTime) {
         // 添加题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
@@ -53,7 +54,6 @@ public class ProblemService {
         problemEntity.setDifficult(difficult);
         problemEntity.setSamples(samples);
         problemEntity.setModerators(new JSONArray());
-        problemEntity.setTags(tags);
         problemEntity.setStatus(0);
         problemEntity.setCreateTime(createTime);
 
@@ -79,8 +79,16 @@ public class ProblemService {
         return problemDao.getProblemByPid(sqlSession, pid);
     }
 
+    public List<Map<String, Object>> getProblemTags(int pid) {
+        return problemDao.getProblemTags(sqlSession, pid);
+    }
+
+    public List<ProblemEntity> getSharedProblems(PageRowBounds pager) {
+        return problemDao.getSharedProblems(sqlSession, pager);
+    }
+
     public boolean updateProblemDescription(int pid, String title, String description, String inputFormat,
-                                            String outputFormat, JSONArray samples, int difficult, JSONArray tags) {
+                                            String outputFormat, JSONArray samples, int difficult) {
         //通过pid来更新题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setPid(pid);
@@ -90,7 +98,7 @@ public class ProblemService {
         problemEntity.setOutputFormat(outputFormat);
         problemEntity.setSamples(samples);
         problemEntity.setDifficult(difficult);
-        problemEntity.setTags(tags);
+        //problemEntity.setTags(tags);
         return problemDao.updateProblemDescription(sqlSession, problemEntity);
     }
 
