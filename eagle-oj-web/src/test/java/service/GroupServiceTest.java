@@ -25,7 +25,7 @@ public class GroupServiceTest {
 
     @Test
     public void addTest(){
-        int insertNum = groupService.createGroup(1,2,"testcover","123456",System.currentTimeMillis());
+        int insertNum = groupService.createGroup(1,"testcover","123456",System.currentTimeMillis());
         Assert.assertEquals(true,insertNum >0);
     }
 }

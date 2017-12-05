@@ -25,11 +25,13 @@ public class AddProblemFormat {
 
     @JSONField(name = "input_format")
     @Length(max = 10000)
+    @NotBlank
     @NotNull
     private String inputFormat;
 
     @JSONField(name = "output_format")
     @Length(max = 10000)
+    @NotBlank
     @NotNull
     private String outputFormat;
 

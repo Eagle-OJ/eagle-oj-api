@@ -10,25 +10,27 @@ import javax.validation.constraints.NotNull;
  **/
 public class AddContestProblemFormat {
 
+    @NotNull
     @Range(min = 1)
-    private int pid;
+    private Integer pid;
 
+    @NotNull
     @Range(min = 1)
-    private int score;
+    private Integer score;
 
-    public int getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 }
