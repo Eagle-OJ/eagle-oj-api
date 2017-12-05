@@ -1,0 +1,50 @@
+{
+  "receive": {
+    "code_language_id": 1,
+    "source_code": "print('hello')",
+    "time_limit": "3",
+    "memory_limit": "128",
+    "test_cases": [
+      {
+        "stdin": "1 2 3",
+        "stdout": "xx"
+      },
+      {
+        "stdin": "5 67",
+        "stdout": "xx"
+      }
+    ]
+
+  },
+  "return": {
+    "time": "1.28",
+    "memory": "12",
+    "result": "RTE",
+    "test_cases": [
+      {
+        "result": "AC",
+        "error_message": null
+      },
+      {
+        "result": "CE",
+        "error_message": "xxxxx"
+      }
+    ]
+  },
+  "returnCE": {
+    "time": 0,
+    "memory": 0,
+    "result": "CE",
+    "test_cases": [
+      {
+        "result": "CE",
+        "error_message": "xxxxx"
+      },
+      {
+        "result": "CE",
+        "error_message": "xxxxx"
+      }
+    ]
+  },
+  "result": ["WrongAnswer(WA)", "Accepted(AC)", "RuntimeError(RTE)", "TimeLimitExceed(TLE)", "CompileError(CE)"]
+}

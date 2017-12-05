@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tagProblem">
+
+    <insert id="insertTagProblem">
+        INSERT INTO tag_problem VALUES (#{tid}, #{pid})
+    </insert>
+
+    <select id="getProblemTags" resultMap="tagProblemMap">
+        SELECT * FROM tag_problem WHERE pid = #{pid}
+    </select>
+
+    <delete id="deleteProblemTags">
+        DELETE FROM tag_problem WHERE pid = #{pid}
+    </delete>
+
+    <resultMap id="tagProblemMap" type="TagProblemEntity">
+        <result column="tid" property="tid"/>
+        <result column="pid" property="pid"/>
+    </resultMap>
+</mapper>
