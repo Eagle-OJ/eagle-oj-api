@@ -42,10 +42,10 @@ public class ContestUserInfoService {
 
     public ContestUserInfoEntity getByCidAndUid(int cid, int uid) {
         // 通过cid和uid来获取实体
-        Map<String,Object> map = new HashMap<>();
-        map.put("cid",cid);
-        map.put("uid",uid);
-        return contestUserInfoDao.getByUidAndUid(sqlSession,map);
+        ContestUserInfoEntity entity = new ContestUserInfoEntity();
+        entity.setCid(cid);
+        entity.setUid(uid);
+        return contestUserInfoDao.getByUidAndUid(sqlSession, entity);
     }
 
     public boolean updateData(int cid, int uid, int submitTimes, int acceptTimes, long newlyAcceptTime) {

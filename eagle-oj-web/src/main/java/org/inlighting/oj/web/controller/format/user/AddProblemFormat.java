@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.controller.format.user;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -18,22 +19,16 @@ public class AddProblemFormat {
     @NotNull
     private String title;
 
-    @Length(max = 10000)
-    @NotBlank
     @NotNull
-    private String description;
+    private JSONObject description;
 
     @JSONField(name = "input_format")
-    @Length(max = 10000)
-    @NotBlank
     @NotNull
-    private String inputFormat;
+    private JSONObject inputFormat;
 
     @JSONField(name = "output_format")
-    @Length(max = 10000)
-    @NotBlank
     @NotNull
-    private String outputFormat;
+    private JSONObject outputFormat;
 
     @Range(min = 0, max = 3)
     @NotNull
@@ -53,27 +48,27 @@ public class AddProblemFormat {
         this.title = title;
     }
 
-    public String getDescription() {
+    public JSONObject getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(JSONObject description) {
         this.description = description;
     }
 
-    public String getInputFormat() {
+    public JSONObject getInputFormat() {
         return inputFormat;
     }
 
-    public void setInputFormat(String inputFormat) {
+    public void setInputFormat(JSONObject inputFormat) {
         this.inputFormat = inputFormat;
     }
 
-    public String getOutputFormat() {
+    public JSONObject getOutputFormat() {
         return outputFormat;
     }
 
-    public void setOutputFormat(String outputFormat) {
+    public void setOutputFormat(JSONObject outputFormat) {
         this.outputFormat = outputFormat;
     }
 

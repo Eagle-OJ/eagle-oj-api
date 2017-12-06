@@ -31,11 +31,14 @@
     </update>
 
     <resultMap id="contestUserInfoMap" type="ContestUserInfoEntity">
-        <result column="cid" property="cid"/>
-        <result column="uid" property="score"/>
+        <id column="cid" property="cid"/>
+        <id column="uid" property="uid"/>
         <result column="submit_times" property="submitTimes"/>
-        <result column="accept_times" property="acceptTimes"/>
-        <result column="used_time" property="usedTime"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
         <result column="join_time" property="joinTime"/>
     </resultMap>
 </mapper>

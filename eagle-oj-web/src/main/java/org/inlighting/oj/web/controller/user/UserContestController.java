@@ -118,7 +118,7 @@ public class UserContestController {
         int uid = SessionHelper.get().getUid();
         ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
         if (contestUserInfoEntity != null) {
-            throw new WebErrorException("你已经加入比赛了");
+            return new ResponseEntity("你已经加入比赛了");
         }
 
         // 校验密码

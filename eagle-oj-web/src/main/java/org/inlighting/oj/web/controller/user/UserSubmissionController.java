@@ -77,7 +77,7 @@ public class UserSubmissionController {
                 throw new WebErrorException("你不在比赛中");
             }
 
-            ContestEntity contestEntity = contestService.getContestByCid(contestId, true);
+            ContestEntity contestEntity = contestService.getContestByCid(contestId);
             contestType = contestEntity.getType();
             if (contestEntity.getType() == 1 || contestEntity.getType() ==3) {
                 if ((contestUserInfoEntity.getJoinTime()+contestEntity.getTotalTime()) > System.currentTimeMillis()) {

@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.entity;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
@@ -16,15 +17,15 @@ public class ProblemEntity {
     @JSONField(name = "code_language")
     private JSONArray codeLanguage;
 
-    private String description;
+    private JSONObject description;
 
     private int difficult;
 
     @JSONField(name = "input_format")
-    private String inputFormat;
+    private JSONObject inputFormat;
 
     @JSONField(name = "output_format")
-    private String outputFormat;
+    private JSONObject outputFormat;
 
     private JSONArray samples;
 
@@ -88,11 +89,11 @@ public class ProblemEntity {
         this.codeLanguage = codeLanguage;
     }
 
-    public String getDescription() {
+    public JSONObject getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(JSONObject description) {
         this.description = description;
     }
 
@@ -104,19 +105,19 @@ public class ProblemEntity {
         this.difficult = difficult;
     }
 
-    public String getInputFormat() {
+    public JSONObject getInputFormat() {
         return inputFormat;
     }
 
-    public void setInputFormat(String inputFormat) {
+    public void setInputFormat(JSONObject inputFormat) {
         this.inputFormat = inputFormat;
     }
 
-    public String getOutputFormat() {
+    public JSONObject getOutputFormat() {
         return outputFormat;
     }
 
-    public void setOutputFormat(String outputFormat) {
+    public void setOutputFormat(JSONObject outputFormat) {
         this.outputFormat = outputFormat;
     }
 

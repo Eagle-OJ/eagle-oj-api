@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ProblemDao;
@@ -41,7 +42,7 @@ public class ProblemService {
     }
 
 
-    public int addProblem(int owner, String title, String description, String inputFormat, String outputFormat,
+    public int addProblem(int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
                           int difficult, JSONArray samples, long createTime) {
         // 添加题目
         ProblemEntity problemEntity = new ProblemEntity();
@@ -87,8 +88,8 @@ public class ProblemService {
         return problemDao.getSharedProblems(sqlSession, pager);
     }
 
-    public boolean updateProblemDescription(int pid, String title, String description, String inputFormat,
-                                            String outputFormat, JSONArray samples, int difficult) {
+    public boolean updateProblemDescription(int pid, String title, JSONObject description, JSONObject inputFormat,
+                                            JSONObject outputFormat, JSONArray samples, int difficult) {
         //通过pid来更新题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setPid(pid);

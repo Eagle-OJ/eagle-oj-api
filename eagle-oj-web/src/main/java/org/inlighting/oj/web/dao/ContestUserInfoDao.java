@@ -19,9 +19,8 @@ public class ContestUserInfoDao {
         return insertNum == 1;
     }
 
-    public ContestUserInfoEntity getByUidAndUid(SqlSession sqlSession, Map<String ,Object> map)
-    {
-        return sqlSession.selectOne("contestUserInfo.getByUidAndUid",map);
+    public ContestUserInfoEntity getByUidAndUid(SqlSession sqlSession, ContestUserInfoEntity entity) {
+        return sqlSession.selectOne("contestUserInfo.getByUidAndUid", entity);
     }
 
     public boolean updateData(SqlSession sqlSession, int cid, int uid, int submitTimes,

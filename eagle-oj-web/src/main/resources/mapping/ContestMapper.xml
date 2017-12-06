@@ -11,9 +11,11 @@
             #{endTime},#{totalTime},#{password},#{official},#{type},#{status},#{createTime})
         </insert>
 
-        <select id="getAll" resultMap="contestMap">
-            SELECT * FROM `contest`
+        <select id="getValidContests" resultMap="contestUserMap">
+            SELECT contest.*, user.nickname
+            FROM `contest` LEFT JOIN user ON contest.owner=user.uid WHERE status!=0 ORDER BY status ASC, official DESC, create_time DESC
         </select>
+
 
         <select id="getUserContests" resultMap="contestMap">
             SELECT * FROM contest WHERE owner = #{uid} ORDER BY create_time DESC
@@ -25,6 +27,10 @@
                 `password` = #{password}, `type` = #{type} WHERE `cid` = #{cid}
         </update>
 
+        <update id="updateContestStatus">
+            UPDATE contest SET status=#{status} WHERE cid=#{cid}
+        </update>
+
         <delete id="deleteContestByCid">
             DELETE FROM `contest` WHERE `cid` = #{cid}
         </delete>
@@ -32,11 +38,29 @@
         <select id="getContestByCid" resultMap="contestMap">
             SELECT * FROM `contest` WHERE `cid` = #{cid}
         </select>
+
+        <resultMap id="contestUserMap" type="HashMap">
+            <id column="cid" property="cid" javaType="int"/>
+            <result column="name" property="name"/>
+            <result column="owner" property="owner"/>
+            <result column="moderator" property="moderator"/>
+            <result column="slogan" property="slogan"/>
+            <result column="description" property="description"/>
+            <result column="start_time" property="startTime"/>
+            <result column="end_time" property="endTime" javaType="long"/>
+            <result column="total_time" property="totalTime"/>
+            <result column="password" property="password"/>
+            <result column="official" property="official" javaType="int"/>
+            <result column="type" property="type" javaType="int"/>
+            <result column="status" property="status" javaType="int"/>
+            <result column="create_time" property="createTime"/>
+            <result column="nickname" property="nickname"/>
+        </resultMap>
+
         <resultMap id="contestMap" type="ContestEntity">
             <id column="cid" property="cid"/>
             <result column="name" property="name"/>
             <result column="owner" property="owner"/>
-            <result column="moderator" property="moderator"/>
             <result column="slogan" property="slogan"/>
             <result column="description" property="description"/>
             <result column="start_time" property="startTime"/>
@@ -45,6 +69,7 @@
             <result column="password" property="password"/>
             <result column="official" property="official"/>
             <result column="type" property="type"/>
+            <result column="status" property="status"/>
             <result column="create_time" property="createTime"/>
         </resultMap>
 </mapper>

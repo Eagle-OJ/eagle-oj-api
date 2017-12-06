@@ -7,6 +7,7 @@ import org.inlighting.oj.web.entity.ContestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -54,21 +55,10 @@ public class ContestService {
     }
 
     // 进行比赛校验
-    public ContestEntity getContestByCid(int cid, boolean valid) {
-        ContestEntity contestEntity = contestDao.getContestByCid(sqlSession, cid);
-        if (valid) {
-            if (contestEntity.getStatus()==1 && contestEntity.getEndTime()<System.currentTimeMillis()) {
-                contestEntity.setStatus(0);
-                //updateContestDescription(cid, contestEntity);
-                return contestEntity;
-            }
-        }
-        return contestEntity;
-    }
-
-    // 不进行比赛校验
     public ContestEntity getContestByCid(int cid) {
-        return getContestByCid(cid, false);
+        ContestEntity contestEntity = contestDao.getContestByCid(sqlSession, cid);
+        checkContestValid(contestEntity);
+        return contestEntity;
     }
 
     public boolean deleteContestByCid(int cid){
@@ -91,9 +81,36 @@ public class ContestService {
         return contestDao.updateContestDescription(sqlSession, contestEntity);
     }
 
-    public List<ContestEntity> getAll(){
-        //获得所有比赛
-        return contestDao.getAll(sqlSession);
+    public List<HashMap<String, Object>> getValidContests(PageRowBounds pager){
+        List<HashMap<String, Object>> contests = contestDao.getValidContests(sqlSession, pager);
+        for (HashMap<String, Object> contest: contests) {
+            checkContestValid(contest);
+        }
+        return contests;
     }
 
+    private void checkContestValid(ContestEntity contestEntity) {
+        if (contestEntity.getStatus() == 1) {
+            if (contestEntity.getEndTime()<System.currentTimeMillis()) {
+                closeContest(contestEntity.getCid());
+                contestEntity.setStatus(2);
+            }
+        }
+    }
+
+    private void checkContestValid(HashMap<String, Object> contest) {
+        if ((int)contest.get("status") == 1) {
+            if ((long)contest.get("endTime")<System.currentTimeMillis()) {
+                closeContest((int)contest.get("cid"));
+                contest.replace("status", 2);
+            }
+        }
+    }
+
+    public boolean closeContest(int cid) {
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setCid(cid);
+        contestEntity.setStatus(2);
+        return contestDao.updateContestStatus(sqlSession, contestEntity);
+    }
 }

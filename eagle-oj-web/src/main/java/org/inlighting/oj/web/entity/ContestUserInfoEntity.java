@@ -10,16 +10,23 @@ public class ContestUserInfoEntity {
 
     private int uid;
 
-    private int score;
-
     @JSONField(name = "submit_times")
     private int submitTimes;
 
     @JSONField(name = "accept_times")
-    private int acceptTimes;
+    private int ACTimes;
 
-    @JSONField(name = "used_time")
-    private long usedTime;
+    @JSONField(name = "wa_times")
+    private int WATimes;
+
+    @JSONField(name = "rte_times")
+    private int RTETimes;
+
+    @JSONField(name = "tle_times")
+    private int TLETimes;
+
+    @JSONField(name = "ce_times")
+    private int CETimes;
 
     @JSONField(name = "join_time")
     private long joinTime;
@@ -40,14 +47,6 @@ public class ContestUserInfoEntity {
         this.uid = uid;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public int getSubmitTimes() {
         return submitTimes;
     }
@@ -56,12 +55,44 @@ public class ContestUserInfoEntity {
         this.submitTimes = submitTimes;
     }
 
-    public int getAcceptTimes() {
-        return acceptTimes;
+    public int getACTimes() {
+        return ACTimes;
     }
 
-    public void setAcceptTimes(int acceptTimes) {
-        this.acceptTimes = acceptTimes;
+    public void setACTimes(int ACTimes) {
+        this.ACTimes = ACTimes;
+    }
+
+    public int getWATimes() {
+        return WATimes;
+    }
+
+    public void setWATimes(int WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public int getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(int RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public int getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(int TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public int getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(int CETimes) {
+        this.CETimes = CETimes;
     }
 
     public long getJoinTime() {
@@ -70,13 +101,5 @@ public class ContestUserInfoEntity {
 
     public void setJoinTime(long joinTime) {
         this.joinTime = joinTime;
-    }
-
-    public long getUsedTime() {
-        return usedTime;
-    }
-
-    public void setUsedTime(long usedTime) {
-        this.usedTime = usedTime;
     }
 }
