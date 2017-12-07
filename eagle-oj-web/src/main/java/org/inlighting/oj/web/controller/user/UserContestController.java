@@ -1,20 +1,15 @@
 package org.inlighting.oj.web.controller.user;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
-import org.inlighting.oj.web.controller.format.user.AddContestProblemFormat;
-import org.inlighting.oj.web.controller.format.user.CreateContestFormat;
-import org.inlighting.oj.web.controller.format.user.EnterContestFormat;
-import org.inlighting.oj.web.controller.format.user.UpdateContestProblemFormat;
+import org.inlighting.oj.web.controller.format.user.*;
 import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ContestService;
 import org.inlighting.oj.web.service.ContestUserInfoService;
-import org.inlighting.oj.web.service.ProblemContestInfoService;
+import org.inlighting.oj.web.service.ContestProblemService;
 import org.inlighting.oj.web.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,8 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Smith
@@ -39,11 +32,11 @@ public class UserContestController {
 
     private ContestUserInfoService contestUserInfoService;
 
-    private ProblemContestInfoService problemContestInfoService;
+    private ContestProblemService contestProblemService;
 
     @Autowired
-    public void setProblemContestInfoService(ProblemContestInfoService problemContestInfoService) {
-        this.problemContestInfoService = problemContestInfoService;
+    public void setContestProblemService(ContestProblemService contestProblemService) {
+        this.contestProblemService = contestProblemService;
     }
 
     @Autowired
@@ -144,7 +137,8 @@ public class UserContestController {
         // 校验数据
         int pid = format.getPid();
         int score = format.getScore();
-        if (pid < 1 || score < 1) {
+        int displayId = format.getDisplayId();
+        if (pid < 1 || score < 1 || displayId < 1) {
             throw new WebErrorException("数据格式错误");
         }
 
@@ -153,8 +147,8 @@ public class UserContestController {
         haveContest(contestEntity);
         havePermission(contestEntity);
 
-        ProblemContestInfoEntity problemContestInfoEntity = problemContestInfoService.getProblemContest(pid, cid);
-        if (problemContestInfoEntity != null) {
+        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(pid, cid);
+        if (contestProblemEntity != null) {
             throw new WebErrorException("题目已经被添加");
         }
 
@@ -166,7 +160,11 @@ public class UserContestController {
             throw new WebErrorException("此题不能被添加");
         }
 
-        if (! problemContestInfoService.addProblemInfo(pid, cid, score)) {
+        if (contestProblemService.displayIdIsDuplicate(cid, displayId)) {
+            throw new WebErrorException("显示题号重复");
+        }
+
+        if (! contestProblemService.addProblemInfo(pid, cid, displayId, score)) {
             throw new WebErrorException("题目添加失败");
         }
 
@@ -176,10 +174,10 @@ public class UserContestController {
     @ApiOperation("获取比赛的题目列表")
     @GetMapping("/{cid}/problem")
     public ResponseEntity getContestProblems(@PathVariable("cid") int cid) {
-        return new ResponseEntity(problemContestInfoService.getContestProblems(cid));
+        return new ResponseEntity(contestProblemService.getContestProblems(cid));
     }
 
-    @ApiOperation("更新比赛题目的分值")
+    @ApiOperation("更新比赛题目的分值和题号")
     @PutMapping("/{cid}/problem/{pid}")
     public ResponseEntity updateContestProblem(@PathVariable("cid") int cid,
                                                @PathVariable("pid") int pid,
@@ -187,10 +185,28 @@ public class UserContestController {
         ContestEntity contestEntity = contestService.getContestByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
-        if (! problemContestInfoService.updateContestProblem(cid, pid, format.getScore())) {
+        if (contestProblemService.displayIdIsDuplicate(cid, format.getDisplayId())) {
+            throw new WebErrorException("显示题号重复");
+        }
+
+        if (! contestProblemService.updateContestProblem(cid, pid, format.getDisplayId(), format.getScore())) {
             throw new WebErrorException("更新失败");
         }
         return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("启用比赛")
+    @PostMapping("/{cid}/status")
+    public ResponseEntity updateContestStatus(@PathVariable("cid") int cid,
+                                              @RequestBody @Valid UpdateContestStatusFormat format) {
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        haveContest(contestEntity);
+        havePermission(contestEntity);
+
+        if (! contestService.updateContestStatus(cid, format.getStatus())) {
+            throw new WebErrorException("修改比赛状态失败");
+        }
+        return new ResponseEntity("成功修改比赛状态");
     }
 
     @ApiOperation("删除比赛的题目")
@@ -200,7 +216,7 @@ public class UserContestController {
         ContestEntity contestEntity = contestService.getContestByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
-        if (! problemContestInfoService.deleteContestProblem(cid, pid)) {
+        if (! contestProblemService.deleteContestProblem(cid, pid)) {
             throw new WebErrorException("删除失败");
         }
         return new ResponseEntity("删除成功");

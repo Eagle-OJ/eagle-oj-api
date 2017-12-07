@@ -16,6 +16,10 @@ public class AddContestProblemFormat {
 
     @NotNull
     @Range(min = 1)
+    private Integer displayId;
+
+    @NotNull
+    @Range(min = 1)
     private Integer score;
 
     public Integer getPid() {
@@ -32,5 +36,13 @@ public class AddContestProblemFormat {
 
     public void setScore(Integer score) {
         this.score = score;
+    }
+
+    public Integer getDisplayId() {
+        return displayId;
+    }
+
+    public void setDisplayId(Integer displayId) {
+        this.displayId = displayId;
     }
 }

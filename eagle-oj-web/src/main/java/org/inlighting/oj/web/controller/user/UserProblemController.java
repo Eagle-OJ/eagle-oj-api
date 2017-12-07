@@ -165,6 +165,18 @@ public class UserProblemController {
         return new ResponseEntity("题目更新成功");
     }
 
+    @ApiOperation("申请题目审核")
+    @PostMapping("/{pid}/status")
+    public ResponseEntity updateProblemStatus(@PathVariable("pid") int pid) {
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        haveProblem(problemEntity);
+        haveOwnPermission(problemEntity);
+        if (! problemService.updateProblemStatus(pid, 1)) {
+            throw new WebErrorException("申请审核失败");
+        }
+        return new ResponseEntity("申请审核成功");
+    }
+
 
     @ApiOperation("获取一道题目的测试用例")
     @GetMapping("/{pid}/test_cases")

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="contestProblem">
+    <insert id="insertContestProblem" parameterType="ContestProblemEntity">
+        INSERT INTO `contest_problem` (`pid`, `cid`, `display_id`, `score`) VALUES (#{pid}, #{cid}, #{displayId}, #{score})
+    </insert>
+
+    <select id="getContestProblem" resultMap="contestProblemMap">
+        <if test="displayId == 0">
+            SELECT * FROM `contest_problem` WHERE `pid`=#{pid} AND `cid`=#{cid}
+        </if>
+        <if test="displayId != 0">
+            SELECT * FROM `contest_problem` WHERE `cid`=#{cid} AND display_id=#{displayId}
+        </if>
+    </select>
+
+    <select id="getContestProblems" resultType="HashMap">
+        SELECT problem.title, contest_problem.pid, contest_problem.display_id, contest_problem.score FROM contest_problem
+        LEFT JOIN problem ON contest_problem.pid=problem.pid
+        WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
+    </select>
+
+    <update id="updateContestProblem">
+        UPDATE `contest_problem` SET score = #{score}, display_id=#{displayId} WHERE cid = #{cid} AND pid = #{pid}
+    </update>
+
+
+    <update id="addSubmitTimesByPidAndCid">
+        UPDATE `contest_problem` SET `submit_times` = `submit_times` +1 WHERE `pid` = #{pid} AND `cid` = #{cid}
+    </update>
+
+    <update id="addAcceptTimesByPidAndCid">
+        UPDATE `contest_problem` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid} AND `cid` = #{cid}
+    </update>
+
+    <delete id="deleteContestProblem">
+        DELETE FROM contest_problem WHERE cid=#{cid} AND pid=#{pid}
+    </delete>
+
+    <resultMap id="contestProblemMap" type="ContestProblemEntity">
+        <result column="pid" property="pid"/>
+        <result column="cid" property="cid"/>
+        <result column="display_id" property="displayId"/>
+        <result column="score" property="score"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
+    </resultMap>
+</mapper>

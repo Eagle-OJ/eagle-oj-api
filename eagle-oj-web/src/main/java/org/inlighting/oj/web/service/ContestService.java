@@ -81,6 +81,13 @@ public class ContestService {
         return contestDao.updateContestDescription(sqlSession, contestEntity);
     }
 
+    public boolean updateContestStatus(int cid, int status) {
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setCid(cid);
+        contestEntity.setStatus(status);
+        return contestDao.updateContestStatus(sqlSession, contestEntity);
+    }
+
     public List<HashMap<String, Object>> getValidContests(PageRowBounds pager){
         List<HashMap<String, Object>> contests = contestDao.getValidContests(sqlSession, pager);
         for (HashMap<String, Object> contest: contests) {
@@ -90,7 +97,7 @@ public class ContestService {
     }
 
     private void checkContestValid(ContestEntity contestEntity) {
-        if (contestEntity.getStatus() == 1) {
+        if (contestEntity!=null && contestEntity.getStatus() == 1) {
             if (contestEntity.getEndTime()<System.currentTimeMillis()) {
                 closeContest(contestEntity.getCid());
                 contestEntity.setStatus(2);
@@ -108,9 +115,6 @@ public class ContestService {
     }
 
     public boolean closeContest(int cid) {
-        ContestEntity contestEntity = new ContestEntity();
-        contestEntity.setCid(cid);
-        contestEntity.setStatus(2);
-        return contestDao.updateContestStatus(sqlSession, contestEntity);
+        return updateContestStatus(cid, 2);
     }
 }

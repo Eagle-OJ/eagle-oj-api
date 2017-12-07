@@ -35,7 +35,7 @@
     <mappers>
         <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/ProblemMapper.xml"/>
-        <mapper resource="mapping/ProblemContestInfoMapper.xml"/>
+        <mapper resource="mapping/ContestProblemMapper.xml"/>
         <mapper resource="mapping/TestCasesMapper.xml"/>
         <mapper resource="mapping/ContestMapper.xml"/>
         <mapper resource="mapping/ContestUserInfoMapper.xml"/>

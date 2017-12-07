@@ -28,12 +28,12 @@ public class UserSubmissionController {
 
     private TestCasesService testCaseService;
 
-    private ProblemContestInfoService problemContestInfoService;
+    private ContestProblemService problemContestInfoService;
 
     private JudgerQueue judgerQueue;
 
     @Autowired
-    public void setProblemContestInfoService(ProblemContestInfoService problemInfoService) {
+    public void setProblemContestInfoService(ContestProblemService problemInfoService) {
         this.problemContestInfoService = problemInfoService;
     }
 
@@ -85,7 +85,7 @@ public class UserSubmissionController {
                 }
             }
 
-            ProblemContestInfoEntity problemContestInfoEntity = problemContestInfoService.getProblemContest(problemId, contestId);
+            ContestProblemEntity problemContestInfoEntity = problemContestInfoService.getContestProblem(problemId, contestId);
             if (problemContestInfoEntity == null) {
                 throw new WebErrorException("问题不在比赛中");
             }

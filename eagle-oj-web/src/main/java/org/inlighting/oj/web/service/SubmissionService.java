@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.inlighting.oj.judge.config.ProblemStatusEnum;
-import org.inlighting.oj.web.dao.ProblemContestInfoDao;
+import org.inlighting.oj.web.dao.ContestProblemDao;
 import org.inlighting.oj.web.dao.SubmissionDao;
 import org.inlighting.oj.web.dao.UserDao;
 import org.inlighting.oj.web.entity.SubmissionEntity;
@@ -21,7 +21,7 @@ public class SubmissionService {
 
     private SubmissionDao submissionDao;
 
-    private ProblemContestInfoDao problemInfoDao;
+    private ContestProblemDao problemInfoDao;
 
     private UserDao userDao;
 
@@ -35,7 +35,7 @@ public class SubmissionService {
     }
 
     @Autowired
-    public void setProblemInfoDao(ProblemContestInfoDao problemInfoDao) {
+    public void setProblemInfoDao(ContestProblemDao problemInfoDao) {
         this.problemInfoDao = problemInfoDao;
     }
 

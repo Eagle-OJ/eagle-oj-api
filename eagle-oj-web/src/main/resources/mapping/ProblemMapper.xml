@@ -35,6 +35,10 @@
         UPDATE problem SET moderators=#{moderators} WHERE pid=#{pid}
     </update>
 
+    <update id="updateProblemStatus">
+        UPDATE problem SET status=#{status} WHERE pid = #{pid}
+    </update>
+
     <update id="addProblemSubmitTimes">
         UPDATE `problem` SET `submit_times` = `submit_times` + 1 WHERE `pid` = #{pid}
     </update>

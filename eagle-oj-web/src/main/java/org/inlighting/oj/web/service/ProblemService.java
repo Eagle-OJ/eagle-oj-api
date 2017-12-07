@@ -5,9 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ProblemDao;
-import org.inlighting.oj.web.dao.ProblemContestInfoDao;
+import org.inlighting.oj.web.dao.ContestProblemDao;
 import org.inlighting.oj.web.entity.ProblemEntity;
-import org.inlighting.oj.web.entity.ProblemContestInfoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,7 @@ public class ProblemService {
 
     private ProblemDao problemDao;
 
-    private ProblemContestInfoDao problemInfoDao;
+    private ContestProblemDao problemInfoDao;
 
     public ProblemService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
@@ -37,7 +36,7 @@ public class ProblemService {
     }
 
     @Autowired
-    public void setProblemInfoDao(ProblemContestInfoDao problemInfoDao) {
+    public void setProblemInfoDao(ContestProblemDao problemInfoDao) {
         this.problemInfoDao = problemInfoDao;
     }
 
@@ -101,6 +100,13 @@ public class ProblemService {
         problemEntity.setDifficult(difficult);
         //problemEntity.setTags(tags);
         return problemDao.updateProblemDescription(sqlSession, problemEntity);
+    }
+
+    public boolean updateProblemStatus(int pid, int status) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
+        problemEntity.setStatus(status);
+        return problemDao.updateProblemStatus(sqlSession, problemEntity);
     }
 
     public boolean updateProblemModerators(int pid, JSONArray moderators) {

@@ -39,7 +39,7 @@ public class JudgerQueue {
 
     private SubmissionService submissionService;
 
-    private ProblemContestInfoService problemContestInfoService;
+    private ContestProblemService problemContestInfoService;
 
     private ContestProblemUserInfoService contestProblemUserInfoService;
 
@@ -70,7 +70,7 @@ public class JudgerQueue {
 
 
     @Autowired
-    public void setProblemContestInfoService(ProblemContestInfoService problemContestInfoService) {
+    public void setProblemContestInfoService(ContestProblemService problemContestInfoService) {
         this.problemContestInfoService = problemContestInfoService;
     }
 

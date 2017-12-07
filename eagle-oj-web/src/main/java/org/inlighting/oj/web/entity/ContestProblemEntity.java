@@ -5,10 +5,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * @author Smith
  **/
-public class ProblemContestInfoEntity {
+public class ContestProblemEntity {
     private int pid;
 
     private int cid;
+
+    @JSONField(name = "display_id")
+    private int displayId;
 
     private int score;
 
@@ -100,5 +103,13 @@ public class ProblemContestInfoEntity {
 
     public void setCETimes(int CETimes) {
         this.CETimes = CETimes;
+    }
+
+    public int getDisplayId() {
+        return displayId;
+    }
+
+    public void setDisplayId(int displayId) {
+        this.displayId = displayId;
     }
 }
