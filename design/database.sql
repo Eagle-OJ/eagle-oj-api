@@ -64,7 +64,7 @@ CREATE TABLE `contest` (
   `status` tinyint(1) unsigned NOT NULL COMMENT '0编辑中 1开启 2已结束',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,8 +73,41 @@ CREATE TABLE `contest` (
 
 LOCK TABLES `contest` WRITE;
 /*!40000 ALTER TABLE `contest` DISABLE KEYS */;
-INSERT INTO `contest` VALUES (3,'这是一个比赛',14,'检测大家的技巧','我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞',150000000000000,1515427200000,5,NULL,1,1,1,1510403394474),(4,'这是一个比赛',14,'检测大家的技巧','我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞',150000000000000,150000000000100,5,'1',0,1,1,1510403786772),(5,'这是一个比赛',14,'检测大家的技巧','我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞',1400000000000,1400000000000,5,'1',0,1,2,1510464222315),(6,'这是一个牛逼的比赛',14,'检测大家的技巧','我来给大家信息接发接飞机发哦飞啊飞阿尔及发级啊诶发骄傲二维if就as诶飞',1612313440000,1712313440000,5,'1',0,0,1,1510832002472),(7,'aef',35,'aef','aef',1512313440000,1516118400000,NULL,NULL,0,0,0,1512293375827),(8,'再来试试11',35,'哈哈哈','哈哈',1512316800000,1515427200000,1512238500000,'123456',0,1,2,1512295979305);
+INSERT INTO `contest` VALUES (1,'红鹰杯1',35,'一起来红颜被吧','这是大红鹰的挑战书',1512648000000,1514304000000,NULL,NULL,0,2,0,1512638522358),(2,'红鹰杯2',35,'红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2','红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2',1512658800000,1513267200000,1512587700000,'123456',0,3,1,1512648212424);
 /*!40000 ALTER TABLE `contest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contest_problem`
+--
+
+DROP TABLE IF EXISTS `contest_problem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contest_problem` (
+  `cid` int(10) unsigned NOT NULL COMMENT '对应比赛id',
+  `pid` int(10) unsigned NOT NULL,
+  `display_id` int(10) unsigned NOT NULL,
+  `score` int(10) unsigned NOT NULL,
+  `submit_times` int(10) unsigned DEFAULT '0',
+  `ac_times` int(10) unsigned DEFAULT '0',
+  `wa_times` int(10) unsigned DEFAULT '0',
+  `rte_times` int(10) unsigned DEFAULT '0',
+  `tle_times` int(10) unsigned DEFAULT '0',
+  `ce_times` int(10) unsigned DEFAULT '0',
+  UNIQUE KEY `pid_cid_unique` (`pid`,`cid`),
+  UNIQUE KEY `cid_displayId_unique` (`cid`,`display_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contest_problem`
+--
+
+LOCK TABLES `contest_problem` WRITE;
+/*!40000 ALTER TABLE `contest_problem` DISABLE KEYS */;
+INSERT INTO `contest_problem` VALUES (1,1,4,1,0,0,0,0,0,0),(2,1,1,1,0,0,0,0,0,0),(1,2,2,1,0,0,0,0,0,0),(2,2,2,1,0,0,0,0,0,0),(1,3,3,1,0,0,0,0,0,0),(2,3,3,1,0,0,0,0,0,0);
+/*!40000 ALTER TABLE `contest_problem` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -100,7 +133,6 @@ CREATE TABLE `contest_problem_user_info` (
 
 LOCK TABLES `contest_problem_user_info` WRITE;
 /*!40000 ALTER TABLE `contest_problem_user_info` DISABLE KEYS */;
-INSERT INTO `contest_problem_user_info` VALUES (6,54,14,7,'Accepted');
 /*!40000 ALTER TABLE `contest_problem_user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +163,6 @@ CREATE TABLE `contest_user_info` (
 
 LOCK TABLES `contest_user_info` WRITE;
 /*!40000 ALTER TABLE `contest_user_info` DISABLE KEYS */;
-INSERT INTO `contest_user_info` VALUES (1,12,0,0,0,0,0,0,1510559765984),(3,14,0,0,0,0,0,0,1510403705466),(4,14,0,0,0,0,0,0,1510403804620),(6,14,9,1,0,0,0,0,1510832042252),(8,35,0,0,0,0,0,0,1512564466260);
 /*!40000 ALTER TABLE `contest_user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +181,7 @@ CREATE TABLE `group` (
   `people` int(10) unsigned DEFAULT '0',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`gid`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +190,6 @@ CREATE TABLE `group` (
 
 LOCK TABLES `group` WRITE;
 /*!40000 ALTER TABLE `group` DISABLE KEYS */;
-INSERT INTO `group` VALUES (1,14,'我们是胜利之队','123sda',0,1510486465720),(2,35,'aefasefae',NULL,0,1512473508555),(3,35,'aefasefae',NULL,0,1512473515209),(4,35,'aefasefae',NULL,0,1512473548482),(5,35,'aefasefae',NULL,0,1512473568962),(6,35,'123312',NULL,0,1512473592860),(7,35,'123312','234',0,1512473597193),(8,35,'123312',NULL,0,1512473604787),(9,35,'awefaf',NULL,0,1512474297647),(10,35,'ergrseg',NULL,0,1512478665453),(11,35,'awsdrgxcvsdzvsdvsrv',NULL,0,1512478697313);
 /*!40000 ALTER TABLE `group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,7 +248,7 @@ CREATE TABLE `problem` (
   `status` tinyint(1) unsigned NOT NULL COMMENT '0 自己使用\n1 审核中\n2 全局使用',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,39 +257,8 @@ CREATE TABLE `problem` (
 
 LOCK TABLES `problem` WRITE;
 /*!40000 ALTER TABLE `problem` DISABLE KEYS */;
-INSERT INTO `problem` VALUES (1,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1]',0,NULL,0,0,0,0,0,1,1510133001856),(3,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510137594057),(4,1,'awefasefasef','[1, 2]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]',0,NULL,0,0,0,0,0,1,1510155806317),(5,1,'awefasefasef','[1, 2]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]',0,NULL,0,0,0,0,0,1,1510155937092),(6,1,'awefasefasef','[1, 2]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]',0,NULL,0,0,0,0,0,1,1510155974292),(7,1,'awefasefasef','[1, 2]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]',0,NULL,0,0,0,0,0,2,1510155974906),(8,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510203568179),(9,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510207430914),(10,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510207555221),(11,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510207578307),(12,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510208130947),(13,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510379347391),(14,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510379353632),(15,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2, 3]',0,NULL,0,0,0,0,0,2,1510464328957),(16,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510462910373),(19,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510463003126),(21,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464252616),(22,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464328801),(23,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464352016),(24,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464352748),(25,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464353151),(26,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464353514),(27,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464353833),(28,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464354119),(29,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464354529),(30,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464354753),(31,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464355256),(32,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464355572),(33,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464355997),(34,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464356215),(35,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464356483),(36,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464356664),(37,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464356957),(38,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464357246),(39,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464357562),(40,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464357881),(41,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464358221),(42,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464358577),(43,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464358812),(44,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464359094),(45,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464359277),(46,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464359531),(47,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464359751),(48,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464365334),(49,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464365742),(50,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464365982),(51,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464366273),(52,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,NULL,0,0,0,0,0,1,1510464384639),(53,1,'awefasefasef','[1, 2]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[1, 2]',0,NULL,0,0,0,0,0,1,1510465276410),(54,14,'awefasefasef','[1, 3, 4]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',14,NULL,2,0,0,0,0,1,1510832220276),(55,35,'awefasefasef','[]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,0,0,0,0,0,0,0,1512032505885),(56,35,'WD','[]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,0,0,0,0,0,0,0,1512038335822),(57,35,'awefasefasef','[]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfas\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasefeasfefe\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[]',0,0,0,0,0,0,0,2,1512038425558),(58,35,'awefasefasef','[35, 36, 37]','{\"ops\": [{\"insert\": \"aefaesfasf\\n\"}]}','{\"ops\": [{\"insert\": \"aserfgawf\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfasef\\n\"}]}',0,'[{\"input\": \"aef\", \"output\": \"ef\"}]','[35, 37, 12]',0,0,0,0,0,0,0,2,1512039261743),(59,35,'如果这是代还','[]','{\"ops\": [{\"insert\": \"a+bproblems\\n\"}]}','{\"ops\": [{\"insert\": \"asefasfeasfaefasef\\n\"}]}','{\"ops\": [{\"insert\": \"aesfasefasef\\n\"}]}',0,'[{\"input\": \"abc\", \"output\": \"c\"}]','[]',0,0,0,0,0,0,0,2,1512276517458),(60,35,'aefasefawe','[]','{\"ops\": [{\"insert\": \"WDAEFASF\\n\"}]}','{\"ops\": [{\"insert\": \"aefasf\\n\"}]}','{\"ops\": [{\"insert\": \"aewfasefasef\\n\"}]}',0,'[{\"input\": \"awefe\", \"output\": \"asfasef\"}]','[]',0,0,0,0,0,0,0,2,1512377633934);
+INSERT INTO `problem` VALUES (1,35,'2n皇后问题','[]','{\"ops\": [{\"insert\": \"给定一个n*n的棋盘，棋盘中有一些位置不能放皇后。现在要向棋盘中放入n个黑皇后和n个白皇后，使任意的两个黑皇后都不在同一行、同一列或同一条对角线上，任意的两个白皇后都不在同一行、同一列或同一条对角线上。问总共有多少种放法？n小于等于8。\\n\"}]}','{\"ops\": [{\"insert\": \"输入的第一行为一个整数n，表示棋盘的大小。接下来n行，每行n个0或1的整数，如果一个整数为1，表示对应的位置可以放皇后，如果一个整数为0，表示对应的位置不可以放皇后。\\n\"}]}','{\"ops\": [{\"insert\": \"输出一个整数，表示总共有多少种放法。\\n\"}]}',1,'[{\"input\": \"4\\n1 1 1 1\\n1 1 1 1\\n1 1 1 1\\n1 1 1 1\", \"output\": \"2\"}, {\"input\": \"4\\n1 0 1 1\\n1 1 1 1\\n1 1 1 1\\n1 1 1 1\", \"output\": \"0\"}]','[]',0,0,0,0,0,0,0,2,1512628342544),(2,35,'FJ沙盘问题','[]','{\"ops\": [{\"insert\": \"FJ在沙盘上写了这样一些字符串：\\n  A1 = “A”\\n  A2 = “ABA”\\n  A3 = “ABACABA”\\n  A4 = “ABACABADABACABA”\\n  … …\\n你能找出其中的规律并写所有的数列AN吗？\\n\"}]}','{\"ops\": [{\"insert\": \"仅有一个数：N ≤ 26。\\n\"}]}','{\"ops\": [{\"insert\": \"请输出相应的字符串AN，以一个换行符结束。输出中不得含有多余的空格或换行、回车符。\\n\"}]}',1,'[{\"input\": \"a\", \"output\": \"ABACABA\"}]','[]',0,0,0,0,0,0,0,2,1512636034347),(3,35,'Huffuman树','[]','{\"ops\": [{\"insert\": \"Huffman树在编码中有着广泛的应用。在这里，我们只关心Huffman树的构造过程。\\n  给出一列数{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}={\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"0\", \"attributes\": {\"script\": \"sub\"}}, {\"insert\": \", \"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"1\", \"attributes\": {\"script\": \"sub\"}}, {\"insert\": \", …, \"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"n\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"-1\", \"attributes\": {\"script\": \"sub\"}}, {\"insert\": \"}，用这列数构造Huffman树的过程如下：\\n  1. 找到{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中最小的两个数，设为\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"a\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"和\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"b\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"，将\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"a\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"和\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"b\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"从{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中删除掉，然后将它们的和加入到{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中。这个过程的费用记为\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"a\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \" + \"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"b\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"。\\n  2. 重复步骤1，直到{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中只剩下一个数。\\n  在上面的操作过程中，把所有的费用相加，就得到了构造Huffman树的总费用。\\n  本题任务：对于给定的一个数列，现在请你求出用该数列构造Huffman树的总费用。\\n \\n  例如，对于数列{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}={5, 3, 8, 2, 9}，Huffman树的构造过程如下：\\n  1. 找到{5, 3, 8, 2, 9}中最小的两个数，分别是2和3，从{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中删除它们并将和5加入，得到{5, 8, 9, 5}，费用为5。\\n  2. 找到{5, 8, 9, 5}中最小的两个数，分别是5和5，从{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中删除它们并将和10加入，得到{8, 9, 10}，费用为10。\\n  3. 找到{8, 9, 10}中最小的两个数，分别是8和9，从{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中删除它们并将和17加入，得到{10, 17}，费用为17。\\n  4. 找到{10, 17}中最小的两个数，分别是10和17，从{\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"i\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"}中删除它们并将和27加入，得到{27}，费用为27。\\n  5. 现在，数列中只剩下一个数27，构造过程结束，总费用为5+10+17+27=59。\\n\"}]}','{\"ops\": [{\"insert\": \"输入的第一行包含一个正整数\"}, {\"insert\": \"n\", \"attributes\": {\"italic\": true}}, {\"insert\": \"（\"}, {\"insert\": \"n\", \"attributes\": {\"italic\": true}}, {\"insert\": \"<=100）。\\n接下来是\"}, {\"insert\": \"n\", \"attributes\": {\"italic\": true}}, {\"insert\": \"个正整数，表示\"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"0\", \"attributes\": {\"script\": \"sub\"}}, {\"insert\": \", \"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"1\", \"attributes\": {\"script\": \"sub\"}}, {\"insert\": \", …, \"}, {\"insert\": \"p\", \"attributes\": {\"italic\": true}}, {\"insert\": \"n\", \"attributes\": {\"italic\": true, \"script\": \"sub\"}}, {\"insert\": \"-1\", \"attributes\": {\"script\": \"sub\"}}, {\"insert\": \"，每个数不超过1000。\\n\"}]}','{\"ops\": [{\"insert\": \"输出用这些数构造Huffman树的总费用。\\n\"}]}',2,'[{\"input\": \"5\\n5 3 8 2 9\", \"output\": \"59\"}]','[]',0,0,0,0,0,0,0,2,1512636389524);
 /*!40000 ALTER TABLE `problem` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `problem_contest_info`
---
-
-DROP TABLE IF EXISTS `problem_contest_info`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `problem_contest_info` (
-  `pid` int(10) unsigned NOT NULL,
-  `cid` int(10) unsigned NOT NULL COMMENT '对应比赛id',
-  `score` int(10) unsigned NOT NULL,
-  `submit_times` int(10) unsigned DEFAULT '0',
-  `ac_times` int(10) unsigned DEFAULT '0',
-  `wa_times` int(10) unsigned DEFAULT '0',
-  `rte_times` int(10) unsigned DEFAULT '0',
-  `tle_times` int(10) unsigned DEFAULT '0',
-  `ce_times` int(10) unsigned DEFAULT '0',
-  UNIQUE KEY `pid_cid_unique` (`pid`,`cid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `problem_contest_info`
---
-
-LOCK TABLES `problem_contest_info` WRITE;
-/*!40000 ALTER TABLE `problem_contest_info` DISABLE KEYS */;
-INSERT INTO `problem_contest_info` VALUES (3,0,0,0,0,0,0,0,0),(4,0,0,0,0,0,0,0,0),(5,0,0,0,0,0,0,0,0),(6,0,0,0,0,0,0,0,0),(7,0,0,0,0,0,0,0,0),(8,0,0,0,0,0,0,0,0),(9,0,0,0,0,0,0,0,0),(10,0,0,0,0,0,0,0,0),(11,0,0,0,0,0,0,0,0),(12,0,0,0,0,0,0,0,0),(13,0,0,0,0,0,0,0,0),(14,0,0,0,0,0,0,0,0),(15,0,0,2,2,0,0,0,0),(15,4,5,0,0,0,0,0,0),(21,0,0,0,0,0,0,0,0),(22,0,0,0,0,0,0,0,0),(23,0,0,0,0,0,0,0,0),(24,0,0,0,0,0,0,0,0),(25,0,0,0,0,0,0,0,0),(26,0,0,0,0,0,0,0,0),(27,0,0,0,0,0,0,0,0),(28,0,0,0,0,0,0,0,0),(29,0,0,0,0,0,0,0,0),(30,0,0,0,0,0,0,0,0),(31,0,0,0,0,0,0,0,0),(32,0,0,0,0,0,0,0,0),(33,0,0,0,0,0,0,0,0),(34,0,0,0,0,0,0,0,0),(35,0,0,0,0,0,0,0,0),(36,0,0,0,0,0,0,0,0),(37,0,0,0,0,0,0,0,0),(38,0,0,0,0,0,0,0,0),(39,0,0,0,0,0,0,0,0),(40,0,0,0,0,0,0,0,0),(41,0,0,0,0,0,0,0,0),(42,0,0,0,0,0,0,0,0),(43,0,0,0,0,0,0,0,0),(44,0,0,0,0,0,0,0,0),(45,0,0,0,0,0,0,0,0),(46,0,0,0,0,0,0,0,0),(47,0,0,0,0,0,0,0,0),(48,0,0,0,0,0,0,0,0),(49,0,0,0,0,0,0,0,0),(50,0,0,0,0,0,0,0,0),(51,0,0,0,0,0,0,0,0),(52,0,0,0,0,0,0,0,0),(53,0,0,0,0,0,0,0,0),(54,6,7,12,1,0,0,0,0),(57,8,4,0,0,0,0,0,0),(58,8,5,0,0,0,0,0,0),(59,8,8,0,0,0,0,0,0),(60,8,1,0,0,0,0,0,0);
-/*!40000 ALTER TABLE `problem_contest_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -282,7 +281,7 @@ CREATE TABLE `submission` (
   `status` enum('Accepted','WrongAnswer','TimeLimitExceeded','CompileError','RuntimeError','JudgeError') NOT NULL,
   `submit_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,7 +290,6 @@ CREATE TABLE `submission` (
 
 LOCK TABLES `submission` WRITE;
 /*!40000 ALTER TABLE `submission` DISABLE KEYS */;
-INSERT INTO `submission` VALUES (1,14,15,5,'PYTHON36',0,'[{\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}]',0.020,2.980,'Accepted',1510571480286),(2,14,15,6,'PYTHON36',0,'[{\"status\": \"RuntimeError\", \"stderr\": \"Traceback (most recent call last):\\n  File \\\"main.py\\\", line 1, in <module>\\n    while(True):  print(\'stdout\')\\nOSError: [Errno 27] File too large\\nException ignored in: <_io.TextIOWrapper name=\'<stdout>\' mode=\'w\' encoding=\'ANSI_X3.4-1968\'>\\nOSError: [Errno 27] File too large\\n\"}, {\"status\": \"RuntimeError\", \"stderr\": \"Traceback (most recent call last):\\n  File \\\"main.py\\\", line 1, in <module>\\n    while(True):  print(\'stdout\')\\nOSError: [Errno 27] File too large\\nException ignored in: <_io.TextIOWrapper name=\'<stdout>\' mode=\'w\' encoding=\'ANSI_X3.4-1968\'>\\nOSError: [Errno 27] File too large\\n\"}, {\"status\": \"RuntimeError\", \"stderr\": \"Traceback (most recent call last):\\n  File \\\"main.py\\\", line 1, in <module>\\n    while(True):  print(\'stdout\')\\nOSError: [Errno 27] File too large\\nException ignored in: <_io.TextIOWrapper name=\'<stdout>\' mode=\'w\' encoding=\'ANSI_X3.4-1968\'>\\nOSError: [Errno 27] File too large\\n\"}]',0.110,4.290,'RuntimeError',1510571659647),(3,14,15,7,'PYTHON36',0,'[{\"status\": \"RuntimeError\", \"stderr\": \"Traceback (most recent call last):\\n  File \\\"main.py\\\", line 1, in <module>\\n    while(True):  print(\'stdout\')\\nOSError: [Errno 27] File too large\\nException ignored in: <_io.TextIOWrapper name=\'<stdout>\' mode=\'w\' encoding=\'ANSI_X3.4-1968\'>\\nOSError: [Errno 27] File too large\\n\"}, {\"status\": \"RuntimeError\", \"stderr\": \"Traceback (most recent call last):\\n  File \\\"main.py\\\", line 1, in <module>\\n    while(True):  print(\'stdout\')\\nOSError: [Errno 27] File too large\\nException ignored in: <_io.TextIOWrapper name=\'<stdout>\' mode=\'w\' encoding=\'ANSI_X3.4-1968\'>\\nOSError: [Errno 27] File too large\\n\"}, {\"status\": \"RuntimeError\", \"stderr\": \"Traceback (most recent call last):\\n  File \\\"main.py\\\", line 1, in <module>\\n    while(True):  print(\'stdout\')\\nOSError: [Errno 27] File too large\\nException ignored in: <_io.TextIOWrapper name=\'<stdout>\' mode=\'w\' encoding=\'ANSI_X3.4-1968\'>\\nOSError: [Errno 27] File too large\\n\"}]',0.110,4.290,'RuntimeError',1510571855417),(4,14,15,8,'PYTHON36',0,'[{\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}]',0.020,3.000,'Accepted',1510647017054),(5,14,15,9,'PYTHON36',0,'[{\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}]',0.020,3.010,'Accepted',1510647023708),(6,14,54,10,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.000,'WrongAnswer',1510832408664),(7,14,54,11,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,2.990,'WrongAnswer',1510832619203),(8,14,54,12,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,2.970,'WrongAnswer',1510832751380),(9,14,54,13,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,2.990,'WrongAnswer',1510833023526),(10,14,54,14,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.000,'WrongAnswer',1510833257262),(11,14,54,15,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.030,'WrongAnswer',1510833536309),(12,14,54,16,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.020,'WrongAnswer',1510833623850),(13,14,54,17,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.050,'WrongAnswer',1510833767133),(14,14,54,18,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.010,'WrongAnswer',1510833814653),(15,14,54,19,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,2.950,'WrongAnswer',1510833897691),(16,14,54,20,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.030,3.000,'WrongAnswer',1510833928308),(17,14,54,21,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.010,'WrongAnswer',1510833961867),(18,14,54,22,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.000,'WrongAnswer',1510835715189),(19,14,54,23,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}]',0.020,3.050,'Accepted',1510835767413),(20,14,54,24,'PYTHON36',6,'[{\"status\": \"Accepted\"}, {\"status\": \"Accepted\"}]',0.020,3.040,'Accepted',1510836121042),(21,14,54,25,'PYTHON36',6,'[{\"status\": \"WrongAnswer\"}, {\"status\": \"WrongAnswer\"}]',0.020,3.040,'WrongAnswer',1510836256829);
 /*!40000 ALTER TABLE `submission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -315,7 +313,7 @@ CREATE TABLE `tag_problem` (
 
 LOCK TABLES `tag_problem` WRITE;
 /*!40000 ALTER TABLE `tag_problem` DISABLE KEYS */;
-INSERT INTO `tag_problem` VALUES (1,60),(4,60);
+INSERT INTO `tag_problem` VALUES (1,2),(5,1),(6,3);
 /*!40000 ALTER TABLE `tag_problem` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,7 +330,7 @@ CREATE TABLE `tags` (
   `used` int(10) unsigned DEFAULT '0',
   PRIMARY KEY (`tid`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,7 +339,7 @@ CREATE TABLE `tags` (
 
 LOCK TABLES `tags` WRITE;
 /*!40000 ALTER TABLE `tags` DISABLE KEYS */;
-INSERT INTO `tags` VALUES (1,'java',3),(2,'python',4),(3,'hellworld',4),(4,'链表',3);
+INSERT INTO `tags` VALUES (1,'java',4),(2,'python',4),(3,'hellworld',5),(4,'链表',3),(5,'DFS',1),(6,'哈夫曼',1);
 /*!40000 ALTER TABLE `tags` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -360,7 +358,7 @@ CREATE TABLE `test_cases` (
   `strength` tinyint(1) unsigned NOT NULL COMMENT '介于1-9之间',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -369,7 +367,7 @@ CREATE TABLE `test_cases` (
 
 LOCK TABLES `test_cases` WRITE;
 /*!40000 ALTER TABLE `test_cases` DISABLE KEYS */;
-INSERT INTO `test_cases` VALUES (8,15,'stdin','stdout',5,0),(9,15,'stdin','stdout',5,0),(11,15,'stdin','stdout',5,1510464329067),(15,54,'stdin','stdout',5,1510832251391),(16,54,'stdin','stdout',3,1510832262021),(20,58,'大海','而发而非啊',9,1512096555464),(23,60,'dfsv','sadv',3,1512391303773);
+INSERT INTO `test_cases` VALUES (1,1,'3\n1 1 0 \n1 1 1 \n1 1 0 ','0',1,1512631461719),(2,1,'4\n1 1 1 1 \n1 0 1 1 \n1 1 1 1 \n1 1 1 1','2',1,1512632319498),(3,1,'5\n1 1 1 1 1 \n1 0 1 1 1 \n1 1 1 1 1 \n1 0 1 1 1 \n1 1 1 1 1','12',1,1512632336990),(4,1,'6\n1 1 1 1 1 1 \n1 1 1 1 1 1 \n1 1 1 1 1 1 \n1 1 1 1 1 1 \n1 1 1 1 1 1 \n1 1 1 1 1 1','12',1,1512632350016),(5,1,'7\n1 1 1 1 1 1 0 \n1 1 1 1 1 1 1 \n1 1 1 1 1 1 1 \n1 1 1 1 1 1 1 \n1 1 1 1 1 1 1 \n1 1 1 1 1 1 1 \n1 1 1 1 1 1 1','408',1,1512632362740),(6,2,'10','ABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAHABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAIABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAHABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAJABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAHABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAIABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAHABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABAD',1,1512636173870),(7,2,'9','ABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAHABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAIABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAHABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABAGABACABADABACABAEABACABADABACABAFABACABADABACABAEABACABADABACABA',1,1512636201839),(8,3,'2\n42 468','510',1,1512636419045),(9,3,'5\n335 501 170 725 479','4925',1,1512636438162);
 /*!40000 ALTER TABLE `test_cases` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -426,4 +424,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-06 21:10:22
+-- Dump completed on 2017-12-07 21:07:10
