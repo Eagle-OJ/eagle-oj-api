@@ -17,6 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -130,6 +132,19 @@ public class UserContestController {
         return new ResponseEntity("加入比赛成功");
     }
 
+    @ApiOperation("获取本人在某个比赛中的状况+题目列表")
+    @GetMapping("/{cid}/data")
+    public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid) {
+        ContestUserInfoEntity info = contestUserInfoService.getByCidAndUid(cid, SessionHelper.get().getUid());
+        if (info == null) {
+            throw new WebErrorException("你不在此比赛中");
+        }
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("user", info);
+        map.put("problems", contestProblemService.getContestProblems(cid));
+        return new ResponseEntity(map);
+    }
+
     @ApiOperation("向比赛添加题目")
     @PostMapping("/{cid}/problem")
     public ResponseEntity addContestProblem(@PathVariable("cid") int cid,
@@ -174,6 +189,9 @@ public class UserContestController {
     @ApiOperation("获取比赛的题目列表")
     @GetMapping("/{cid}/problem")
     public ResponseEntity getContestProblems(@PathVariable("cid") int cid) {
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        haveContest(contestEntity);
+        havePermission(contestEntity);
         return new ResponseEntity(contestProblemService.getContestProblems(cid));
     }
 
@@ -223,12 +241,6 @@ public class UserContestController {
     }
 
     private void checkContest(CreateContestFormat format) {
-        long currentTime = System.currentTimeMillis();
-        // valid time
-        if (format.getStartTime() <= currentTime) {
-            throw new WebErrorException("开始时间不得早于现在的时间");
-        }
-
         // endTime为0代表永远不结束
         if (format.getEndTime()!=0 && format.getStartTime() >= format.getEndTime()) {
             throw new WebErrorException("非法结束时间");
@@ -236,7 +248,7 @@ public class UserContestController {
 
         // 限时模式
         if (format.getType()==1 || format.getType()==3) {
-            if (format.getTotalTime() == null) {
+            if (format.getTotalTime() == null || format.getTotalTime()<=0) {
                 throw new WebErrorException("非法总时间");
             }
         }

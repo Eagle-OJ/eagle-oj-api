@@ -17,7 +17,7 @@
     </select>
 
     <select id="getContestProblems" resultType="HashMap">
-        SELECT problem.title, contest_problem.pid, contest_problem.display_id, contest_problem.score FROM contest_problem
+        SELECT problem.title, problem.difficult, contest_problem.* FROM contest_problem
         LEFT JOIN problem ON contest_problem.pid=problem.pid
         WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
     </select>

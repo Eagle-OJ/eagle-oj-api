@@ -64,12 +64,4 @@ public class ContestController {
         }
         return new ResponseEntity(contestEntity);
     }
-
-    @ApiOperation("获取用户在某个比赛中的状况")
-    @GetMapping("/{cid}/user/{uid}")
-    public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid,
-                                             @PathVariable("uid") int uid) {
-        ContestUserInfoEntity info = contestUserInfoService.getByCidAndUid(cid, uid);
-        return new ResponseEntity(info);
-    }
 }
