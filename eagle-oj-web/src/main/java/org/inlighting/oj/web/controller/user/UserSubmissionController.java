@@ -43,11 +43,6 @@ public class UserSubmissionController {
     }
 
     @Autowired
-    public void setJudgerQueue(JudgerQueue judgerQueue) {
-        this.judgerQueue = judgerQueue;
-    }
-
-    @Autowired
     public void setContestUserInfoService(ContestUserInfoService contestUserInfoService) {
         this.contestUserInfoService = contestUserInfoService;
     }

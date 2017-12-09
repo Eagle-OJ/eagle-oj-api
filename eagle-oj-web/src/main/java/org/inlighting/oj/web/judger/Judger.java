@@ -19,7 +19,6 @@ import java.util.concurrent.Future;
 /**
  * @author Smith
  **/
-@Component
 public class Judger {
 
     public Map<CodeLanguageEnum, Map<String, Integer>> getConfiguration() {

@@ -1,6 +1,6 @@
 {
-  "receive": {
-    "code_language_id": 1,
+  "request": {
+    "lang": 1,
     "source_code": "print('hello')",
     "time_limit": "3",
     "memory_limit": "128",
@@ -16,7 +16,7 @@
     ]
 
   },
-  "return": {
+  "response": {
     "time": "1.28",
     "memory": "12",
     "result": "RTE",

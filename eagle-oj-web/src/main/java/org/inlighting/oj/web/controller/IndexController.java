@@ -33,19 +33,12 @@ public class IndexController {
 
     private UserService userService;
 
-    private Judger judger;
-
     @Value("${eagle-oj.oss.url}")
     private String OSS_URL;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setJudger(Judger judger) {
-        this.judger = judger;
     }
 
     @ApiOperation("用户注册")
@@ -87,12 +80,6 @@ public class IndexController {
         authCache.put(token, userEntity.getPassword());
 
         return new ResponseEntity("登入成功", token);
-    }
-
-    @ApiOperation("编程语言配置默认文件")
-    @GetMapping("/language")
-    public ResponseEntity getLanguageConfig() {
-        return new ResponseEntity(judger.getConfiguration());
     }
 
     @GetMapping("/setting")

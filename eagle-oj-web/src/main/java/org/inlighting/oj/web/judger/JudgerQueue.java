@@ -24,7 +24,6 @@ import java.util.concurrent.PriorityBlockingQueue;
 /**
  * @author Smith
  **/
-@Component
 public class JudgerQueue {
 
     private Logger LOGGER = LogManager.getLogger(this.getClass());
