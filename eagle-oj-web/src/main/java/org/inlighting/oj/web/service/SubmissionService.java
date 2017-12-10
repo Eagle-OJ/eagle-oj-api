@@ -1,7 +1,10 @@
 package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.SqlSession;
+import org.inlighting.oj.judge.LanguageEnum;
+import org.inlighting.oj.judge.ResultEnum;
 import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.inlighting.oj.judge.config.ProblemStatusEnum;
 import org.inlighting.oj.web.dao.ContestProblemDao;
@@ -44,21 +47,18 @@ public class SubmissionService {
         this.userDao = userDao;
     }
 
-    public int submitCode(int owner, int pid, int codeSource, CodeLanguageEnum codeLanguage,
-                              int belong, JSONArray result, double timeUsed, double memoryUsed,
-                              ProblemStatusEnum statusEnum, long submitTime) {
-        // 添加submission
+    public int add(int owner, int pid, int cid, int sourceCode, LanguageEnum lang, double time, int memory,
+                   ResultEnum status) {
         SubmissionEntity submissionEntity = new SubmissionEntity();
         submissionEntity.setOwner(owner);
         submissionEntity.setPid(pid);
-        submissionEntity.setCodeSource(codeSource);
-        submissionEntity.setCodeLanguage(codeLanguage);
-        submissionEntity.setBelong(belong);
-        submissionEntity.setResult(result);
-        submissionEntity.setTimeUsed(timeUsed);
-        submissionEntity.setMemoryUsed(memoryUsed);
-        submissionEntity.setStatus(statusEnum);
-        submissionEntity.setSubmitTime(submitTime);
+        submissionEntity.setCid(cid);
+        submissionEntity.setSourceCode(sourceCode);
+        submissionEntity.setLang(lang);
+        submissionEntity.setTime(time);
+        submissionEntity.setMemory(memory);
+        submissionEntity.setStatus(status);
+        submissionEntity.setSubmitTime(System.currentTimeMillis());
         return submissionDao.insert(sqlSession, submissionEntity) ? submissionEntity.getSid(): 0;
     }
 }

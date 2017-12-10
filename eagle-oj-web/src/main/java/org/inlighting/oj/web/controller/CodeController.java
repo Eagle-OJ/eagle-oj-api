@@ -5,18 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
-import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.index.SubmitCodeFormat;
-import org.inlighting.oj.web.controller.format.index.TestSubmitCodeFormat;
 import org.inlighting.oj.web.entity.ResponseEntity;
-import org.inlighting.oj.web.entity.TestCaseEntity;
-import org.inlighting.oj.web.judger.JudgerQueue;
-import org.inlighting.oj.web.judger.JudgerTaskResultEntity;
-import org.inlighting.oj.web.judger.re.JudgerManager;
-import org.inlighting.oj.web.judger.re.JudgerResult;
+import org.inlighting.oj.web.judger.JudgerManager;
+import org.inlighting.oj.web.judger.JudgerResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +26,6 @@ import java.util.List;
 @Validated
 @RequestMapping(value = "/code", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class CodeController {
-
-    private Logger LOGGER = LogManager.getLogger(this.getClass());
-
-    private JudgerQueue judgerQueue;
 
     private JudgerManager judgerManager;
 
@@ -57,8 +47,9 @@ public class CodeController {
             TestCaseRequestEntity testCaseRequestEntity = new TestCaseRequestEntity(obj.getString("stdin"), obj.getString("stdout"));
             testCases.add(testCaseRequestEntity);
         }
-        String id = judgerManager.addTask(true, 0, 0,
-                format.getLang(), format.getSourceCode(), testCases);
+        String id = judgerManager.addTask(true, 0, 0, 0,
+                format.getLang(), format.getSourceCode(), testCases,
+                null, null, null, null);
         return new ResponseEntity(id);
     }
 
@@ -71,81 +62,4 @@ public class CodeController {
         }
         return new ResponseEntity(result);
     }
-
-    @PostMapping("/submit")
-    public ResponseEntity guestSubmitTest(@RequestBody @Valid TestSubmitCodeFormat format) {
-        return new ResponseEntity("提交成功", submitTest(format, 0));
-    }
-
-    @PostMapping("/user/submit")
-    public ResponseEntity userSubmitTest(@RequestBody @Valid TestSubmitCodeFormat format) {
-        return new ResponseEntity("提交成功", submitTest(format, 1));
-    }
-
-    private String submitTest(TestSubmitCodeFormat format, int priority) {
-        if (format.getTestCases().size() == 0) {
-            throw new WebErrorException("没有测试用例");
-        }
-        // 组装测试用例
-        List<TestCaseEntity> testCaseEntities = new ArrayList<>(3);
-        for (int i=0; i<format.getTestCases().size(); i++) {
-            JSONObject obj = format.getTestCases().getJSONObject(i);
-            TestCaseEntity testCaseEntity = new TestCaseEntity(0, obj.getString("stdin"),
-                    obj.getString("stdout"), 0, System.currentTimeMillis());
-            testCaseEntities.add(testCaseEntity);
-        }
-
-        String uuid = judgerQueue.addTask(priority, 0, 0, 0, 0,0,
-                format.getCodeLanguage(), format.getCodeSource(), true, testCaseEntities);
-        return uuid;
-    }
-
-    /*private JudgerRequestBean requestBeanLoader(SubmitCodeFormat format) {
-        int pid = format.getPid();
-
-        String[] stdin;
-        String[] expectResult;
-        if (format.isTestMode()) {
-            stdin = new String[format.getTestCase().size()];
-            expectResult = new String[format.getTestCase().size()];
-            for (int i=0; i<format.getTestCase().size(); i++) {
-                JSONObject jsonObject = format.getTestCase().getJSONObject(i);
-                stdin[i] = jsonObject.getString("stdin");
-                expectResult[i] = jsonObject.getString("stdout");
-            }
-        } else {
-            List<TestCaseEntity> testCaseEntities = testCaseService.getAllTestCasesByPid(pid);
-            stdin = new String[testCaseEntities.size()];
-            expectResult = new String[testCaseEntities.size()];
-            for (int i=0; i<testCaseEntities.size(); i++) {
-                stdin[i] = testCaseEntities.get(i).getStdin();
-                expectResult[i] = testCaseEntities.get(i).getStdout();
-            }
-        }
-
-
-        JudgerRequestBean stdRequestBean = new JudgerRequestBean();
-        stdRequestBean.setTestCaseNumber(stdin.length);
-        stdRequestBean.setLanguage(format.getCodeLanguage());
-        stdRequestBean.setSourceCode(format.getSourceCode());
-        stdRequestBean.setStdin(stdin);
-        stdRequestBean.setExpectResult(expectResult);
-        stdRequestBean.setTimeLimit(3);
-        stdRequestBean.setMemoryLimit(128);
-        return stdRequestBean;
-    }
-
-    private JSONArray judgeResultLoader(JudgeResponseBean stdResponseBean) {
-        JSONArray result = new JSONArray();
-        for (int i=0; i<stdResponseBean.getTestCaseNumber(); i++) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("stderr", stdResponseBean.getStderr()[i]);
-            jsonObject.put("status", stdResponseBean.getProblemStatusEnums()[i]);
-            result.add(jsonObject);
-        }
-        return result;
-    }*/
-
-
-
 }

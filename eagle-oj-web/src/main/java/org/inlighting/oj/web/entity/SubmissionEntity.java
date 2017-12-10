@@ -1,7 +1,10 @@
 package org.inlighting.oj.web.entity;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.inlighting.oj.judge.LanguageEnum;
+import org.inlighting.oj.judge.ResultEnum;
 import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.inlighting.oj.judge.config.ProblemStatusEnum;
 
@@ -15,23 +18,21 @@ public class SubmissionEntity {
 
     private int pid;
 
-    @JSONField(name = "code_source")
-    private int codeSource;
+    private int cid;
 
-    @JSONField(name = "code_language")
-    private CodeLanguageEnum codeLanguage;
+    @JSONField(name = "source_code")
+    private int sourceCode;
 
-    private int belong;
+    @JSONField(name = "lang")
+    private LanguageEnum lang;
 
-    private JSONArray result;
+    @JSONField(name = "time")
+    private double time;
 
-    @JSONField(name = "time_used")
-    private double timeUsed;
+    @JSONField(name = "memory")
+    private int memory;
 
-    @JSONField(name = "memory_used")
-    private double memoryUsed;
-
-    private ProblemStatusEnum status;
+    private ResultEnum status;
 
     @JSONField(name = "submit_time")
     private long submitTime;
@@ -60,59 +61,51 @@ public class SubmissionEntity {
         this.pid = pid;
     }
 
-    public int getCodeSource() {
-        return codeSource;
+    public int getCid() {
+        return cid;
     }
 
-    public void setCodeSource(int codeSource) {
-        this.codeSource = codeSource;
+    public void setCid(int cid) {
+        this.cid = cid;
     }
 
-    public CodeLanguageEnum getCodeLanguage() {
-        return codeLanguage;
+    public int getSourceCode() {
+        return sourceCode;
     }
 
-    public void setCodeLanguage(CodeLanguageEnum codeLanguage) {
-        this.codeLanguage = codeLanguage;
+    public void setSourceCode(int sourceCode) {
+        this.sourceCode = sourceCode;
     }
 
-    public int getBelong() {
-        return belong;
+    public LanguageEnum getLang() {
+        return lang;
     }
 
-    public void setBelong(int belong) {
-        this.belong = belong;
+    public void setLang(LanguageEnum lang) {
+        this.lang = lang;
     }
 
-    public JSONArray getResult() {
-        return result;
+    public double getTime() {
+        return time;
     }
 
-    public void setResult(JSONArray result) {
-        this.result = result;
+    public void setTime(double time) {
+        this.time = time;
     }
 
-    public double getTimeUsed() {
-        return timeUsed;
+    public int getMemory() {
+        return memory;
     }
 
-    public void setTimeUsed(double timeUsed) {
-        this.timeUsed = timeUsed;
+    public void setMemory(int memory) {
+        this.memory = memory;
     }
 
-    public double getMemoryUsed() {
-        return memoryUsed;
-    }
-
-    public void setMemoryUsed(double memoryUsed) {
-        this.memoryUsed = memoryUsed;
-    }
-
-    public ProblemStatusEnum getStatus() {
+    public ResultEnum getStatus() {
         return status;
     }
 
-    public void setStatus(ProblemStatusEnum status) {
+    public void setStatus(ResultEnum status) {
         this.status = status;
     }
 

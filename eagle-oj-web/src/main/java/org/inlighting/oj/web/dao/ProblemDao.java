@@ -51,11 +51,7 @@ public class ProblemDao {
         return sqlSession.update("problem.updateProblemModerators", entity) == 1;
     }
 
-    public boolean addProblemSubmitTimes(SqlSession sqlSession, int pid) {
-        return sqlSession.update("problem.addProblemSubmitTimes", pid) == 1;
-    }
-
-    public boolean addProblemAcceptTimes(SqlSession sqlSession, int pid) {
-        return sqlSession.update("problem.addProblemAcceptTimes", pid) == 1;
+    public boolean updateProblemTimes(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemTimes", entity) == 1;
     }
 }

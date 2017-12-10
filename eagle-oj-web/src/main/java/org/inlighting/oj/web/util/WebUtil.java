@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.util;
 
 import com.github.pagehelper.PageRowBounds;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,5 +17,11 @@ public class WebUtil {
         map.put("page_count", pager.getTotal());
         map.put("data", data);
         return map;
+    }
+
+    public static void assertNotNull(Object obj, String message) {
+        if (obj == null) {
+            throw new WebErrorException(message);
+        }
     }
 }

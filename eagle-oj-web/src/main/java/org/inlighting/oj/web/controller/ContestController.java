@@ -3,10 +3,9 @@ package org.inlighting.oj.web.controller;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.entity.ContestEntity;
-import org.inlighting.oj.web.entity.ContestUserInfoEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.service.ContestService;
-import org.inlighting.oj.web.service.ContestUserInfoService;
+import org.inlighting.oj.web.service.ContestUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -26,10 +25,10 @@ public class ContestController {
 
     private ContestService contestService;
 
-    private ContestUserInfoService contestUserInfoService;
+    private ContestUserService contestUserInfoService;
 
     @Autowired
-    public void setContestUserInfoService(ContestUserInfoService contestUserInfoService) {
+    public void setContestUserInfoService(ContestUserService contestUserInfoService) {
         this.contestUserInfoService = contestUserInfoService;
     }
 

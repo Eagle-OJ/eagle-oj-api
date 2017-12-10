@@ -1,12 +1,11 @@
 package org.inlighting.oj.web.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import org.inlighting.oj.judge.config.ProblemStatusEnum;
+import org.inlighting.oj.judge.ResultEnum;
 
 /**
  * @author Smith
  **/
-public class ContestProblemUserInfoEntity {
+public class ContestProblemUserEntity {
     private int cid;
 
     private int pid;
@@ -15,7 +14,7 @@ public class ContestProblemUserInfoEntity {
 
     private int score;
 
-    private ProblemStatusEnum status;
+    private ResultEnum status;
 
     public int getCid() {
         return cid;
@@ -49,11 +48,11 @@ public class ContestProblemUserInfoEntity {
         this.score = score;
     }
 
-    public ProblemStatusEnum getStatus() {
+    public ResultEnum getStatus() {
         return status;
     }
 
-    public void setStatus(ProblemStatusEnum status) {
+    public void setStatus(ResultEnum status) {
         this.status = status;
     }
 }

@@ -38,22 +38,21 @@
         </foreach>
     </select>
 
-    <!--<update id="updateUserProfile">
+    <update id="updateUserTimes">
         UPDATE `user`
         <set>
-            <if test="email != null">`email`=#{email}</if>
-            <if test="nickname != null"> `nickname`=#{nickname} </if>
-            <if test="realName != null"> `real_name`=#{realName} </if>
-            <if test="avatar != 0"> `avatar`=#{avatar} </if>
-            <if test="password != null"> `password`=#{password} </if>
-            <if test="role != 0"> `role`=#{role} </if>
-            <if test="permission != null"> `permission`=#{permission} </if>
-            <if test="gender != 0"> `gender`=#{gender} </if>
-            <if test="motto != null"> `motto`=#{motto} </if>
-            <if test="verified != 0"> `verified`=#{verified} </if>
+            <if test="submitTimes > 0">submit_times = submit_times+1,</if>
+            <if test="contestTimes > 0">contest_times = contest_times+1,</if>
+            <if test="ACTimes > 0">ac_times = ac_times+1,</if>
+            <if test="WATimes > 0">wa_times = wa_times+1,</if>
+            <if test="RTETimes > 0">rte_times = rte_times+1,</if>
+            <if test="TLETimes > 0">tle_times = tle_times+1,</if>
+            <if test="CETimes > 0"> ce_times = ce_times+1,</if>
+            <if test="finishedProblems">finished_problems = finished_problems+1,</if>
         </set>
         WHERE `uid`=#{uid}
-    </update>-->
+    </update>
+
     <update id="updateUserProfile">
         UPDATE `user` SET `nickname`=#{nickname}, `real_name`=#{realName}, `motto`=#{motto}, `gender`=#{gender}
         WHERE `uid`=#{uid}

@@ -5,13 +5,16 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * @author Smith
  **/
-public class ContestUserInfoEntity {
+public class ContestUserEntity {
     private int cid;
 
     private int uid;
 
     @JSONField(name = "submit_times")
     private int submitTimes;
+
+    @JSONField(name = "finished_problems")
+    private int finishedProblems;
 
     @JSONField(name = "accept_times")
     private int ACTimes;
@@ -101,5 +104,13 @@ public class ContestUserInfoEntity {
 
     public void setJoinTime(long joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public int getFinishedProblems() {
+        return finishedProblems;
+    }
+
+    public void setFinishedProblems(int finishedProblems) {
+        this.finishedProblems = finishedProblems;
     }
 }

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="contestUserInfo">
+<mapper namespace="contestUser">
 
-    <select id="getByUidAndUid" resultMap="contestUserInfoMap">
+    <select id="getByUidAndUid" resultMap="contestUserMap">
         SELECT * FROM `contest_user_info` WHERE `cid` = #{cid} AND `uid` = #{uid}
     </select>
 
@@ -14,7 +14,7 @@
     </insert>
 
 
-    <update id="addData">
+    <update id="updateTimes">
         UPDATE `contest_user_info`
         <set>
             <if test="submitTimes > 0">
@@ -30,10 +30,11 @@
         WHERE `cid` = #{cid} AND `uid` = #{uid}
     </update>
 
-    <resultMap id="contestUserInfoMap" type="ContestUserInfoEntity">
+    <resultMap id="contestUserMap" type="ContestUserEntity">
         <id column="cid" property="cid"/>
         <id column="uid" property="uid"/>
         <result column="submit_times" property="submitTimes"/>
+        <result column="finished_problems" property="finishedProblems"/>
         <result column="ac_times" property="ACTimes"/>
         <result column="wa_times" property="WATimes"/>
         <result column="rte_times" property="RTETimes"/>

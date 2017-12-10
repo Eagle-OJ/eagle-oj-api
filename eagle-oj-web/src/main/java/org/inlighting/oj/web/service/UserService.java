@@ -85,11 +85,7 @@ public class UserService {
         return userDao.updateUserAvatar(sqlSession, userEntity);
     }
 
-    public boolean addUserSubmitTimes(int uid) {
-        return userDao.addUserSubmitTimesByUid(sqlSession, uid);
-    }
-
-    public boolean addUserAcceptTimes(int uid) {
-        return userDao.addUserAcceptTimesByUid(sqlSession, uid);
+    public boolean updateUserTimes(UserEntity userEntity) {
+        return userDao.updateUserTimes(sqlSession, userEntity);
     }
 }

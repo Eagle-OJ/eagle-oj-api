@@ -8,7 +8,7 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.expiry.Duration;
 import org.ehcache.expiry.Expirations;
-import org.inlighting.oj.web.judger.re.JudgerResult;
+import org.inlighting.oj.web.judger.JudgerResult;
 
 import java.util.concurrent.TimeUnit;
 

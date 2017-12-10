@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="problemUser">
+
+    <insert id="insert">
+        INSERT INTO problem_user (pid, uid, status) VALUES (#{pid}, #{uid}, #{status})
+    </insert>
+
+    <select id="select" resultMap="problemUserMap">
+        SELECT * FROM problem_user WHERE pid=#{pid} AND uid=#{uid}
+    </select>
+
+    <update id="update">
+        UPDATE problem_user SET status=#{status} WHERE pid=#{pid} AND uid=#{uid}
+    </update>
+
+    <resultMap id="problemUserMap" type="ProblemUserEntity">
+        <id column="pid" property="pid"/>
+        <id column="uid" property="uid"/>
+        <result column="status" property="status"/>
+    </resultMap>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="contestProblemUser">
+
+    <insert id="insert">
+        INSERT INTO `contest_problem_user` (`cid`,`pid`,`uid`,`score`,`status`) VALUES (#{cid},#{pid},
+        #{uid},#{score},#{status})
+    </insert>
+
+    <select id="select" resultMap="contestProblemUserMap">
+        SELECT * FROM `contest_problem_user` WHERE `cid`=#{cid} AND `pid`=#{pid} AND `uid`=#{uid}
+    </select>
+
+    <update id="update">
+        UPDATE `contest_problem_user` SET `score` = #{score}, `status` = #{status} WHERE `cid` = #{cid}
+        AND `pid` = #{pid} AND `uid` = #{uid}
+    </update>
+
+    <resultMap id="contestProblemUserMap" type="ContestProblemUserEntity">
+        <result column="cid" property="cid"/>
+        <result column="pid" property="pid"/>
+        <result column="uid" property="uid"/>
+        <result column="status" property="status"/>
+        <result column="solved_time" property="solvedTime"/>
+    </resultMap>
+</mapper>

@@ -3,6 +3,8 @@ package org.inlighting.oj.web.controller.format.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
+import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.config.CodeLanguageEnum;
 
 import javax.validation.constraints.NotNull;
@@ -12,21 +14,23 @@ import javax.validation.constraints.NotNull;
  **/
 public class SubmitCodeFormat {
 
-    @NotNull
+    @Range(min = 1)
     @JSONField(name = "contest_id")
     private Integer contestId;
 
     @NotNull
+    @Range(min = 1)
     @JSONField(name = "problem_id")
     private Integer problemId;
 
     @NotNull
-    @JSONField(name = "code_language")
-    private CodeLanguageEnum codeLanguage;
+    @JSONField(name = "lang")
+    private LanguageEnum lang;
 
     @NotNull
-    @JSONField(name = "code_source")
-    private String codeSource;
+    @NotBlank
+    @JSONField(name = "source_code")
+    private String SourceCode;
 
     public Integer getContestId() {
         return contestId;
@@ -44,19 +48,19 @@ public class SubmitCodeFormat {
         this.problemId = problemId;
     }
 
-    public CodeLanguageEnum getCodeLanguage() {
-        return codeLanguage;
+    public LanguageEnum getLang() {
+        return lang;
     }
 
-    public void setCodeLanguage(CodeLanguageEnum codeLanguage) {
-        this.codeLanguage = codeLanguage;
+    public void setLang(LanguageEnum lang) {
+        this.lang = lang;
     }
 
-    public String getCodeSource() {
-        return codeSource;
+    public String getSourceCode() {
+        return SourceCode;
     }
 
-    public void setCodeSource(String codeSource) {
-        this.codeSource = codeSource;
+    public void setSourceCode(String sourceCode) {
+        SourceCode = sourceCode;
     }
 }

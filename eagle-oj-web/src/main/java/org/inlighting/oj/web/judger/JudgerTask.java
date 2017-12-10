@@ -1,7 +1,11 @@
-package org.inlighting.oj.web.judger.re;
+package org.inlighting.oj.web.judger;
 
 import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
+import org.inlighting.oj.web.entity.ContestEntity;
+import org.inlighting.oj.web.entity.ContestProblemEntity;
+import org.inlighting.oj.web.entity.ProblemEntity;
+import org.inlighting.oj.web.entity.TestCaseEntity;
 
 import java.util.List;
 
@@ -17,6 +21,8 @@ public class JudgerTask {
 
     private int contestId;
 
+    private int owner;
+
     private LanguageEnum lang;
 
     private String sourceCode;
@@ -24,6 +30,14 @@ public class JudgerTask {
     private boolean testMode;
 
     private List<TestCaseRequestEntity> testCases;
+
+    private List<TestCaseEntity> addTestCaseEntities;
+
+    private ProblemEntity addProblemEntity;
+
+    private ContestEntity addContestEntity;
+
+    private ContestProblemEntity addContestProblemEntity;
 
     private long refreshTime;
 
@@ -97,5 +111,45 @@ public class JudgerTask {
 
     public void setRefreshTime(long refreshTime) {
         this.refreshTime = refreshTime;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    public List<TestCaseEntity> getAddTestCaseEntities() {
+        return addTestCaseEntities;
+    }
+
+    public void setAddTestCaseEntities(List<TestCaseEntity> addTestCaseEntities) {
+        this.addTestCaseEntities = addTestCaseEntities;
+    }
+
+    public ProblemEntity getAddProblemEntity() {
+        return addProblemEntity;
+    }
+
+    public void setAddProblemEntity(ProblemEntity addProblemEntity) {
+        this.addProblemEntity = addProblemEntity;
+    }
+
+    public ContestEntity getAddContestEntity() {
+        return addContestEntity;
+    }
+
+    public void setAddContestEntity(ContestEntity addContestEntity) {
+        this.addContestEntity = addContestEntity;
+    }
+
+    public ContestProblemEntity getAddContestProblemEntity() {
+        return addContestProblemEntity;
+    }
+
+    public void setAddContestProblemEntity(ContestProblemEntity addContestProblemEntity) {
+        this.addContestProblemEntity = addContestProblemEntity;
     }
 }

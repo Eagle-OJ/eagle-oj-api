@@ -667,7 +667,7 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "submission",
+					"name": "code",
 					"description": "",
 					"item": [
 						{
@@ -686,10 +686,10 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"contest_id\": 6,\n  \"problem_id\": 54,\n  \"code_language\": \"PYTHON36\",\n  \"code_source\": \"print('stdout')\"\n}"
+									"raw": "{\n  \"problem_id\": 1,\n  \"lang\": \"PYTHON36\",\n  \"source_code\": \"import os\\n  time.sleep(30000)\\nprint('stdout')\"\n}"
 								},
 								"url": {
-									"raw": "http://localhost:8080/user/submission",
+									"raw": "http://localhost:8080/user/code",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -697,7 +697,7 @@
 									"port": "8080",
 									"path": [
 										"user",
-										"submission"
+										"code"
 									]
 								},
 								"description": ""
@@ -737,63 +737,38 @@
 							}
 						],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "source_code",
-									"value": "code",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "language_id",
-									"value": "34",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "stdin",
-									"value": "null",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "expected_output",
-									"value": "null",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "cpu_time_limit",
-									"value": "3",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "memory_limit",
-									"value": "128000",
-									"description": "",
-									"type": "text"
-								}
-							]
+							"mode": "raw",
+							"raw": "{\n\t\"lang\": \"PYTHON36\",\n\t\"source_code\": \"while(True):\\n  print('hello')\",\n\t\"test_cases\": [\n\t\t{\n\t\t\t\"stdin\": \"\",\n\t\t\t\"stdout\": \"\"\n\t\t},\n\t\t{\n\t\t\t\"stdin\": \"\",\n\t\t\t\"stdout\": \"hello\"\n\t\t}\n\t]\n}"
 						},
 						"url": {
-							"raw": "www.funnytu.com:3000/submissions?wait=true",
+							"raw": "localhost:8080/code",
 							"host": [
-								"www",
-								"funnytu",
-								"com"
+								"localhost"
 							],
-							"port": "3000",
+							"port": "8080",
 							"path": [
-								"submissions"
+								"code"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get_judge",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "localhost:8080/code/4f67dca1-a484-4e13-80b6-d7c152686629",
+							"host": [
+								"localhost"
 							],
-							"query": [
-								{
-									"key": "wait",
-									"value": "true",
-									"equals": true
-								}
+							"port": "8080",
+							"path": [
+								"code",
+								"4f67dca1-a484-4e13-80b6-d7c152686629"
 							]
 						},
 						"description": ""
@@ -901,7 +876,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"test@test.com\",\n\t\"password\": \"123456\"\n}"
+					"raw": "{\n\t\"email\": \"1@1.com\",\n\t\"password\": \"123\"\n}"
 				},
 				"url": {
 					"raw": "localhost:8080/login",

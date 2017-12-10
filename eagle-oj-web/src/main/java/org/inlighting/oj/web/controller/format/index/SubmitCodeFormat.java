@@ -2,6 +2,7 @@ package org.inlighting.oj.web.controller.format.index;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.inlighting.oj.judge.LanguageEnum;
 
@@ -16,6 +17,7 @@ public class SubmitCodeFormat {
     private LanguageEnum lang;
 
     @JSONField(name = "source_code")
+    @NotBlank
     @NotNull
     private String sourceCode;
 

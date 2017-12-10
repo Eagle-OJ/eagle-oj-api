@@ -39,18 +39,24 @@
         UPDATE problem SET status=#{status} WHERE pid = #{pid}
     </update>
 
-    <update id="addProblemSubmitTimes">
-        UPDATE `problem` SET `submit_times` = `submit_times` + 1 WHERE `pid` = #{pid}
-    </update>
-
-    <update id="addProblemAcceptTimes">
-        UPDATE `problem` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid}
-    </update>
-
     <update id="updateProblemDescription" parameterType="ProblemEntity">
         UPDATE `problem` SET `title`=#{title}, `description`=#{description}, `input_format`=#{inputFormat},
             `output_format`=#{outputFormat}, `samples`=#{samples}, `difficult`=#{difficult}
         WHERE `pid`=#{pid}
+    </update>
+
+    <update id="updateProblemTimes">
+        UPDATE problem
+        <set>
+            <if test="submitTimes > 0">submit_times = submit_times+1,</if>
+            <if test="usedTimes > 0">used_times = used_times+1,</if>
+            <if test="ACTimes > 0">ac_times = ac_times+1,</if>
+            <if test="WATimes > 0">wa_times = wa_times+1,</if>
+            <if test="RTETimes > 0">rte_times = rte_times+1,</if>
+            <if test="TLETimes > 0">tle_times = tle_times+1,</if>
+            <if test="CETimes > 0"> ce_times = ce_times+1,</if>
+        </set>
+        WHERE pid=#{pid}
     </update>
 
     <resultMap id="problemResultMap" type="ProblemEntity">

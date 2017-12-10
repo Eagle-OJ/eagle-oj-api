@@ -2,6 +2,7 @@ package org.inlighting.oj.web.util;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
+import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,10 +31,10 @@ public class FileUtil {
     }
 
 
-    public String uploadCode(CodeLanguageEnum languageEnum, String code) {
+    public String uploadCode(LanguageEnum lang, String code) {
         InputStream is = new ByteArrayInputStream(code.getBytes());
         StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
-        switch (languageEnum) {
+        switch (lang) {
             case JAVA8:
                 fileName.append(".java");
                 break;

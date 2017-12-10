@@ -1,8 +1,8 @@
 package service;
 
 import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.entity.ContestUserInfoEntity;
-import org.inlighting.oj.web.service.ContestUserInfoService;
+import org.inlighting.oj.web.entity.ContestUserEntity;
+import org.inlighting.oj.web.service.ContestUserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +17,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class ContestUserInfoServiceTest {
 
-    private ContestUserInfoService contestUserInfoService;
+    private ContestUserService contestUserInfoService;
     @Autowired
-    public void setContestUserInfoService(ContestUserInfoService contestUserInfoService) {
+    public void setContestUserInfoService(ContestUserService contestUserInfoService) {
         this.contestUserInfoService = contestUserInfoService;
     }
 
@@ -35,7 +35,7 @@ public class ContestUserInfoServiceTest {
     public void getTest(){
         int cid = 4;
         int uid = 14;
-        ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid,uid);
+        ContestUserEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid,uid);
         Assert.assertEquals(true,contestUserInfoEntity!=null);
     }
 }

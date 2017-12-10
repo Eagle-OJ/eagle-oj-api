@@ -1,8 +1,7 @@
 package org.inlighting.oj.web.dao;
 
-import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.session.SqlSession;
-import org.inlighting.oj.web.entity.ContestUserInfoEntity;
+import org.inlighting.oj.web.entity.ContestUserEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -12,15 +11,15 @@ import java.util.Map;
  * @author = ygj
  **/
 @Repository
-public class ContestUserInfoDao {
+public class ContestUserDao {
 
-    public boolean add(SqlSession sqlSession, ContestUserInfoEntity contestUserInfoEntity){
-        int insertNum = sqlSession.insert("contestUserInfo.add",contestUserInfoEntity);
+    public boolean add(SqlSession sqlSession, ContestUserEntity contestUserInfoEntity){
+        int insertNum = sqlSession.insert("contestUser.add",contestUserInfoEntity);
         return insertNum == 1;
     }
 
-    public ContestUserInfoEntity getByUidAndUid(SqlSession sqlSession, ContestUserInfoEntity entity) {
-        return sqlSession.selectOne("contestUserInfo.getByUidAndUid", entity);
+    public ContestUserEntity getByUidAndUid(SqlSession sqlSession, ContestUserEntity entity) {
+        return sqlSession.selectOne("contestUser.getByUidAndUid", entity);
     }
 
     public boolean updateData(SqlSession sqlSession, int cid, int uid, int submitTimes,
@@ -31,6 +30,6 @@ public class ContestUserInfoDao {
         map.put("submitTimes", submitTimes);
         map.put("acceptTimes", acceptTimes);
         map.put("newlyAcceptTime", newlyAcceptTime);
-        return sqlSession.update("contestUserInfo.addData", map) == 1;
+        return sqlSession.update("contestUser.addData", map) == 1;
     }
 }

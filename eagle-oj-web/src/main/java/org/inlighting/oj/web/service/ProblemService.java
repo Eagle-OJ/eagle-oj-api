@@ -116,11 +116,7 @@ public class ProblemService {
         return problemDao.updateModerators(sqlSession, problemEntity);
     }
 
-    public boolean addProblemSubmitTimes(int pid) {
-        return problemDao.addProblemSubmitTimes(sqlSession, pid);
-    }
-
-    public boolean addProblemAcceptTimes(int pid) {
-        return problemDao.addProblemAcceptTimes(sqlSession, pid);
+    public boolean updateProblemTimes(ProblemEntity problemEntity) {
+        return problemDao.updateProblemTimes(sqlSession, problemEntity);
     }
 }

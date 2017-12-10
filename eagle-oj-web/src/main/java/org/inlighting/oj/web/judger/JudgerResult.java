@@ -1,4 +1,4 @@
-package org.inlighting.oj.web.judger.re;
+package org.inlighting.oj.web.judger;
 
 
 import org.inlighting.oj.judge.entity.ResponseEntity;

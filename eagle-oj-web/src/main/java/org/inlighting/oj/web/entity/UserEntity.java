@@ -48,8 +48,6 @@ public class UserEntity {
     @JSONField(name = "finished_problems")
     private int finishedProblems;
 
-    private int score;
-
     private int gender;
 
     private String motto;
@@ -185,14 +183,6 @@ public class UserEntity {
 
     public void setFinishedProblems(int finishedProblems) {
         this.finishedProblems = finishedProblems;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public int getGender() {

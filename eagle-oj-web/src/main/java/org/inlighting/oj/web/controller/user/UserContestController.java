@@ -8,7 +8,7 @@ import org.inlighting.oj.web.controller.format.user.*;
 import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ContestService;
-import org.inlighting.oj.web.service.ContestUserInfoService;
+import org.inlighting.oj.web.service.ContestUserService;
 import org.inlighting.oj.web.service.ContestProblemService;
 import org.inlighting.oj.web.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class UserContestController {
 
     private ContestService contestService;
 
-    private ContestUserInfoService contestUserInfoService;
+    private ContestUserService contestUserInfoService;
 
     private ContestProblemService contestProblemService;
 
@@ -52,7 +52,7 @@ public class UserContestController {
     }
 
     @Autowired
-    public void setContestUserInfoService(ContestUserInfoService contestUserInfoService) {
+    public void setContestUserInfoService(ContestUserService contestUserInfoService) {
         this.contestUserInfoService = contestUserInfoService;
     }
 
@@ -111,7 +111,7 @@ public class UserContestController {
                                        @RequestBody @Valid EnterContestFormat format) {
         // 判断是否已经加入比赛
         int uid = SessionHelper.get().getUid();
-        ContestUserInfoEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
+        ContestUserEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
         if (contestUserInfoEntity != null) {
             return new ResponseEntity("你已经加入比赛了");
         }
@@ -135,7 +135,7 @@ public class UserContestController {
     @ApiOperation("获取本人在某个比赛中的状况+题目列表")
     @GetMapping("/{cid}/data")
     public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid) {
-        ContestUserInfoEntity info = contestUserInfoService.getByCidAndUid(cid, SessionHelper.get().getUid());
+        ContestUserEntity info = contestUserInfoService.getByCidAndUid(cid, SessionHelper.get().getUid());
         if (info == null) {
             throw new WebErrorException("你不在此比赛中");
         }

@@ -35,7 +35,7 @@ public class UserAttachmentController {
     @PostMapping
     public ResponseEntity uploadAttachment(@RequestBody @Valid UploadAttachmentFormat format) {
         int uid = SessionHelper.get().getUid();
-        int aid = attachmentService.add(uid, format.getUrl(), System.currentTimeMillis());
+        int aid = attachmentService.add(uid, format.getUrl());
         if (aid == 0) {
             throw new WebErrorException("上传失败");
         }

@@ -50,6 +50,9 @@ public class UserDao {
         return sqlSession.selectList("user.selectModeratorsInUidList", uidList);
     }
 
+    public boolean updateUserTimes(SqlSession sqlSession, UserEntity entity) {
+        return sqlSession.update("user.updateUserTimes", entity) == 1;
+    }
 
     public boolean addUserSubmitTimesByUid(SqlSession sqlSession, int uid) {
         return sqlSession.update("user.addUserSubmitTimes", uid) == 1;

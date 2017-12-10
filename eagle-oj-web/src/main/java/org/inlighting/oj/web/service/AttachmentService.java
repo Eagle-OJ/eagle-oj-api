@@ -24,12 +24,12 @@ public class AttachmentService {
         this.attachmentDao = attachmentDao;
     }
 
-    public int add(int owner, String url, long uploadTime) {
+    public int add(int owner, String url) {
         // 添加attachment
         AttachmentEntity attachmentEntity = new AttachmentEntity();
         attachmentEntity.setOwner(owner);
         attachmentEntity.setUrl(url);
-        attachmentEntity.setUploadTime(uploadTime);
+        attachmentEntity.setUploadTime(System.currentTimeMillis());
         boolean flag = attachmentDao.addAttachment(sqlSession,attachmentEntity);
 
         return flag ? attachmentEntity.getAid():0;

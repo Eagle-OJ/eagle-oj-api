@@ -1,19 +1,14 @@
 package org.inlighting.oj.web.controller.user;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
-import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
 import org.inlighting.oj.web.controller.format.user.UpdateUserProfileFormat;
 import org.inlighting.oj.web.entity.ResponseEntity;
-import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.security.SessionHelper;
-import org.inlighting.oj.web.security.UserSession;
 import org.inlighting.oj.web.service.AttachmentService;
-import org.inlighting.oj.web.service.ProblemService;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +102,7 @@ public class UserController {
             throw new WebErrorException("文件上传失败");
         }
 
-        int aid = attachmentService.add(uid, filePath, System.currentTimeMillis());
+        int aid = attachmentService.add(uid, filePath);
         if (! userService.updateUserAvatar(uid, aid)) {
             throw new WebErrorException("头像更新失败");
         }

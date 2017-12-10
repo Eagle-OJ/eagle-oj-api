@@ -10,7 +10,6 @@ import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
 import org.inlighting.oj.web.controller.format.index.IndexRegisterFormat;
-import org.inlighting.oj.web.judger.Judger;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;

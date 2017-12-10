@@ -1,30 +1,27 @@
 package org.inlighting.oj.web.service;
 
 import org.apache.ibatis.session.SqlSession;
-import org.inlighting.oj.web.dao.ContestUserInfoDao;
-import org.inlighting.oj.web.entity.ContestUserInfoEntity;
+import org.inlighting.oj.web.dao.ContestUserDao;
+import org.inlighting.oj.web.entity.ContestUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Smith
  **/
 @Service
-public class ContestUserInfoService {
+public class ContestUserService {
 
     private final SqlSession sqlSession;
 
-    private ContestUserInfoDao contestUserInfoDao;
+    private ContestUserDao contestUserInfoDao;
 
-    public ContestUserInfoService(SqlSession sqlSession) {
+    public ContestUserService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
 
     @Autowired
-    public void setContestUserInfoDao(ContestUserInfoDao contestUserInfoDao) {
+    public void setContestUserInfoDao(ContestUserDao contestUserInfoDao) {
         this.contestUserInfoDao = contestUserInfoDao;
     }
 
@@ -33,16 +30,16 @@ public class ContestUserInfoService {
      */
     public boolean add(int cid, int uid, long joinTime) {
         //添加contestUserInfo
-        ContestUserInfoEntity contestUserInfoEntity = new ContestUserInfoEntity();
+        ContestUserEntity contestUserInfoEntity = new ContestUserEntity();
         contestUserInfoEntity.setCid(cid);
         contestUserInfoEntity.setUid(uid);
         contestUserInfoEntity.setJoinTime(joinTime);
         return contestUserInfoDao.add(sqlSession,contestUserInfoEntity);
     }
 
-    public ContestUserInfoEntity getByCidAndUid(int cid, int uid) {
+    public ContestUserEntity getByCidAndUid(int cid, int uid) {
         // 通过cid和uid来获取实体
-        ContestUserInfoEntity entity = new ContestUserInfoEntity();
+        ContestUserEntity entity = new ContestUserEntity();
         entity.setCid(cid);
         entity.setUid(uid);
         return contestUserInfoDao.getByUidAndUid(sqlSession, entity);

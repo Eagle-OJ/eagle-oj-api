@@ -5,22 +5,20 @@
 <mapper namespace="submission">
 
     <insert id="insertSubmission" parameterType="SubmissionEntity" useGeneratedKeys="true" keyProperty="sid">
-        INSERT INTO `submission` (`owner`, `pid`, `code_source`, `code_language`, `belong`, `result`,
-                                  `time_used`, `memory_used`, `status`, `submit_time`)
-        VALUES (#{owner}, #{pid}, #{codeSource}, #{codeLanguage}, #{belong}, #{result},
-                #{timeUsed}, #{memoryUsed}, #{status}, #{submitTime})
+        INSERT INTO `submission` (`owner`, `pid`, `cid`, `source_code`, `lang`,
+                                  `time`, `memory`, `status`, `submit_time`)
+        VALUES (#{owner}, #{pid}, #{cid}, #{sourceCode}, #{lang}, #{time}, #{memory}, #{status}, #{submitTime})
     </insert>
 
-    <resultMap id="submissionEntity" type="SubmissionEntity">
+    <resultMap id="submissionMap" type="SubmissionEntity">
         <id column="sid" property="sid"/>
         <result column="owner" property="owner"/>
         <result column="pid" property="pid" />
-        <result column="code_source" property="codeSource" />
-        <result column="code_language" property="codeLanguage" />
-        <result column="belong" property="belong" />
-        <result column="result" property="result"/>
-        <result column="time_used" property="timeUsed"/>
-        <result column="memory_used" property="memoryUsed"/>
+        <result column="cid" property="cid"/>
+        <result column="source_code" property="sourceCode" />
+        <result column="lang" property="lang" />
+        <result column="time" property="time"/>
+        <result column="memory" property="memory"/>
         <result column="status" property="status"/>
         <result column="submit_time" property="submitTime"/>
     </resultMap>
