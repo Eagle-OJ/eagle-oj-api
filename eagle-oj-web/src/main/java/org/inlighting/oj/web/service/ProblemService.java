@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,8 +84,19 @@ public class ProblemService {
         return problemDao.getProblemTags(sqlSession, pid);
     }
 
-    public List<ProblemEntity> getSharedProblems(PageRowBounds pager) {
-        return problemDao.getSharedProblems(sqlSession, pager);
+    public List<Map<String, Object>> getSharedProblems(int difficult, String tag, PageRowBounds pager) {
+        Map<String, Object> condition = new HashMap<>(2);
+        condition.put("difficult", difficult);
+        condition.put("tag", tag);
+        return problemDao.getSharedProblems(sqlSession, condition, pager);
+    }
+
+    public List<Map<String, Object>> getSharedProblemsWithStatus(int uid, int difficult, String tag, PageRowBounds pager) {
+        Map<String, Object> condition = new HashMap<>(3);
+        condition.put("uid", uid);
+        condition.put("difficult", difficult);
+        condition.put("tag", tag);
+        return problemDao.getSharedProblemsWithStatus(sqlSession, condition, pager);
     }
 
     public boolean updateProblemDescription(int pid, String title, JSONObject description, JSONObject inputFormat,

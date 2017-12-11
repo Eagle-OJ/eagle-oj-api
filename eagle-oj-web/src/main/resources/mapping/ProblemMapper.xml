@@ -23,8 +23,29 @@
         SELECT * FROM `problem`
     </select>
 
-    <select id="getSharedProblems" resultMap="problemResultMap">
-        SELECT * FROM problem WHERE status=2 ORDER BY pid ASC
+    <select id="getSharedProblems" resultType="HashMap" parameterType="HashMap">
+        SELECT problem.pid, title, difficult, submit_times, ac_times FROM problem
+        WHERE status=2
+        <if test="difficult != -1">
+          AND difficult=#{difficult}
+        </if>
+        <if test="tag != null">
+            AND pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
+        </if>
+        ORDER BY pid ASC
+    </select>
+
+    <select id="getSharedProblemsWithStatus" resultType="HashMap" parameterType="HashMap">
+        SELECT problem.pid, title, difficult, submit_times, ac_times, problem_user.status FROM problem
+        LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
+        WHERE problem.status=2
+        <if test="difficult != -1">
+            AND difficult=#{difficult}
+        </if>
+        <if test="tag != null">
+            AND problem.pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
+        </if>
+        ORDER BY pid ASC
     </select>
 
     <select id="getProblemsByUid" resultMap="problemResultMap">

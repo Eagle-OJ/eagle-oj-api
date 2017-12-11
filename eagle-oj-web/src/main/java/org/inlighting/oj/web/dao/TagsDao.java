@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.dao;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.TagEntity;
 import org.inlighting.oj.web.entity.TagProblemEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 @Repository
 public class TagsDao {
     public List<TagEntity> getTags(SqlSession sqlSession) {
-        return sqlSession.selectList("tags.getAll");
+        return sqlSession.selectList("tags.get");
     }
 
     public boolean addUsedTimes(SqlSession sqlSession, int tid) {

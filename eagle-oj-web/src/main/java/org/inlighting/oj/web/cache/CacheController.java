@@ -40,8 +40,7 @@ public class CacheController {
                                 JudgerResult.class,
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(5, TimeUnit.MINUTES)))
-                                .build()
-                );
+                                .build());
     }
 
     public static Cache<String, String> getAuthCache() {

@@ -31,8 +31,12 @@ public class ProblemDao {
         return sqlSession.selectList("problem.getProblemsByUid", uid, pager);
     }
 
-    public List<ProblemEntity> getSharedProblems(SqlSession sqlSession, PageRowBounds pager) {
-        return sqlSession.selectList("problem.getSharedProblems", null, pager);
+    public List<Map<String, Object>> getSharedProblems(SqlSession sqlSession, Map<String, Object> condition, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getSharedProblems", condition, pager);
+    }
+
+    public List<Map<String, Object>> getSharedProblemsWithStatus(SqlSession sqlSession, Map<String, Object> condition, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getSharedProblemsWithStatus", condition, pager);
     }
 
     public List<Map<String, Object>> getProblemTags(SqlSession sqlSession, int pid) {
