@@ -85,7 +85,8 @@ public class UserService {
         return userDao.updateUserAvatar(sqlSession, userEntity);
     }
 
-    public boolean updateUserTimes(UserEntity userEntity) {
+    public boolean updateUserTimes(int uid, UserEntity userEntity) {
+        userEntity.setUid(uid);
         return userDao.updateUserTimes(sqlSession, userEntity);
     }
 }

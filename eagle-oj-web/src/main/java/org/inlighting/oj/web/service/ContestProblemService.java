@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class ContestProblemService {
 
-    private ContestProblemDao problemContestInfoDao;
+    private ContestProblemDao contestProblemDao;
 
     private final SqlSession sqlSession;
 
@@ -24,19 +24,19 @@ public class ContestProblemService {
     }
 
     @Autowired
-    public void setProblemContestInfoDao(ContestProblemDao problemContestInfoDao) {
-        this.problemContestInfoDao = problemContestInfoDao;
+    public void setContestProblemDao(ContestProblemDao contestProblemDao) {
+        this.contestProblemDao = contestProblemDao;
     }
 
     public ContestProblemEntity getContestProblem(int pid, int cid) {
         ContestProblemEntity contestProblemEntity = new ContestProblemEntity();
         contestProblemEntity.setPid(pid);
         contestProblemEntity.setCid(cid);
-        return problemContestInfoDao.getContestProblem(sqlSession, contestProblemEntity);
+        return contestProblemDao.getContestProblem(sqlSession, contestProblemEntity);
     }
 
     public List<HashMap<String, Object>> getContestProblems(int cid) {
-        return problemContestInfoDao.getContestProblems(sqlSession, cid);
+        return contestProblemDao.getContestProblems(sqlSession, cid);
     }
 
     public boolean addProblemInfo(int pid, int cid, int displayId, int score) {
@@ -45,7 +45,7 @@ public class ContestProblemService {
         contestProblemEntity.setCid(cid);
         contestProblemEntity.setDisplayId(displayId);
         contestProblemEntity.setScore(score);
-        return problemContestInfoDao.add(sqlSession, contestProblemEntity);
+        return contestProblemDao.add(sqlSession, contestProblemEntity);
     }
 
     public boolean updateContestProblem(int cid, int pid, int displayId, int score) {
@@ -54,29 +54,29 @@ public class ContestProblemService {
         entity.setPid(pid);
         entity.setDisplayId(displayId);
         entity.setScore(score);
-        return problemContestInfoDao.updateContestProblem(sqlSession, entity);
+        return contestProblemDao.updateContestProblem(sqlSession, entity);
+    }
+
+    public boolean updateContestProblemTimes(int cid, int pid, ContestProblemEntity entity) {
+        entity.setCid(cid);
+        entity.setPid(pid);
+        return contestProblemDao.updateContestProblemTimes(sqlSession, entity);
     }
 
     public boolean deleteContestProblem(int cid, int pid) {
         ContestProblemEntity entity = new ContestProblemEntity();
         entity.setCid(cid);
         entity.setPid(pid);
-        return problemContestInfoDao.deleteContestProblem(sqlSession, entity);
+        return contestProblemDao.deleteContestProblem(sqlSession, entity);
     }
 
     public boolean displayIdIsDuplicate(int cid, int displayId) {
         ContestProblemEntity entity = new ContestProblemEntity();
         entity.setCid(cid);
         entity.setDisplayId(displayId);
-        ContestProblemEntity result = problemContestInfoDao.getContestProblem(sqlSession, entity);
+        ContestProblemEntity result = contestProblemDao.getContestProblem(sqlSession, entity);
         return result != null;
     }
 
-    public boolean addSubmitTimes(int pid, int cid) {
-        return problemContestInfoDao.addSubmitTimesByPidAndCid(sqlSession, pid, cid);
-    }
 
-    public boolean addAcceptTimes(int pid, int cid) {
-        return problemContestInfoDao.addAcceptTimesByPidAndCid(sqlSession, pid, cid);
-    }
 }

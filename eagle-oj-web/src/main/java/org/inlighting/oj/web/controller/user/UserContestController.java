@@ -111,7 +111,7 @@ public class UserContestController {
                                        @RequestBody @Valid EnterContestFormat format) {
         // 判断是否已经加入比赛
         int uid = SessionHelper.get().getUid();
-        ContestUserEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid, uid);
+        ContestUserEntity contestUserInfoEntity = contestUserInfoService.get(cid, uid);
         if (contestUserInfoEntity != null) {
             return new ResponseEntity("你已经加入比赛了");
         }
@@ -135,7 +135,7 @@ public class UserContestController {
     @ApiOperation("获取本人在某个比赛中的状况+题目列表")
     @GetMapping("/{cid}/data")
     public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid) {
-        ContestUserEntity info = contestUserInfoService.getByCidAndUid(cid, SessionHelper.get().getUid());
+        ContestUserEntity info = contestUserInfoService.get(cid, SessionHelper.get().getUid());
         if (info == null) {
             throw new WebErrorException("你不在此比赛中");
         }

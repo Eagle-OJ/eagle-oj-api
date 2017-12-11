@@ -105,7 +105,7 @@ public class UserCodeController {
         }
 
         // 获取用户是否参加比赛
-        ContestUserEntity contestUserEntity = contestUserService.getByCidAndUid(contestId, uid);
+        ContestUserEntity contestUserEntity = contestUserService.get(contestId, uid);
         WebUtil.assertNotNull(contestUserEntity, "用户没有参加此比赛");
 
         // 查询如果为时间限制模式，用户是否能提交判卷

@@ -14,15 +14,15 @@ public class ContestUserService {
 
     private final SqlSession sqlSession;
 
-    private ContestUserDao contestUserInfoDao;
+    private ContestUserDao contestUserDao;
 
     public ContestUserService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
 
     @Autowired
-    public void setContestUserInfoDao(ContestUserDao contestUserInfoDao) {
-        this.contestUserInfoDao = contestUserInfoDao;
+    public void setContestUserDao(ContestUserDao contestUserDao) {
+        this.contestUserDao = contestUserDao;
     }
 
     /**
@@ -30,22 +30,24 @@ public class ContestUserService {
      */
     public boolean add(int cid, int uid, long joinTime) {
         //添加contestUserInfo
-        ContestUserEntity contestUserInfoEntity = new ContestUserEntity();
-        contestUserInfoEntity.setCid(cid);
-        contestUserInfoEntity.setUid(uid);
-        contestUserInfoEntity.setJoinTime(joinTime);
-        return contestUserInfoDao.add(sqlSession,contestUserInfoEntity);
+        ContestUserEntity contestUserEntity = new ContestUserEntity();
+        contestUserEntity.setCid(cid);
+        contestUserEntity.setUid(uid);
+        contestUserEntity.setJoinTime(joinTime);
+        return contestUserDao.add(sqlSession, contestUserEntity);
     }
 
-    public ContestUserEntity getByCidAndUid(int cid, int uid) {
+    public ContestUserEntity get(int cid, int uid) {
         // 通过cid和uid来获取实体
         ContestUserEntity entity = new ContestUserEntity();
         entity.setCid(cid);
         entity.setUid(uid);
-        return contestUserInfoDao.getByUidAndUid(sqlSession, entity);
+        return contestUserDao.get(sqlSession, entity);
     }
 
-    public boolean updateData(int cid, int uid, int submitTimes, int acceptTimes, long newlyAcceptTime) {
-        return contestUserInfoDao.updateData(sqlSession, cid, uid, submitTimes, acceptTimes, newlyAcceptTime);
+    public boolean updateTimes(int cid, int uid, ContestUserEntity entity) {
+        entity.setCid(cid);
+        entity.setUid(uid);
+        return contestUserDao.updateTimes(sqlSession, entity);
     }
 }

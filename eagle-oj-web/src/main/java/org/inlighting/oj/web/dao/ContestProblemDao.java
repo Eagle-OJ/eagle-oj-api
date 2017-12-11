@@ -26,22 +26,12 @@ public class ContestProblemDao {
         return sqlSession.selectList("contestProblem.getContestProblems", cid);
     }
 
-    public boolean addSubmitTimesByPidAndCid(SqlSession sqlSession, int pid, int cid) {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("pid", pid);
-        map.put("cid", cid);
-        return sqlSession.update("contestProblem.addSubmitTimesByPidAndCid", map) == 1;
-    }
-
-    public boolean addAcceptTimesByPidAndCid(SqlSession sqlSession, int pid, int cid) {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("pid", pid);
-        map.put("cid", cid);
-        return sqlSession.update("contestProblem.addAcceptTimesByPidAndCid", map) == 1;
-    }
-
     public boolean updateContestProblem(SqlSession sqlSession, ContestProblemEntity entity) {
         return sqlSession.update("contestProblem.updateContestProblem", entity) == 1;
+    }
+
+    public boolean updateContestProblemTimes(SqlSession sqlSession, ContestProblemEntity entity) {
+        return sqlSession.update("contestProblem.updateTimes", entity) == 1;
     }
 
     public boolean deleteContestProblem(SqlSession sqlSession, ContestProblemEntity entity) {

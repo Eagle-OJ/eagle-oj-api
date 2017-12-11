@@ -16,6 +16,8 @@ public class ContestProblemUserEntity {
 
     private ResultEnum status;
 
+    private long solvedTime;
+
     public int getCid() {
         return cid;
     }
@@ -54,5 +56,13 @@ public class ContestProblemUserEntity {
 
     public void setStatus(ResultEnum status) {
         this.status = status;
+    }
+
+    public long getSolvedTime() {
+        return solvedTime;
+    }
+
+    public void setSolvedTime(long solvedTime) {
+        this.solvedTime = solvedTime;
     }
 }

@@ -33,23 +33,25 @@ public class ContestProblemUserService {
         return contestProblemUserDao.get(sqlSession, entity);
     }
 
-    public boolean add(int cid, int pid, int uid, int score, ResultEnum status) {
+    public boolean add(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes) {
         ContestProblemUserEntity entity = new ContestProblemUserEntity();
         entity.setCid(cid);
         entity.setPid(pid);
         entity.setUid(uid);
         entity.setScore(score);
         entity.setStatus(status);
+        entity.setSolvedTime(solvedTimes);
         return contestProblemUserDao.add(sqlSession, entity);
     }
 
-    public boolean updateScoreStatus(int cid, int pid, int uid, int score, ResultEnum status) {
+    public boolean update(int cid, int pid, int uid, int score, ResultEnum status, long solvedTime) {
         ContestProblemUserEntity entity = new ContestProblemUserEntity();
         entity.setCid(cid);
         entity.setPid(pid);
         entity.setUid(uid);
         entity.setScore(score);
         entity.setStatus(status);
+        entity.setSolvedTime(solvedTime);
         return contestProblemUserDao.update(sqlSession, entity);
     }
 }

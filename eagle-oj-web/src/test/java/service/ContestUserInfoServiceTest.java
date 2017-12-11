@@ -35,7 +35,7 @@ public class ContestUserInfoServiceTest {
     public void getTest(){
         int cid = 4;
         int uid = 14;
-        ContestUserEntity contestUserInfoEntity = contestUserInfoService.getByCidAndUid(cid,uid);
+        ContestUserEntity contestUserInfoEntity = contestUserInfoService.get(cid,uid);
         Assert.assertEquals(true,contestUserInfoEntity!=null);
     }
 }

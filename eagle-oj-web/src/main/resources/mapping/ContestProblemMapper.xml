@@ -26,13 +26,29 @@
         UPDATE `contest_problem` SET score = #{score}, display_id=#{displayId} WHERE cid = #{cid} AND pid = #{pid}
     </update>
 
-
-    <update id="addSubmitTimesByPidAndCid">
-        UPDATE `contest_problem` SET `submit_times` = `submit_times` +1 WHERE `pid` = #{pid} AND `cid` = #{cid}
-    </update>
-
-    <update id="addAcceptTimesByPidAndCid">
-        UPDATE `contest_problem` SET `accept_times` = `accept_times` + 1 WHERE `pid` = #{pid} AND `cid` = #{cid}
+    <update id="updateTimes">
+        UPDATE contest_problem
+        <set>
+            <if test="submitTimes > 0">
+                submit_times = submit_times + 1,
+            </if>
+            <if test="ACTimes > 0">
+                ac_times = ac_times + 1,
+            </if>
+            <if test="WATimes > 0">
+                wa_times = wa_times + 1,
+            </if>
+            <if test="RTETimes > 0">
+                rte_times = rte_times + 1,
+            </if>
+            <if test="TLETimes > 0">
+                tle_times = tle_times + 1,
+            </if>
+            <if test="CETimes > 0">
+                ce_times = ce_times + 1,
+            </if>
+        </set>
+        WHERE cid = #{cid} AND pid = #{pid}
     </update>
 
     <delete id="deleteContestProblem">

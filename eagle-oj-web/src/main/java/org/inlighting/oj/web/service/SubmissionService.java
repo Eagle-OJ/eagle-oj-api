@@ -1,12 +1,8 @@
 package org.inlighting.oj.web.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.ResultEnum;
-import org.inlighting.oj.judge.config.CodeLanguageEnum;
-import org.inlighting.oj.judge.config.ProblemStatusEnum;
 import org.inlighting.oj.web.dao.ContestProblemDao;
 import org.inlighting.oj.web.dao.SubmissionDao;
 import org.inlighting.oj.web.dao.UserDao;

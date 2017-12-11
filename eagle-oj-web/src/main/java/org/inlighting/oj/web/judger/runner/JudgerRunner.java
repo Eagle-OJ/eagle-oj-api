@@ -49,13 +49,22 @@ public class JudgerRunner {
 
     private ProblemUserService problemUserService;
 
+    private ContestProblemService contestProblemService;
+
     private ContestProblemUserService contestProblemUserService;
 
     private UserService userService;
 
     private ProblemService problemService;
 
+    private ContestUserService contestUserService;
+
     private FileUtil fileUtil;
+
+    @Autowired
+    public void setContestProblemService(ContestProblemService contestProblemService) {
+        this.contestProblemService = contestProblemService;
+    }
 
     @Autowired
     public void setContestProblemUserService(ContestProblemUserService contestProblemUserService) {
@@ -75,6 +84,11 @@ public class JudgerRunner {
     @Autowired
     public void setProblemUserService(ProblemUserService problemUserService) {
         this.problemUserService = problemUserService;
+    }
+
+    @Autowired
+    public void setContestUserService(ContestUserService contestUserService) {
+        this.contestUserService = contestUserService;
     }
 
     @Autowired
@@ -198,23 +212,43 @@ public class JudgerRunner {
             }
 
             if (contestProblemUserEntity == null) {
-                contestProblemUserService.add(cid, pid, uid, score, resultEnum);
-                // todo contestProblemUserMapper里面数据库配置文件未完成，然后后面也没有完成
+                if (resultEnum == ResultEnum.AC) {
+                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, System.currentTimeMillis());
+                } else {
+                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, 0);
+                }
                 // 更新contest_user里面的times
+                updateContestUserTimes(cid, uid, resultEnum);
                 // 更新contest_problem
+                updateContestProblemTimes(cid, pid, resultEnum);
                 // 更新problem times
+                updateProblemTimes(pid, resultEnum);
                 // 如果比赛为官方official
                 // addUserTimes
+                if (contestEntity.getOfficial() == 1) {
+                    updateUserTimes(uid, resultEnum);
+                }
                 return;
             }
 
             if (contestProblemUserEntity.getStatus() != ResultEnum.AC) {
                 // 更新contest_problem_user 的成绩状态
+                if (resultEnum == ResultEnum.AC) {
+                    contestProblemUserService.update(cid, pid, uid, score, resultEnum, System.currentTimeMillis());
+                } else {
+                    contestProblemUserService.update(cid, pid, uid, score, resultEnum, 0);
+                }
                 // 更新contest_user里面的times
+                updateContestUserTimes(cid, uid, resultEnum);
                 // 更新contest_problem
+                updateContestProblemTimes(cid, pid, resultEnum);
                 // 更新problem times
+                updateProblemTimes(pid, resultEnum);
                 // 如果比赛为官方official
                 // addUserTimes
+                if (contestEntity.getOfficial() == 1) {
+                    updateUserTimes(uid, resultEnum);
+                }
             }
         }
 
@@ -241,7 +275,6 @@ public class JudgerRunner {
 
         private void updateUserTimes(int uid, ResultEnum resultEnum) {
             UserEntity userEntity = new UserEntity();
-            userEntity.setUid(uid);
             userEntity.setSubmitTimes(1);
             switch (resultEnum) {
                 case AC:
@@ -261,12 +294,11 @@ public class JudgerRunner {
                     userEntity.setTLETimes(1);
                     break;
             }
-            userService.updateUserTimes(userEntity);
+            userService.updateUserTimes(uid, userEntity);
         }
 
         private void updateProblemTimes(int pid, ResultEnum resultEnum) {
             ProblemEntity problemEntity = new ProblemEntity();
-            problemEntity.setPid(pid);
             problemEntity.setSubmitTimes(1);
             switch (resultEnum) {
                 case AC:
@@ -285,31 +317,56 @@ public class JudgerRunner {
                     problemEntity.setCETimes(1);
                     break;
             }
-            problemService.updateProblemTimes(problemEntity);
+            problemService.updateProblemTimes(pid, problemEntity);
         }
 
         private void updateContestUserTimes(int cid, int uid, ResultEnum resultEnum) {
-            ContestUserEntity contestUserEntity = new ContestUserEntity();
+            ContestUserEntity entity = new ContestUserEntity();
+            entity.setCid(cid);
+            entity.setUid(uid);
+            entity.setSubmitTimes(1);
             switch (resultEnum) {
                 case AC:
-                    userEntity.setFinishedProblems(1);
-                    userEntity.setACTimes(1);
+                    entity.setFinishedProblems(1);
+                    entity.setACTimes(1);
                     break;
                 case CE:
-                    userEntity.setCETimes(1);
+                    entity.setCETimes(1);
                     break;
                 case WA:
-                    userEntity.setWATimes(1);
+                    entity.setWATimes(1);
                     break;
                 case RTE:
-                    userEntity.setRTETimes(1);
+                    entity.setRTETimes(1);
                     break;
                 case TLE:
-                    userEntity.setTLETimes(1);
+                    entity.setTLETimes(1);
                     break;
             }
+            contestUserService.updateTimes(cid, uid, entity);
         }
 
-        private void updateContestProblemTimes() {}
+        private void updateContestProblemTimes(int cid, int pid, ResultEnum result) {
+            ContestProblemEntity entity = new ContestProblemEntity();
+            entity.setSubmitTimes(1);
+            switch (result) {
+                case AC:
+                    entity.setACTimes(1);
+                    break;
+                case TLE:
+                    entity.setTLETimes(1);
+                    break;
+                case RTE:
+                    entity.setRTETimes(1);
+                    break;
+                case WA:
+                    entity.setWATimes(1);
+                    break;
+                case CE:
+                    entity.setCETimes(1);
+                    break;
+            }
+            contestProblemService.updateContestProblemTimes(cid, pid, entity);
+        }
     }
 }

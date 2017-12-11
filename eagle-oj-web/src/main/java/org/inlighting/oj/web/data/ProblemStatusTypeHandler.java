@@ -2,7 +2,7 @@ package org.inlighting.oj.web.data;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.inlighting.oj.judge.config.ProblemStatusEnum;
+import org.inlighting.oj.judge.ResultEnum;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -12,9 +12,9 @@ import java.sql.SQLException;
 /**
  * @author Smith
  **/
-public class ProblemStatusTypeHandler extends BaseTypeHandler<ProblemStatusEnum> {
+/*public class ResultTypeHandler extends BaseTypeHandler<ResultEnum> {
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, ProblemStatusEnum parameter, JdbcType jdbcType) throws SQLException {
+    public void setNonNullParameter(PreparedStatement ps, int i, ResultEnum parameter, JdbcType jdbcType) throws SQLException {
         ps.setString(i, parameter.name());
     }
 
@@ -32,4 +32,4 @@ public class ProblemStatusTypeHandler extends BaseTypeHandler<ProblemStatusEnum>
     public ProblemStatusEnum getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         return ProblemStatusEnum.valueOf(cs.getString(columnIndex));
     }
-}
+}*/
