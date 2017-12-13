@@ -1,5 +1,6 @@
 package org.inlighting.oj.judge.judger;
 
+import com.alibaba.fastjson.JSON;
 import org.inlighting.oj.judge.ResultEnum;
 import org.inlighting.oj.judge.entity.RequestEntity;
 import org.inlighting.oj.judge.entity.ResponseEntity;

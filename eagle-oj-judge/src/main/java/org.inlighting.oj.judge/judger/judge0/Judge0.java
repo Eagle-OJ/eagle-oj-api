@@ -60,9 +60,15 @@ public class Judge0 implements JudgerApi {
                 countLength++;
             }
         }
-        DecimalFormat df = new DecimalFormat("#.##");
-        double time = Double.valueOf(df.format(totalTime / countLength));
-        return new ResponseEntity(time, (int) Math.ceil(totalMemory/(double)countLength), result, testCases);
+
+        if (countLength == 0) {
+            return new ResponseEntity(0, 0, result, testCases);
+        } else {
+            DecimalFormat df = new DecimalFormat("#.##");
+            double time = Double.valueOf(df.format(totalTime / countLength));
+            int memory = (int) Math.ceil(totalMemory/(double)countLength);
+            return new ResponseEntity(time, memory, result, testCases);
+        }
     }
 
     private ResponseEntity judgeEach(int index) throws Exception {
@@ -100,9 +106,18 @@ public class Judge0 implements JudgerApi {
         }
         JSONObject status = jsonObject.getJSONObject("status");
         ResultEnum result = getResult(status.getInteger("id"));
-        DecimalFormat df = new DecimalFormat("#.##");
-        double time = Double.valueOf(df.format(jsonObject.getDouble("time")));
-        int memory = (int) Math.ceil(jsonObject.getDouble("memory")/1000);
+        double time = 0;
+        Double tempTime = jsonObject.getDouble("time");
+        if (tempTime != null) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            time = Double.valueOf(df.format(tempTime));
+        }
+
+        int memory = 0;
+        Double tempMemory = jsonObject.getDouble("memory");
+        if (tempMemory != null) {
+            memory = (int) Math.ceil(tempMemory/1000);
+        }
 
         if (result == ResultEnum.CE) {
             // ce

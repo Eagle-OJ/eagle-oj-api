@@ -7,6 +7,7 @@ import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.inlighting.oj.web.entity.ProblemUserEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
+import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ProblemService;
 import org.inlighting.oj.web.service.ProblemUserService;
@@ -82,7 +83,11 @@ public class ProblemController {
         if (problemEntity == null) {
             throw new WebErrorException("此题不存在");
         }
-        return new ResponseEntity(problemEntity);
+        UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("problem", problemEntity);
+        map.put("author", userEntity.getNickname());
+        return new ResponseEntity(map);
     }
 
     @ApiOperation("获取该题目的problem的所有moderator")

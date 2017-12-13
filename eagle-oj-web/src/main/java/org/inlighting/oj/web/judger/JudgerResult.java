@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.judger;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.inlighting.oj.judge.entity.ResponseEntity;
 
 /**

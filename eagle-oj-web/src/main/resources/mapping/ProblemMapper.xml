@@ -4,9 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="problem">
     <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
-        INSERT INTO `problem` (owner, title, code_language, description,
+        INSERT INTO `problem` (owner, title, lang, description,
                                input_format, output_format, difficult, samples, moderators, status, create_time) VALUES
-        (#{owner}, #{title}, #{codeLanguage}, #{description},#{inputFormat}, #{outputFormat},
+        (#{owner}, #{title}, #{lang}, #{description},#{inputFormat}, #{outputFormat},
         #{difficult}, #{samples}, #{moderators}, #{status}, #{createTime})
     </insert>
 
@@ -84,7 +84,7 @@
         <id column="pid" property="pid"/>
         <result column="owner" property="owner"/>
         <result column="title" property="title"/>
-        <result column="code_language" property="codeLanguage"/>
+        <result column="lang" property="lang"/>
         <result column="description" property="description"/>
         <result column="input_format" property="inputFormat"/>
         <result column="output_format" property="outputFormat"/>

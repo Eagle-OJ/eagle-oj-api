@@ -48,7 +48,7 @@ public class ProblemService {
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
         problemEntity.setTitle(title);
-        problemEntity.setCodeLanguage(new JSONArray());
+        problemEntity.setLang(new JSONArray());
         problemEntity.setDescription(description);
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);

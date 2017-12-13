@@ -14,8 +14,8 @@ public class ProblemEntity {
 
     private String title;
 
-    @JSONField(name = "code_language")
-    private JSONArray codeLanguage;
+    @JSONField(name = "lang")
+    private JSONArray lang;
 
     private JSONObject description;
 
@@ -81,12 +81,12 @@ public class ProblemEntity {
         this.title = title;
     }
 
-    public JSONArray getCodeLanguage() {
-        return codeLanguage;
+    public JSONArray getLang() {
+        return lang;
     }
 
-    public void setCodeLanguage(JSONArray codeLanguage) {
-        this.codeLanguage = codeLanguage;
+    public void setLang(JSONArray lang) {
+        this.lang = lang;
     }
 
     public JSONObject getDescription() {
