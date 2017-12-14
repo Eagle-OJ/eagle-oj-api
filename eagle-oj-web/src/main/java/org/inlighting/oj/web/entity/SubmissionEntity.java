@@ -1,12 +1,8 @@
 package org.inlighting.oj.web.entity;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.ResultEnum;
-import org.inlighting.oj.judge.config.CodeLanguageEnum;
-import org.inlighting.oj.judge.config.ProblemStatusEnum;
 
 /**
  * @author Smith

@@ -3,7 +3,6 @@ package org.inlighting.oj.web.util;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import org.inlighting.oj.judge.LanguageEnum;
-import org.inlighting.oj.judge.config.CodeLanguageEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

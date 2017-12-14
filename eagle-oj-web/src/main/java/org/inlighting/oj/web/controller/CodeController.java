@@ -66,7 +66,7 @@ public class CodeController {
         boolean testMode = result.getJudgerTask().isTestMode();
         map.put("response", result.getResponse());
         map.put("id", result.getId());
-        map.put("status", result.getStatus());
+        map.put("status", result.getStatus().getMessage());
         map.put("test_mode", testMode);
         if (! testMode) {
             map.put("pid", result.getJudgerTask().getProblemId());

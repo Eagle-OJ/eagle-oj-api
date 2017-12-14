@@ -1,11 +1,9 @@
 package org.inlighting.oj.web.controller.format.user;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.inlighting.oj.judge.LanguageEnum;
-import org.inlighting.oj.judge.config.CodeLanguageEnum;
 
 import javax.validation.constraints.NotNull;
 

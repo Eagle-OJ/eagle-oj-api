@@ -39,7 +39,7 @@ public class CacheController {
                                 String.class,
                                 JudgerResult.class,
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
-                                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(5, TimeUnit.MINUTES)))
+                                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(1, TimeUnit.HOURS)))
                                 .build());
     }
 
