@@ -27,6 +27,10 @@ public class JudgerTask {
 
     private String sourceCode;
 
+    private int time;
+
+    private int memory;
+
     private boolean testMode;
 
     private List<TestCaseRequestEntity> testCases;
@@ -151,5 +155,21 @@ public class JudgerTask {
 
     public void setAddContestProblemEntity(ContestProblemEntity addContestProblemEntity) {
         this.addContestProblemEntity = addContestProblemEntity;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getMemory() {
+        return memory;
+    }
+
+    public void setMemory(int memory) {
+        this.memory = memory;
     }
 }

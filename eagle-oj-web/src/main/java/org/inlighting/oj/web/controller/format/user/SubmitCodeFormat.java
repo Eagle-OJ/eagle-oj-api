@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
  **/
 public class SubmitCodeFormat {
 
-    @Range(min = 1)
+    @Range(min = 0)
+    @NotNull
     @JSONField(name = "contest_id")
     private Integer contestId;
 

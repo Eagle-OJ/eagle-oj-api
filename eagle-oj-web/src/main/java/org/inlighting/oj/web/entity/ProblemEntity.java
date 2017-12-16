@@ -29,6 +29,10 @@ public class ProblemEntity {
 
     private JSONArray samples;
 
+    private int time;
+
+    private int memory;
+
     private JSONArray moderators;
 
     @JSONField(name = "submit_times")
@@ -207,5 +211,21 @@ public class ProblemEntity {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getMemory() {
+        return memory;
+    }
+
+    public void setMemory(int memory) {
+        this.memory = memory;
     }
 }

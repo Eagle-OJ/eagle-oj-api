@@ -2,9 +2,8 @@ package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
+import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.index.SubmitCodeFormat;
 import org.inlighting.oj.web.entity.ResponseEntity;
@@ -50,7 +49,7 @@ public class CodeController {
             testCases.add(testCaseRequestEntity);
         }
         String id = judgerManager.addTask(true, 0, 0, 0,
-                format.getLang(), format.getSourceCode(), testCases,
+                format.getLang(), format.getSourceCode(), DefaultConfig.TIME, DefaultConfig.MEMORY, testCases,
                 null, null, null, null);
         return new ResponseEntity(null, id);
     }

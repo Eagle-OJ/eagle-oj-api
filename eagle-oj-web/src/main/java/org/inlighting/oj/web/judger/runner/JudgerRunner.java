@@ -35,10 +35,6 @@ public class JudgerRunner {
 
     private final int MAX_THREADS = 3;
 
-    private final int DEFAULT_TIME_LIMIT = 3;
-
-    private final int DEFAULT_MEMORY_LIMIT = 128;
-
     private final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(MAX_THREADS);
 
     private final Cache<String, JudgerResult> submissionCache = CacheController.getSubmissionCache();
@@ -134,7 +130,7 @@ public class JudgerRunner {
             judgerResult.setStatus(JudgerStatus.Judging);
             // 组装判卷格式
             RequestEntity requestEntity = new RequestEntity(judgerTask.getLang(), judgerTask.getSourceCode(),
-                    DEFAULT_TIME_LIMIT, DEFAULT_MEMORY_LIMIT, judgerTask.getTestCases());
+                    judgerTask.getTime(), judgerTask.getMemory(), judgerTask.getTestCases());
 
             Judger judger = new Judger(JUDGE_URL, requestEntity, new Judge0());
             ResponseEntity response = judger.judge();

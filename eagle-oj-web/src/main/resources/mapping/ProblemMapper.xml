@@ -5,9 +5,9 @@
 <mapper namespace="problem">
     <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
         INSERT INTO `problem` (owner, title, lang, description,
-                               input_format, output_format, difficult, samples, moderators, status, create_time) VALUES
+                               input_format, output_format, difficult, samples, time, memory, moderators, status, create_time) VALUES
         (#{owner}, #{title}, #{lang}, #{description},#{inputFormat}, #{outputFormat},
-        #{difficult}, #{samples}, #{moderators}, #{status}, #{createTime})
+        #{difficult}, #{samples}, #{time}, #{memory}, #{moderators}, #{status}, #{createTime})
     </insert>
 
     <select id="getProblemByPid" resultMap="problemResultMap">
@@ -66,6 +66,10 @@
         WHERE `pid`=#{pid}
     </update>
 
+    <update id="updateProblemSetting">
+        UPDATE problem SET lang=#{lang}, time=#{time}, memory=#{memory} WHERE pid = #{pid}
+    </update>
+
     <update id="updateProblemTimes">
         UPDATE problem
         <set>
@@ -89,6 +93,8 @@
         <result column="input_format" property="inputFormat"/>
         <result column="output_format" property="outputFormat"/>
         <result column="samples" property="samples"/>
+        <result column="time" property="time"/>
+        <result column="memory" property="memory"/>
         <result column="moderators" property="moderators"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="used_times" property="usedTimes"/>

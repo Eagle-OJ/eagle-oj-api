@@ -9,6 +9,7 @@ import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemModeratorFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
+import org.inlighting.oj.web.controller.format.user.UpdateProblemSettingFormat;
 import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.*;
@@ -84,7 +85,7 @@ public class UserProblemController {
         }
 
         int pid = problemService.addProblem(owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
-                format.getOutputFormat(), format.getDifficult(), format.getSamples(), System.currentTimeMillis());
+                format.getOutputFormat(), format.getDifficult(), format.getSamples(), DefaultConfig.TIME, DefaultConfig.MEMORY);
 
         if (pid == 0) {
             throw new WebErrorException("添加题目失败");
@@ -163,6 +164,24 @@ public class UserProblemController {
         }
 
         return new ResponseEntity("题目更新成功");
+    }
+
+    @ApiOperation("更新题目设置")
+    @PutMapping("/{pid}/setting")
+    public ResponseEntity updateProblemSetting(@PathVariable("pid") int pid,
+                                               @RequestBody @Valid UpdateProblemSettingFormat format) {
+        // check data
+        if (format.getLang().size() == 0) {
+            throw new WebErrorException("至少支持一种编程语言");
+        }
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        haveProblem(problemEntity);
+        havePermission(problemEntity);
+
+        if (! problemService.updateProblemSetting(pid, format.getLang(), format.getTime(), format.getMemory())) {
+            throw new WebErrorException("更新设置失败");
+        }
+        return new ResponseEntity("更新成功");
     }
 
     @ApiOperation("申请题目审核")

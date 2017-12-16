@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
+import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.entity.ResponseEntity;
@@ -85,6 +86,15 @@ public class IndexController {
     public ResponseEntity getWebConfig() {
         Map<String, Object> data = new HashMap<>();
         data.put("oss_url", OSS_URL);
+
+        // 添加编程语言配置文件
+        {
+            Map<Object, String> lang = new HashMap<>();
+            for (LanguageEnum languageEnum: LanguageEnum.values()) {
+                lang.put(languageEnum, languageEnum.getName());
+            }
+            data.put("lang", lang);
+        }
         return new ResponseEntity(data);
     }
 

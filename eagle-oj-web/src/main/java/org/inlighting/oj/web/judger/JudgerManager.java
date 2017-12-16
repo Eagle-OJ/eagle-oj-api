@@ -32,6 +32,8 @@ public class JudgerManager {
                           int owner,
                           LanguageEnum lang,
                           String sourceCode,
+                          int time,
+                          int memory,
                           List<TestCaseRequestEntity> testCases,
                           List<TestCaseEntity> addTestCaseEntities,
                           ProblemEntity addProblemEntity,
@@ -44,6 +46,8 @@ public class JudgerManager {
         task.setOwner(owner);
         task.setLang(lang);
         task.setSourceCode(sourceCode);
+        task.setTime(time);
+        task.setMemory(memory);
         task.setTestCases(testCases);
         task.setAddTestCaseEntities(addTestCaseEntities);
         task.setAddProblemEntity(addProblemEntity);

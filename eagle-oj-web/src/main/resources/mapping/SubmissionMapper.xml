@@ -10,6 +10,15 @@
         VALUES (#{owner}, #{pid}, #{cid}, #{sourceCode}, #{lang}, #{time}, #{memory}, #{status}, #{submitTime})
     </insert>
 
+    <select id="getSubmissions" resultType="HashMap">
+        SELECT * FROM submission LEFT JOIN attachment ON submission.source_code=attachment.aid
+        WHERE submission.owner=#{owner} AND pid=#{pid}
+        <if test="cid != 0">
+            AND cid=#{cid}
+        </if>
+        ORDER BY submit_time DESC
+    </select>
+
     <resultMap id="submissionMap" type="SubmissionEntity">
         <id column="sid" property="sid"/>
         <result column="owner" property="owner"/>

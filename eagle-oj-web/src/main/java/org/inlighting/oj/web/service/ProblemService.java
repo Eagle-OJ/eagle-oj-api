@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.inlighting.oj.judge.JudgeHelper;
 import org.inlighting.oj.web.dao.ProblemDao;
 import org.inlighting.oj.web.dao.ContestProblemDao;
 import org.inlighting.oj.web.entity.ProblemEntity;
@@ -43,20 +44,22 @@ public class ProblemService {
 
 
     public int addProblem(int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
-                          int difficult, JSONArray samples, long createTime) {
+                          int difficult, JSONArray samples, int time, int memory) {
         // 添加题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
         problemEntity.setTitle(title);
-        problemEntity.setLang(new JSONArray());
+        problemEntity.setLang(JudgeHelper.getAllLanguages());
         problemEntity.setDescription(description);
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);
         problemEntity.setDifficult(difficult);
         problemEntity.setSamples(samples);
+        problemEntity.setTime(time);
+        problemEntity.setMemory(memory);
         problemEntity.setModerators(new JSONArray());
         problemEntity.setStatus(0);
-        problemEntity.setCreateTime(createTime);
+        problemEntity.setCreateTime(System.currentTimeMillis());
 
         return problemDao.addProblem(sqlSession, problemEntity)? problemEntity.getPid() : 0;
     }
@@ -110,8 +113,16 @@ public class ProblemService {
         problemEntity.setOutputFormat(outputFormat);
         problemEntity.setSamples(samples);
         problemEntity.setDifficult(difficult);
-        //problemEntity.setTags(tags);
         return problemDao.updateProblemDescription(sqlSession, problemEntity);
+    }
+
+    public boolean updateProblemSetting(int pid, JSONArray lang, int time, int memory) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
+        problemEntity.setLang(lang);
+        problemEntity.setTime(time);
+        problemEntity.setMemory(memory);
+        return problemDao.updateProblemSetting(sqlSession, problemEntity);
     }
 
     public boolean updateProblemStatus(int pid, int status) {

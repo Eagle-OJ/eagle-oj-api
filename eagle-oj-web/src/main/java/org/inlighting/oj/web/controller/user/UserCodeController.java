@@ -1,5 +1,10 @@
 package org.inlighting.oj.web.controller.user;
 
+import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageRowBounds;
+import io.swagger.annotations.ApiOperation;
+import org.inlighting.oj.judge.JudgeHelper;
+import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.SubmitCodeFormat;
@@ -15,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -35,7 +42,14 @@ public class UserCodeController {
 
     private ProblemService problemService;
 
+    private SubmissionService submissionService;
+
     private JudgerManager judgerManager;
+
+    @Autowired
+    public void setSubmissionService(SubmissionService submissionService) {
+        this.submissionService = submissionService;
+    }
 
     @Autowired
     public void setJudgerManager(JudgerManager judgerManager) {
@@ -67,14 +81,29 @@ public class UserCodeController {
         this.contestService = contestService;
     }
 
+    @ApiOperation("用户提交代码进行判卷")
     @PostMapping
     public ResponseEntity submitCode(@RequestBody @Valid SubmitCodeFormat format) {
         Integer contestId = format.getContestId();
-        if (contestId == null) {
+        if (contestId == 0) {
             return submitProblem(format);
         } else {
             return submitContestProblem(format);
         }
+    }
+
+    @ApiOperation("获取用户的代码提交")
+    @GetMapping
+    public ResponseEntity getUserSubmissions(@RequestParam("cid") int cid,
+                                             @RequestParam("pid") int pid,
+                                             @RequestParam("page") int page,
+                                             @RequestParam("page_size") int pageSize) {
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        int owner = SessionHelper.get().getUid();
+        Map<String, Object> data = new HashMap<>(2);
+        data.put("data", submissionService.getSubmissions(owner, cid, pid, pager));
+        data.put("total", pager.getTotal());
+        return new ResponseEntity(data);
     }
 
     // 提交比赛模式下面的题目
@@ -85,6 +114,8 @@ public class UserCodeController {
 
         ProblemEntity problemEntity = problemService.getProblemByPid(problemId);
         WebUtil.assertNotNull(problemEntity, "题目不存在");
+
+        containLang(format.getLang(), problemEntity.getLang());
 
         // 组装testCases
         List<TestCaseEntity> tempTestCases = testCaseService.getAllTestCasesByPid(problemId);
@@ -120,8 +151,8 @@ public class UserCodeController {
         WebUtil.assertNotNull(contestProblemEntity, "题目不在比赛中");
 
         String id = judgerManager.addTask(false, problemId, contestId, uid, format.getLang(),
-                format.getSourceCode(), testCases, tempTestCases, problemEntity, contestEntity, contestProblemEntity);
-        return new ResponseEntity(id);
+                format.getSourceCode(), problemEntity.getTime(), problemEntity.getMemory(), testCases, tempTestCases, problemEntity, contestEntity, contestProblemEntity);
+        return new ResponseEntity(null, id);
     }
 
     // 提交非比赛模式下面的代码
@@ -129,6 +160,10 @@ public class UserCodeController {
         int problemId = format.getProblemId();
         int uid = SessionHelper.get().getUid();
         ProblemEntity problemEntity = problemService.getProblemByPid(problemId);
+
+        WebUtil.assertNotNull(problemEntity, "不存在此题");
+        containLang(format.getLang(), problemEntity.getLang());
+
         if (problemEntity.getStatus() != 2) {
             throw new WebErrorException("此题不能提交");
         }
@@ -138,7 +173,17 @@ public class UserCodeController {
             testCases.add(new TestCaseRequestEntity(entity.getStdin(), entity.getStdout()));
         }
         String id = judgerManager.addTask(false, problemId, 0, uid, format.getLang(),
-                format.getSourceCode(), testCases, tempTestCases, problemEntity, null, null);
-        return new ResponseEntity(id);
+                format.getSourceCode(), problemEntity.getTime(), problemEntity.getMemory(),
+                testCases, tempTestCases, problemEntity, null, null);
+        return new ResponseEntity(null, id);
+    }
+
+    private void containLang(LanguageEnum lang, JSONArray langArray) {
+        for (Object obj: langArray) {
+            if (lang == LanguageEnum.valueOf(obj.toString())) {
+                return;
+            }
+        }
+        throw new WebErrorException("不能使用此语言");
     }
 }
