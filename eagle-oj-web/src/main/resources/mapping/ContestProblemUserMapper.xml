@@ -13,6 +13,16 @@
         SELECT * FROM `contest_problem_user` WHERE `cid`=#{cid} AND `pid`=#{pid} AND `uid`=#{uid}
     </select>
 
+    <select id="getNormalContestRank" resultType="HashMap">
+        SELECT contest_problem_user.uid,user.nickname,sum(score) AS score FROM contest_problem_user
+            LEFT JOIN user ON contest_problem_user.uid=user.uid
+        where cid=5 group by uid order by sum(score) DESC
+    </select>
+
+    <select id="selectAll" resultMap="contestProblemUserMap">
+        SELECT * FROM contest_problem_user WHERE cid=#{cid}
+    </select>
+
     <update id="update">
         UPDATE `contest_problem_user` SET `score` = #{score}, `status` = #{status}, solved_time = #{solvedTime}
         WHERE `cid` = #{cid} AND `pid` = #{pid} AND `uid` = #{uid}

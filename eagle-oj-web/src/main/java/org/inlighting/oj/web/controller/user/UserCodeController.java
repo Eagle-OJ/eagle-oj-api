@@ -112,8 +112,31 @@ public class UserCodeController {
         int problemId = format.getProblemId();
         int uid = SessionHelper.get().getUid();
 
+        ContestEntity contestEntity = contestService.getContestByCid(contestId);
+        WebUtil.assertNotNull(contestEntity, "比赛不存在");;
+
+        // 检验比赛状态是否合法
+        if (contestEntity.getStatus()!=1) {
+            throw new WebErrorException("比赛不得参加");
+        }
+
+        // 获取用户是否参加比赛
+        ContestUserEntity contestUserEntity = contestUserService.get(contestId, uid);
+        WebUtil.assertNotNull(contestUserEntity, "用户没有参加此比赛");
+
+        // 查询如果为时间限制模式，用户是否能提交判卷
+        if (contestEntity.getType() == 1 || contestEntity.getType() == 3) {
+            if (System.currentTimeMillis() > (contestUserEntity.getJoinTime()+contestEntity.getTotalTime())) {
+                throw new WebErrorException("你已超时，不能提交");
+            }
+        }
+
         ProblemEntity problemEntity = problemService.getProblemByPid(problemId);
         WebUtil.assertNotNull(problemEntity, "题目不存在");
+
+        // 获取题目是否在次比赛中
+        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(problemId, contestId);
+        WebUtil.assertNotNull(contestProblemEntity, "题目不在比赛中");
 
         containLang(format.getLang(), problemEntity.getLang());
 
@@ -127,28 +150,6 @@ public class UserCodeController {
         for(TestCaseEntity entity: tempTestCases) {
             testCases.add(new TestCaseRequestEntity(entity.getStdin(), entity.getStdout()));
         }
-
-        ContestEntity contestEntity = contestService.getContestByCid(contestId);
-        WebUtil.assertNotNull(contestEntity, "比赛不存在");;
-
-        if (contestEntity.getStatus()!=1) {
-            throw new WebErrorException("比赛不得参加");
-        }
-
-        // 获取用户是否参加比赛
-        ContestUserEntity contestUserEntity = contestUserService.get(contestId, uid);
-        WebUtil.assertNotNull(contestUserEntity, "用户没有参加此比赛");
-
-        // 查询如果为时间限制模式，用户是否能提交判卷
-        if (contestEntity.getStatus() == 1 || contestEntity.getStatus() == 3) {
-            if (System.currentTimeMillis() > (contestUserEntity.getJoinTime()+contestEntity.getTotalTime())) {
-                throw new WebErrorException("你已超时，不能判卷");
-            }
-        }
-
-        // 获取题目是否在次比赛中
-        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(problemId, contestId);
-        WebUtil.assertNotNull(contestProblemEntity, "题目不在比赛中");
 
         String id = judgerManager.addTask(false, problemId, contestId, uid, format.getLang(),
                 format.getSourceCode(), problemEntity.getTime(), problemEntity.getMemory(), testCases, tempTestCases, problemEntity, contestEntity, contestProblemEntity);

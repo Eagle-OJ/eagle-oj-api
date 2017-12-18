@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.cache;
 
+import org.assertj.core.util.CheckReturnValue;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -8,8 +9,13 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.expiry.Duration;
 import org.ehcache.expiry.Expirations;
+import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.judger.JudgerResult;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,6 +29,8 @@ public class CacheController {
     private static Cache<String, String> authCache;
 
     private static Cache<String, JudgerResult> submissionCache;
+
+    private static Cache<Integer, Object> leaderboardCache;
 
     static {
         CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
@@ -41,6 +49,14 @@ public class CacheController {
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(1, TimeUnit.HOURS)))
                                 .build());
+        leaderboardCache = cacheManager
+                .createCache("leaderboardCache",
+                        CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                                Integer.class,
+                                Object.class,
+                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(20, MemoryUnit.MB))
+                                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(DefaultConfig.LEADERBOARD_REFRESH_TIME, TimeUnit.MINUTES)))
+                .build());
     }
 
     public static Cache<String, String> getAuthCache() {
@@ -48,4 +64,8 @@ public class CacheController {
     }
 
     public static Cache<String, JudgerResult> getSubmissionCache() { return submissionCache; }
+
+    public static Cache<Integer, Object> getLeaderboard() {
+        return leaderboardCache;
+    }
 }

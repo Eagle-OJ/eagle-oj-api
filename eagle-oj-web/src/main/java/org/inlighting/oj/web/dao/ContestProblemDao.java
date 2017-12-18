@@ -26,6 +26,10 @@ public class ContestProblemDao {
         return sqlSession.selectList("contestProblem.getContestProblems", cid);
     }
 
+    public List<HashMap<String, Object>> getContestProblemsWithStatus(SqlSession sqlSession, Map<String, Object> condition) {
+        return sqlSession.selectList("contestProblem.getContestProblemsWithStatus", condition);
+    }
+
     public boolean updateContestProblem(SqlSession sqlSession, ContestProblemEntity entity) {
         return sqlSession.update("contestProblem.updateContestProblem", entity) == 1;
     }

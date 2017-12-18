@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -37,6 +38,13 @@ public class ContestProblemService {
 
     public List<HashMap<String, Object>> getContestProblems(int cid) {
         return contestProblemDao.getContestProblems(sqlSession, cid);
+    }
+
+    public List<HashMap<String, Object>> getContestProblemsWithStatus(int cid, int uid) {
+        Map<String, Object> condition = new HashMap<>(2);
+        condition.put("cid", cid);
+        condition.put("uid", uid);
+        return contestProblemDao.getContestProblemsWithStatus(sqlSession, condition);
     }
 
     public boolean addProblemInfo(int pid, int cid, int displayId, int score) {

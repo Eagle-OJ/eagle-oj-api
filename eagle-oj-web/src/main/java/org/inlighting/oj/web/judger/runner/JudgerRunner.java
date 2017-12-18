@@ -1,8 +1,5 @@
 package org.inlighting.oj.web.judger.runner;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import org.ehcache.Cache;
 import org.inlighting.oj.judge.ResultEnum;
 import org.inlighting.oj.judge.entity.RequestEntity;

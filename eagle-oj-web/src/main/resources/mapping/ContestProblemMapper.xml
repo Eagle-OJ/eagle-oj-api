@@ -22,6 +22,15 @@
         WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
     </select>
 
+    <select id="getContestProblemsWithStatus" resultType="HashMap">
+        SELECT problem.title, problem.difficult, contest_problem.*, contest_problem_user.status FROM contest_problem
+        LEFT JOIN problem ON contest_problem.pid=problem.pid
+        LEFT JOIN contest_problem_user ON contest_problem_user.cid=contest_problem.cid
+                                          AND contest_problem_user.pid=contest_problem.pid
+                                          AND contest_problem_user.uid=#{uid}
+        WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
+    </select>
+
     <update id="updateContestProblem">
         UPDATE `contest_problem` SET score = #{score}, display_id=#{displayId} WHERE cid = #{cid} AND pid = #{pid}
     </update>

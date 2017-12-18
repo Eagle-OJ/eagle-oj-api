@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
  **/
 public class EnterContestFormat {
 
-    @Length(max = 6)
-    @NotNull
+    // password 可以为空
+    @Length(min = 1, max = 6)
     private String password;
 
     public String getPassword() {

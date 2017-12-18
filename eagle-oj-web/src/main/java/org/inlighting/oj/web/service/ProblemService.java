@@ -68,18 +68,7 @@ public class ProblemService {
         return problemDao.getProblemsByUid(sqlSession, uid, page);
     }
 
-    /**
-     * 添加problem和contest之间的关系
-     * 开启事务
-     */
-    @Transactional
-    public boolean addContestProblem(List<Integer> problemList, int belong) {
-        // todo
-        return false;
-    }
-
     public ProblemEntity getProblemByPid(int pid) {
-        // 通过ID获得题目
         return problemDao.getProblemByPid(sqlSession, pid);
     }
 

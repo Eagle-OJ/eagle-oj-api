@@ -7,10 +7,7 @@ import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.*;
 import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.security.SessionHelper;
-import org.inlighting.oj.web.service.ContestService;
-import org.inlighting.oj.web.service.ContestUserService;
-import org.inlighting.oj.web.service.ContestProblemService;
-import org.inlighting.oj.web.service.ProblemService;
+import org.inlighting.oj.web.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +32,13 @@ public class UserContestController {
     private ContestUserService contestUserInfoService;
 
     private ContestProblemService contestProblemService;
+
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
     public void setContestProblemService(ContestProblemService contestProblemService) {
@@ -141,7 +145,8 @@ public class UserContestController {
         }
         Map<String, Object> map = new HashMap<>(2);
         map.put("user", info);
-        map.put("problems", contestProblemService.getContestProblems(cid));
+        // todo 添加在比赛中的排名
+        map.put("problems", contestProblemService.getContestProblemsWithStatus(cid, info.getUid()));
         return new ResponseEntity(map);
     }
 

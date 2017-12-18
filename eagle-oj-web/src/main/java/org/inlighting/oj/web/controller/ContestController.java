@@ -2,10 +2,9 @@ package org.inlighting.oj.web.controller;
 
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
-import org.inlighting.oj.web.entity.ContestEntity;
-import org.inlighting.oj.web.entity.ResponseEntity;
-import org.inlighting.oj.web.service.ContestService;
-import org.inlighting.oj.web.service.ContestUserService;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
+import org.inlighting.oj.web.entity.*;
+import org.inlighting.oj.web.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +25,27 @@ public class ContestController {
     private ContestService contestService;
 
     private ContestUserService contestUserInfoService;
+
+    private UserService userService;
+
+    private ContestProblemService contestProblemService;
+
+    private ProblemService problemService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setProblemService(ProblemService problemService) {
+        this.problemService = problemService;
+    }
+
+    @Autowired
+    public void setContestProblemService(ContestProblemService contestProblemService) {
+        this.contestProblemService = contestProblemService;
+    }
 
     @Autowired
     public void setContestUserInfoService(ContestUserService contestUserInfoService) {
@@ -52,6 +72,28 @@ public class ContestController {
         data.put("data", contests);
         data.put("total", pager.getTotal());
         return new ResponseEntity(data);
+    }
+
+    @ApiOperation("获取比赛中题目的信息")
+    @GetMapping("/{cid}/problem/{pid}")
+    public ResponseEntity getContestProblemInfo(@PathVariable("cid") int cid,
+                                                @PathVariable("pid") int pid) {
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        if (problemEntity == null) {
+            throw new WebErrorException("此题不存在");
+        }
+        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(pid, cid);
+        problemEntity.setSubmitTimes(contestProblemEntity.getSubmitTimes());
+        problemEntity.setACTimes(contestProblemEntity.getACTimes());
+        problemEntity.setCETimes(contestProblemEntity.getCETimes());
+        problemEntity.setWATimes(contestProblemEntity.getWATimes());
+        problemEntity.setTLETimes(contestProblemEntity.getTLETimes());
+        problemEntity.setRTETimes(contestProblemEntity.getRTETimes());
+        UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("problem", problemEntity);
+        map.put("author", userEntity.getNickname());
+        return new ResponseEntity(map);
     }
 
     @ApiOperation("获取某个比赛信息")

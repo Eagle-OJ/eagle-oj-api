@@ -7,6 +7,10 @@ import org.inlighting.oj.web.entity.ContestProblemUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Smith
  **/
@@ -31,6 +35,14 @@ public class ContestProblemUserService {
         entity.setPid(pid);
         entity.setUid(uid);
         return contestProblemUserDao.get(sqlSession, entity);
+    }
+
+    public List<ContestProblemUserEntity> getAll(int cid) {
+        return contestProblemUserDao.getAll(sqlSession, cid);
+    }
+
+    public List<Map<String, Object>> getNormalContestRank(int cid) {
+        return contestProblemUserDao.getNormalContestRank(sqlSession, cid);
     }
 
     public boolean add(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes) {
