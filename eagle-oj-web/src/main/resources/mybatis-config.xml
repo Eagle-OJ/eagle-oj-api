@@ -47,5 +47,6 @@
         <mapper resource="mapping/TagsMapper.xml"/>
         <mapper resource="mapping/TagProblemMapper.xml"/>
         <mapper resource="mapping/ProblemUserMapper.xml"/>
+        <mapper resource="mapping/UserLogMapper.xml"/>
     </mappers>
 </configuration>

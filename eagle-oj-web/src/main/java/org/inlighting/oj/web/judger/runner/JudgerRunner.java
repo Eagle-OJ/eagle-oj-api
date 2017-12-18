@@ -41,6 +41,8 @@ public class JudgerRunner {
 
     private SubmissionService submissionService;
 
+    private UserLogService userLogService;
+
     private AttachmentService attachmentService;
 
     private ProblemUserService problemUserService;
@@ -56,6 +58,11 @@ public class JudgerRunner {
     private ContestUserService contestUserService;
 
     private FileUtil fileUtil;
+
+    @Autowired
+    public void setUserLogService(UserLogService userLogService) {
+        this.userLogService = userLogService;
+    }
 
     @Autowired
     public void setContestProblemService(ContestProblemService contestProblemService) {
@@ -153,6 +160,7 @@ public class JudgerRunner {
 
         private void save(JudgerTask task, JudgerResult result) {
             saveSubmission(task, result);
+            saveUserLog(task.getOwner(), result.getResponse().getResult());
             int contestId = task.getContestId();
             if (contestId == 0) {
                 saveProblem(task, result);
@@ -363,6 +371,29 @@ public class JudgerRunner {
                     break;
             }
             contestProblemService.updateContestProblemTimes(cid, pid, entity);
+        }
+
+        private void saveUserLog(int uid, ResultEnum result) {
+            UserLogEntity entity = new UserLogEntity();
+            entity.setSubmitTimes(1);
+            switch (result) {
+                case AC:
+                    entity.setACTimes(1);
+                    break;
+                case TLE:
+                    entity.setTLETimes(1);
+                    break;
+                case RTE:
+                    entity.setRTETimes(1);
+                    break;
+                case WA:
+                    entity.setWATimes(1);
+                    break;
+                case CE:
+                    entity.setCETimes(1);
+                    break;
+            }
+            userLogService.updateLog(uid, entity);
         }
     }
 }

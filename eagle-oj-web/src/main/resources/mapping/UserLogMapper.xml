@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userLog">
+
+    <update id="updateLog">
+        INSERT INTO user_log VALUES (CURRENT_DATE(), #{uid}, #{submitTimes}, #{ACTimes}, #{WATimes}, #{RTETimes},
+        #{TLETimes}, #{CETimes}) ON DUPLICATE KEY UPDATE
+        <trim prefix="" suffixOverrides=",">
+            <if test="submitTimes > 0">
+                submit_times = submit_times + 1,
+            </if>
+            <if test="ACTimes > 0">
+                ac_times = ac_times + 1,
+            </if>
+            <if test="WATimes > 0">
+                wa_times = wa_times + 1,
+            </if>
+            <if test="RTETimes > 0">
+                rte_times = rte_times + 1,
+            </if>
+            <if test="TLETimes > 0">
+                tle_times = tle_times + 1,
+            </if>
+            <if test="CETimes > 0">
+                ce_times = ce_times + 1,
+            </if>
+        </trim>
+    </update>
+
+    <select id="selectInWeek">
+        SELECT * FROM user_log where uid=#{uid} AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 WEEK)
+    </select>
+
+    <select id="selectInMonth">
+        SELECT * FROM user_log where uid=#{uid} AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
+    </select>
+
+    <resultMap id="userLogMap" type="UserLogEntity">
+        <id column="date" property="date"/>
+        <id column="uid" property="uid"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
+    </resultMap>
+</mapper>
