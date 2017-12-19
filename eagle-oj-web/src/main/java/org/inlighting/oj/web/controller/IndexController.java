@@ -20,7 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -96,6 +99,13 @@ public class IndexController {
             data.put("lang", lang);
         }
         return new ResponseEntity(data);
+    }
+
+    @GetMapping("/avatar")
+    public void getAvatar(@RequestParam("uid") int uid,
+                          HttpServletResponse response) throws IOException {
+
+        response.sendRedirect("http://www.baidu.com");
     }
 
     @RequestMapping("/401")

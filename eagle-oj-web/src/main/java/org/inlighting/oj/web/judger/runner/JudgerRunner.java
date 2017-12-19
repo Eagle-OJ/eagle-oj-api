@@ -198,7 +198,6 @@ public class JudgerRunner {
 
         // 保存比赛中的代码提交
         private void saveContestProblem(JudgerTask task, JudgerResult result) {
-            // todo
             int cid = task.getContestId();
             int uid = task.getOwner();
             int pid = task.getProblemId();

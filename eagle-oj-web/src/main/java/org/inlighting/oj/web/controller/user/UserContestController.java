@@ -33,7 +33,14 @@ public class UserContestController {
 
     private ContestProblemService contestProblemService;
 
+    private LeaderboardService leaderboardService;
+
     private UserService userService;
+
+    @Autowired
+    public void setLeaderboardService(LeaderboardService leaderboardService) {
+        this.leaderboardService = leaderboardService;
+    }
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -133,19 +140,25 @@ public class UserContestController {
         if (! contestUserInfoService.add(cid, uid, System.currentTimeMillis())) {
             throw new WebErrorException("加入比赛失败");
         }
+
+        // 添加加入比赛的记录
+        UserEntity userEntity = new UserEntity();
+        userEntity.setContestTimes(1);
+        userService.updateUserTimes(uid, userEntity);
         return new ResponseEntity("加入比赛成功");
     }
 
     @ApiOperation("获取本人在某个比赛中的状况+题目列表")
     @GetMapping("/{cid}/data")
     public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid) {
-        ContestUserEntity info = contestUserInfoService.get(cid, SessionHelper.get().getUid());
+        int uid = SessionHelper.get().getUid();
+        ContestUserEntity info = contestUserInfoService.get(cid, uid);
         if (info == null) {
             throw new WebErrorException("你不在此比赛中");
         }
-        Map<String, Object> map = new HashMap<>(2);
+        Map<String, Object> map = new HashMap<>(3);
+        map.put("meta", leaderboardService.getUserMetaInContest(uid, cid));
         map.put("user", info);
-        // todo 添加在比赛中的排名
         map.put("problems", contestProblemService.getContestProblemsWithStatus(cid, info.getUid()));
         return new ResponseEntity(map);
     }

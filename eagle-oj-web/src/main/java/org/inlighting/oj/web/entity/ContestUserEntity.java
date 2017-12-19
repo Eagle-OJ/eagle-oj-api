@@ -16,7 +16,7 @@ public class ContestUserEntity {
     @JSONField(name = "finished_problems")
     private int finishedProblems;
 
-    @JSONField(name = "accept_times")
+    @JSONField(name = "ac_times")
     private int ACTimes;
 
     @JSONField(name = "wa_times")

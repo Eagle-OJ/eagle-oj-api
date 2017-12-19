@@ -9,6 +9,7 @@ import org.inlighting.oj.web.entity.ContestProblemUserEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.service.ContestProblemUserService;
 import org.inlighting.oj.web.service.ContestService;
+import org.inlighting.oj.web.service.LeaderboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -27,20 +28,20 @@ import java.util.Map;
 @RestController
 @Validated
 @RequestMapping(value = "/leaderboard", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class RankController {
+public class LeaderboardController {
+
+    private LeaderboardService leaderboardService;
 
     private ContestService contestService;
-
-    private ContestProblemUserService contestProblemUserService;
-
-    @Autowired
-    public void setContestProblemUserService(ContestProblemUserService contestProblemUserService) {
-        this.contestProblemUserService = contestProblemUserService;
-    }
 
     @Autowired
     public void setContestService(ContestService contestService) {
         this.contestService = contestService;
+    }
+
+    @Autowired
+    public void setLeaderboardService(LeaderboardService leaderboardService) {
+        this.leaderboardService = leaderboardService;
     }
 
     @GetMapping
@@ -51,21 +52,10 @@ public class RankController {
     @ApiOperation("获取某个比赛的排行榜")
     @GetMapping("/contest/{cid}")
     @SuppressWarnings("unchecked")
-    public ResponseEntity getContestRank(@PathVariable int cid) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
-        if (contestEntity == null) {
-            throw new WebErrorException("不存在次比赛");
-        }
-        Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();
-        List<Map<String, Object>> list = (List<Map<String, Object>>) leaderboard.get(cid);
-        if (contestEntity.getType() == 0 || contestEntity.getType() == 1) {
-            // 普通比赛
-            if (list == null) {
-                list = contestProblemUserService.getNormalContestRank(cid);
-                leaderboard.put(cid, list);
-            }
-        } else {
-
+    public ResponseEntity getContestLeaderboard(@PathVariable int cid) {
+        List<Map<String, Object>> list = leaderboardService.getContestLeaderboard(cid);
+        if (list == null) {
+            throw new WebErrorException("不存在此比赛");
         }
         return new ResponseEntity(list);
     }
