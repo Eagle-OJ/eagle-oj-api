@@ -4,10 +4,7 @@ import org.ehcache.Cache;
 import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
 import org.inlighting.oj.web.cache.CacheController;
-import org.inlighting.oj.web.entity.ContestEntity;
-import org.inlighting.oj.web.entity.ContestProblemEntity;
-import org.inlighting.oj.web.entity.ProblemEntity;
-import org.inlighting.oj.web.entity.TestCaseEntity;
+import org.inlighting.oj.web.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -38,7 +35,8 @@ public class JudgerManager {
                           List<TestCaseEntity> addTestCaseEntities,
                           ProblemEntity addProblemEntity,
                           ContestEntity addContestEntity,
-                          ContestProblemEntity addContestProblemEntity) {
+                          ContestProblemEntity addContestProblemEntity,
+                          ContestUserEntity addContestUserEntity) {
         JudgerTask task = new JudgerTask();
         task.setTestMode(testMode);
         task.setProblemId(problemId);
@@ -53,6 +51,7 @@ public class JudgerManager {
         task.setAddProblemEntity(addProblemEntity);
         task.setAddContestEntity(addContestEntity);
         task.setAddContestProblemEntity(addContestProblemEntity);
+        task.setAddContestUserEntity(addContestUserEntity);
         return judgerQueue.addTask(task);
     }
 

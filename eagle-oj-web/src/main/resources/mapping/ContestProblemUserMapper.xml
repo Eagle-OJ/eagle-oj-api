@@ -5,8 +5,8 @@
 <mapper namespace="contestProblemUser">
 
     <insert id="insert">
-        INSERT INTO `contest_problem_user` (`cid`,`pid`,`uid`,`score`,`status`,`solved_time`) VALUES (#{cid},#{pid},
-        #{uid},#{score},#{status},#{solvedTime})
+        INSERT INTO `contest_problem_user` (`cid`,`pid`,`uid`,`score`,`status`,`solved_time`,`used_time`) VALUES (#{cid},#{pid},
+        #{uid},#{score},#{status},#{solvedTime},#{usedTime})
     </insert>
 
     <select id="select" resultMap="contestProblemUserMap">
@@ -24,7 +24,7 @@
     </select>
 
     <update id="update">
-        UPDATE `contest_problem_user` SET `score` = #{score}, `status` = #{status}, solved_time = #{solvedTime}
+        UPDATE `contest_problem_user` SET `score` = #{score}, `status` = #{status}, solved_time = #{solvedTime}, used_time=#{usedTime}
         WHERE `cid` = #{cid} AND `pid` = #{pid} AND `uid` = #{uid}
     </update>
 
@@ -35,5 +35,6 @@
         <result column="score" property="score"/>
         <result column="status" property="status"/>
         <result column="solved_time" property="solvedTime"/>
+        <result column="used_time" property="usedTime"/>
     </resultMap>
 </mapper>

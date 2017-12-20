@@ -51,7 +51,9 @@ public class LeaderboardService {
                 leaderboard.put(cid, list);
             }
         } else {
+            if (list == null) {
 
+            }
         }
         return list;
     }

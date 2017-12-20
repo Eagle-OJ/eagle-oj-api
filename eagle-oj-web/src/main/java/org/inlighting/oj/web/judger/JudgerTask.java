@@ -2,10 +2,7 @@ package org.inlighting.oj.web.judger;
 
 import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
-import org.inlighting.oj.web.entity.ContestEntity;
-import org.inlighting.oj.web.entity.ContestProblemEntity;
-import org.inlighting.oj.web.entity.ProblemEntity;
-import org.inlighting.oj.web.entity.TestCaseEntity;
+import org.inlighting.oj.web.entity.*;
 
 import java.util.List;
 
@@ -42,6 +39,8 @@ public class JudgerTask {
     private ContestEntity addContestEntity;
 
     private ContestProblemEntity addContestProblemEntity;
+
+    private ContestUserEntity addContestUserEntity;
 
     private long refreshTime;
 
@@ -171,5 +170,13 @@ public class JudgerTask {
 
     public void setMemory(int memory) {
         this.memory = memory;
+    }
+
+    public ContestUserEntity getAddContestUserEntity() {
+        return addContestUserEntity;
+    }
+
+    public void setAddContestUserEntity(ContestUserEntity addContestUserEntity) {
+        this.addContestUserEntity = addContestUserEntity;
     }
 }

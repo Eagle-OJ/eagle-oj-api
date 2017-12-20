@@ -152,7 +152,9 @@ public class UserCodeController {
         }
 
         String id = judgerManager.addTask(false, problemId, contestId, uid, format.getLang(),
-                format.getSourceCode(), problemEntity.getTime(), problemEntity.getMemory(), testCases, tempTestCases, problemEntity, contestEntity, contestProblemEntity);
+                format.getSourceCode(), problemEntity.getTime(),
+                problemEntity.getMemory(), testCases, tempTestCases,
+                problemEntity, contestEntity, contestProblemEntity, contestUserEntity);
         return new ResponseEntity(null, id);
     }
 
@@ -175,7 +177,8 @@ public class UserCodeController {
         }
         String id = judgerManager.addTask(false, problemId, 0, uid, format.getLang(),
                 format.getSourceCode(), problemEntity.getTime(), problemEntity.getMemory(),
-                testCases, tempTestCases, problemEntity, null, null);
+                testCases, tempTestCases, problemEntity,
+                null, null, null);
         return new ResponseEntity(null, id);
     }
 

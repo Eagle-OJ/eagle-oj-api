@@ -18,6 +18,8 @@ public class ContestProblemUserEntity {
 
     private long solvedTime;
 
+    private long usedTime;
+
     public int getCid() {
         return cid;
     }
@@ -64,5 +66,13 @@ public class ContestProblemUserEntity {
 
     public void setSolvedTime(long solvedTime) {
         this.solvedTime = solvedTime;
+    }
+
+    public long getUsedTime() {
+        return usedTime;
+    }
+
+    public void setUsedTime(long usedTime) {
+        this.usedTime = usedTime;
     }
 }

@@ -45,7 +45,7 @@ public class ContestProblemUserService {
         return contestProblemUserDao.getNormalContestRank(sqlSession, cid);
     }
 
-    public boolean add(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes) {
+    public boolean add(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes, long usedTime) {
         ContestProblemUserEntity entity = new ContestProblemUserEntity();
         entity.setCid(cid);
         entity.setPid(pid);
@@ -53,10 +53,11 @@ public class ContestProblemUserService {
         entity.setScore(score);
         entity.setStatus(status);
         entity.setSolvedTime(solvedTimes);
+        entity.setUsedTime(usedTime);
         return contestProblemUserDao.add(sqlSession, entity);
     }
 
-    public boolean update(int cid, int pid, int uid, int score, ResultEnum status, long solvedTime) {
+    public boolean update(int cid, int pid, int uid, int score, ResultEnum status, long solvedTime, long usedTime) {
         ContestProblemUserEntity entity = new ContestProblemUserEntity();
         entity.setCid(cid);
         entity.setPid(pid);
@@ -64,6 +65,7 @@ public class ContestProblemUserService {
         entity.setScore(score);
         entity.setStatus(status);
         entity.setSolvedTime(solvedTime);
+        entity.setUsedTime(usedTime);
         return contestProblemUserDao.update(sqlSession, entity);
     }
 }

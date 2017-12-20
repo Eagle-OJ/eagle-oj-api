@@ -204,8 +204,9 @@ public class JudgerRunner {
             int score = 0;
             ResultEnum resultEnum = result.getResponse().getResult();
             ContestEntity contestEntity = task.getAddContestEntity();
+            ContestUserEntity contestUserEntity = task.getAddContestUserEntity();
             ContestProblemUserEntity contestProblemUserEntity = contestProblemUserService.get(cid, pid, uid);
-
+            long usedTime = evaluateUsedTime(contestEntity, contestUserEntity);
             if (contestEntity.getType() == 0 || contestEntity.getType() == 1) {
                 score = evaluateScore(resultEnum, result.getResponse().getTestCases(),
                         task.getAddTestCaseEntities(), task.getAddContestProblemEntity().getScore());
@@ -213,9 +214,9 @@ public class JudgerRunner {
 
             if (contestProblemUserEntity == null) {
                 if (resultEnum == ResultEnum.AC) {
-                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, System.currentTimeMillis());
+                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, System.currentTimeMillis(), usedTime);
                 } else {
-                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, 0);
+                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, 0, 0);
                 }
                 // 更新contest_user里面的times
                 updateContestUserTimes(cid, uid, resultEnum);
@@ -234,9 +235,9 @@ public class JudgerRunner {
             if (contestProblemUserEntity.getStatus() != ResultEnum.AC) {
                 // 更新contest_problem_user 的成绩状态
                 if (resultEnum == ResultEnum.AC) {
-                    contestProblemUserService.update(cid, pid, uid, score, resultEnum, System.currentTimeMillis());
+                    contestProblemUserService.update(cid, pid, uid, score, resultEnum, System.currentTimeMillis(), usedTime);
                 } else {
-                    contestProblemUserService.update(cid, pid, uid, score, resultEnum, 0);
+                    contestProblemUserService.update(cid, pid, uid, score, resultEnum, 0, 0);
                 }
                 // 更新contest_user里面的times
                 updateContestUserTimes(cid, uid, resultEnum);
@@ -390,6 +391,17 @@ public class JudgerRunner {
                     break;
             }
             userLogService.updateLog(uid, entity);
+        }
+
+        private long evaluateUsedTime(ContestEntity contestEntity, ContestUserEntity contestUserEntity) {
+            long startTime = contestEntity.getStartTime();
+            long currentTime = System.currentTimeMillis();
+            int type = contestEntity.getType();
+            if (type == 0 || type == 2) {
+                return currentTime-startTime;
+            } else {
+                return currentTime-contestUserEntity.getJoinTime();
+            }
         }
     }
 }
