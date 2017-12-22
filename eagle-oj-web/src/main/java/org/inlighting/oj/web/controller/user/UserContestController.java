@@ -82,7 +82,10 @@ public class UserContestController {
                                       @RequestParam("page_size") int pageSize) {
         int owner = SessionHelper.get().getUid();
         PageRowBounds pager = new PageRowBounds(page, pageSize);
-        return new ResponseEntity(contestService.getUserContests(owner, pager));
+        Map<String ,Object> data = new HashMap<>(2);
+        data.put("data", contestService.getUserContests(owner, pager));
+        data.put("total", pager.getTotal());
+        return new ResponseEntity(data);
     }
 
     @ApiOperation("创建比赛")
@@ -260,7 +263,8 @@ public class UserContestController {
 
     private void checkContest(CreateContestFormat format) {
         // endTime为0代表永远不结束
-        if (format.getEndTime()!=0 && format.getStartTime() >= format.getEndTime()) {
+        // todo
+        if (format.getStartTime() >= format.getEndTime() || format.getEndTime() <= System.currentTimeMillis()) {
             throw new WebErrorException("非法结束时间");
         }
 

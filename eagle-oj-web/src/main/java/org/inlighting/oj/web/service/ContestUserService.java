@@ -45,9 +45,9 @@ public class ContestUserService {
         return contestUserDao.get(sqlSession, entity);
     }
 
-    public boolean updateTimes(int cid, int uid, ContestUserEntity entity) {
+    public boolean updateTimesAndData(int cid, int uid, ContestUserEntity entity) {
         entity.setCid(cid);
         entity.setUid(uid);
-        return contestUserDao.updateTimes(sqlSession, entity);
+        return contestUserDao.updateTimesAndData(sqlSession, entity);
     }
 }

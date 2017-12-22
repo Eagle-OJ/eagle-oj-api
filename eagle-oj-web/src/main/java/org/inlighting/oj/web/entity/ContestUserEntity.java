@@ -31,6 +31,11 @@ public class ContestUserEntity {
     @JSONField(name = "ce_times")
     private int CETimes;
 
+    private int score;
+
+    @JSONField(name = "used_time")
+    private long usedTime;
+
     @JSONField(name = "join_time")
     private long joinTime;
 
@@ -112,5 +117,21 @@ public class ContestUserEntity {
 
     public void setFinishedProblems(int finishedProblems) {
         this.finishedProblems = finishedProblems;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public long getUsedTime() {
+        return usedTime;
+    }
+
+    public void setUsedTime(long usedTime) {
+        this.usedTime = usedTime;
     }
 }

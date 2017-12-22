@@ -21,7 +21,7 @@ public class ContestUserDao {
         return sqlSession.selectOne("contestUser.select", entity);
     }
 
-    public boolean updateTimes(SqlSession sqlSession, ContestUserEntity entity) {
-        return sqlSession.update("contestUser.updateTimes", entity) == 1;
+    public boolean updateTimesAndData(SqlSession sqlSession, ContestUserEntity entity) {
+        return sqlSession.update("contestUser.updateTimesAndData", entity) == 1;
     }
 }

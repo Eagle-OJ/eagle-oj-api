@@ -179,18 +179,19 @@ public class JudgerRunner {
         private void saveProblem(JudgerTask task, JudgerResult result) {
             int pid = task.getProblemId();
             int uid = task.getOwner();
+            int status = task.getAddProblemEntity().getStatus();
             ResultEnum resultEnum = result.getResponse().getResult();
             ProblemUserEntity problemUserEntity = problemUserService.get(pid, uid);
             if (problemUserEntity == null) {
                 problemUserService.add(pid, uid, resultEnum);
-                updateUserTimes(uid, resultEnum);
+                updateUserTimes(uid, status, resultEnum);
                 updateProblemTimes(pid, resultEnum);
                 return;
             }
 
             if (problemUserEntity.getStatus() != ResultEnum.AC) {
                 problemUserService.update(pid, uid, resultEnum);
-                updateUserTimes(uid, resultEnum);
+                updateUserTimes(uid, status, resultEnum);
                 updateProblemTimes(pid, resultEnum);
             }
 
@@ -201,6 +202,7 @@ public class JudgerRunner {
             int cid = task.getContestId();
             int uid = task.getOwner();
             int pid = task.getProblemId();
+            int problemStatus = task.getAddProblemEntity().getStatus();
             int score = 0;
             ResultEnum resultEnum = result.getResponse().getResult();
             ContestEntity contestEntity = task.getAddContestEntity();
@@ -219,7 +221,7 @@ public class JudgerRunner {
                     contestProblemUserService.add(cid, pid, uid, score, resultEnum, 0, 0);
                 }
                 // 更新contest_user里面的times
-                updateContestUserTimes(cid, uid, resultEnum);
+                updateContestUserTimesAndData(cid, uid, score, usedTime, resultEnum);
                 // 更新contest_problem
                 updateContestProblemTimes(cid, pid, resultEnum);
                 // 更新problem times
@@ -227,7 +229,7 @@ public class JudgerRunner {
                 // 如果比赛为官方official
                 // addUserTimes
                 if (contestEntity.getOfficial() == 1) {
-                    updateUserTimes(uid, resultEnum);
+                    updateUserTimes(uid, problemStatus, resultEnum);
                 }
                 return;
             }
@@ -240,7 +242,7 @@ public class JudgerRunner {
                     contestProblemUserService.update(cid, pid, uid, score, resultEnum, 0, 0);
                 }
                 // 更新contest_user里面的times
-                updateContestUserTimes(cid, uid, resultEnum);
+                updateContestUserTimesAndData(cid, uid, score, usedTime, resultEnum);
                 // 更新contest_problem
                 updateContestProblemTimes(cid, pid, resultEnum);
                 // 更新problem times
@@ -248,7 +250,7 @@ public class JudgerRunner {
                 // 如果比赛为官方official
                 // addUserTimes
                 if (contestEntity.getOfficial() == 1) {
-                    updateUserTimes(uid, resultEnum);
+                    updateUserTimes(uid, problemStatus, resultEnum);
                 }
             }
         }
@@ -274,7 +276,10 @@ public class JudgerRunner {
             return (int) Math.floor((totalScore / totalPoint)*rightPoint);
         }
 
-        private void updateUserTimes(int uid, ResultEnum resultEnum) {
+        private void updateUserTimes(int uid, int status, ResultEnum resultEnum) {
+            if (status!=2) {
+                return;
+            }
             UserEntity userEntity = new UserEntity();
             userEntity.setSubmitTimes(1);
             switch (resultEnum) {
@@ -321,10 +326,12 @@ public class JudgerRunner {
             problemService.updateProblemTimes(pid, problemEntity);
         }
 
-        private void updateContestUserTimes(int cid, int uid, ResultEnum resultEnum) {
+        private void updateContestUserTimesAndData(int cid, int uid, int score, long usedTime, ResultEnum resultEnum) {
             ContestUserEntity entity = new ContestUserEntity();
             entity.setCid(cid);
             entity.setUid(uid);
+            entity.setScore(score);
+            entity.setUsedTime(usedTime);
             entity.setSubmitTimes(1);
             switch (resultEnum) {
                 case AC:
@@ -344,7 +351,7 @@ public class JudgerRunner {
                     entity.setTLETimes(1);
                     break;
             }
-            contestUserService.updateTimes(cid, uid, entity);
+            contestUserService.updateTimesAndData(cid, uid, entity);
         }
 
         private void updateContestProblemTimes(int cid, int pid, ResultEnum result) {

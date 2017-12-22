@@ -14,7 +14,7 @@
     </insert>
 
 
-    <update id="updateTimes">
+    <update id="updateTimesAndData">
         UPDATE contest_user
         <set>
             <if test="submitTimes > 0">
@@ -38,6 +38,12 @@
             <if test="CETimes > 0">
                 ce_times = ce_times + 1,
             </if>
+            <if test="score > 0">
+                score = score + #{score},
+            </if>
+            <if test="usedTime > 0">
+                used_time = used_time + #{usedTime}
+            </if>
         </set>
         WHERE `cid` = #{cid} AND `uid` = #{uid}
     </update>
@@ -52,6 +58,8 @@
         <result column="rte_times" property="RTETimes"/>
         <result column="tle_times" property="TLETimes"/>
         <result column="ce_times" property="CETimes"/>
+        <result column="score" property="score"/>
+        <result column="used_time" property="usedTime"/>
         <result column="join_time" property="joinTime"/>
     </resultMap>
 </mapper>

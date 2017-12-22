@@ -14,9 +14,9 @@
     </select>
 
     <select id="getNormalContestRank" resultType="HashMap">
-        SELECT contest_problem_user.uid,user.nickname,sum(score) AS score FROM contest_problem_user
+        SELECT contest_problem_user.uid,user.nickname,SUM(score) AS score, SUM(used_time) AS used_time FROM contest_problem_user
             LEFT JOIN user ON contest_problem_user.uid=user.uid
-        where cid=5 group by uid order by sum(score) DESC
+        where cid=#{cid} group by uid order by SUM(score) DESC, SUM(used_time) DESC
     </select>
 
     <select id="selectAll" resultMap="contestProblemUserMap">
