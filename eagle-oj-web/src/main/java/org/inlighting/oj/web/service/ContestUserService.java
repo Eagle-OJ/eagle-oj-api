@@ -1,10 +1,15 @@
 package org.inlighting.oj.web.service;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ContestUserDao;
 import org.inlighting.oj.web.entity.ContestUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -43,6 +48,17 @@ public class ContestUserService {
         entity.setCid(cid);
         entity.setUid(uid);
         return contestUserDao.get(sqlSession, entity);
+    }
+
+    public List<Map<String, Object>> getNormalContestRankList(int cid) {
+        return contestUserDao.getNormalContestRankList(sqlSession, cid);
+    }
+
+    public List<Map<String, Object>> getACMContestRankList(int cid, int penalty) {
+        Map<String, Object> param = new HashMap<>(2);
+        param.put("cid", cid);
+        param.put("penalty", penalty);
+        return contestUserDao.getACMContestRankList(sqlSession, param);
     }
 
     public boolean updateTimesAndData(int cid, int uid, ContestUserEntity entity) {

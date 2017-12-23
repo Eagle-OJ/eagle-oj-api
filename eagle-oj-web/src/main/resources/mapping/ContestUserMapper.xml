@@ -8,11 +8,25 @@
         SELECT * FROM `contest_user` WHERE `cid` = #{cid} AND `uid` = #{uid}
     </select>
 
+    <select id="getNormalContestRankList" resultType="HashMap">
+        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
+            score, used_time, contest_user.ac_times,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
+        WHERE contest_user.cid=#{cid} ORDER BY score DESC, used_time ASC
+    </select>
+
+    <select id="getACMContestRankList" resultType="HashMap">
+        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
+            score, contest_user.ac_times,
+            #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times) as penalty,
+            (used_time + #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times)) as used_time
+            ,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
+        WHERE contest_user.cid=#{cid} ORDER BY contest_user.finished_problems DESC, used_time ASC
+    </select>
+
     <insert id="insert">
         INSERT INTO `contest_user`(`cid`,`uid`,`join_time`)
             VALUES (#{cid},#{uid},#{joinTime})
     </insert>
-
 
     <update id="updateTimesAndData">
         UPDATE contest_user

@@ -7,10 +7,12 @@ import org.ehcache.Cache;
 import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
+import org.inlighting.oj.web.entity.AttachmentEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
 import org.inlighting.oj.web.controller.format.index.IndexRegisterFormat;
+import org.inlighting.oj.web.service.AttachmentService;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,15 @@ public class IndexController {
 
     private UserService userService;
 
+    private AttachmentService attachmentService;
+
     @Value("${eagle-oj.oss.url}")
     private String OSS_URL;
+
+    @Autowired
+    public void setAttachmentService(AttachmentService attachmentService) {
+        this.attachmentService = attachmentService;
+    }
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -102,10 +111,11 @@ public class IndexController {
     }
 
     @GetMapping("/avatar")
-    public void getAvatar(@RequestParam("uid") int uid,
+    public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {
-
-        response.sendRedirect("http://www.baidu.com");
+        AttachmentEntity entity = attachmentService.get(aid);
+        String url = OSS_URL+entity.getUrl();
+        response.sendRedirect(url);
     }
 
     @RequestMapping("/401")

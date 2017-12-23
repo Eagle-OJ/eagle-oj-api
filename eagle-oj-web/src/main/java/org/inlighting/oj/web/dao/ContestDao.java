@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author = ygj
@@ -19,7 +20,7 @@ public class ContestDao {
         return sqlSession.insert("contest.addContest",contestEntity) == 1;
     }
 
-    public List<HashMap<String, Object>> getValidContests(SqlSession sqlSession, PageRowBounds pager){
+    public List<Map<String, Object>> getValidContests(SqlSession sqlSession, PageRowBounds pager){
         return sqlSession.selectList("contest.getValidContests", null, pager);
     }
 

@@ -63,8 +63,8 @@ public class ContestController {
                                       @RequestParam("page_size") int pageSize) {
         PageRowBounds pager = new PageRowBounds(page, pageSize);
         Map<String, Object> data = new HashMap<>();
-        List<HashMap<String, Object>> contests = contestService.getValidContests(pager);
-        for (HashMap<String, Object> contest: contests) {
+        List<Map<String, Object>> contests = contestService.getValidContests(pager);
+        for (Map<String, Object> contest: contests) {
             if (contest.get("password") != null) {
                 contest.replace("password", "You can't see it!");
             }

@@ -1,6 +1,8 @@
 package org.inlighting.oj.web.service;
 
+import com.github.pagehelper.PageRowBounds;
 import org.ehcache.Cache;
+import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.entity.ContestEntity;
@@ -17,13 +19,13 @@ import java.util.Map;
 @Service
 public class LeaderboardService {
 
-    private ContestProblemUserService contestProblemUserService;
+    private ContestUserService contestUserService;
 
     private ContestService contestService;
 
     @Autowired
-    public void setContestProblemUserService(ContestProblemUserService contestProblemUserService) {
-        this.contestProblemUserService = contestProblemUserService;
+    public void setContestUserService(ContestUserService contestUserService) {
+        this.contestUserService = contestUserService;
     }
 
     @Autowired
@@ -40,21 +42,23 @@ public class LeaderboardService {
         int type = contestEntity.getType();
         Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();
         List<Map<String, Object>> list = (List<Map<String, Object>>) leaderboard.get(cid);
+
+        if (list!=null) {
+            return list;
+        }
+
         if (type == 0 || type == 1) {
             // 普通比赛
-            if (list == null) {
-                list = contestProblemUserService.getNormalContestRank(cid);
-                Map<String, Object> meta = new HashMap<>(2);
-                meta.put("total", list.size());
-                meta.put("create_time", System.currentTimeMillis());
-                list.add(0, meta);
-                leaderboard.put(cid, list);
-            }
+            list = contestUserService.getNormalContestRankList(cid);
         } else {
-            if (list == null) {
-
-            }
+            // ACM
+            list = contestUserService.getACMContestRankList(cid, DefaultConfig.ACM_PENALTY_TIME);
         }
+        Map<String, Object> meta = new HashMap<>(2);
+        meta.put("total", list.size());
+        meta.put("create_time", System.currentTimeMillis());
+        list.add(0, meta);
+        leaderboard.put(cid, list);
         return list;
     }
 

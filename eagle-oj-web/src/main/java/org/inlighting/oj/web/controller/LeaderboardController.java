@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.controller;
 
+import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.ehcache.Cache;
 import org.inlighting.oj.web.cache.CacheController;
@@ -13,10 +14,7 @@ import org.inlighting.oj.web.service.LeaderboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,13 +29,6 @@ import java.util.Map;
 public class LeaderboardController {
 
     private LeaderboardService leaderboardService;
-
-    private ContestService contestService;
-
-    @Autowired
-    public void setContestService(ContestService contestService) {
-        this.contestService = contestService;
-    }
 
     @Autowired
     public void setLeaderboardService(LeaderboardService leaderboardService) {

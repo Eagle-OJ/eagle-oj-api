@@ -12,4 +12,7 @@ public class DefaultConfig {
 
     // 排行榜刷新时间 5min
     public static final int LEADERBOARD_REFRESH_TIME = 5;
+
+    // ACM模式罚时
+    public static final int ACM_PENALTY_TIME = 20;
 }

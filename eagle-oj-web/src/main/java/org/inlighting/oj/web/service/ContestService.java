@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -88,9 +89,9 @@ public class ContestService {
         return contestDao.updateContestStatus(sqlSession, contestEntity);
     }
 
-    public List<HashMap<String, Object>> getValidContests(PageRowBounds pager){
-        List<HashMap<String, Object>> contests = contestDao.getValidContests(sqlSession, pager);
-        for (HashMap<String, Object> contest: contests) {
+    public List<Map<String, Object>> getValidContests(PageRowBounds pager){
+        List<Map<String, Object>> contests = contestDao.getValidContests(sqlSession, pager);
+        for (Map<String, Object> contest: contests) {
             checkContestValid(contest);
         }
         return contests;
@@ -105,9 +106,9 @@ public class ContestService {
         }
     }
 
-    private void checkContestValid(HashMap<String, Object> contest) {
+    private void checkContestValid(Map<String, Object> contest) {
         if ((int)contest.get("status") == 1) {
-            if ((long)contest.get("endTime")<System.currentTimeMillis()) {
+            if ((long)contest.get("end_time")<System.currentTimeMillis()) {
                 closeContest((int)contest.get("cid"));
                 contest.replace("status", 2);
             }
