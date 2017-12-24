@@ -43,6 +43,9 @@ public class IndexController {
     @Value("${eagle-oj.oss.url}")
     private String OSS_URL;
 
+    @Value("${eagle-oj.default.avatar}")
+    private String DEFAULT_AVATAR;
+
     @Autowired
     public void setAttachmentService(AttachmentService attachmentService) {
         this.attachmentService = attachmentService;
@@ -114,7 +117,12 @@ public class IndexController {
     public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {
         AttachmentEntity entity = attachmentService.get(aid);
-        String url = OSS_URL+entity.getUrl();
+        String url;
+        if (entity == null) {
+            url = OSS_URL+DEFAULT_AVATAR;
+        } else {
+            url = OSS_URL+entity.getUrl();
+        }
         response.sendRedirect(url);
     }
 
