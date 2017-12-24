@@ -12,6 +12,11 @@
         SELECT * FROM problem_user WHERE pid=#{pid} AND uid=#{uid}
     </select>
 
+    <select id="selectProblemUser" resultType="HashMap">
+        SELECT problem_user.*, problem.title FROM problem_user LEFT JOIN problem ON problem_user.pid=problem.pid
+        WHERE problem_user.uid = #{uid}
+    </select>
+
     <update id="update">
         UPDATE problem_user SET status=#{status} WHERE pid=#{pid} AND uid=#{uid}
     </update>

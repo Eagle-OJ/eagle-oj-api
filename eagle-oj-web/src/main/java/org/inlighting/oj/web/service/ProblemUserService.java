@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.service;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.judge.ResultEnum;
 import org.inlighting.oj.web.dao.ProblemUserDao;
@@ -43,6 +44,10 @@ public class ProblemUserService {
         problemUserEntity.setPid(pid);
         problemUserEntity.setUid(uid);
         return problemUserDao.get(sqlSession, problemUserEntity);
+    }
+
+    public List<Map<String, Object>> getProblemUser(int uid, PageRowBounds pager) {
+        return problemUserDao.getProblemUser(sqlSession, uid, pager);
     }
 
     public boolean update(int pid, int uid, ResultEnum result) {

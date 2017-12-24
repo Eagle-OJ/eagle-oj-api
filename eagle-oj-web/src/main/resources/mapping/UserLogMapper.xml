@@ -29,11 +29,11 @@
         </trim>
     </update>
 
-    <select id="selectInWeek">
+    <select id="selectInWeek" resultMap="userLogMap">
         SELECT * FROM user_log where uid=#{uid} AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 WEEK)
     </select>
 
-    <select id="selectInMonth">
+    <select id="selectInMonth" resultMap="userLogMap">
         SELECT * FROM user_log where uid=#{uid} AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)
     </select>
 

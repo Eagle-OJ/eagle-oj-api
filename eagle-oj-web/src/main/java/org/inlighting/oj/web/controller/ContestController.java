@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.entity.*;
 import org.inlighting.oj.web.service.*;
+import org.inlighting.oj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -100,9 +101,11 @@ public class ContestController {
     @GetMapping("/{cid}")
     public ResponseEntity getContest(@PathVariable("cid") int cid) {
         ContestEntity contestEntity = contestService.getContestByCid(cid);
+        WebUtil.assertNotNull(contestEntity, "不存在次比赛");
         if (contestEntity.getPassword()!=null) {
             contestEntity.setPassword("You can't see it");
         }
         return new ResponseEntity(contestEntity);
     }
+
 }

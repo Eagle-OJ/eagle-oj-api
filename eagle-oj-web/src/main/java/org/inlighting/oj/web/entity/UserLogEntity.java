@@ -8,6 +8,8 @@ import java.util.Date;
  * @author Smith
  **/
 public class UserLogEntity {
+
+    @JSONField(name = "date", format = "MM-dd")
     private Date date;
 
     private int uid;
