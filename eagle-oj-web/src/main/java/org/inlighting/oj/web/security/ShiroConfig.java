@@ -46,6 +46,7 @@ public class ShiroConfig {
         //filterRuleMap.put("/edit", "jwt, perms[edit]");
         //filterRuleMap.put("/admin/**", "jwt, roles[admin]");
         filterRuleMap.put("/user/**", "jwt, roles[0]");
+        filterRuleMap.put("/code/user/**", "jwt, roles[0]");
         filterRuleMap.put("/**", "anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;

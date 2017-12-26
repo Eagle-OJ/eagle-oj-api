@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testCases">
+    <insert id="addTestCase" parameterType="TestCaseEntity" useGeneratedKeys="true" keyProperty="tid">
+        INSERT INTO `test_cases` (`pid`,`stdin`,`stdout`,`strength`,`create_time`)
+        VALUES (#{pid},#{stdin},#{stdout},#{strength},#{createTime})
+    </insert>
+
+    <select id="getAllTestCaseByPid" resultMap="testCaseMap">
+        SELECT * FROM test_cases WHERE `pid` = #{pid}
+    </select>
+
+    <update id="updateTestCaseByTidPid" >
+        UPDATE `test_cases` SET `stdin` = #{stdin}, `stdout` = #{stdout}, `strength` = #{strength}
+        WHERE  `tid` = #{tid} AND `pid`=#{pid}
+    </update>
+
+    <delete id="deleteOneTestCaseByTid">
+        DELETE From test_cases WHERE  `tid` = #{tid}
+    </delete>
+
+    <select id="getTestCaseCountByPid" resultType="java.lang.Integer">
+        SELECT  count(`pid`) FROM  `test_cases` WHERE `pid` = #{pid}
+    </select>
+
+    <resultMap id="testCaseMap" type="TestCaseEntity">
+        <id column="tid" property="tid"/>
+        <result column="pid" property="pid"/>
+        <result column="stdin" property="stdin" />
+        <result column="stdout" property="stdout" />
+        <result column="strength" property="strength" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+</mapper>

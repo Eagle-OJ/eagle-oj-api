@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tags">
+
+    <select id="get" resultMap="tagMap">
+        SELECT * FROM `tags`
+    </select>
+
+    <update id="addUsedTimes">
+        UPDATE `tags` SET `used`=`used`+1 WHERE `tid`=#{tid}
+    </update>
+
+    <resultMap id="tagMap" type="TagEntity">
+        <id column="tid" property="tid"/>
+        <result column="name" property="name"/>
+        <result column="used" property="used"/>
+    </resultMap>
+</mapper>

@@ -1,10 +1,14 @@
 package org.inlighting.oj.web.dao;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ContestEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author = ygj
@@ -13,12 +17,15 @@ import java.util.List;
 public class ContestDao {
 
     public boolean addContest(SqlSession sqlSession,ContestEntity contestEntity){
-        int addNum = sqlSession.insert("contest.addContest",contestEntity);
-        return addNum == 1;
+        return sqlSession.insert("contest.addContest",contestEntity) == 1;
     }
 
-    public List<ContestEntity> getAll(SqlSession sqlSession){
-        return sqlSession.selectList("contest.getAll");
+    public List<Map<String, Object>> getValidContests(SqlSession sqlSession, PageRowBounds pager){
+        return sqlSession.selectList("contest.getValidContests", null, pager);
+    }
+
+    public List<ContestEntity> getUserContests(SqlSession sqlSession, int uid, PageRowBounds pager) {
+        return sqlSession.selectList("contest.getUserContests", uid, pager);
     }
 
     public boolean deleteContestByCid(SqlSession sqlSession,int cid){
@@ -26,11 +33,12 @@ public class ContestDao {
         return deleteNum == 1;
     }
 
-    @Deprecated
-    public boolean updateContestByCid(SqlSession sqlSession,ContestEntity contestEntity)
-    {
-        int updateNum = sqlSession.update("contest.updateContestByCid",contestEntity);
-        return updateNum == 1;
+    public boolean updateContestDescription(SqlSession sqlSession,ContestEntity contestEntity) {
+        return sqlSession.update("contest.updateContestDescription",contestEntity) == 1;
+    }
+
+    public boolean updateContestStatus(SqlSession sqlSession, ContestEntity contestEntity) {
+        return sqlSession.update("contest.updateContestStatus", contestEntity) == 1;
     }
 
     public ContestEntity getContestByCid(SqlSession sqlSession,int cid){

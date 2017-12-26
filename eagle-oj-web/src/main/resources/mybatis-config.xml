@@ -9,6 +9,12 @@
     </typeAliases>
 
     <typeHandlers>
+<!--        <typeHandler handler="org.inlighting.oj.web.data.ProblemStatusTypeHandler"
+                     javaType="org.inlighting.oj.judge.config.ProblemStatusEnum" jdbcType="VARCHAR"/>
+
+        <typeHandler handler="org.inlighting.oj.web.data.CodeLanguageTypeHandler"
+                     javaType="org.inlighting.oj.judge.config.CodeLanguageEnum" jdbcType="VARCHAR"/>-->
+
         <typeHandler handler="org.inlighting.oj.web.data.JsonArrayTypeHandler"
                      javaType="com.alibaba.fastjson.JSONArray" jdbcType="VARCHAR"/>
 
@@ -29,12 +35,18 @@
     <mappers>
         <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/ProblemMapper.xml"/>
-        <mapper resource="mapping/ProblemInfoMapper.xml"/>
-        <mapper resource="mapping/TestCaseMapper.xml"/>
+        <mapper resource="mapping/ContestProblemMapper.xml"/>
+        <mapper resource="mapping/TestCasesMapper.xml"/>
         <mapper resource="mapping/ContestMapper.xml"/>
-        <mapper resource="mapping/ContestUserInfoMapper.xml"/>
+        <mapper resource="mapping/ContestUserMapper.xml"/>
         <mapper resource="mapping/AttachmentMapper.xml"/>
         <mapper resource="mapping/GroupMapper.xml" />
         <mapper resource="mapping/GroupUserInfoMapper.xml"/>
+        <mapper resource="mapping/SubmissionMapper.xml"/>
+        <mapper resource="mapping/ContestProblemUserMapper.xml"/>
+        <mapper resource="mapping/TagsMapper.xml"/>
+        <mapper resource="mapping/TagProblemMapper.xml"/>
+        <mapper resource="mapping/ProblemUserMapper.xml"/>
+        <mapper resource="mapping/UserLogMapper.xml"/>
     </mappers>
 </configuration>

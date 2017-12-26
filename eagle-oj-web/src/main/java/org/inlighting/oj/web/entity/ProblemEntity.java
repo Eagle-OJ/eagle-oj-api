@@ -1,6 +1,7 @@
 package org.inlighting.oj.web.entity;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
@@ -11,34 +12,54 @@ public class ProblemEntity {
 
     private int owner;
 
-    @JSONField(name = "code_language")
-    private JSONArray codeLanguage;
-
     private String title;
 
-    private String description;
+    @JSONField(name = "lang")
+    private JSONArray lang;
+
+    private JSONObject description;
 
     private int difficult;
 
     @JSONField(name = "input_format")
-    private String inputFormat;
+    private JSONObject inputFormat;
 
     @JSONField(name = "output_format")
-    private String outputFormat;
+    private JSONObject outputFormat;
 
-    private String constraint;
+    private JSONArray samples;
 
-    private JSONArray sample;
+    private int time;
 
-    private JSONArray moderator;
+    private int memory;
 
-    private JSONArray tag;
+    private JSONArray moderators;
 
-    private int share;
+    @JSONField(name = "submit_times")
+    private int submitTimes;
+
+    @JSONField(name = "used_times")
+    private int usedTimes;
+
+    @JSONField(name = "ac_times")
+    private int ACTimes;
+
+    @JSONField(name = "wa_times")
+    private int WATimes;
+
+    @JSONField(name = "rte_times")
+    private int RTETimes;
+
+    @JSONField(name = "tle_times")
+    private int TLETimes;
+
+    @JSONField(name = "ce_times")
+    private int CETimes;
+
+    private int status;
 
     @JSONField(name = "create_time")
     private long createTime;
-
 
     public int getPid() {
         return pid;
@@ -56,14 +77,6 @@ public class ProblemEntity {
         this.owner = owner;
     }
 
-    public JSONArray getCodeLanguage() {
-        return codeLanguage;
-    }
-
-    public void setCodeLanguage(JSONArray codeLanguage) {
-        this.codeLanguage = codeLanguage;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -72,11 +85,19 @@ public class ProblemEntity {
         this.title = title;
     }
 
-    public String getDescription() {
+    public JSONArray getLang() {
+        return lang;
+    }
+
+    public void setLang(JSONArray lang) {
+        this.lang = lang;
+    }
+
+    public JSONObject getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(JSONObject description) {
         this.description = description;
     }
 
@@ -88,60 +109,100 @@ public class ProblemEntity {
         this.difficult = difficult;
     }
 
-    public String getInputFormat() {
+    public JSONObject getInputFormat() {
         return inputFormat;
     }
 
-    public void setInputFormat(String inputFormat) {
+    public void setInputFormat(JSONObject inputFormat) {
         this.inputFormat = inputFormat;
     }
 
-    public String getOutputFormat() {
+    public JSONObject getOutputFormat() {
         return outputFormat;
     }
 
-    public void setOutputFormat(String outputFormat) {
+    public void setOutputFormat(JSONObject outputFormat) {
         this.outputFormat = outputFormat;
     }
 
-    public String getConstraint() {
-        return constraint;
+    public JSONArray getSamples() {
+        return samples;
     }
 
-    public void setConstraint(String constraint) {
-        this.constraint = constraint;
+    public void setSamples(JSONArray samples) {
+        this.samples = samples;
     }
 
-    public JSONArray getSample() {
-        return sample;
+    public JSONArray getModerators() {
+        return moderators;
     }
 
-    public void setSample(JSONArray sample) {
-        this.sample = sample;
+    public void setModerators(JSONArray moderators) {
+        this.moderators = moderators;
     }
 
-    public JSONArray getModerator() {
-        return moderator;
+    public int getSubmitTimes() {
+        return submitTimes;
     }
 
-    public void setModerator(JSONArray moderator) {
-        this.moderator = moderator;
+    public void setSubmitTimes(int submitTimes) {
+        this.submitTimes = submitTimes;
     }
 
-    public JSONArray getTag() {
-        return tag;
+    public int getUsedTimes() {
+        return usedTimes;
     }
 
-    public void setTag(JSONArray tag) {
-        this.tag = tag;
+    public void setUsedTimes(int usedTimes) {
+        this.usedTimes = usedTimes;
     }
 
-    public int getShare() {
-        return share;
+    public int getACTimes() {
+        return ACTimes;
     }
 
-    public void setShare(int share) {
-        this.share = share;
+    public void setACTimes(int ACTimes) {
+        this.ACTimes = ACTimes;
+    }
+
+    public int getWATimes() {
+        return WATimes;
+    }
+
+    public void setWATimes(int WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public int getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(int RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public int getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(int TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public int getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(int CETimes) {
+        this.CETimes = CETimes;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public long getCreateTime() {
@@ -152,5 +213,19 @@ public class ProblemEntity {
         this.createTime = createTime;
     }
 
+    public int getTime() {
+        return time;
+    }
 
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getMemory() {
+        return memory;
+    }
+
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
 }

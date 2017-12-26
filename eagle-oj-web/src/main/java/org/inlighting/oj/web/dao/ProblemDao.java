@@ -1,8 +1,13 @@
 package org.inlighting.oj.web.dao;
 
+import com.alibaba.fastjson.JSONArray;
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.entity.ProblemEntity;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,9 +27,39 @@ public class ProblemDao {
         return sqlSession.selectOne("problem.getProblemByPid", pid);
     }
 
-    public boolean updateProblemByPid(SqlSession sqlSession, ProblemEntity entity) {
-        int updateNum = sqlSession.update("problem.updateProblemByPid", entity);
-        return updateNum == 1;
+    public List<ProblemEntity> getProblemsByUid(SqlSession sqlSession, int uid, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getProblemsByUid", uid, pager);
     }
 
+    public List<Map<String, Object>> getSharedProblems(SqlSession sqlSession, Map<String, Object> condition, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getSharedProblems", condition, pager);
+    }
+
+    public List<Map<String, Object>> getSharedProblemsWithStatus(SqlSession sqlSession, Map<String, Object> condition, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getSharedProblemsWithStatus", condition, pager);
+    }
+
+    public List<Map<String, Object>> getProblemTags(SqlSession sqlSession, int pid) {
+        return sqlSession.selectList("problem.getProblemTags", pid);
+    }
+
+    public boolean updateProblemDescription(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemDescription", entity) == 1;
+    }
+
+    public boolean updateProblemSetting(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemSetting", entity) == 1;
+    }
+
+    public boolean updateProblemStatus(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemStatus", entity) == 1;
+    }
+
+    public boolean updateModerators(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemModerators", entity) == 1;
+    }
+
+    public boolean updateProblemTimes(SqlSession sqlSession, ProblemEntity entity) {
+        return sqlSession.update("problem.updateProblemTimes", entity) == 1;
+    }
 }

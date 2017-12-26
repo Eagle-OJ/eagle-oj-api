@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="contestUser">
+
+    <select id="select" resultMap="contestUserMap">
+        SELECT * FROM `contest_user` WHERE `cid` = #{cid} AND `uid` = #{uid}
+    </select>
+
+    <select id="getNormalContestRankList" resultType="HashMap">
+        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
+            score, used_time, contest_user.ac_times,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
+        WHERE contest_user.cid=#{cid} ORDER BY score DESC, used_time ASC
+    </select>
+
+    <select id="getACMContestRankList" resultType="HashMap">
+        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
+            score, contest_user.ac_times,
+            #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times) as penalty,
+            (used_time + #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times)) as used_time
+            ,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
+        WHERE contest_user.cid=#{cid} ORDER BY contest_user.finished_problems DESC, used_time ASC
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `contest_user`(`cid`,`uid`,`join_time`)
+            VALUES (#{cid},#{uid},#{joinTime})
+    </insert>
+
+    <update id="updateTimesAndData">
+        UPDATE contest_user
+        <set>
+            <if test="submitTimes > 0">
+                submit_times = submit_times + 1,
+            </if>
+            <if test="finishedProblems > 0">
+                finished_problems = finished_problems + 1,
+            </if>
+            <if test="ACTimes > 0">
+                ac_times = ac_times + 1,
+            </if>
+            <if test="WATimes > 0">
+                wa_times = wa_times + 1,
+            </if>
+            <if test="RTETimes > 0">
+                rte_times = rte_times + 1,
+            </if>
+            <if test="TLETimes > 0">
+                tle_times = tle_times + 1,
+            </if>
+            <if test="CETimes > 0">
+                ce_times = ce_times + 1,
+            </if>
+            <if test="score > 0">
+                score = score + #{score},
+            </if>
+            <if test="usedTime > 0">
+                used_time = used_time + #{usedTime}
+            </if>
+        </set>
+        WHERE `cid` = #{cid} AND `uid` = #{uid}
+    </update>
+
+    <resultMap id="contestUserMap" type="ContestUserEntity">
+        <id column="cid" property="cid"/>
+        <id column="uid" property="uid"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="finished_problems" property="finishedProblems"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
+        <result column="score" property="score"/>
+        <result column="used_time" property="usedTime"/>
+        <result column="join_time" property="joinTime"/>
+    </resultMap>
+</mapper>

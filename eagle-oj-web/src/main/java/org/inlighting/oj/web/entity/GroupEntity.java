@@ -8,11 +8,11 @@ public class GroupEntity {
 
     private int owner;
 
-    private int cover;
-
     private String name;
 
     private String password;
+
+    private int people;
 
     private long createTime;
 
@@ -32,14 +32,6 @@ public class GroupEntity {
         this.owner = owner;
     }
 
-    public int getCover() {
-        return cover;
-    }
-
-    public void setCover(int cover) {
-        this.cover = cover;
-    }
-
     public String getName() {
         return name;
     }
@@ -54,6 +46,14 @@ public class GroupEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getPeople() {
+        return people;
+    }
+
+    public void setPeople(int people) {
+        this.people = people;
     }
 
     public long getCreateTime() {

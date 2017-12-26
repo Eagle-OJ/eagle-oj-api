@@ -1,12 +1,15 @@
 package org.inlighting.oj.web.service;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ContestDao;
 import org.inlighting.oj.web.entity.ContestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -28,7 +31,7 @@ public class ContestService {
     }
 
     public int addContest(String name, int owner, String slogan, String description,
-                          long startTime, long endTime, long totalTime, String password, int official,
+                          long startTime, long endTime, Long totalTime, String password,
                           int type, long createTime) {
         // 添加比赛
         ContestEntity contestEntity = new ContestEntity();
@@ -40,16 +43,23 @@ public class ContestService {
         contestEntity.setEndTime(endTime);
         contestEntity.setTotalTime(totalTime);
         contestEntity.setPassword(password);
-        contestEntity.setOfficial(official);
+        contestEntity.setOfficial(0);
         contestEntity.setType(type);
+        contestEntity.setStatus(0);
         contestEntity.setCreateTime(createTime);
         boolean result = contestDao.addContest(sqlSession,contestEntity);
         return result ? contestEntity.getCid() : 0;
     }
 
+    public List<ContestEntity> getUserContests(int uid, PageRowBounds pager) {
+        return contestDao.getUserContests(sqlSession, uid, pager);
+    }
+
+    // 进行比赛校验
     public ContestEntity getContestByCid(int cid) {
-        //通过Cid获取比赛
-        return contestDao.getContestByCid(sqlSession,cid);
+        ContestEntity contestEntity = contestDao.getContestByCid(sqlSession, cid);
+        checkContestValid(contestEntity);
+        return contestEntity;
     }
 
     public boolean deleteContestByCid(int cid){
@@ -57,10 +67,55 @@ public class ContestService {
         return contestDao.deleteContestByCid(sqlSession,cid);
     }
 
-    public List<ContestEntity> getAll(){
-        //获得所有比赛
-        return contestDao.getAll(sqlSession);
+    public boolean updateContestDescription(int cid, String name, String slogan, String description, long startTime,
+                                            long endTime, Long totalTime, String password, int type) {
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setCid(cid);
+        contestEntity.setName(name);
+        contestEntity.setSlogan(slogan);
+        contestEntity.setDescription(description);
+        contestEntity.setStartTime(startTime);
+        contestEntity.setEndTime(endTime);
+        contestEntity.setTotalTime(totalTime);
+        contestEntity.setPassword(password);
+        contestEntity.setType(type);
+        return contestDao.updateContestDescription(sqlSession, contestEntity);
     }
 
+    public boolean updateContestStatus(int cid, int status) {
+        ContestEntity contestEntity = new ContestEntity();
+        contestEntity.setCid(cid);
+        contestEntity.setStatus(status);
+        return contestDao.updateContestStatus(sqlSession, contestEntity);
+    }
 
+    public List<Map<String, Object>> getValidContests(PageRowBounds pager){
+        List<Map<String, Object>> contests = contestDao.getValidContests(sqlSession, pager);
+        for (Map<String, Object> contest: contests) {
+            checkContestValid(contest);
+        }
+        return contests;
+    }
+
+    private void checkContestValid(ContestEntity contestEntity) {
+        if (contestEntity!=null && contestEntity.getStatus() == 1) {
+            if (contestEntity.getEndTime()<System.currentTimeMillis()) {
+                closeContest(contestEntity.getCid());
+                contestEntity.setStatus(2);
+            }
+        }
+    }
+
+    private void checkContestValid(Map<String, Object> contest) {
+        if ((int)contest.get("status") == 1) {
+            if ((long)contest.get("end_time")<System.currentTimeMillis()) {
+                closeContest((int)contest.get("cid"));
+                contest.replace("status", 2);
+            }
+        }
+    }
+
+    public boolean closeContest(int cid) {
+        return updateContestStatus(cid, 2);
+    }
 }

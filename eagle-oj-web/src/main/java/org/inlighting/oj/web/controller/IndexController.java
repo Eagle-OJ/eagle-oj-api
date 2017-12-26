@@ -4,23 +4,29 @@ import com.alibaba.fastjson.JSONArray;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
+import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.web.cache.CacheController;
+import org.inlighting.oj.web.controller.exception.WebErrorException;
+import org.inlighting.oj.web.entity.AttachmentEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
 import org.inlighting.oj.web.controller.format.index.IndexRegisterFormat;
+import org.inlighting.oj.web.service.AttachmentService;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Smith
@@ -31,6 +37,19 @@ import java.util.Set;
 public class IndexController {
 
     private UserService userService;
+
+    private AttachmentService attachmentService;
+
+    @Value("${eagle-oj.oss.url}")
+    private String OSS_URL;
+
+    @Value("${eagle-oj.default.avatar}")
+    private String DEFAULT_AVATAR;
+
+    @Autowired
+    public void setAttachmentService(AttachmentService attachmentService) {
+        this.attachmentService = attachmentService;
+    }
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -43,7 +62,7 @@ public class IndexController {
         // 检查用户是否存在
         UserEntity userEntity = userService.getUserByEmail(format.getEmail());
         if (userEntity != null) {
-            throw new RuntimeException("用户已经注册");
+            throw new WebErrorException("邮箱已经注册");
         }
 
         // 注册用户
@@ -52,7 +71,7 @@ public class IndexController {
                 new Md5Hash(format.getPassword()).toString(),
                 System.currentTimeMillis());
         if (uid == 0) {
-            throw new RuntimeException("注册失败");
+            throw new WebErrorException("注册失败");
         }
         return new ResponseEntity("注册成功", uid);
     }
@@ -63,7 +82,7 @@ public class IndexController {
         UserEntity userEntity = userService.getUserByLogin(format.getEmail(),
                 new Md5Hash(format.getPassword()).toString());
         if (userEntity == null)
-            throw new RuntimeException("用户名密码错误");
+            throw new WebErrorException("用户名密码错误");
 
         JSONArray array = userEntity.getPermission();
         Iterator<Object> it = array.iterator();
@@ -76,6 +95,35 @@ public class IndexController {
         authCache.put(token, userEntity.getPassword());
 
         return new ResponseEntity("登入成功", token);
+    }
+
+    @GetMapping("/setting")
+    public ResponseEntity getWebConfig() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("oss_url", OSS_URL);
+
+        // 添加编程语言配置文件
+        {
+            Map<Object, String> lang = new HashMap<>();
+            for (LanguageEnum languageEnum: LanguageEnum.values()) {
+                lang.put(languageEnum, languageEnum.getName());
+            }
+            data.put("lang", lang);
+        }
+        return new ResponseEntity(data);
+    }
+
+    @GetMapping("/avatar")
+    public void getAvatar(@RequestParam("aid") int aid,
+                          HttpServletResponse response) throws IOException {
+        AttachmentEntity entity = attachmentService.get(aid);
+        String url;
+        if (entity == null) {
+            url = OSS_URL+DEFAULT_AVATAR;
+        } else {
+            url = OSS_URL+entity.getUrl();
+        }
+        response.sendRedirect(url);
     }
 
     @RequestMapping("/401")

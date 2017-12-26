@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="contestProblem">
+    <insert id="insertContestProblem" parameterType="ContestProblemEntity">
+        INSERT INTO `contest_problem` (`pid`, `cid`, `display_id`, `score`) VALUES (#{pid}, #{cid}, #{displayId}, #{score})
+    </insert>
+
+    <select id="getContestProblem" resultMap="contestProblemMap">
+        <if test="displayId == 0">
+            SELECT * FROM `contest_problem` WHERE `pid`=#{pid} AND `cid`=#{cid}
+        </if>
+        <if test="displayId != 0">
+            SELECT * FROM `contest_problem` WHERE `cid`=#{cid} AND display_id=#{displayId}
+        </if>
+    </select>
+
+    <select id="getContestProblems" resultType="HashMap">
+        SELECT problem.title, problem.difficult, contest_problem.* FROM contest_problem
+        LEFT JOIN problem ON contest_problem.pid=problem.pid
+        WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
+    </select>
+
+    <select id="getContestProblemsWithStatus" resultType="HashMap">
+        SELECT problem.title, problem.difficult, contest_problem.*, contest_problem_user.status FROM contest_problem
+        LEFT JOIN problem ON contest_problem.pid=problem.pid
+        LEFT JOIN contest_problem_user ON contest_problem_user.cid=contest_problem.cid
+                                          AND contest_problem_user.pid=contest_problem.pid
+                                          AND contest_problem_user.uid=#{uid}
+        WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
+    </select>
+
+    <update id="updateContestProblem">
+        UPDATE `contest_problem` SET score = #{score}, display_id=#{displayId} WHERE cid = #{cid} AND pid = #{pid}
+    </update>
+
+    <update id="updateTimes">
+        UPDATE contest_problem
+        <set>
+            <if test="submitTimes > 0">
+                submit_times = submit_times + 1,
+            </if>
+            <if test="ACTimes > 0">
+                ac_times = ac_times + 1,
+            </if>
+            <if test="WATimes > 0">
+                wa_times = wa_times + 1,
+            </if>
+            <if test="RTETimes > 0">
+                rte_times = rte_times + 1,
+            </if>
+            <if test="TLETimes > 0">
+                tle_times = tle_times + 1,
+            </if>
+            <if test="CETimes > 0">
+                ce_times = ce_times + 1,
+            </if>
+        </set>
+        WHERE cid = #{cid} AND pid = #{pid}
+    </update>
+
+    <delete id="deleteContestProblem">
+        DELETE FROM contest_problem WHERE cid=#{cid} AND pid=#{pid}
+    </delete>
+
+    <resultMap id="contestProblemMap" type="ContestProblemEntity">
+        <result column="pid" property="pid"/>
+        <result column="cid" property="cid"/>
+        <result column="display_id" property="displayId"/>
+        <result column="score" property="score"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
+    </resultMap>
+</mapper>

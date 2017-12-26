@@ -27,7 +27,7 @@ public class ProblemServiceTest {
     @Autowired
     private ProblemService problemService;
 
-    @Test
+    /*@Test
     public void addProblem() {
         List<Object> list = new ArrayList<>();
         list.add(1);
@@ -55,5 +55,5 @@ public class ProblemServiceTest {
                 moderator, tag, 1,System.currentTimeMillis());
 
         Assert.assertEquals(pid > 0, true);
-    }
+    }*/
 }

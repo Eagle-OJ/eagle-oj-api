@@ -26,7 +26,7 @@ public class AttachmentServiceTest {
 
     @Test
     public void addTest() throws Exception {
-       int insertNum = attachmentService.add(1,"testurl",System.currentTimeMillis());
+       int insertNum = attachmentService.add(1,"testurl");
         Assert.assertEquals(true,insertNum>0);
     }
 }

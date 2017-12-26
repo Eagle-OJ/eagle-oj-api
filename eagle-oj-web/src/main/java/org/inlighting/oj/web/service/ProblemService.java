@@ -1,14 +1,20 @@
 package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.inlighting.oj.judge.JudgeHelper;
 import org.inlighting.oj.web.dao.ProblemDao;
-import org.inlighting.oj.web.dao.ProblemInfoDao;
+import org.inlighting.oj.web.dao.ContestProblemDao;
 import org.inlighting.oj.web.entity.ProblemEntity;
-import org.inlighting.oj.web.entity.ProblemInfoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author ygj
@@ -20,7 +26,7 @@ public class ProblemService {
 
     private ProblemDao problemDao;
 
-    private ProblemInfoDao problemInfoDao;
+    private ContestProblemDao problemInfoDao;
 
     public ProblemService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
@@ -32,73 +38,98 @@ public class ProblemService {
     }
 
     @Autowired
-    public void setProblemInfoDao(ProblemInfoDao problemInfoDao) {
+    public void setProblemInfoDao(ContestProblemDao problemInfoDao) {
         this.problemInfoDao = problemInfoDao;
     }
 
 
-    /**
-     * 同时添加problem 和 problem_info
-     */
-    @Transactional
-    public int addProblem(int owner, JSONArray codeLanguage, String title,
-                              String description, int difficult, String inputFormat,
-                              String outputFormat, String constraint, JSONArray sample,
-                              JSONArray moderator, JSONArray tag, int share,long createTime) {
+    public int addProblem(int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
+                          int difficult, JSONArray samples, int time, int memory) {
         // 添加题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setOwner(owner);
-        problemEntity.setCodeLanguage(codeLanguage);
         problemEntity.setTitle(title);
+        problemEntity.setLang(JudgeHelper.getAllLanguages());
         problemEntity.setDescription(description);
-        problemEntity.setDifficult(difficult);
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);
-        problemEntity.setConstraint(constraint);
-        problemEntity.setSample(sample);
-        problemEntity.setModerator(moderator);
-        problemEntity.setTag(tag);
-        problemEntity.setShare(share);
-        problemEntity.setCreateTime(createTime);
+        problemEntity.setDifficult(difficult);
+        problemEntity.setSamples(samples);
+        problemEntity.setTime(time);
+        problemEntity.setMemory(memory);
+        problemEntity.setModerators(new JSONArray());
+        problemEntity.setStatus(0);
+        problemEntity.setCreateTime(System.currentTimeMillis());
 
-        // 添加数据到problem_info
-        boolean result1 = problemDao.addProblem(sqlSession, problemEntity);
-        boolean result2 = false;
-        int pid = problemEntity.getPid();
-        if (pid > 0) {
-            ProblemInfoEntity entity = new ProblemInfoEntity();
-            entity.setPid(pid);
-            entity.setBelong(0);
-            result2 = problemInfoDao.add(sqlSession, entity);
-        }
-        return (result1 && result2) ? pid : 0;
+        return problemDao.addProblem(sqlSession, problemEntity)? problemEntity.getPid() : 0;
+    }
+
+    public List<ProblemEntity> getProblemsByUid(int uid, PageRowBounds page) {
+        return problemDao.getProblemsByUid(sqlSession, uid, page);
     }
 
     public ProblemEntity getProblemByPid(int pid) {
-        // 通过ID获得题目
         return problemDao.getProblemByPid(sqlSession, pid);
     }
 
-    public boolean updateProblemByPid(int pid, JSONArray codeLanguage, String title,
-                                     String description, int difficult, String inputFormat,
-                                     String outputFormat, String constraint, JSONArray sample,
-                                     JSONArray moderator, JSONArray tag, int share) {
+    public List<Map<String, Object>> getProblemTags(int pid) {
+        return problemDao.getProblemTags(sqlSession, pid);
+    }
+
+    public List<Map<String, Object>> getSharedProblems(int difficult, String tag, PageRowBounds pager) {
+        Map<String, Object> condition = new HashMap<>(2);
+        condition.put("difficult", difficult);
+        condition.put("tag", tag);
+        return problemDao.getSharedProblems(sqlSession, condition, pager);
+    }
+
+    public List<Map<String, Object>> getSharedProblemsWithStatus(int uid, int difficult, String tag, PageRowBounds pager) {
+        Map<String, Object> condition = new HashMap<>(3);
+        condition.put("uid", uid);
+        condition.put("difficult", difficult);
+        condition.put("tag", tag);
+        return problemDao.getSharedProblemsWithStatus(sqlSession, condition, pager);
+    }
+
+    public boolean updateProblemDescription(int pid, String title, JSONObject description, JSONObject inputFormat,
+                                            JSONObject outputFormat, JSONArray samples, int difficult) {
         //通过pid来更新题目
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setPid(pid);
-        problemEntity.setCodeLanguage(codeLanguage);
         problemEntity.setTitle(title);
         problemEntity.setDescription(description);
-        problemEntity.setDifficult(difficult);
         problemEntity.setInputFormat(inputFormat);
         problemEntity.setOutputFormat(outputFormat);
-        problemEntity.setConstraint(constraint);
-        problemEntity.setModerator(moderator);
-        problemEntity.setSample(sample);
-        problemEntity.setTag(tag);
-        problemEntity.setShare(share);
-        problemEntity.setCreateTime(System.currentTimeMillis());
-        return problemDao.updateProblemByPid(sqlSession, problemEntity);
+        problemEntity.setSamples(samples);
+        problemEntity.setDifficult(difficult);
+        return problemDao.updateProblemDescription(sqlSession, problemEntity);
     }
 
+    public boolean updateProblemSetting(int pid, JSONArray lang, int time, int memory) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
+        problemEntity.setLang(lang);
+        problemEntity.setTime(time);
+        problemEntity.setMemory(memory);
+        return problemDao.updateProblemSetting(sqlSession, problemEntity);
+    }
+
+    public boolean updateProblemStatus(int pid, int status) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
+        problemEntity.setStatus(status);
+        return problemDao.updateProblemStatus(sqlSession, problemEntity);
+    }
+
+    public boolean updateProblemModerators(int pid, JSONArray moderators) {
+        ProblemEntity problemEntity = new ProblemEntity();
+        problemEntity.setPid(pid);
+        problemEntity.setModerators(moderators);
+        return problemDao.updateModerators(sqlSession, problemEntity);
+    }
+
+    public boolean updateProblemTimes(int pid, ProblemEntity problemEntity) {
+        problemEntity.setPid(pid);
+        return problemDao.updateProblemTimes(sqlSession, problemEntity);
+    }
 }

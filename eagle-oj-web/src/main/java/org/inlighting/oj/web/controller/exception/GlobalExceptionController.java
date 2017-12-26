@@ -45,22 +45,29 @@ public class GlobalExceptionController {
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity handle(HttpServletRequest request, Throwable ex) {
-        LOGGER.info(ex.getMessage(), ex);
+        LOGGER.info(ex.getMessage());
         return new ResponseEntity(401, ex.getMessage(), null);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(WebErrorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity globalException(HttpServletRequest request, Throwable ex) {
-        LOGGER.info(ex.getMessage(), ex);
-        return new ResponseEntity(getStatus(request).value(), ex.getMessage(), null);
+    public ResponseEntity handleErrorException(HttpServletRequest request, Throwable ex) {
+        LOGGER.info(ex.getMessage());
+        return new ResponseEntity(400, ex.getMessage(), null);
     }
 
-    private HttpStatus getStatus(HttpServletRequest request) {
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity globalException(HttpServletRequest request, Throwable ex) {
+        LOGGER.info(ex.getMessage(), ex);
+        return new ResponseEntity(500, ex.getMessage(), null);
+    }
+
+    /*private HttpStatus getStatus(HttpServletRequest request) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         if (statusCode == null) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return HttpStatus.valueOf(statusCode);
-    }
+    }*/
 }

@@ -46,7 +46,42 @@ public class UserDao {
         return session.selectOne("user.selectUserByLogin", map);
     }
 
+    public List<HashMap<String, Object>> getModeratorsInUidList(SqlSession sqlSession, List<Integer> uidList) {
+        return sqlSession.selectList("user.selectModeratorsInUidList", uidList);
+    }
+
+    public boolean updateUserTimes(SqlSession sqlSession, UserEntity entity) {
+        return sqlSession.update("user.updateUserTimes", entity) == 1;
+    }
+
+    public boolean addUserSubmitTimesByUid(SqlSession sqlSession, int uid) {
+        return sqlSession.update("user.addUserSubmitTimes", uid) == 1;
+    }
+
+    public boolean addUserAcceptTimesByUid(SqlSession sqlSession, int uid) {
+        return sqlSession.update("user.addUserAcceptTimes", uid) == 1;
+    }
+
+    public boolean addUserContestTimesByUid(SqlSession sqlSession, int uid) {
+        return sqlSession.update("user.addUserContestTimes", uid) == 1;
+    }
+
+    public boolean addUserScoreByUid(SqlSession sqlSession, int uid, int score) {
+        Map<String, Integer> data = new HashMap<>();
+        data.put("uid", uid);
+        data.put("score", score);
+        return sqlSession.update("user.addUserScore", data) == 1;
+    }
+
     public List<UserEntity> getUserList(int currentPage, int pageSize) {
         return null;
+    }
+
+    public boolean updateUserProfile(SqlSession sqlSession, UserEntity userEntity) {
+        return sqlSession.update("user.updateUserProfile", userEntity) == 1;
+    }
+
+    public boolean updateUserAvatar(SqlSession sqlSession, UserEntity userEntity) {
+        return sqlSession.update("user.updateUserAvatar", userEntity) == 1;
     }
 }

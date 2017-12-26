@@ -2,6 +2,7 @@ package org.inlighting.oj.web.entity;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * @author Smith
@@ -24,13 +25,15 @@ public class ContestEntity {
     private long endTime;
 
     @JSONField(name = "total_time")
-    private long totalTime;
+    private Long totalTime;
 
     private String password;
 
     private int official;
 
     private int type;
+
+    private int status;
 
     @JSONField(name = "create_time")
     private long createTime;
@@ -91,11 +94,11 @@ public class ContestEntity {
         this.endTime = endTime;
     }
 
-    public long getTotalTime() {
+    public Long getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(long totalTime) {
+    public void setTotalTime(Long totalTime) {
         this.totalTime = totalTime;
     }
 
@@ -121,6 +124,14 @@ public class ContestEntity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public long getCreateTime() {
