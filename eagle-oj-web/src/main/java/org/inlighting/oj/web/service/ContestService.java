@@ -4,9 +4,12 @@ import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ContestDao;
 import org.inlighting.oj.web.entity.ContestEntity;
+import org.inlighting.oj.web.postman.MessageQueue;
+import org.inlighting.oj.web.postman.task.CloseContestTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +24,15 @@ public class ContestService {
 
     private ContestDao contestDao ;
 
+    private MessageQueue messageQueue;
+
     public ContestService(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
+    }
+
+    @Autowired
+    public void setMessageQueue(MessageQueue messageQueue) {
+        this.messageQueue = messageQueue;
     }
 
     @Autowired
@@ -108,14 +118,19 @@ public class ContestService {
 
     private void checkContestValid(Map<String, Object> contest) {
         if ((int)contest.get("status") == 1) {
-            if ((long)contest.get("end_time")<System.currentTimeMillis()) {
-                closeContest((int)contest.get("cid"));
+            BigInteger bigInteger = (BigInteger)contest.get("end_time");
+            if (bigInteger.longValue()<System.currentTimeMillis()) {
+                Long cid = (Long)contest.get("cid");
+                closeContest(cid.intValue());
                 contest.replace("status", 2);
             }
         }
     }
 
-    public boolean closeContest(int cid) {
-        return updateContestStatus(cid, 2);
+    public void closeContest(int cid) {
+        if (updateContestStatus(cid, 2)) {
+            CloseContestTask task = new CloseContestTask(cid, 1);
+            messageQueue.addTask(task);
+        }
     }
 }

@@ -16,9 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Smith
@@ -48,6 +46,8 @@ public class LeaderboardController {
         if (list == null) {
             throw new WebErrorException("不存在此比赛");
         }
-        return new ResponseEntity(list);
+        List<Map<String, Object>> targetList = new LinkedList<>(list);
+        targetList.remove(1);
+        return new ResponseEntity(targetList);
     }
 }

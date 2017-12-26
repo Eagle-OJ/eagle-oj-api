@@ -73,7 +73,7 @@ CREATE TABLE `contest` (
 
 LOCK TABLES `contest` WRITE;
 /*!40000 ALTER TABLE `contest` DISABLE KEYS */;
-INSERT INTO `contest` VALUES (1,'红鹰杯1',35,'一起来红颜被吧','这是大红鹰的挑战书',1512745500000,1513353600000,NULL,NULL,0,2,2,1512638522358),(2,'红鹰杯2',35,'红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2','红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2',1512658800000,1513267200000,720000000,'123456',0,3,2,1512648212424),(3,'test',35,'啊哈哈','而发而非非法',1513699200000,1513872000000,3600000,NULL,0,3,2,1512727885637),(4,'时间测试',35,'good','分',1513785600000,1513872000000,12600000,NULL,0,1,0,1512731412243),(5,'新的比赛',35,'新的比赛新的比赛新的比赛新的比赛','新的比赛',1513872000000,1513958400000,NULL,NULL,0,0,2,1513586277893);
+INSERT INTO `contest` VALUES (1,'红鹰杯1',35,'一起来红颜被吧','这是大红鹰的挑战书',1512745500000,1513353600000,NULL,NULL,0,2,2,1512638522358),(2,'红鹰杯2',35,'红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2','红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2',1512658800000,1513267200000,720000000,'123456',0,3,2,1512648212424),(3,'test',35,'啊哈哈','而发而非非法',1513699200000,1513872000000,3600000,NULL,0,3,2,1512727885637),(4,'时间测试',35,'good','分',1513785600000,1513872000000,12600000,NULL,0,1,0,1512731412243),(5,'新的比赛',35,'新的比赛新的比赛新的比赛新的比赛','新的比赛',1514217600000,1514280060000,NULL,NULL,0,0,2,1513586277893);
 /*!40000 ALTER TABLE `contest` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +169,7 @@ CREATE TABLE `contest_user` (
 
 LOCK TABLES `contest_user` WRITE;
 /*!40000 ALTER TABLE `contest_user` DISABLE KEYS */;
-INSERT INTO `contest_user` VALUES (2,35,7,0,0,0,0,0,3,3,0,1512726258550),(3,35,0,0,0,0,0,0,0,0,0,1513766993861),(4,35,0,0,0,0,0,0,0,0,0,1513859188601),(5,35,10,2,10,39764383,2,3,0,0,5,1513587153645),(5,37,1,1,0,0,1,0,0,0,0,1513594201072);
+INSERT INTO `contest_user` VALUES (1,35,0,0,0,0,0,0,0,0,0,1514276552093),(2,35,7,0,0,0,0,0,3,3,0,1512726258550),(3,35,0,0,0,0,0,0,0,0,0,1513766993861),(4,35,0,0,0,0,0,0,0,0,0,1513859188601),(5,35,10,2,10,39764383,2,3,0,0,5,1513587153645),(5,37,1,1,0,0,1,0,0,0,0,1513594201072);
 /*!40000 ALTER TABLE `contest_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,6 +225,36 @@ CREATE TABLE `group_user_info` (
 LOCK TABLES `group_user_info` WRITE;
 /*!40000 ALTER TABLE `group_user_info` DISABLE KEYS */;
 /*!40000 ALTER TABLE `group_user_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `message`
+--
+
+DROP TABLE IF EXISTS `message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `message` (
+  `mid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `owner` int(10) unsigned NOT NULL COMMENT '0 代表global 全局消息',
+  `type` tinyint(1) unsigned NOT NULL COMMENT '0 普通消息，显示content即可\n1 xxx 比赛结束的排行榜',
+  `content` varchar(500) NOT NULL,
+  `json_content` json NOT NULL,
+  `create_time` bigint(13) unsigned NOT NULL,
+  PRIMARY KEY (`mid`),
+  KEY `owner_index` (`owner`),
+  KEY `create_time_index` (`create_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `message`
+--
+
+LOCK TABLES `message` WRITE;
+/*!40000 ALTER TABLE `message` DISABLE KEYS */;
+INSERT INTO `message` VALUES (1,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514278862084),(2,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514279642076),(3,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514279838486),(4,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514280061191),(5,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514280093555),(6,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514289676933),(7,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514289824868),(8,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\"></a>','{}',1514289978292),(9,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\"></a>','{}',1514289978352),(10,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514293165340),(11,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514293165395);
+/*!40000 ALTER TABLE `message` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -448,7 +478,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'aef','aef',NULL,0,'aef',0,'[\"get\", \"ge\"]',0,0,0,0,0,0,0,0,0,NULL,12312,0),(3,'chen!@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625563796,0),(5,'chen!1@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625680241,0),(6,'chen!11@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625693663,0),(8,'che1n!11@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625797534,0),(9,'c1@126.com1','test',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,0,0),(10,'c1@126.com','test',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,0,0),(11,'test@test.com2','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,NULL,0,0),(12,'test@test.com1','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509886602210,0),(13,'test@test.com3','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509964177613,0),(14,'test@test.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',14,0,2,0,0,0,0,0,0,NULL,1510129937075,0),(15,'1510157247573@126.com','1510157247573-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510157248389,0),(16,'1510157414297@126.com','1510157414297-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510157414311,0),(17,'1510200482152@126.com','1510200482152-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510200482167,0),(18,'1510200639157@126.com','1510200639157-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510200639171,0),(19,'test@test1.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510377927655,0),(21,'test@test2.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510377955548,0),(23,'test@test99.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510377967933,0),(25,'test@test9.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510378047399,0),(27,'test@test8.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510378179880,0),(28,'test@test.comx','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510462603114,0),(29,'test@test.comxb','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510462649043,0),(30,'test@test.com7','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510464192666,0),(31,'fe@12.dth','asef',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511771980307,0),(32,'chen1@126.com','abc',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772230886,0),(33,'chen@126.com','abc',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772355487,0),(34,'1@126.com','aef',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772618636,0),(35,'1@1.com','我是Smith','打败',31,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',15,2,1,1,11,0,3,1,0,'我是孤独求败的人',1511772653407,0),(36,'12@1.com','aec',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772836330,0),(37,'2@2.com','大海',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772924348,0),(38,'danny@126.com','danny',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511774201713,0),(39,'dfgv@12.com','aewfeasf',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1512306366983,0);
+INSERT INTO `user` VALUES (1,'aef','aef',NULL,0,'aef',0,'[\"get\", \"ge\"]',0,0,0,0,0,0,0,0,0,NULL,12312,0),(3,'chen!@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625563796,0),(5,'chen!1@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625680241,0),(6,'chen!11@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625693663,0),(8,'che1n!11@126.com','smith',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509625797534,0),(9,'c1@126.com1','test',NULL,0,'123456',0,'[]',0,0,0,0,0,0,0,0,0,NULL,0,0),(10,'c1@126.com','test',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,0,0),(11,'test@test.com2','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,NULL,0,0),(12,'test@test.com1','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509886602210,0),(13,'test@test.com3','I Am Test',NULL,0,'098f6bcd4621d373cade4e832627b4f6',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1509964177613,0),(14,'test@test.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',14,0,2,0,0,0,0,0,0,NULL,1510129937075,0),(15,'1510157247573@126.com','1510157247573-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510157248389,0),(16,'1510157414297@126.com','1510157414297-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510157414311,0),(17,'1510200482152@126.com','1510200482152-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510200482167,0),(18,'1510200639157@126.com','1510200639157-TESTER',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510200639171,0),(19,'test@test1.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510377927655,0),(21,'test@test2.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510377955548,0),(23,'test@test99.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510377967933,0),(25,'test@test9.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510378047399,0),(27,'test@test8.com','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510378179880,0),(28,'test@test.comx','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510462603114,0),(29,'test@test.comxb','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510462649043,0),(30,'test@test.com7','I am tester',NULL,0,'e10adc3949ba59abbe56e057f20f883e',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1510464192666,0),(31,'fe@12.dth','asef',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511771980307,0),(32,'chen1@126.com','abc',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772230886,0),(33,'chen@126.com','abc',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772355487,0),(34,'1@126.com','aef',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772618636,0),(35,'1@1.com','我是Smith','打败',31,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',15,3,1,1,11,0,3,1,0,'我是孤独求败的人',1511772653407,0),(36,'12@1.com','aec',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772836330,0),(37,'2@2.com','大海',NULL,0,'d9b1d7db4cd6e70935368a1efb10e377',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511772924348,0),(38,'danny@126.com','danny',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1511774201713,0),(39,'dfgv@12.com','aewfeasf',NULL,0,'14e1b600b1fd579f47433b88e8d85291',0,'[]',0,0,0,0,0,0,0,0,0,NULL,1512306366983,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -491,4 +521,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-26  9:59:57
+-- Dump completed on 2017-12-26 21:11:38
