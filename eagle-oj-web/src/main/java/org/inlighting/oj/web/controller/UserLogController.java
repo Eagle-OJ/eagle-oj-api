@@ -51,25 +51,20 @@ public class UserLogController {
             Date date = entity.getDate();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.set(Calendar.HOUR, 12);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            mapping.put(calendar.getTime().toString(), entity);
+            String key = calendar.get(Calendar.YEAR)+"-"+calendar.get(Calendar.MONTH)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
+            mapping.put(key, entity);
         }
         List<UserLogEntity> finalList = new ArrayList<>(timeLength);
         for (int i=timeLength; i>=0; i--) {
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
             calendar.add(Calendar.DATE, -i);
-            Date date = calendar.getTime();
-            if (mapping.containsKey(date.toString())) {
-                finalList.add(mapping.get(date.toString()));
+            String key = calendar.get(Calendar.YEAR)+"-"+calendar.get(Calendar.MONTH)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
+            if (mapping.containsKey(key)) {
+                finalList.add(mapping.get(key));
             } else {
                 UserLogEntity entity = new UserLogEntity();
                 entity.setUid(uid);
-                entity.setDate(date);
+                entity.setDate(calendar.getTime());
                 finalList.add(entity);
             }
         }
