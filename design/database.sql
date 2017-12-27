@@ -73,7 +73,7 @@ CREATE TABLE `contest` (
 
 LOCK TABLES `contest` WRITE;
 /*!40000 ALTER TABLE `contest` DISABLE KEYS */;
-INSERT INTO `contest` VALUES (1,'红鹰杯1',35,'一起来红颜被吧','这是大红鹰的挑战书',1512745500000,1513353600000,NULL,NULL,0,2,2,1512638522358),(2,'红鹰杯2',35,'红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2','红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2',1512658800000,1513267200000,720000000,'123456',0,3,2,1512648212424),(3,'test',35,'啊哈哈','而发而非非法',1513699200000,1513872000000,3600000,NULL,0,3,2,1512727885637),(4,'时间测试',35,'good','分',1513785600000,1513872000000,12600000,NULL,0,1,0,1512731412243),(5,'新的比赛',35,'新的比赛新的比赛新的比赛新的比赛','新的比赛',1514217600000,1514280060000,NULL,NULL,0,0,2,1513586277893);
+INSERT INTO `contest` VALUES (1,'红鹰杯1',35,'一起来红颜被吧','这是大红鹰的挑战书',1512745500000,1513353600000,NULL,NULL,0,2,2,1512638522358),(2,'红鹰杯2',35,'红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2','红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2红鹰杯2',1512658800000,1513267200000,720000000,'123456',0,3,2,1512648212424),(3,'test',35,'啊哈哈','而发而非非法',1513699200000,1513872000000,3600000,NULL,0,3,2,1512727885637),(4,'时间测试',35,'good','分',1513785600000,1513872000000,12600000,NULL,0,1,0,1512731412243),(5,'新的比赛',35,'新的比赛新的比赛新的比赛新的比赛','新的比赛',1514217600000,1514280060000,NULL,NULL,1,0,2,1513586277893);
 /*!40000 ALTER TABLE `contest` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,7 +188,7 @@ CREATE TABLE `group` (
   `people` int(10) unsigned DEFAULT '0',
   `create_time` bigint(13) unsigned NOT NULL,
   PRIMARY KEY (`gid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,34 +197,32 @@ CREATE TABLE `group` (
 
 LOCK TABLES `group` WRITE;
 /*!40000 ALTER TABLE `group` DISABLE KEYS */;
+INSERT INTO `group` VALUES (1,35,'我的小组','123',0,1514374777412);
 /*!40000 ALTER TABLE `group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `group_user_info`
+-- Table structure for table `group_user`
 --
 
-DROP TABLE IF EXISTS `group_user_info`;
+DROP TABLE IF EXISTS `group_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `group_user_info` (
+CREATE TABLE `group_user` (
   `gid` int(10) unsigned NOT NULL,
   `uid` int(10) unsigned NOT NULL,
-  `score` int(10) unsigned DEFAULT '0',
-  `submit_times` int(10) unsigned DEFAULT '0',
-  `accept_times` int(10) unsigned DEFAULT '0',
   `join_time` bigint(13) unsigned NOT NULL,
   UNIQUE KEY `gid_uid_unique` (`gid`,`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `group_user_info`
+-- Dumping data for table `group_user`
 --
 
-LOCK TABLES `group_user_info` WRITE;
-/*!40000 ALTER TABLE `group_user_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `group_user_info` ENABLE KEYS */;
+LOCK TABLES `group_user` WRITE;
+/*!40000 ALTER TABLE `group_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `group_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -244,7 +242,7 @@ CREATE TABLE `message` (
   PRIMARY KEY (`mid`),
   KEY `owner_index` (`owner`),
   KEY `create_time_index` (`create_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +251,7 @@ CREATE TABLE `message` (
 
 LOCK TABLES `message` WRITE;
 /*!40000 ALTER TABLE `message` DISABLE KEYS */;
-INSERT INTO `message` VALUES (1,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514278862084),(2,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514279642076),(3,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514279838486),(4,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514280061191),(5,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514280093555),(6,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514289676933),(7,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514289824868),(8,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\"></a>','{}',1514289978292),(9,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\"></a>','{}',1514289978352),(10,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514293165340),(11,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514293165395);
+INSERT INTO `message` VALUES (1,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514278862084),(2,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514279642076),(3,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514279838486),(4,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514280061191),(5,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514280093555),(6,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514289676933),(7,35,1,'<a href=\"/#/contest/2\">红鹰杯2</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/2/leaderboard\"></a>','{}',1514289824868),(8,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\"></a>','{}',1514289978292),(9,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\"></a>','{}',1514289978352),(10,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514293165340),(11,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514293165395),(12,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514362414496),(13,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514362414554),(14,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363399813),(15,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363399858),(16,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363505878),(17,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363505931),(18,1,1,'href=\"/#/contest/5/leaderboard\">','{}',1514363505931),(19,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363620256),(20,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363620312),(21,0,2,'','{\"cid\": 5, \"name\": \"新的比赛\", \"rank\": [{\"cid\": 5, \"uid\": 35, \"score\": 10, \"ac_times\": 2, \"nickname\": \"我是Smith\", \"used_time\": 39764383, \"submit_times\": 10, \"finished_problems\": 2}, {\"cid\": 5, \"uid\": 37, \"score\": 0, \"ac_times\": 1, \"nickname\": \"大海\", \"used_time\": 0, \"submit_times\": 1, \"finished_problems\": 1}]}',1514363620344),(22,37,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第2名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363847188),(23,35,1,'<a href=\"/#/contest/5\">新的比赛</a>已经结束，你获得了第1名，查看<a href=\"/#/contest/5/leaderboard\">排行榜</a>','{}',1514363847251),(24,0,2,'','{\"cid\": 5, \"name\": \"新的比赛\", \"rank\": [{\"uid\": 35, \"nickname\": \"我是Smith\"}, {\"uid\": 37, \"nickname\": \"大海\"}]}',1514363847338);
 /*!40000 ALTER TABLE `message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,7 +345,12 @@ CREATE TABLE `submission` (
   `memory` smallint(5) unsigned NOT NULL COMMENT 'MB整数',
   `status` enum('AC','WA','RTE','TLE','CE') NOT NULL,
   `submit_time` bigint(13) unsigned NOT NULL,
-  PRIMARY KEY (`sid`)
+  PRIMARY KEY (`sid`),
+  KEY `OWNER_INDEX` (`owner`),
+  KEY `PID_INDEX` (`pid`),
+  KEY `CID_INDEX` (`cid`),
+  KEY `STATUS_INDEX` (`status`),
+  KEY `SUBMIT_TIME_INDEX` (`submit_time`)
 ) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -521,4 +524,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-26 21:11:38
+-- Dump completed on 2017-12-27 20:47:38
