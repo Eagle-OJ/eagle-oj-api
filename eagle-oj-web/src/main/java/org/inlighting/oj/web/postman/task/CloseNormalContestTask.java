@@ -3,10 +3,10 @@ package org.inlighting.oj.web.postman.task;
 /**
  * @author Smith
  **/
-public class CloseContestTask extends BaseTask {
+public class CloseNormalContestTask extends BaseTask {
     private int cid;
 
-    public CloseContestTask(int cid, int type) {
+    public CloseNormalContestTask(int cid, int type) {
         this.cid = cid;
         this.type = type;
     }

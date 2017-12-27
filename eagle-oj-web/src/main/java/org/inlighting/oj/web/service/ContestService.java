@@ -5,12 +5,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.inlighting.oj.web.dao.ContestDao;
 import org.inlighting.oj.web.entity.ContestEntity;
 import org.inlighting.oj.web.postman.MessageQueue;
-import org.inlighting.oj.web.postman.task.CloseContestTask;
+import org.inlighting.oj.web.postman.task.CloseNormalContestTask;
+import org.inlighting.oj.web.postman.task.CloseOfficialContestTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -110,7 +110,7 @@ public class ContestService {
     private void checkContestValid(ContestEntity contestEntity) {
         if (contestEntity!=null && contestEntity.getStatus() == 1) {
             if (contestEntity.getEndTime()<System.currentTimeMillis()) {
-                closeContest(contestEntity.getCid());
+                closeContest(contestEntity.getCid(), contestEntity.getOfficial());
                 contestEntity.setStatus(2);
             }
         }
@@ -121,16 +121,23 @@ public class ContestService {
             BigInteger bigInteger = (BigInteger)contest.get("end_time");
             if (bigInteger.longValue()<System.currentTimeMillis()) {
                 Long cid = (Long)contest.get("cid");
-                closeContest(cid.intValue());
+                int official = (int) contest.get("official");
+                closeContest(cid.intValue(), official);
                 contest.replace("status", 2);
             }
         }
     }
 
-    public void closeContest(int cid) {
+    private void closeContest(int cid, int official) {
         if (updateContestStatus(cid, 2)) {
-            CloseContestTask task = new CloseContestTask(cid, 1);
-            messageQueue.addTask(task);
+            // 关闭官方比赛
+            if (official == 1) {
+                CloseOfficialContestTask task = new CloseOfficialContestTask(cid, 2);
+                messageQueue.addTask(task);
+            } else {
+                CloseNormalContestTask task = new CloseNormalContestTask(cid, 1);
+                messageQueue.addTask(task);
+            }
         }
     }
 }

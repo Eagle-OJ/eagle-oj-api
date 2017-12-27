@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="groupUser">
+
+    <insert id="add">
+        INSERT INTO group_user (gid, uid, join_time) VALUES (#{gid}, #{uid}, #{joinTime})
+    </insert>
+
+    <select id="get" resultMap="groupUserMap">
+        SELECT * FROM group_user WHERE gid=#{gid} AND uid=#{uid}
+    </select>
+
+    <select id="getMembers" resultType="HashMap">
+        SELECT group_user.*, nickname, real_name FROM group_user LEFT JOIN user ON group_user.uid=user.uid
+    </select>
+
+    <delete id="deleteMember">
+        DELETE FROM group_user WHERE gid=#{gid} AND uid=#{uid}
+    </delete>
+
+    <resultMap id="groupUserMap" type="GroupUserEntity">
+        <result column="gid" property="gid"/>
+        <result column="uid" property="uid"/>
+        <result column="join_time" property="joinTime" />
+    </resultMap>
+</mapper>

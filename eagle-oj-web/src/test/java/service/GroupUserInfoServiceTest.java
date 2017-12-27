@@ -1,9 +1,8 @@
 package service;
 
 import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.dao.GroupUserInfoDao;
-import org.inlighting.oj.web.entity.GroupUserInfoEntity;
-import org.inlighting.oj.web.service.GroupUserInfoService;
+import org.inlighting.oj.web.entity.GroupUserEntity;
+import org.inlighting.oj.web.service.GroupUserService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,33 +19,33 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class GroupUserInfoServiceTest {
 
-    private GroupUserInfoService groupUserInfoService;
+    private GroupUserService groupUserInfoService;
 
     private int testGid =2;
     private int testUid = 2;
 
     @Autowired
-    public void setGroupUserInfoService(GroupUserInfoService groupUserInfoService) {
+    public void setGroupUserInfoService(GroupUserService groupUserInfoService) {
         this.groupUserInfoService = groupUserInfoService;
     }
 
 
     @Before
     public void addTest(){
-        boolean result = groupUserInfoService.add(testGid,testUid,System.currentTimeMillis());
+        boolean result = groupUserInfoService.add(testGid,testUid);
         Assert.assertEquals(true,result);
     }
 
 
     @Test
     public void getTest(){
-        GroupUserInfoEntity groupUserInfoEntity = groupUserInfoService.getByGidAndUid(testGid,testUid);
+        GroupUserEntity groupUserInfoEntity = groupUserInfoService.getMember(testGid,testUid);
         Assert.assertEquals(true,groupUserInfoEntity!=null);
     }
 
     @After
     public void deleteTest(){
-        boolean result = groupUserInfoService.deleteByGidAndUid(testGid,testUid);
+        boolean result = groupUserInfoService.deleteMember(testGid,testUid);
         Assert.assertEquals(true,result);
     }
 }

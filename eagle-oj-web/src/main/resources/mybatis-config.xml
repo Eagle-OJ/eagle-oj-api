@@ -41,7 +41,7 @@
         <mapper resource="mapping/ContestUserMapper.xml"/>
         <mapper resource="mapping/AttachmentMapper.xml"/>
         <mapper resource="mapping/GroupMapper.xml" />
-        <mapper resource="mapping/GroupUserInfoMapper.xml"/>
+        <mapper resource="mapping/GroupUserMapper.xml"/>
         <mapper resource="mapping/SubmissionMapper.xml"/>
         <mapper resource="mapping/ContestProblemUserMapper.xml"/>
         <mapper resource="mapping/TagsMapper.xml"/>

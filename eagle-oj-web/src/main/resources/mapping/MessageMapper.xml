@@ -10,7 +10,7 @@
     </insert>
 
     <select id="get" resultMap="messageMap">
-        SELECT * FROM message WHERE owner=#{owner} ORDER BY create_time DESC
+        SELECT * FROM message WHERE owner=#{owner} OR owner=0 ORDER BY create_time DESC
     </select>
 
     <resultMap id="messageMap" type="MessageEntity">

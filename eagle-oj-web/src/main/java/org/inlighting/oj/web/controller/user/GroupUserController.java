@@ -7,11 +7,12 @@ import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.CreateGroupFormat;
 import org.inlighting.oj.web.controller.format.user.EnterGroupFormat;
 import org.inlighting.oj.web.entity.GroupEntity;
-import org.inlighting.oj.web.entity.GroupUserInfoEntity;
+import org.inlighting.oj.web.entity.GroupUserEntity;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.GroupService;
-import org.inlighting.oj.web.service.GroupUserInfoService;
+import org.inlighting.oj.web.service.GroupUserService;
+import org.inlighting.oj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -28,11 +29,11 @@ import java.util.Map;
 @RestController
 @Validated
 @RequestMapping(value = "/user/group", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class UserGroupController {
+public class GroupUserController {
 
     private GroupService groupService;
 
-    private GroupUserInfoService groupUserInfoService;
+    private GroupUserService groupUserService;
 
     @Autowired
     public void setGroupService(GroupService groupService) {
@@ -40,11 +41,11 @@ public class UserGroupController {
     }
 
     @Autowired
-    public void setGroupUserInfoService(GroupUserInfoService groupUserInfoService) {
-        this.groupUserInfoService = groupUserInfoService;
+    public void setGroupUserInfoService(GroupUserService groupUserService) {
+        this.groupUserService = groupUserService;
     }
 
-    @ApiOperation("获取我的小组")
+    @ApiOperation("获取我管理的小组")
     @GetMapping
     public ResponseEntity getGroups(@RequestParam("page") int page,
                                     @RequestParam("page_size") int pageSize) {
@@ -104,8 +105,8 @@ public class UserGroupController {
 
         // 查看是否已经在小组里面
         int uid = SessionHelper.get().getUid();
-        GroupUserInfoEntity groupUserInfoEntity = groupUserInfoService.getByGidAndUid(gid, uid);
-        if (groupUserInfoEntity != null) {
+        GroupUserEntity groupUserEntity = groupUserService.getMember(gid, uid);
+        if (groupUserEntity != null) {
             throw new WebErrorException("已经在小组里面了");
         }
 
@@ -117,36 +118,40 @@ public class UserGroupController {
         }
 
         // 加入小组
-        if (! groupUserInfoService.add(gid, uid, System.currentTimeMillis())) {
+        if (! groupUserService.add(gid, uid)) {
             throw new WebErrorException("加入小组失败");
         }
 
         return new ResponseEntity("小组加入成功");
     }
 
+    @ApiOperation("获取小组里面的所有组员")
+    @GetMapping("/{gid}/user")
+    public ResponseEntity getGroupMembers(@PathVariable int gid,
+                                          @RequestParam("page") int page,
+                                          @RequestParam("page_size") int pageSize) {
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        List<Map<String, Object>> list = groupUserService.getMembers(gid, pager);
+        return new ResponseEntity(list);
+    }
+
     @ApiOperation("踢出用户")
-    @PostMapping("/{gid}/user/{uid}/kick")
+    @DeleteMapping("/{gid}/user/{uid}")
     public ResponseEntity kickUser(@PathVariable int gid,
                                    @PathVariable int uid) {
-        int owner = SessionHelper.get().getUid();
-
-        // 检验自己是否为小组长
         GroupEntity groupEntity = groupService.getGroup(gid);
-        if (groupEntity.getOwner() != owner) {
-            throw new WebErrorException("你没有管理权限");
-        }
+        haveGroup(groupEntity);
+        havePermission(groupEntity);
 
         // 删除用户
-        if (! groupUserInfoService.deleteByGidAndUid(gid, uid)) {
+        if (! groupUserService.deleteMember(gid, uid)) {
             throw new WebErrorException("删除用户失败");
         }
         return new ResponseEntity("用户删除成功");
     }
 
     private void haveGroup(GroupEntity entity) {
-        if (entity == null) {
-            throw new WebErrorException("不存在此比赛");
-        }
+        WebUtil.assertNotNull(entity, "不存在此小组");
     }
 
     private void havePermission(GroupEntity groupEntity) {
