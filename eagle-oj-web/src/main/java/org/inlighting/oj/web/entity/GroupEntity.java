@@ -1,5 +1,7 @@
 package org.inlighting.oj.web.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author Smith
  **/
@@ -14,6 +16,7 @@ public class GroupEntity {
 
     private int people;
 
+    @JSONField(name = "create_time")
     private long createTime;
 
     public int getGid() {

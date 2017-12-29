@@ -93,14 +93,26 @@ public class GroupUserController {
         return new ResponseEntity("小组更新成功");
     }
 
+    @ApiOperation("判断用户是否在小组中")
+    @GetMapping("/{gid}/is_in")
+    public ResponseEntity getMeInfo(@PathVariable("gid") int gid) {
+        GroupUserEntity entity = groupUserService.getMember(gid, SessionHelper.get().getUid());
+        boolean isIn = entity !=null;
+        return new ResponseEntity(isIn);
+    }
+
     @ApiOperation("加入小组")
     @PostMapping("/{gid}/enter")
     public ResponseEntity enterGroup(@PathVariable("gid") int gid,
                                      @RequestBody @Valid EnterGroupFormat format) {
-        // 校对密码
         GroupEntity groupEntity = groupService.getGroup(gid);
-        if (groupEntity == null) {
-            throw new WebErrorException("次小组不存在");
+        haveGroup(groupEntity);
+
+        // 密码校对
+        if (groupEntity.getPassword() != null) {
+            if (! format.getPassword().equals(groupEntity.getPassword())) {
+                throw new WebErrorException("密码错误");
+            }
         }
 
         // 查看是否已经在小组里面
@@ -108,13 +120,6 @@ public class GroupUserController {
         GroupUserEntity groupUserEntity = groupUserService.getMember(gid, uid);
         if (groupUserEntity != null) {
             throw new WebErrorException("已经在小组里面了");
-        }
-
-        // 密码校对
-        if (groupEntity.getPassword() != null) {
-            if (! format.getPassword().equals(groupEntity.getPassword())) {
-                throw new WebErrorException("密码错误");
-            }
         }
 
         // 加入小组
@@ -125,23 +130,17 @@ public class GroupUserController {
         return new ResponseEntity("小组加入成功");
     }
 
-    @ApiOperation("获取小组里面的所有组员")
-    @GetMapping("/{gid}/user")
-    public ResponseEntity getGroupMembers(@PathVariable int gid,
-                                          @RequestParam("page") int page,
-                                          @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        List<Map<String, Object>> list = groupUserService.getMembers(gid, pager);
-        return new ResponseEntity(list);
-    }
-
-    @ApiOperation("踢出用户")
+    @ApiOperation("踢出用户或者自己退出")
     @DeleteMapping("/{gid}/user/{uid}")
     public ResponseEntity kickUser(@PathVariable int gid,
                                    @PathVariable int uid) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         haveGroup(groupEntity);
-        havePermission(groupEntity);
+
+        //  校验被踢出或者自己退出
+        if (! (SessionHelper.get().getUid() == uid)) {
+            havePermission(groupEntity);
+        }
 
         // 删除用户
         if (! groupUserService.deleteMember(gid, uid)) {

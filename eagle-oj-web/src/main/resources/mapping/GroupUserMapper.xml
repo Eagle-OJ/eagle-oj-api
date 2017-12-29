@@ -13,7 +13,9 @@
     </select>
 
     <select id="getMembers" resultType="HashMap">
-        SELECT group_user.*, nickname, real_name FROM group_user LEFT JOIN user ON group_user.uid=user.uid
+        SELECT group_user.*, nickname, real_name, attachment.url FROM group_user
+            LEFT JOIN user ON group_user.uid=user.uid
+            LEFT JOIN attachment ON user.avatar = attachment.aid
     </select>
 
     <delete id="deleteMember">
