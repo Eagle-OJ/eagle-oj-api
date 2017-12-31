@@ -21,6 +21,9 @@ public class UpdateProblemSettingFormat {
     @Range(min = 1, max = 256)
     private Integer memory;
 
+    @NotNull
+    private Boolean isShared;
+
     public JSONArray getLang() {
         return lang;
     }
@@ -43,5 +46,13 @@ public class UpdateProblemSettingFormat {
 
     public void setMemory(Integer memory) {
         this.memory = memory;
+    }
+
+    public Boolean getShared() {
+        return isShared;
+    }
+
+    public void setShared(Boolean shared) {
+        isShared = shared;
     }
 }

@@ -1,8 +1,9 @@
-package org.inlighting.oj.web.controller.user;
+package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
 import org.inlighting.oj.web.controller.format.user.UpdateUserProfileFormat;
 import org.inlighting.oj.web.entity.ResponseEntity;
@@ -20,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Smith
@@ -58,6 +56,7 @@ public class UserController {
 
     @ApiOperation("获取用户的所有信息")
     @GetMapping("/info")
+    @RequiresAuthentication
     public ResponseEntity getUserInfo() {
         int uid = SessionHelper.get().getUid();
         UserEntity userEntity = userService.getUserByUid(uid);
@@ -75,6 +74,7 @@ public class UserController {
 
     @ApiOperation("更新用户的信息")
     @PostMapping("/profile/edit")
+    @RequiresAuthentication
     public ResponseEntity updateUserProfile(@Valid @RequestBody UpdateUserProfileFormat format) {
         int uid = SessionHelper.get().getUid();
         if (! userService.updateUserProfile(uid, format.getNickname(), format.getRealName(), format.getMotto(),
@@ -86,6 +86,7 @@ public class UserController {
 
     @ApiOperation("头像上传")
     @PostMapping("/profile/avatar")
+    @RequiresAuthentication
     public ResponseEntity uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
 
         int uid = SessionHelper.get().getUid();

@@ -57,7 +57,6 @@ public class ProblemService {
         problemEntity.setSamples(samples);
         problemEntity.setTime(time);
         problemEntity.setMemory(memory);
-        problemEntity.setModerators(new JSONArray());
         problemEntity.setStatus(0);
         problemEntity.setCreateTime(System.currentTimeMillis());
 
@@ -105,27 +104,14 @@ public class ProblemService {
         return problemDao.updateProblemDescription(sqlSession, problemEntity);
     }
 
-    public boolean updateProblemSetting(int pid, JSONArray lang, int time, int memory) {
+    public boolean updateProblemSetting(int pid, JSONArray lang, int time, int memory, int status) {
         ProblemEntity problemEntity = new ProblemEntity();
         problemEntity.setPid(pid);
         problemEntity.setLang(lang);
         problemEntity.setTime(time);
         problemEntity.setMemory(memory);
-        return problemDao.updateProblemSetting(sqlSession, problemEntity);
-    }
-
-    public boolean updateProblemStatus(int pid, int status) {
-        ProblemEntity problemEntity = new ProblemEntity();
-        problemEntity.setPid(pid);
         problemEntity.setStatus(status);
-        return problemDao.updateProblemStatus(sqlSession, problemEntity);
-    }
-
-    public boolean updateProblemModerators(int pid, JSONArray moderators) {
-        ProblemEntity problemEntity = new ProblemEntity();
-        problemEntity.setPid(pid);
-        problemEntity.setModerators(moderators);
-        return problemDao.updateModerators(sqlSession, problemEntity);
+        return problemDao.updateProblemSetting(sqlSession, problemEntity);
     }
 
     public boolean updateProblemTimes(int pid, ProblemEntity problemEntity) {

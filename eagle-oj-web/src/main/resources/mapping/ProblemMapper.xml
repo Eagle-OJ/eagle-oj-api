@@ -5,9 +5,9 @@
 <mapper namespace="problem">
     <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
         INSERT INTO `problem` (owner, title, lang, description,
-                               input_format, output_format, difficult, samples, time, memory, moderators, status, create_time) VALUES
+                               input_format, output_format, difficult, samples, time, memory, status, create_time) VALUES
         (#{owner}, #{title}, #{lang}, #{description},#{inputFormat}, #{outputFormat},
-        #{difficult}, #{samples}, #{time}, #{memory}, #{moderators}, #{status}, #{createTime})
+        #{difficult}, #{samples}, #{time}, #{memory}, #{status}, #{createTime})
     </insert>
 
     <select id="getProblemByPid" resultMap="problemResultMap">
@@ -52,14 +52,6 @@
         SELECT * FROM `problem` WHERE owner=#{uid} ORDER BY create_time DESC
     </select>
 
-    <update id="updateProblemModerators">
-        UPDATE problem SET moderators=#{moderators} WHERE pid=#{pid}
-    </update>
-
-    <update id="updateProblemStatus">
-        UPDATE problem SET status=#{status} WHERE pid = #{pid}
-    </update>
-
     <update id="updateProblemDescription" parameterType="ProblemEntity">
         UPDATE `problem` SET `title`=#{title}, `description`=#{description}, `input_format`=#{inputFormat},
             `output_format`=#{outputFormat}, `samples`=#{samples}, `difficult`=#{difficult}
@@ -67,7 +59,7 @@
     </update>
 
     <update id="updateProblemSetting">
-        UPDATE problem SET lang=#{lang}, time=#{time}, memory=#{memory} WHERE pid = #{pid}
+        UPDATE problem SET lang=#{lang}, time=#{time}, memory=#{memory}, status=#{status} WHERE pid = #{pid}
     </update>
 
     <update id="updateProblemTimes">
@@ -95,7 +87,6 @@
         <result column="samples" property="samples"/>
         <result column="time" property="time"/>
         <result column="memory" property="memory"/>
-        <result column="moderators" property="moderators"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="used_times" property="usedTimes"/>
         <result column="ac_times" property="ACTimes"/>

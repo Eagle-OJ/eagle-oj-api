@@ -1,6 +1,7 @@
-package org.inlighting.oj.web.controller.user;
+package org.inlighting.oj.web.controller;
 
 import com.github.pagehelper.PageRowBounds;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.MessageService;
@@ -20,8 +21,8 @@ import java.util.Map;
  **/
 @RestController
 @Validated
-@RequestMapping(value = "/user/message", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class UserMessageController {
+@RequestMapping(value = "/message", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+public class MessageController {
 
     private MessageService messageService;
 
@@ -31,6 +32,7 @@ public class UserMessageController {
     }
 
     @GetMapping
+    @RequiresAuthentication
     public ResponseEntity getMessage(@RequestParam("page") int page,
                                      @RequestParam("page_size") int pageSize) {
         int owner = SessionHelper.get().getUid();

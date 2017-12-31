@@ -51,14 +51,6 @@ public class ProblemDao {
         return sqlSession.update("problem.updateProblemSetting", entity) == 1;
     }
 
-    public boolean updateProblemStatus(SqlSession sqlSession, ProblemEntity entity) {
-        return sqlSession.update("problem.updateProblemStatus", entity) == 1;
-    }
-
-    public boolean updateModerators(SqlSession sqlSession, ProblemEntity entity) {
-        return sqlSession.update("problem.updateProblemModerators", entity) == 1;
-    }
-
     public boolean updateProblemTimes(SqlSession sqlSession, ProblemEntity entity) {
         return sqlSession.update("problem.updateProblemTimes", entity) == 1;
     }

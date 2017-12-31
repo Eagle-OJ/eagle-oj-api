@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="problemModerator">
+
+    <insert id="insert">
+        INSERT INTO problem_moderator VALUES (#{pid}, #{uid})
+    </insert>
+
+    <select id="select" resultMap="problemModeratorMap">
+        SELECT * FROM problem_moderator WHERE pid=#{pid} AND uid=#{uid}
+    </select>
+
+    <select id="selectWithUser" resultType="HashMap">
+        SELECT pid, user.uid, user.nickname, user.email, user.avatar FROM problem_moderator
+            LEFT JOIN user ON problem_moderator.uid=user.uid
+        WHERE pid=#{pid}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM problem_moderator WHERE pid=#{pid} AND uid=#{uid}
+    </delete>
+
+    <resultMap id="problemModeratorMap" type="ProblemModeratorEntity">
+        <id column="pid" property="pid"/>
+        <id column="uid" property="uid"/>
+    </resultMap>
+</mapper>
