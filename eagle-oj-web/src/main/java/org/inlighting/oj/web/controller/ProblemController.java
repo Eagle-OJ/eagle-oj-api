@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageRowBounds;
@@ -114,7 +115,11 @@ public class ProblemController {
     public ResponseEntity get(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         haveProblem(problemEntity);
-        return new ResponseEntity(problemEntity);
+        UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
+        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(problemEntity));
+        jsonObject.put("nickname", userEntity.getNickname());
+        jsonObject.put("avatar", userEntity.getAvatar());
+        return new ResponseEntity(jsonObject);
     }
 
     @ApiOperation("获取该题的所有标签")

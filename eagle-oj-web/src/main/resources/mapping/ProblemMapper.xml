@@ -97,4 +97,5 @@
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
+
 </mapper>

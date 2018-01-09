@@ -46,6 +46,10 @@ public class GroupUserService {
         return groupUserDao.getMember(sqlSession, entity);
     }
 
+    public boolean isIn(int gid, int uid) {
+        return getMember(gid, uid) != null;
+    }
+
     public List<Map<String, Object>> getMembers(int gid, PageRowBounds pager) {
         return groupUserDao.getMembers(sqlSession, gid, pager);
     }

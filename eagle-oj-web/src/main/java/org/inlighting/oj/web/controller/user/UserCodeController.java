@@ -92,20 +92,6 @@ public class UserCodeController {
         }
     }
 
-    @ApiOperation("获取用户的代码提交")
-    @GetMapping
-    public ResponseEntity getUserSubmissions(@RequestParam("cid") int cid,
-                                             @RequestParam("pid") int pid,
-                                             @RequestParam("page") int page,
-                                             @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        int owner = SessionHelper.get().getUid();
-        Map<String, Object> data = new HashMap<>(2);
-        data.put("data", submissionService.getSubmissions(owner, cid, pid, pager));
-        data.put("total", pager.getTotal());
-        return new ResponseEntity(data);
-    }
-
     // 提交比赛模式下面的题目
     private ResponseEntity submitContestProblem(SubmitCodeFormat format) {
         int contestId = format.getContestId();
