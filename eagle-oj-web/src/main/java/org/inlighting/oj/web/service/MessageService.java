@@ -34,7 +34,13 @@ public class MessageService {
         entity.setOwner(owner);
         entity.setType(type);
         entity.setContent(content);
-        entity.setJsonContent(json);
+
+        if (json == null) {
+            entity.setJsonContent(new JSONObject());
+        } else {
+            entity.setJsonContent(json);
+        }
+
         entity.setCreateTime(System.currentTimeMillis());
         return messageDao.add(sqlSession, entity)? entity.getMid(): 0;
     }

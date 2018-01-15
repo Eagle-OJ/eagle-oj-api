@@ -8,6 +8,13 @@
         SELECT * FROM `contest_user` WHERE `cid` = #{cid} AND `uid` = #{uid}
     </select>
 
+    <select id="getUserContests" resultType="HashMap">
+        SELECT contest_user.*, contest.name FROM contest_user
+            LEFT JOIN contest ON contest_user.cid=contest.cid
+        WHERE uid=#{uid}
+        ORDER BY join_time DESC
+    </select>
+
     <select id="getNormalContestRankList" resultType="HashMap">
         SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
             score, used_time, contest_user.ac_times,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
@@ -24,7 +31,7 @@
     </select>
 
     <insert id="insert">
-        INSERT INTO `contest_user`(`cid`,`uid`,`join_time`)
+        INSERT IGNORE INTO `contest_user`(`cid`,`uid`,`join_time`)
             VALUES (#{cid},#{uid},#{joinTime})
     </insert>
 

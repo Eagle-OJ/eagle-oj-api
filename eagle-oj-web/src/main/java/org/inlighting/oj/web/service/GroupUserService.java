@@ -38,12 +38,24 @@ public class GroupUserService {
         return groupUserDao.add(sqlSession, entity);
     }
 
+    public List<Map<String, Object>> getUserGroups(int uid, PageRowBounds pager) {
+        return groupUserDao.getUserGroups(sqlSession, uid, pager);
+    }
+
     public GroupUserEntity getMember(int gid, int uid) {
         // 根据Uid和Gid获取group
         GroupUserEntity entity = new GroupUserEntity();
         entity.setGid(gid);
         entity.setUid(uid);
         return groupUserDao.getMember(sqlSession, entity);
+    }
+
+    public boolean updateRealName(int gid, int uid, String realName) {
+        GroupUserEntity entity = new GroupUserEntity();
+        entity.setGid(gid);
+        entity.setUid(uid);
+        entity.setRealName(realName);
+        return groupUserDao.update(sqlSession, entity);
     }
 
     public boolean isIn(int gid, int uid) {

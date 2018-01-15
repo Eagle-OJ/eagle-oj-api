@@ -9,13 +9,13 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.UnauthorizedException;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
-import org.inlighting.oj.web.controller.format.user.CreateGroupFormat;
-import org.inlighting.oj.web.controller.format.user.EnterGroupFormat;
-import org.inlighting.oj.web.entity.GroupEntity;
-import org.inlighting.oj.web.entity.GroupUserEntity;
-import org.inlighting.oj.web.entity.ResponseEntity;
-import org.inlighting.oj.web.entity.UserEntity;
+import org.inlighting.oj.web.controller.format.user.*;
+import org.inlighting.oj.web.entity.*;
+import org.inlighting.oj.web.postman.MessageQueue;
+import org.inlighting.oj.web.postman.task.PullGroupUserIntoContestTask;
+import org.inlighting.oj.web.postman.task.SendGroupUserMessageTask;
 import org.inlighting.oj.web.security.SessionHelper;
+import org.inlighting.oj.web.service.ContestService;
 import org.inlighting.oj.web.service.GroupService;
 import org.inlighting.oj.web.service.GroupUserService;
 import org.inlighting.oj.web.service.UserService;
@@ -43,6 +43,20 @@ public class GroupController {
     private GroupService groupService;
 
     private GroupUserService groupUserService;
+
+    private ContestService contestService;
+
+    private MessageQueue messageQueue;
+
+    @Autowired
+    public void setMessageQueue(MessageQueue messageQueue) {
+        this.messageQueue = messageQueue;
+    }
+
+    @Autowired
+    public void setContestService(ContestService contestService) {
+        this.contestService = contestService;
+    }
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -169,6 +183,26 @@ public class GroupController {
         return new ResponseEntity("小组加入成功");
     }
 
+    @ApiOperation("获取用户在小组中的信息")
+    @RequiresAuthentication
+    @GetMapping("/{gid}/user/{uid}")
+    public ResponseEntity getMeInfo(@PathVariable("gid") int gid,
+                                    @PathVariable("uid") int uid) {
+        if (uid != SessionHelper.get().getUid()) {
+            throw new UnauthorizedException();
+        }
+
+        GroupUserEntity entity = groupUserService.getMember(gid, uid);
+        if (entity == null) {
+            throw new WebErrorException("用户不在小组中");
+        }
+
+        if (entity.getRealName() == null) {
+            entity.setRealName("");
+        }
+        return new ResponseEntity(entity);
+    }
+
     @ApiOperation("踢出用户或者自己退出")
     @RequiresAuthentication
     @DeleteMapping("/{gid}/user/{uid}")
@@ -181,7 +215,7 @@ public class GroupController {
         if (! (SessionHelper.get().getUid() == uid)) {
             havePermission(groupEntity);
         }
-        
+
         // 删除用户
         if (! groupUserService.deleteMember(gid, uid)) {
             throw new WebErrorException("删除用户失败");
@@ -189,16 +223,71 @@ public class GroupController {
         return new ResponseEntity("用户删除成功");
     }
 
-    @ApiOperation("判断用户是否在小组中")
+    @ApiOperation("更新用户组内名称")
     @RequiresAuthentication
-    @GetMapping("/{gid}/is_in")
-    public ResponseEntity getMeInfo(@PathVariable("gid") int gid) {
-        boolean isIn = groupUserService.isIn(gid, SessionHelper.get().getUid());
-        return new ResponseEntity(isIn);
+    @PutMapping("/{gid}/user/{uid}")
+    public ResponseEntity updateUserRealName(@PathVariable int gid,
+                                             @PathVariable int uid,
+                                             @RequestBody @Valid UpdateGroupUserFormat format) {
+        if (uid != SessionHelper.get().getUid()) {
+            throw new UnauthorizedException();
+        }
+
+        if (! groupUserService.updateRealName(gid, uid, format.getRealName())) {
+            throw new WebErrorException("更新失败");
+        }
+
+        return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("将用户拉入某个比赛")
+    @RequiresAuthentication
+    @PostMapping("/{gid}/pull_contest")
+    public ResponseEntity pullUsersIntoContest(@PathVariable int gid,
+                                               @RequestBody @Valid PullUsersIntoContestFormat format) {
+        GroupEntity groupEntity = groupService.getGroup(gid);
+        haveGroup(groupEntity);
+        havePermission(groupEntity);
+
+        ContestEntity contestEntity = contestService.getContestByCid(format.getCid());
+        haveContest(contestEntity);
+
+        String password = contestEntity.getPassword();
+        if (password!= null) {
+            if (! password.equals(format.getPassword()) ) {
+                throw new WebErrorException("小组密码错误");
+            }
+        }
+
+        PullGroupUserIntoContestTask task = new PullGroupUserIntoContestTask(gid, groupEntity.getName(),
+                format.getCid(), contestEntity.getName());
+        task.setType(3);
+        messageQueue.addTask(task);
+        return new ResponseEntity("操作成功");
+    }
+
+    @ApiOperation("给组内成员发送通知")
+    @RequiresAuthentication
+    @PostMapping("/{gid}/message")
+    public ResponseEntity sendGroupUserMessage(@PathVariable int gid,
+                                               @RequestBody @Valid SendGroupUserMessageFormat format) {
+        GroupEntity groupEntity = groupService.getGroup(gid);
+        haveGroup(groupEntity);
+        havePermission(groupEntity);
+
+        SendGroupUserMessageTask task = new SendGroupUserMessageTask(groupEntity.getGid(), groupEntity.getName(),
+                format.getMessage());
+        task.setType(4);
+        messageQueue.addTask(task);
+        return new ResponseEntity("通知发送成功");
     }
 
     private void haveGroup(GroupEntity entity) {
         WebUtil.assertNotNull(entity, "小组不存在");
+    }
+
+    private void haveContest(ContestEntity entity) {
+        WebUtil.assertNotNull(entity, "比赛不存在");
     }
 
     private void havePermission(GroupEntity groupEntity) {

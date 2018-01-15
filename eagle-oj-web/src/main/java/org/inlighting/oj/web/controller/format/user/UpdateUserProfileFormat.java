@@ -17,10 +17,6 @@ public class UpdateUserProfileFormat {
     @Length(max = 20)
     private String nickname;
 
-    @JSONField(name = "real_name")
-    @Length(max = 20)
-    private String realName;
-
     @Length(max = 50)
     private String motto;
 
@@ -34,14 +30,6 @@ public class UpdateUserProfileFormat {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
     }
 
     public String getMotto() {

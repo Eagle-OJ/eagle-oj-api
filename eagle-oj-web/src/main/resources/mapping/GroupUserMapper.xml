@@ -12,9 +12,20 @@
         SELECT * FROM group_user WHERE gid=#{gid} AND uid=#{uid}
     </select>
 
+    <select id="getUserGroups" resultType="HashMap">
+        SELECT group_user.*, `group`.name FROM group_user
+            LEFT JOIN `group` ON group_user.gid=`group`.gid
+        WHERE uid=#{uid} ORDER BY join_time DESC
+    </select>
+
+    <update id="update">
+        UPDATE group_user SET real_name=#{realName} WHERE gid=#{gid} AND uid=#{uid}
+    </update>
+
     <select id="getMembers" resultType="HashMap">
-        SELECT group_user.*, nickname, real_name, avatar FROM group_user
+        SELECT group_user.*, nickname, avatar FROM group_user
             LEFT JOIN user ON group_user.uid=user.uid
+        WHERE gid=#{gid}
     </select>
 
     <delete id="deleteMember">
@@ -24,6 +35,7 @@
     <resultMap id="groupUserMap" type="GroupUserEntity">
         <result column="gid" property="gid"/>
         <result column="uid" property="uid"/>
+        <result column="real_name" property="realName"/>
         <result column="join_time" property="joinTime" />
     </resultMap>
 </mapper>

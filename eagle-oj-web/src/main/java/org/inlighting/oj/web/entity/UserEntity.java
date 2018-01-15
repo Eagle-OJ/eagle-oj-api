@@ -13,9 +13,6 @@ public class UserEntity {
 
     private String nickname;
 
-    @JSONField(name = "real_name")
-    private String realName;
-
     private int avatar;
 
     private String password;
@@ -79,14 +76,6 @@ public class UserEntity {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
     }
 
     public int getAvatar() {

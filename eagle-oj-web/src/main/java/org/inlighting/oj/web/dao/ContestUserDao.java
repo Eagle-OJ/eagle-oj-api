@@ -23,6 +23,10 @@ public class ContestUserDao {
         return sqlSession.selectOne("contestUser.select", entity);
     }
 
+    public List<Map<String, Object>> getUserContests(SqlSession sqlSession, int uid, PageRowBounds pager) {
+        return sqlSession.selectList("contestUser.getUserContests", uid, pager);
+    }
+
     public List<Map<String, Object>> getNormalContestRankList(SqlSession sqlSession, int cid) {
         return sqlSession.selectList("contestUser.getNormalContestRankList", cid);
     }

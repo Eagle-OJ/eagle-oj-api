@@ -2,6 +2,7 @@ package org.inlighting.oj.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
@@ -10,8 +11,11 @@ import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.AttachmentService;
+import org.inlighting.oj.web.service.ContestUserService;
+import org.inlighting.oj.web.service.GroupUserService;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.FileUtil;
+import org.inlighting.oj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -21,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -34,6 +40,10 @@ public class UserController {
 
     private AttachmentService attachmentService;
 
+    private GroupUserService groupUserService;
+
+    private ContestUserService contestUserService;
+
     @Value("${eagle-oj.default.avatar}")
     private String DEFAULT_AVATAR;
 
@@ -42,6 +52,16 @@ public class UserController {
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setGroupUserService(GroupUserService groupUserService) {
+        this.groupUserService = groupUserService;
+    }
+
+    @Autowired
+    public void setContestUserService(ContestUserService contestUserService) {
+        this.contestUserService = contestUserService;
     }
 
     @Autowired
@@ -77,11 +97,33 @@ public class UserController {
     @RequiresAuthentication
     public ResponseEntity updateUserProfile(@Valid @RequestBody UpdateUserProfileFormat format) {
         int uid = SessionHelper.get().getUid();
-        if (! userService.updateUserProfile(uid, format.getNickname(), format.getRealName(), format.getMotto(),
+        if (! userService.updateUserProfile(uid, format.getNickname(), format.getMotto(),
                 format.getGender())) {
             throw new WebErrorException("更新用户失败");
         }
         return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("获取用户参加的比赛")
+    @RequiresAuthentication
+    @GetMapping("/contests")
+    public ResponseEntity getUserContests(@RequestParam(name = "page") int page,
+                                          @RequestParam(name = "page_size") int pageSize) {
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        int uid = SessionHelper.get().getUid();
+        List<Map<String, Object>> list = contestUserService.getUserContests(uid, pager);
+        return new ResponseEntity(WebUtil.generatePageData(pager, list));
+    }
+
+    @ApiOperation("获取用户参加的小组")
+    @RequiresAuthentication
+    @GetMapping("/groups")
+    public ResponseEntity getUserGroups(@RequestParam(name = "page") int page,
+                                        @RequestParam(name = "page_size") int pageSize) {
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        int uid = SessionHelper.get().getUid();
+        List<Map<String, Object>> list = groupUserService.getUserGroups(uid, pager);
+        return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 
     @ApiOperation("头像上传")

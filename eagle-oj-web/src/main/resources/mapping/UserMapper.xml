@@ -54,7 +54,7 @@
     </update>
 
     <update id="updateUserProfile">
-        UPDATE `user` SET `nickname`=#{nickname}, `real_name`=#{realName}, `motto`=#{motto}, `gender`=#{gender}
+        UPDATE `user` SET `nickname`=#{nickname}, `motto`=#{motto}, `gender`=#{gender}
         WHERE `uid`=#{uid}
     </update>
 
@@ -88,7 +88,6 @@
         <id property="uid" column="uid"/>
         <result property="email" column="email"/>
         <result property="nickname" column="nickname"/>
-        <result property="realName" column="real_name"/>
         <result property="avatar" column="avatar"/>
         <result property="password" column="password"/>
         <result property="role" column="role"/>

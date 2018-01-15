@@ -50,6 +50,11 @@ public class ContestUserService {
         return contestUserDao.get(sqlSession, entity);
     }
 
+    public List<Map<String, Object>> getUserContests(int uid, PageRowBounds pager) {
+        ContestUserEntity entity = new ContestUserEntity();
+        return contestUserDao.getUserContests(sqlSession, uid, pager);
+    }
+
     public List<Map<String, Object>> getNormalContestRankList(int cid) {
         return contestUserDao.getNormalContestRankList(sqlSession, cid);
     }

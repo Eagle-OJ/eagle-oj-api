@@ -11,8 +11,19 @@ public class GroupUserEntity {
 
     private int uid;
 
+    @JSONField(name = "real_name")
+    private String realName;
+
     @JSONField(name = "join_time")
     private long joinTime;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 
     public int getGid() {
         return gid;

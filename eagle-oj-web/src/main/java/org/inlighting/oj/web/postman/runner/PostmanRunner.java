@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.inlighting.oj.web.postman.MessageQueue;
 import org.inlighting.oj.web.postman.MessageTemplate;
-import org.inlighting.oj.web.postman.task.BaseTask;
-import org.inlighting.oj.web.postman.task.CloseNormalContestTask;
-import org.inlighting.oj.web.postman.task.CloseOfficialContestTask;
+import org.inlighting.oj.web.postman.task.*;
 import org.inlighting.oj.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +38,13 @@ public class PostmanRunner {
 
     private ContestUserService contestUserService;
 
+    private GroupUserService groupUserService;
+
+    @Autowired
+    public void setGroupUserService(GroupUserService groupUserService) {
+        this.groupUserService = groupUserService;
+    }
+
     @Autowired
     public void setContestService(ContestService contestService) {
         this.contestService = contestService;
@@ -67,8 +72,11 @@ public class PostmanRunner {
 
     public PostmanRunner(MessageQueue messageQueue) {
         new Thread(() -> {
-            BaseTask task = messageQueue.take();
-            THREAD_POOL.execute(new Runner(task));
+            while (true) {
+                BaseTask task = messageQueue.take();
+                THREAD_POOL.execute(new Runner(task));
+            }
+
         }).start();
     }
 
@@ -90,6 +98,12 @@ public class PostmanRunner {
                 case 2:
                     closeOfficialContest((CloseOfficialContestTask) baseTask);
                     break;
+                case 3:
+                    pullGroupUserIntoContest((PullGroupUserIntoContestTask) baseTask);
+                    break;
+                case 4:
+                    sendGroupUserMessage((SendGroupUserMessageTask) baseTask);
+                    break;
                 default:
                     LOGGER.error("Invalid postman task type:"+type);
             }
@@ -107,7 +121,7 @@ public class PostmanRunner {
                 int uid = Integer.valueOf(entry.getKey());
                 int rank = (int) entry.getValue();
                 messageService.addMessage(uid, 1,
-                        MessageTemplate.generateCloseContestMessage(cid, name, rank), new JSONObject());
+                        MessageTemplate.generateCloseContestMessage(cid, name, rank), null);
             }
 
             // 发送official全局比赛消息
@@ -130,6 +144,31 @@ public class PostmanRunner {
         private void closeOfficialContest(CloseOfficialContestTask task) {
             CloseNormalContestTask newTask = new CloseNormalContestTask(task.getCid(), task.getType());
             closeContest(newTask, true);
+        }
+
+        // type = 3 将小组成员拉入比赛
+        private void pullGroupUserIntoContest(PullGroupUserIntoContestTask task) {
+            List<Map<String, Object>> users = groupUserService.getMembers(task.getGid(), null);
+            for (Map<String, Object> user: users) {
+                int uid = Long.valueOf((long)user.get("uid")).intValue();
+                boolean i = contestUserService.add(task.getCid(), uid, System.currentTimeMillis());
+                if (i) {
+                    messageService.addMessage(uid, 3,
+                            MessageTemplate.generateUserPulledIntoContestMessage(task.getContestName(),
+                                    task.getCid(), task.getGroupName(), task.getGid()), null);
+                }
+            }
+        }
+
+        // type = 4 给小组成员发送通知
+        private void sendGroupUserMessage(SendGroupUserMessageTask task) {
+            List<Map<String, Object>> users = groupUserService.getMembers(task.getGid(), null);
+            for (Map<String, Object> user: users) {
+                int uid = Long.valueOf((long)user.get("uid")).intValue();
+                messageService.addMessage(uid, 4,
+                        MessageTemplate.generateSendGroupUserMessage(task.getGid(),
+                              task.getGroupName(), task.getMessage()), null);
+            }
         }
     }
 }

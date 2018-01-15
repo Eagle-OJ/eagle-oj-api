@@ -41,7 +41,6 @@ public class ProfileController {
     @GetMapping("/{uid}")
     public ResponseEntity getProfile(@PathVariable int uid) {
         UserEntity userEntity = userService.getUserByUid(uid);
-        userEntity.setRealName(null);
         userEntity.setPassword(null);
         userEntity.setEmail(null);
         return new ResponseEntity(userEntity);
