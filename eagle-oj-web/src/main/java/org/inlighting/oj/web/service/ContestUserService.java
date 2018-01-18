@@ -17,18 +17,11 @@ import java.util.Map;
 @Service
 public class ContestUserService {
 
-    private final SqlSession sqlSession;
-
-    private ContestUserDao contestUserDao;
-
-    public ContestUserService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
+    @Autowired
+    private SqlSession sqlSession;
 
     @Autowired
-    public void setContestUserDao(ContestUserDao contestUserDao) {
-        this.contestUserDao = contestUserDao;
-    }
+    private ContestUserDao contestUserDao;
 
     /**
      * 联合主键（cid,uid），所以没有自增主键

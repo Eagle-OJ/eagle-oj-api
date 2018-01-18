@@ -17,18 +17,11 @@ import java.util.Map;
 @Service
 public class GroupUserService {
 
+    @Autowired
     private GroupUserDao groupUserDao;
 
-    private SqlSession sqlSession;
-
-    public GroupUserService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setGroupUserDao(GroupUserDao groupUserDao) {
-        this.groupUserDao = groupUserDao;
-    }
+    private SqlSession sqlSession;
 
     public boolean add(int gid, int uid) {
         GroupUserEntity entity = new GroupUserEntity();

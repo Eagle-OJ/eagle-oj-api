@@ -12,17 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AttachmentService {
 
-    private final SqlSession sqlSession;
-
-    private AttachmentDao attachmentDao;
-
-    public AttachmentService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
     @Autowired
-    public void setAttachmentDao(AttachmentDao attachmentDao) {
-        this.attachmentDao = attachmentDao;
-    }
+    private SqlSession sqlSession;
+
+    @Autowired
+    private AttachmentDao attachmentDao;
 
     public int add(int owner, String url) {
         // 添加attachment

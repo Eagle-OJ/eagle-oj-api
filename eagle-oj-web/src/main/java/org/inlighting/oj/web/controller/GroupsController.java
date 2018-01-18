@@ -30,12 +30,8 @@ import java.util.Map;
 @RequestMapping(value = "/groups", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class GroupsController {
 
-    private GroupService groupService;
-
     @Autowired
-    public void setGroupService(GroupService groupService) {
-        this.groupService = groupService;
-    }
+    private GroupService groupService;
 
     @ApiOperation("获取小组列表")
     @GetMapping

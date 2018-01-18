@@ -16,18 +16,11 @@ import java.util.Map;
 @Service
 public class ContestProblemService {
 
+    @Autowired
     private ContestProblemDao contestProblemDao;
 
-    private final SqlSession sqlSession;
-
-    public ContestProblemService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setContestProblemDao(ContestProblemDao contestProblemDao) {
-        this.contestProblemDao = contestProblemDao;
-    }
+    private SqlSession sqlSession;
 
     public ContestProblemEntity getContestProblem(int pid, int cid) {
         ContestProblemEntity contestProblemEntity = new ContestProblemEntity();

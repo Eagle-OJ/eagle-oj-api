@@ -20,25 +20,14 @@ import java.util.Map;
 @Service
 public class ContestService {
 
-    private final SqlSession sqlSession;
+    @Autowired
+    private SqlSession sqlSession;
 
+    @Autowired
     private ContestDao contestDao ;
 
+    @Autowired
     private MessageQueue messageQueue;
-
-    public ContestService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
-    @Autowired
-    public void setMessageQueue(MessageQueue messageQueue) {
-        this.messageQueue = messageQueue;
-    }
-
-    @Autowired
-    public void setContestDao(ContestDao contestDao) {
-        this.contestDao = contestDao;
-    }
 
     public int addContest(String name, int owner, String slogan, String description,
                           long startTime, long endTime, Long totalTime, String password,

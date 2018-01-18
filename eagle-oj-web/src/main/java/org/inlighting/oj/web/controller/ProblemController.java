@@ -36,54 +36,23 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/problem", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ProblemController {
 
+    @Autowired
     private ProblemService problemService;
 
+    @Autowired
     private UserService userService;
 
-    private ProblemUserService problemUserService;
-
+    @Autowired
     private ProblemModeratorService problemModeratorService;
 
+    @Autowired
     private TestCasesService testCasesService;
 
+    @Autowired
     private TagsService tagsService;
 
+    @Autowired
     private TagProblemService tagProblemService;
-
-    @Autowired
-    public void setTestCasesService(TestCasesService testCasesService) {
-        this.testCasesService = testCasesService;
-    }
-
-    @Autowired
-    public void setProblemModeratorService(ProblemModeratorService problemModeratorService) {
-        this.problemModeratorService = problemModeratorService;
-    }
-
-    @Autowired
-    public void setTagProblemService(TagProblemService tagProblemService) {
-        this.tagProblemService = tagProblemService;
-    }
-
-    @Autowired
-    public void setTagsService(TagsService tagsService) {
-        this.tagsService = tagsService;
-    }
-
-    @Autowired
-    public void setProblemUserService(ProblemUserService problemUserService) {
-        this.problemUserService = problemUserService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setProblemService(ProblemService problemService) {
-        this.problemService = problemService;
-    }
 
     @ApiOperation("获取公开题目列表")
     @GetMapping

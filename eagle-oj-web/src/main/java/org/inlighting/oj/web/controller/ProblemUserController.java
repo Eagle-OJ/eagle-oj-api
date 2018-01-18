@@ -24,12 +24,8 @@ import java.util.Map;
 @RequestMapping(value = "/problem_user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ProblemUserController {
 
-    private ProblemUserService problemUserService;
-
     @Autowired
-    public void setProblemUserService(ProblemUserService problemUserService) {
-        this.problemUserService = problemUserService;
-    }
+    private ProblemUserService problemUserService;
 
     @ApiOperation("获取最近10条用户做题记录")
     @GetMapping

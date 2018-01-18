@@ -19,12 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class TagsController {
 
-    private TagsService tagsService;
-
     @Autowired
-    public void setTagsService(TagsService tagsService) {
-        this.tagsService = tagsService;
-    }
+    private TagsService tagsService;
 
     @GetMapping
     public ResponseEntity getTags() {

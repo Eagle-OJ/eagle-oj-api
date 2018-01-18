@@ -18,21 +18,14 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final SqlSession sqlSession;
+    @Autowired
+    private SqlSession sqlSession;
 
+    @Autowired
     private UserDao userDao;
 
     @Value("${eagle-oj.default.avatar}")
     private String DEFAULT_AVATAR;
-
-    public UserService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
-    @Autowired
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
 
     public int addUser(String email, String nickname, String password, long registerTime) {
         UserEntity userEntity = new UserEntity();

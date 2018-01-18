@@ -36,8 +36,10 @@ import java.util.*;
 @RequestMapping(value = "/", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class IndexController {
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private AttachmentService attachmentService;
 
     @Value("${eagle-oj.oss.url}")
@@ -45,16 +47,6 @@ public class IndexController {
 
     @Value("${eagle-oj.default.avatar}")
     private String DEFAULT_AVATAR;
-
-    @Autowired
-    public void setAttachmentService(AttachmentService attachmentService) {
-        this.attachmentService = attachmentService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @ApiOperation("用户注册")
     @PostMapping(value = "/register")

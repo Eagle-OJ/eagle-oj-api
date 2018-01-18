@@ -36,43 +36,23 @@ import java.util.Map;
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class UserController {
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private AttachmentService attachmentService;
 
+    @Autowired
     private GroupUserService groupUserService;
 
+    @Autowired
     private ContestUserService contestUserService;
+
+    @Autowired
+    private FileUtil fileUtil;
 
     @Value("${eagle-oj.default.avatar}")
     private String DEFAULT_AVATAR;
-
-    private FileUtil fileUtil;
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setGroupUserService(GroupUserService groupUserService) {
-        this.groupUserService = groupUserService;
-    }
-
-    @Autowired
-    public void setContestUserService(ContestUserService contestUserService) {
-        this.contestUserService = contestUserService;
-    }
-
-    @Autowired
-    public void setAttachmentService(AttachmentService attachmentService) {
-        this.attachmentService = attachmentService;
-    }
-
-    @Autowired
-    public void setFileUtil(FileUtil fileUtil) {
-        this.fileUtil = fileUtil;
-    }
 
     @ApiOperation("获取用户的所有信息")
     @GetMapping("/info")

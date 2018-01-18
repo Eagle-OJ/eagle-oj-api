@@ -24,19 +24,8 @@ import java.util.Map;
 @RequestMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ProfileController {
 
+    @Autowired
     private UserService userService;
-
-    private SubmissionService submissionService;
-
-    @Autowired
-    public void setSubmissionService(SubmissionService submissionService) {
-        this.submissionService = submissionService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/{uid}")
     public ResponseEntity getProfile(@PathVariable int uid) {

@@ -20,18 +20,11 @@ import java.util.List;
 @Service
 public class SubmissionService {
 
-    private final SqlSession sqlSession;
-
-    private SubmissionDao submissionDao;
-
-    public SubmissionService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
+    @Autowired
+    private SqlSession sqlSession;
 
     @Autowired
-    public void setSubmissionDao(SubmissionDao submissionDao) {
-        this.submissionDao = submissionDao;
-    }
+    private SubmissionDao submissionDao;
 
     public int add(int owner, int pid, int cid, int sourceCode, LanguageEnum lang, double time, int memory,
                    ResultEnum status) {

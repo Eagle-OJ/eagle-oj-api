@@ -18,18 +18,11 @@ import java.util.Map;
 @Service
 public class ProblemUserService {
 
+    @Autowired
     private ProblemUserDao problemUserDao;
 
-    private SqlSession sqlSession;
-
-    public ProblemUserService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setProblemUserDao(ProblemUserDao problemUserDao) {
-        this.problemUserDao = problemUserDao;
-    }
+    private SqlSession sqlSession;
 
     public boolean add(int pid, int uid, ResultEnum status) {
         ProblemUserEntity problemUserEntity = new ProblemUserEntity();

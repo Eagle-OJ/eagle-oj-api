@@ -15,18 +15,11 @@ import java.util.List;
 @Service
 public class TagsService {
 
-    private final SqlSession sqlSession;
-
-    private TagsDao tagsDao;
-
-    public TagsService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
+    @Autowired
+    private SqlSession sqlSession;
 
     @Autowired
-    public void setTagsDao(TagsDao tagsDao) {
-        this.tagsDao = tagsDao;
-    }
+    private TagsDao tagsDao;
 
     public List<TagEntity> getTags() {
         return tagsDao.getTags(sqlSession);

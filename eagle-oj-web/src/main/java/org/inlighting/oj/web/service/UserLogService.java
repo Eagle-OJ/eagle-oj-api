@@ -14,18 +14,11 @@ import java.util.List;
 @Service
 public class UserLogService {
 
+    @Autowired
     private SqlSession sqlSession;
 
-    private UserLogDao userLogDao;
-
-    public UserLogService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setUserLogDao(UserLogDao userLogDao) {
-        this.userLogDao = userLogDao;
-    }
+    private UserLogDao userLogDao;
 
     public boolean updateLog(int uid, UserLogEntity entity) {
         entity.setUid(uid);

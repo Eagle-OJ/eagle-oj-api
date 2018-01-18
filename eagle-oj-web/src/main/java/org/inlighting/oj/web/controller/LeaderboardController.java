@@ -26,12 +26,8 @@ import java.util.*;
 @RequestMapping(value = "/leaderboard", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class LeaderboardController {
 
-    private LeaderboardService leaderboardService;
-
     @Autowired
-    public void setLeaderboardService(LeaderboardService leaderboardService) {
-        this.leaderboardService = leaderboardService;
-    }
+    private LeaderboardService leaderboardService;
 
     @GetMapping
     public ResponseEntity getGlobalRank() {

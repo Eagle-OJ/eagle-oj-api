@@ -22,26 +22,11 @@ import java.util.Map;
 @Service
 public class ProblemService {
 
-    private final SqlSession sqlSession;
+    @Autowired
+    private SqlSession sqlSession;
 
+    @Autowired
     private ProblemDao problemDao;
-
-    private ContestProblemDao problemInfoDao;
-
-    public ProblemService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
-    @Autowired
-    public void setProblemDao(ProblemDao problemDao) {
-        this.problemDao = problemDao;
-    }
-
-    @Autowired
-    public void setProblemInfoDao(ContestProblemDao problemInfoDao) {
-        this.problemInfoDao = problemInfoDao;
-    }
-
 
     public int addProblem(int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
                           int difficult, JSONArray samples, int time, int memory) {

@@ -23,12 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/problems", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ProblemsController {
 
-    private ProblemService problemService;
-
     @Autowired
-    public void setProblemService(ProblemService problemService) {
-        this.problemService = problemService;
-    }
+    private ProblemService problemService;
 
     @ApiOperation("获取用户创建的题目")
     @RequiresAuthentication

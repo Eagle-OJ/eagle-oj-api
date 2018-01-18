@@ -22,12 +22,8 @@ import java.util.*;
 @RequestMapping("/user_log")
 public class UserLogController {
 
-    private UserLogService userLogService;
-
     @Autowired
-    public void setUserLogService(UserLogService userLogService) {
-        this.userLogService = userLogService;
-    }
+    private UserLogService userLogService;
 
     @ApiOperation("获取用户近期记录")
     @GetMapping

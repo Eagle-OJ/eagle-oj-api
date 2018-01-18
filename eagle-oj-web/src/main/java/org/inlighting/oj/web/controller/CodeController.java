@@ -28,12 +28,8 @@ import java.util.Map;
 @RequestMapping(value = "/code", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class CodeController {
 
-    private JudgerManager judgerManager;
-
     @Autowired
-    public void setJudgerManager(JudgerManager judgerManager) {
-        this.judgerManager = judgerManager;
-    }
+    private JudgerManager judgerManager;
 
     @ApiOperation("测试提交判卷，优先级为0")
     @PostMapping

@@ -18,6 +18,8 @@ import org.inlighting.oj.web.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ import java.util.concurrent.Executors;
 /**
  * @author Smith
  **/
-@Component
+@Service
 public class JudgerRunner {
 
     private final int MAX_THREADS = 3;
@@ -36,75 +38,35 @@ public class JudgerRunner {
 
     private final Cache<String, JudgerResult> submissionCache = CacheController.getSubmissionCache();
 
+    @Autowired
     private SubmissionService submissionService;
 
+    @Autowired
     private UserLogService userLogService;
 
+    @Autowired
     private AttachmentService attachmentService;
 
+    @Autowired
     private ProblemUserService problemUserService;
 
+    @Autowired
     private ContestProblemService contestProblemService;
 
+    @Autowired
     private ContestProblemUserService contestProblemUserService;
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private ProblemService problemService;
 
+    @Autowired
     private ContestUserService contestUserService;
 
+    @Autowired
     private FileUtil fileUtil;
-
-    @Autowired
-    public void setUserLogService(UserLogService userLogService) {
-        this.userLogService = userLogService;
-    }
-
-    @Autowired
-    public void setContestProblemService(ContestProblemService contestProblemService) {
-        this.contestProblemService = contestProblemService;
-    }
-
-    @Autowired
-    public void setContestProblemUserService(ContestProblemUserService contestProblemUserService) {
-        this.contestProblemUserService = contestProblemUserService;
-    }
-
-    @Autowired
-    public void setProblemService(ProblemService problemService) {
-        this.problemService = problemService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setProblemUserService(ProblemUserService problemUserService) {
-        this.problemUserService = problemUserService;
-    }
-
-    @Autowired
-    public void setContestUserService(ContestUserService contestUserService) {
-        this.contestUserService = contestUserService;
-    }
-
-    @Autowired
-    public void setAttachmentService(AttachmentService attachmentService) {
-        this.attachmentService = attachmentService;
-    }
-
-    @Autowired
-    public void setFileUtil(FileUtil fileUtil) {
-        this.fileUtil = fileUtil;
-    }
-
-    @Autowired
-    public void setSubmissionService(SubmissionService submissionService) {
-        this.submissionService = submissionService;
-    }
 
     @Value("${eagle-oj.judge.url}")
     private String JUDGE_URL;

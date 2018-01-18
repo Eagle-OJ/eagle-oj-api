@@ -14,18 +14,11 @@ import java.util.List;
 @Service
 public class TagProblemService {
 
+    @Autowired
     private TagProblemDao tagProblemDao;
 
-    private SqlSession sqlSession;
-
-    public TagProblemService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setTagProblemDao(TagProblemDao tagProblemDao) {
-        this.tagProblemDao = tagProblemDao;
-    }
+    private SqlSession sqlSession;
 
     public boolean addTagProblem(int tid, int pid) {
         TagProblemEntity entity = new TagProblemEntity();

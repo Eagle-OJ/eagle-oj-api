@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.concurrent.Executors;
 /**
  * @author Smith
  **/
-@Component
+@Service
 public class PostmanRunner {
 
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -28,47 +29,17 @@ public class PostmanRunner {
 
     private final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(MAX_THREADS);
 
-    private ContestService contestService;
-
-    private UserService userService;
-
+    @Autowired
     private LeaderboardService leaderboardService;
 
+    @Autowired
     private MessageService messageService;
 
+    @Autowired
     private ContestUserService contestUserService;
 
+    @Autowired
     private GroupUserService groupUserService;
-
-    @Autowired
-    public void setGroupUserService(GroupUserService groupUserService) {
-        this.groupUserService = groupUserService;
-    }
-
-    @Autowired
-    public void setContestService(ContestService contestService) {
-        this.contestService = contestService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setLeaderboardService(LeaderboardService leaderboardService) {
-        this.leaderboardService = leaderboardService;
-    }
-
-    @Autowired
-    public void setMessageService(MessageService messageService) {
-        this.messageService = messageService;
-    }
-
-    @Autowired
-    public void setContestUserService(ContestUserService contestUserService) {
-        this.contestUserService = contestUserService;
-    }
 
     public PostmanRunner(MessageQueue messageQueue) {
         new Thread(() -> {

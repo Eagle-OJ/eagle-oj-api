@@ -16,18 +16,11 @@ import java.util.List;
 @Service
 public class MessageService {
 
+    @Autowired
     private SqlSession sqlSession;
 
-    private MessageDao messageDao;
-
-    public MessageService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setMessageDao(MessageDao messageDao) {
-        this.messageDao = messageDao;
-    }
+    private MessageDao messageDao;
 
     public int addMessage(int owner, int type, String content, JSONObject json) {
         MessageEntity entity = new MessageEntity();

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="announcement">
+
+    <insert id="addOne">
+        INSERT INTO announcement (title, content, create_time) VALUES (#{title}, #{content}, #{createTime})
+    </insert>
+
+    <select id="getAll" resultMap="announcementMap">
+        SELECT * FROM announcement ORDER BY create_time DESC
+    </select>
+
+    <delete id="deleteOne">
+        DELETE FROM announcement WHERE aid=#{aid}
+    </delete>
+
+    <update id="updateOne">
+        UPDATE announcement SET title=#{title}, content=#{content} WHERE aid=#{aid}
+    </update>
+
+    <resultMap id="announcementMap" type="AnnouncementEntity">
+        <id property="aid" column="aid"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+</mapper>

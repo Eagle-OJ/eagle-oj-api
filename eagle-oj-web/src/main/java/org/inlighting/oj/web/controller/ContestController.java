@@ -23,40 +23,17 @@ import java.util.Map;
 @RequestMapping(value = "/contest", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ContestController {
 
+    @Autowired
     private ContestService contestService;
 
-    private ContestUserService contestUserInfoService;
-
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private ContestProblemService contestProblemService;
 
+    @Autowired
     private ProblemService problemService;
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setProblemService(ProblemService problemService) {
-        this.problemService = problemService;
-    }
-
-    @Autowired
-    public void setContestProblemService(ContestProblemService contestProblemService) {
-        this.contestProblemService = contestProblemService;
-    }
-
-    @Autowired
-    public void setContestUserInfoService(ContestUserService contestUserInfoService) {
-        this.contestUserInfoService = contestUserInfoService;
-    }
-
-    @Autowired
-    public void setContestService(ContestService contestService) {
-        this.contestService = contestService;
-    }
 
     @ApiOperation("获取比赛列表")
     @GetMapping

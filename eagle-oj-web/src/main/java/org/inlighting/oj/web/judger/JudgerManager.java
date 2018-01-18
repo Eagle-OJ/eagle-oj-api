@@ -5,23 +5,22 @@ import org.inlighting.oj.judge.LanguageEnum;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
 import org.inlighting.oj.web.cache.CacheController;
 import org.inlighting.oj.web.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author Smith
  **/
-@Component
+@Service
 public class JudgerManager {
 
+    @Autowired
     private JudgerQueue judgerQueue;
 
     private Cache<String, JudgerResult> submissionCache = CacheController.getSubmissionCache();
-
-    public JudgerManager(JudgerQueue judgerQueue) {
-        this.judgerQueue = judgerQueue;
-    }
 
     public String addTask(boolean testMode,
                           int problemId,

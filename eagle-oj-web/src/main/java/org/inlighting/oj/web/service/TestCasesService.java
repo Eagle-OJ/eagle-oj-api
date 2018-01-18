@@ -14,18 +14,11 @@ import java.util.List;
 @Service
 public class TestCasesService {
 
-    private final SqlSession sqlSession;
-
-    private TestCasesDao testCaseDao;
-
-    public TestCasesService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
+    @Autowired
+    private SqlSession sqlSession;
 
     @Autowired
-    public void setTestCaseDao(TestCasesDao testCaseDao) {
-        this.testCaseDao = testCaseDao;
-    }
+    private TestCasesDao testCaseDao;
 
     public int addTestCase(int pid, String stdin, String stdout, int strength) {
         // 添加一个TestCase

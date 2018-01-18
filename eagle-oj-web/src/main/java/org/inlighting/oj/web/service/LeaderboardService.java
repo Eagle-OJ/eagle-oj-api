@@ -18,19 +18,11 @@ import java.util.Map;
 @Service
 public class LeaderboardService {
 
+    @Autowired
     private ContestUserService contestUserService;
 
+    @Autowired
     private ContestService contestService;
-
-    @Autowired
-    public void setContestUserService(ContestUserService contestUserService) {
-        this.contestUserService = contestUserService;
-    }
-
-    @Autowired
-    public void setContestService(ContestService contestService) {
-        this.contestService = contestService;
-    }
 
     public void refreshContestLeaderboard(int cid) {
         Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();

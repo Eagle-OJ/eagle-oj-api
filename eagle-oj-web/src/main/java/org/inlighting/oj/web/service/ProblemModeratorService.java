@@ -15,18 +15,11 @@ import java.util.Map;
 @Service
 public class ProblemModeratorService {
 
+    @Autowired
     private SqlSession sqlSession;
 
-    private ProblemModeratorDao problemModeratorDao;
-
-    public ProblemModeratorService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setProblemModeratorDao(ProblemModeratorDao problemModeratorDao) {
-        this.problemModeratorDao = problemModeratorDao;
-    }
+    private ProblemModeratorDao problemModeratorDao;
 
     public boolean add(int pid, int uid) {
         ProblemModeratorEntity entity = new ProblemModeratorEntity();

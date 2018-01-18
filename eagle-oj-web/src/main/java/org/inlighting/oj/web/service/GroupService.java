@@ -16,18 +16,11 @@ import java.util.List;
 @Service
 public class GroupService {
 
+    @Autowired
     private GroupDao groupDao;
 
-    private final SqlSession sqlSession;
-
-    public GroupService(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
     @Autowired
-    public void setGroupDao(GroupDao groupDao) {
-        this.groupDao = groupDao;
-    }
+    private SqlSession sqlSession;
 
     public int createGroup(int owner, String name, String password, long createTime) {
         GroupEntity groupEntity = new GroupEntity();

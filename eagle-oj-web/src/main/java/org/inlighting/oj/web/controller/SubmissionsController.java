@@ -25,12 +25,8 @@ import java.util.Map;
 @RequestMapping(value = "/submissions", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class SubmissionsController {
 
-    private SubmissionService submissionService;
-
     @Autowired
-    public void setSubmissionService(SubmissionService submissionService) {
-        this.submissionService = submissionService;
-    }
+    private SubmissionService submissionService;
 
     @ApiOperation("获取用户的代码记录")
     @RequiresAuthentication

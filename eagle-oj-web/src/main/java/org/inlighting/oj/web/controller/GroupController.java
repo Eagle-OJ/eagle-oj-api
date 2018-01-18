@@ -38,40 +38,20 @@ import java.util.Map;
 @RequestMapping(value = "/group", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class GroupController {
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private GroupService groupService;
 
+    @Autowired
     private GroupUserService groupUserService;
 
+    @Autowired
     private ContestService contestService;
 
+    @Autowired
     private MessageQueue messageQueue;
-
-    @Autowired
-    public void setMessageQueue(MessageQueue messageQueue) {
-        this.messageQueue = messageQueue;
-    }
-
-    @Autowired
-    public void setContestService(ContestService contestService) {
-        this.contestService = contestService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setGroupService(GroupService groupService) {
-        this.groupService = groupService;
-    }
-
-    @Autowired
-    public void setGroupUserService(GroupUserService groupUserService) {
-        this.groupUserService = groupUserService;
-    }
 
     @ApiOperation("获取小组的信息")
     @GetMapping("/{gid}")

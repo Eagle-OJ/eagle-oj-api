@@ -24,12 +24,8 @@ import java.util.Map;
 @RequestMapping(value = "/message", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class MessageController {
 
-    private MessageService messageService;
-
     @Autowired
-    public void setMessageService(MessageService messageService) {
-        this.messageService = messageService;
-    }
+    private MessageService messageService;
 
     @GetMapping
     @RequiresAuthentication
