@@ -89,22 +89,6 @@ public class IndexController {
         return new ResponseEntity("登入成功", token);
     }
 
-    @GetMapping("/setting")
-    public ResponseEntity getWebConfig() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("oss_url", OSS_URL);
-
-        // 添加编程语言配置文件
-        {
-            Map<Object, String> lang = new HashMap<>();
-            for (LanguageEnum languageEnum: LanguageEnum.values()) {
-                lang.put(languageEnum, languageEnum.getName());
-            }
-            data.put("lang", lang);
-        }
-        return new ResponseEntity(data);
-    }
-
     @GetMapping("/avatar")
     public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {

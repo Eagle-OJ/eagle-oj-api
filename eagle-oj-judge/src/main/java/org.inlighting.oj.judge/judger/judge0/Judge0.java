@@ -158,8 +158,8 @@ public class Judge0 implements JudgerApi {
         switch (lang) {
             case JAVA8:
                 return 27;
-            case PYTHON36:
-                return 34;
+            case PYTHON35:
+                return 35;
             case PYTHON27:
                 return 36;
             case C:

@@ -51,5 +51,6 @@
         <mapper resource="mapping/MessageMapper.xml"/>
         <mapper resource="mapping/ProblemModeratorMapper.xml"/>
         <mapper resource="mapping/AnnouncementMapper.xml"/>
+        <mapper resource="mapping/SettingMapper.xml"/>
     </mappers>
 </configuration>

@@ -60,15 +60,8 @@ public class UserController {
     public ResponseEntity getUserInfo() {
         int uid = SessionHelper.get().getUid();
         UserEntity userEntity = userService.getUserByUid(uid);
-        String avatar;
-        if (userEntity.getAvatar() == 0) {
-            avatar = DEFAULT_AVATAR;
-        } else {
-            avatar = attachmentService.get(userEntity.getAvatar()).getUrl();
-        }
         JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(userEntity));
         jsonObject.remove("password");
-        jsonObject.replace("avatar", avatar);
         return new ResponseEntity(jsonObject);
     }
 

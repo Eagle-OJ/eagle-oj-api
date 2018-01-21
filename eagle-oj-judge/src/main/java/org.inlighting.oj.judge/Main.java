@@ -20,7 +20,7 @@ public class Main {
         TestCaseRequestEntity testCaseRequestEntity2 = new TestCaseRequestEntity(null, "world");
         list.add(testCaseRequestEntity1);
         list.add(testCaseRequestEntity2);
-        RequestEntity requestEntity = new RequestEntity(LanguageEnum.PYTHON36, "print(\"hello\")", 3,
+        RequestEntity requestEntity = new RequestEntity(LanguageEnum.PYTHON35, "print(\"hello\")", 3,
                 128, list);
         Judger judger = new Judger("http://www.funnytu.com:3000", requestEntity, new Judge0());
         ResponseEntity responseEntity = judger.judge();
