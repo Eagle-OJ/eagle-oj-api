@@ -2,73 +2,32 @@ package org.inlighting.oj.web.config;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.inlighting.oj.judge.LanguageEnum;
-import org.inlighting.oj.web.entity.SettingEntity;
-import org.inlighting.oj.web.service.SettingService;
-import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author Smith
  **/
-@Component
 public class SystemConfig {
-
-    private SettingService settingService;
-
-    public SystemConfig(SettingService service) {
-        this.settingService = service;
-        init();
-    }
-
-    private void init() {
-        List<SettingEntity> list = settingService.getAll();
-        if (list.size() == 0) {
-            isInstalled = false;
-            return;
-        }
-
-        for (SettingEntity entity: list) {
-            autoSetting(entity);
-        }
-
-        // 添加编程语言配置文件
-        {
-            for (LanguageEnum languageEnum: LanguageEnum.values()) {
-                lang.put(languageEnum, languageEnum.getName());
-            }
-        }
-
-
-    }
-
-    private void autoSetting(SettingEntity entity) {
-        String key = entity.getKey();
-        if (key.equals("title")) {
-            title = entity.getValue();
-        }
-    }
 
     @JSONField(name = "is_installed")
     private boolean isInstalled;
 
     private String title;
 
-    @JSONField(serialize = false)
+    @JSONField(name = "judger_url")
     private String judgerUrl;
 
-    private Map<Object, String> lang;
+    private Map<LanguageEnum, String> lang;
 
     @JSONField(name = "oss_config")
     private OSSConfig ossConfig;
 
-    public Map<Object, String> getLang() {
+    public Map<LanguageEnum, String> getLang() {
         return lang;
     }
 
-    public void setLang(Map<Object, String> lang) {
+    public void setLang(Map<LanguageEnum, String> lang) {
         this.lang = lang;
     }
 

@@ -27,13 +27,13 @@ public class UserService {
     @Value("${eagle-oj.default.avatar}")
     private String DEFAULT_AVATAR;
 
-    public int addUser(String email, String nickname, String password, long registerTime) {
+    public int addUser(String email, String nickname, String password) {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
         userEntity.setNickname(nickname);
         userEntity.setPassword(new Md5Hash(password).toString());
         userEntity.setPermission(new JSONArray());
-        userEntity.setRegisterTime(registerTime);
+        userEntity.setRegisterTime(System.currentTimeMillis());
 
         boolean result = userDao.addUser(sqlSession, userEntity);
         return result ? userEntity.getUid() : 0;

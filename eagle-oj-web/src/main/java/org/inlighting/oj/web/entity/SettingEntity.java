@@ -8,6 +8,11 @@ public class SettingEntity {
 
     private String value;
 
+    public SettingEntity(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     public String getKey() {
         return key;
     }

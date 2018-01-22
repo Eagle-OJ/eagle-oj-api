@@ -17,7 +17,6 @@ import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.FileUtil;
 import org.inlighting.oj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +49,6 @@ public class UserController {
 
     @Autowired
     private FileUtil fileUtil;
-
-    @Value("${eagle-oj.default.avatar}")
-    private String DEFAULT_AVATAR;
 
     @ApiOperation("获取用户的所有信息")
     @GetMapping("/info")

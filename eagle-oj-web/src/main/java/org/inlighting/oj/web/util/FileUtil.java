@@ -3,7 +3,8 @@ package org.inlighting.oj.web.util;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import org.inlighting.oj.judge.LanguageEnum;
-import org.springframework.beans.factory.annotation.Value;
+import org.inlighting.oj.web.config.OSSConfig;
+import org.inlighting.oj.web.service.SettingService;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -17,16 +18,15 @@ import java.util.UUID;
 @Component
 public class FileUtil {
 
-    private static String BUCKET;
+    private String BUCKET;
 
     private OSSClient ossClient;
 
-    public FileUtil(@Value("${eagle-oj.oss.end-point}") String endPoint,
-                    @Value("${eagle-oj.oss.access-key}") String key,
-                    @Value("${eagle-oj.oss.access-secret}") String secret,
-                    @Value("${eagle-oj.oss.bucket}") String bucket) {
-        ossClient = new OSSClient(endPoint, key, secret);
-        BUCKET = bucket;
+    public FileUtil(SettingService settingService) {
+        OSSConfig ossConfig = settingService.getSystemConfig().getOssConfig();
+        ossClient = new OSSClient(ossConfig.getEND_POINT(),
+                ossConfig.getACCESS_KEY(), ossConfig.getSECRET_KEY());
+        BUCKET = ossConfig.getBUCKET();
     }
 
 
@@ -69,7 +69,7 @@ public class FileUtil {
         }
     }
 
-    private static String generateFilePath(String fileName) {
+    private String generateFilePath(String fileName) {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.YEAR)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.DATE)+"/"+fileName;
     }

@@ -9,10 +9,15 @@
     </select>
 
     <update id="updateOne">
-        UPDATE setting SET value=#{value} WHERE `key`=${key}
+        UPDATE setting SET value=#{value} WHERE `key`=#{key}
     </update>
 
-
+    <insert id="insertAll">
+        INSERT setting (`key`, value) VALUES
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.key}, #{item.value})
+        </foreach>
+    </insert>
 
     <resultMap id="settingMap" type="SettingEntity">
         <id column="key" property="key"/>

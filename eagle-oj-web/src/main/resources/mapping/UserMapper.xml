@@ -9,6 +9,11 @@
         VALUES (#{email}, #{nickname}, #{password}, #{permission}, #{registerTime})
     </insert>
 
+    <insert id="insertRoot">
+        INSERT IGNORE INTO user (uid, email, nickname, password, permission, role, register_time)
+                VALUES (#{uid}, #{email}, #{nickname}, #{password}, #{permission}, #{role}, #{registerTime})
+    </insert>
+
     <select id="selectUserByUid" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `uid` = #{uid}
     </select>

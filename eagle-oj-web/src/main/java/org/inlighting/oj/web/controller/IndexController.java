@@ -13,6 +13,7 @@ import org.inlighting.oj.web.entity.UserEntity;
 import org.inlighting.oj.web.controller.format.index.IndexLoginFormat;
 import org.inlighting.oj.web.controller.format.index.IndexRegisterFormat;
 import org.inlighting.oj.web.service.AttachmentService;
+import org.inlighting.oj.web.service.SettingService;
 import org.inlighting.oj.web.service.UserService;
 import org.inlighting.oj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,8 @@ public class IndexController {
     @Autowired
     private AttachmentService attachmentService;
 
-    @Value("${eagle-oj.oss.url}")
-    private String OSS_URL;
-
-    @Value("${eagle-oj.default.avatar}")
-    private String DEFAULT_AVATAR;
+    @Autowired
+    private SettingService settingService;
 
     @ApiOperation("用户注册")
     @PostMapping(value = "/register")
@@ -60,8 +58,7 @@ public class IndexController {
         // 注册用户
         int uid = userService.addUser(format.getEmail(),
                 format.getNickname(),
-                new Md5Hash(format.getPassword()).toString(),
-                System.currentTimeMillis());
+                new Md5Hash(format.getPassword()).toString());
         if (uid == 0) {
             throw new WebErrorException("注册失败");
         }
@@ -71,8 +68,7 @@ public class IndexController {
     @ApiOperation("用户登入")
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
-        UserEntity userEntity = userService.getUserByLogin(format.getEmail(),
-                new Md5Hash(format.getPassword()).toString());
+        UserEntity userEntity = userService.getUserByLogin(format.getEmail(), format.getPassword());
         if (userEntity == null)
             throw new WebErrorException("用户名密码错误");
 
@@ -95,10 +91,10 @@ public class IndexController {
         AttachmentEntity entity = attachmentService.get(aid);
         String url;
         if (entity == null) {
-            url = OSS_URL+DEFAULT_AVATAR;
-        } else {
-            url = OSS_URL+entity.getUrl();
+            throw new WebErrorException("不存在此头像");
         }
+        String OSS_URL = settingService.getSystemConfig().getOssConfig().getURL();
+        url = OSS_URL+entity.getUrl();
         response.sendRedirect(url);
     }
 

@@ -6,18 +6,19 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class OSSConfig {
-    @JSONField(serialize = false)
+    @JSONField(name = "end_point")
     private String END_POINT;
 
+    @JSONField(name = "url")
     private String URL;
 
-    @JSONField(serialize = false)
+    @JSONField(name = "access_key")
     private String ACCESS_KEY;
 
-    @JSONField(serialize = false)
+    @JSONField(name = "secret_key")
     private String SECRET_KEY;
 
-    @JSONField(serialize = false)
+    @JSONField(name = "bucket")
     private String BUCKET;
 
     public String getEND_POINT() {

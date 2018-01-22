@@ -26,6 +26,10 @@ public class UserDao {
         return session.insert("user.insertUser", userEntity) == 1;
     }
 
+    public boolean addRoot(SqlSession sqlSession, UserEntity userEntity) {
+        return sqlSession.insert("user.insertRoot", userEntity) == 1;
+    }
+
     /**
      *
      * @param email 邮箱
