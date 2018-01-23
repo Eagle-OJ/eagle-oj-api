@@ -12,7 +12,7 @@
         SELECT * FROM problem_moderator WHERE pid=#{pid} AND uid=#{uid}
     </select>
 
-    <select id="selectWithUser" resultType="HashMap">
+    <select id="getModerators" resultType="HashMap">
         SELECT pid, user.uid, user.nickname, user.email, user.avatar FROM problem_moderator
             LEFT JOIN user ON problem_moderator.uid=user.uid
         WHERE pid=#{pid}

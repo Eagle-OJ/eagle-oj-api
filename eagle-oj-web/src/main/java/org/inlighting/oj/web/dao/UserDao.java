@@ -1,5 +1,6 @@
 package org.inlighting.oj.web.dao;
 
+import com.github.pagehelper.PageRowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -54,31 +55,12 @@ public class UserDao {
         return sqlSession.selectList("user.selectModeratorsInUidList", uidList);
     }
 
+    public List<UserEntity> getUserRankList(SqlSession sqlSession, PageRowBounds pager) {
+        return sqlSession.selectList("user.getUserRankList", null, pager);
+    }
+
     public boolean updateUserTimes(SqlSession sqlSession, UserEntity entity) {
         return sqlSession.update("user.updateUserTimes", entity) == 1;
-    }
-
-    public boolean addUserSubmitTimesByUid(SqlSession sqlSession, int uid) {
-        return sqlSession.update("user.addUserSubmitTimes", uid) == 1;
-    }
-
-    public boolean addUserAcceptTimesByUid(SqlSession sqlSession, int uid) {
-        return sqlSession.update("user.addUserAcceptTimes", uid) == 1;
-    }
-
-    public boolean addUserContestTimesByUid(SqlSession sqlSession, int uid) {
-        return sqlSession.update("user.addUserContestTimes", uid) == 1;
-    }
-
-    public boolean addUserScoreByUid(SqlSession sqlSession, int uid, int score) {
-        Map<String, Integer> data = new HashMap<>();
-        data.put("uid", uid);
-        data.put("score", score);
-        return sqlSession.update("user.addUserScore", data) == 1;
-    }
-
-    public List<UserEntity> getUserList(int currentPage, int pageSize) {
-        return null;
     }
 
     public boolean updateUserProfile(SqlSession sqlSession, UserEntity userEntity) {

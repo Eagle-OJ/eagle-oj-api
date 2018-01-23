@@ -1,10 +1,14 @@
 package org.inlighting.oj.web.service;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageRowBounds;
+import org.apache.ibatis.session.SqlSession;
 import org.ehcache.Cache;
 import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.cache.CacheController;
+import org.inlighting.oj.web.dao.UserDao;
 import org.inlighting.oj.web.entity.ContestEntity;
+import org.inlighting.oj.web.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,12 @@ public class LeaderboardService {
 
     @Autowired
     private ContestService contestService;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private SqlSession sqlSession;
 
     public void refreshContestLeaderboard(int cid) {
         Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();
@@ -84,5 +94,7 @@ public class LeaderboardService {
         return meta;
     }
 
-
+    public List<UserEntity> getLeaderboard(PageRowBounds pager) {
+        return userDao.getUserRankList(sqlSession, pager);
+    }
 }

@@ -39,8 +39,8 @@ public class ProblemModeratorService {
         return problemModeratorDao.get(sqlSession, entity);
     }
 
-    public List<Map<String, Object>> getWithUser(int pid) {
-        return problemModeratorDao.selectWithUser(sqlSession, pid);
+    public List<Map<String, Object>> getModerators(int pid) {
+        return problemModeratorDao.getModerators(sqlSession, pid);
     }
 
     public boolean delete(int pid, int uid) {

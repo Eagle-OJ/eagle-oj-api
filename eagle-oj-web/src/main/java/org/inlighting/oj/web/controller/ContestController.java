@@ -57,20 +57,37 @@ public class ContestController {
     public ResponseEntity getContestProblemInfo(@PathVariable("cid") int cid,
                                                 @PathVariable("pid") int pid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
-        if (problemEntity == null) {
-            throw new WebErrorException("此题不存在");
-        }
+        haveProblem(problemEntity);
+
+        // 加载本次比赛中此题的提交情况
         ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(pid, cid);
+        WebUtil.assertNotNull(contestProblemEntity, "本次比赛不包含此题");
         problemEntity.setSubmitTimes(contestProblemEntity.getSubmitTimes());
         problemEntity.setACTimes(contestProblemEntity.getACTimes());
         problemEntity.setCETimes(contestProblemEntity.getCETimes());
         problemEntity.setWATimes(contestProblemEntity.getWATimes());
         problemEntity.setTLETimes(contestProblemEntity.getTLETimes());
         problemEntity.setRTETimes(contestProblemEntity.getRTETimes());
+
+        // 加载用户信息
         UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
-        Map<String, Object> map = new HashMap<>(2);
+
+        // 加载比赛信息
+        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        boolean contestStatus = false;
+        if (contestEntity.getStatus() == 1) {
+            contestStatus = true;
+        }
+        Map<String, Object> map = new HashMap<>(3);
         map.put("problem", problemEntity);
-        map.put("author", userEntity.getNickname());
+        Map<String, Object> userMap = new HashMap<>(2);
+        userMap.put("nickname", userEntity.getNickname());
+        userMap.put("avatar", userEntity.getAvatar());
+        map.put("author", userMap);
+        Map<String, Object> contestMap = new HashMap<>(2);
+        contestMap.put("status", contestStatus);
+        contestMap.put("name", contestEntity.getName());
+        map.put("contest", contestMap);
         return new ResponseEntity(map);
     }
 
@@ -85,4 +102,7 @@ public class ContestController {
         return new ResponseEntity(contestEntity);
     }
 
+    private void haveProblem(ProblemEntity problemEntity) {
+        WebUtil.assertNotNull(problemEntity, "此题不存在");
+    }
 }

@@ -20,8 +20,8 @@ public class ProblemModeratorDao {
         return sqlSession.selectOne("problemModerator.select", entity);
     }
 
-    public List<Map<String, Object>> selectWithUser(SqlSession sqlSession, int pid) {
-        return sqlSession.selectList("problemModerator.selectWithUser", pid);
+    public List<Map<String, Object>> getModerators(SqlSession sqlSession, int pid) {
+        return sqlSession.selectList("problemModerator.getModerators", pid);
     }
 
     public boolean delete(SqlSession sqlSession, ProblemModeratorEntity entity) {

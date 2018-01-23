@@ -14,6 +14,10 @@
                 VALUES (#{uid}, #{email}, #{nickname}, #{password}, #{permission}, #{role}, #{registerTime})
     </insert>
 
+    <select id="getUserRankList" resultMap="userEntityResultMap">
+        SELECT uid, nickname, avatar, ac_times, finished_problems, submit_times FROM user ORDER BY finished_problems DESC, ac_times DESC, submit_times DESC
+    </select>
+
     <select id="selectUserByUid" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `uid` = #{uid}
     </select>
@@ -65,22 +69,6 @@
 
     <update id="updateUserAvatar">
         UPDATE `user` SET `avatar`=#{avatar} WHERE `uid` = #{uid}
-    </update>
-
-    <update id="addUserSubmitTimes">
-        UPDATE `user` SET `submit_times` = `submit_times`+1 WHERE `uid` = #{uid}
-    </update>
-
-    <update id="addUserAcceptTimes">
-        UPDATE `user` SET `accept_times` = `accept_times`+1 WHERE `uid` = #{uid}
-    </update>
-
-    <update id="addUserContestTimes">
-        UPDATE `user` SET `contest_times` = `contest_times` + 1 WHERE `uid` = #{uid}
-    </update>
-
-    <update id="addUserScore">
-        UPDATE `user` SET `score` = `score` + #{score} WHERE `uid` = #{uid}
     </update>
 
     <resultMap id="moderatorsMap" type="HashMap">

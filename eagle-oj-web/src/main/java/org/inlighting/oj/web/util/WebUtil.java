@@ -11,7 +11,7 @@ import java.util.Map;
  **/
 public class WebUtil {
     public static Map<String, Object> generatePageData(PageRowBounds pager, Object data) {
-        Map<String, Object> map = new HashMap<>(4);
+        Map<String, Object> map = new HashMap<>(2);
         map.put("total", pager.getTotal());
         map.put("data", data);
         return map;

@@ -54,41 +54,19 @@ public class ProblemController {
     @Autowired
     private TagProblemService tagProblemService;
 
-    @ApiOperation("获取公开题目列表")
-    @GetMapping
-    public ResponseEntity getProblems(@RequestParam(name = "difficult", defaultValue = "-1", required = false) int difficult,
-                                      @RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
-                                      @RequestParam(name = "uid", defaultValue = "-1", required = false) int uid,
-                                      @RequestParam("page") int page,
-                                      @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        if (tag.equals("null")) {
-            tag = null;
-        }
-        Map<String, Object> result = new HashMap<>(2);
-        List<Map<String, Object>> data;
-        if (uid != -1) {
-            // 返回带status结果的数据
-            data = problemService.getSharedProblemsWithStatus(uid, difficult, tag, pager);
-        } else {
-            // 返回不带status结果的数据
-            data = problemService.getSharedProblems(difficult, tag, pager);
-        }
-        result.put("problems", data);
-        result.put("total", pager.getTotal());
-        return new ResponseEntity(result);
-    }
-
     @ApiOperation("获取指定题目的信息")
     @GetMapping("/{pid}")
     public ResponseEntity get(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblemByPid(pid);
         haveProblem(problemEntity);
         UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
-        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(problemEntity));
-        jsonObject.put("nickname", userEntity.getNickname());
-        jsonObject.put("avatar", userEntity.getAvatar());
-        return new ResponseEntity(jsonObject);
+        Map<String, Object> dataMap = new HashMap<>(2);
+        dataMap.put("problem", problemEntity);
+        Map<String, Object> userMap = new HashMap<>(2);
+        userMap.put("nickname", userEntity.getNickname());
+        userMap.put("avatar", userEntity.getAvatar());
+        dataMap.put("author", userMap);
+        return new ResponseEntity(dataMap);
     }
 
     @ApiOperation("获取该题的所有标签")
@@ -251,7 +229,7 @@ public class ProblemController {
     @ApiOperation("获取题目的moderator")
     @GetMapping("/{pid}/moderators")
     public ResponseEntity getProblemModerators(@PathVariable("pid") int pid) {
-        List<Map<String, Object>> list = problemModeratorService.getWithUser(pid);
+        List<Map<String, Object>> list = problemModeratorService.getModerators(pid);
         return new ResponseEntity(list);
     }
 
