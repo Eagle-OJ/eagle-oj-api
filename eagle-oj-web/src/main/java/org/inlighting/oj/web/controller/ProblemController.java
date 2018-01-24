@@ -8,11 +8,15 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.inlighting.oj.web.DefaultConfig;
 import org.inlighting.oj.web.controller.exception.WebErrorException;
+import org.inlighting.oj.web.controller.format.admin.ProblemAuditingFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemModeratorFormat;
 import org.inlighting.oj.web.controller.format.user.AddProblemTestCaseFormat;
 import org.inlighting.oj.web.controller.format.user.UpdateProblemSettingFormat;
 import org.inlighting.oj.web.entity.*;
+import org.inlighting.oj.web.postman.MessageQueue;
+import org.inlighting.oj.web.postman.task.SendProblemAcceptedMessageTask;
+import org.inlighting.oj.web.postman.task.SendProblemRefusedMessageTask;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.*;
 import org.inlighting.oj.web.util.WebUtil;
@@ -53,6 +57,9 @@ public class ProblemController {
 
     @Autowired
     private TagProblemService tagProblemService;
+
+    @Autowired
+    private MessageQueue messageQueue;
 
     @ApiOperation("获取指定题目的信息")
     @GetMapping("/{pid}")
@@ -306,6 +313,41 @@ public class ProblemController {
             throw new WebErrorException("更新设置失败");
         }
         return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("题目是否审核通过")
+    @RequiresAuthentication
+    @PostMapping("/{pid}/auditing")
+    public ResponseEntity problemAuditing(@PathVariable int pid,
+                                          @RequestBody @Valid ProblemAuditingFormat format) {
+        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        haveProblem(problemEntity);
+        boolean status;
+        if (format.getAccepted()) {
+            status = problemService.acceptProblem(pid);
+            if (status) {
+                SendProblemAcceptedMessageTask task = new SendProblemAcceptedMessageTask();
+                task.setTitle(problemEntity.getTitle());
+                task.setUid(problemEntity.getOwner());
+                task.setPid(problemEntity.getPid());
+                task.setType(5);
+                messageQueue.addTask(task);
+            }
+        } else {
+            status = problemService.refuseProblem(pid);
+            if (status) {
+                SendProblemRefusedMessageTask task = new SendProblemRefusedMessageTask();
+                task.setTitle(problemEntity.getTitle());
+                task.setUid(problemEntity.getOwner());
+                task.setPid(problemEntity.getPid());
+                task.setType(6);
+                messageQueue.addTask(task);
+            }
+        }
+        if (! status) {
+            throw  new WebErrorException("审核失败");
+        }
+        return new ResponseEntity("审核成功");
     }
 
     private void havePermission(ProblemEntity problemEntity) {

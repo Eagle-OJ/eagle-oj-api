@@ -3,6 +3,7 @@ package org.inlighting.oj.web.controller;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.inlighting.oj.web.entity.ResponseEntity;
 import org.inlighting.oj.web.security.SessionHelper;
 import org.inlighting.oj.web.service.ProblemService;
@@ -63,5 +64,14 @@ public class ProblemsController {
         result.put("problems", data);
         result.put("total", pager.getTotal());
         return new ResponseEntity(result);
+    }
+
+    @RequiresAuthentication
+    @RequiresRoles("9")
+    @GetMapping("/auditing")
+    public ResponseEntity getAuditingProblems(@RequestParam("page") int page,
+                                              @RequestParam("page_size") int pageSize) {
+        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.getAuditingProblems(pager)));
     }
 }

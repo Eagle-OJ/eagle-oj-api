@@ -21,7 +21,7 @@ import java.util.List;
  **/
 public class Judge0 implements JudgerApi {
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient CLIENT = new OkHttpClient();
 
     private String REQUEST_URL = null;
 
@@ -86,7 +86,7 @@ public class Judge0 implements JudgerApi {
                 .post(formBody)
                 .build();
         String json = null;
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = CLIENT.newCall(request).execute()) {
             if (! response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }

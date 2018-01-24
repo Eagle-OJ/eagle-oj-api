@@ -52,6 +52,18 @@ public class ProblemService {
         return problemDao.getProblemsByUid(sqlSession, uid, page);
     }
 
+    public List<ProblemEntity> getAuditingProblems(PageRowBounds pager) {
+        return problemDao.getAuditingProblems(sqlSession, pager);
+    }
+
+    public boolean refuseProblem(int pid) {
+        return problemDao.refuseProblem(sqlSession, pid);
+    }
+
+    public boolean acceptProblem(int pid) {
+        return problemDao.acceptProblem(sqlSession, pid);
+    }
+
     public ProblemEntity getProblemByPid(int pid) {
         return problemDao.getProblemByPid(sqlSession, pid);
     }

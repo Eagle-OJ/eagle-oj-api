@@ -27,6 +27,10 @@ public class ProblemDao {
         return sqlSession.selectOne("problem.getProblemByPid", pid);
     }
 
+    public List<ProblemEntity> getAuditingProblems(SqlSession sqlSession, PageRowBounds pager) {
+        return sqlSession.selectList("problem.getAuditingProblems", null, pager);
+    }
+
     public List<ProblemEntity> getProblemsByUid(SqlSession sqlSession, int uid, PageRowBounds pager) {
         return sqlSession.selectList("problem.getProblemsByUid", uid, pager);
     }
@@ -53,5 +57,13 @@ public class ProblemDao {
 
     public boolean updateProblemTimes(SqlSession sqlSession, ProblemEntity entity) {
         return sqlSession.update("problem.updateProblemTimes", entity) == 1;
+    }
+
+    public boolean acceptProblem(SqlSession sqlSession, int pid) {
+        return sqlSession.update("problem.acceptProblem", pid) == 1;
+    }
+
+    public boolean refuseProblem(SqlSession sqlSession, int pid) {
+        return sqlSession.update("problem.refuseProblem", pid) == 1;
     }
 }

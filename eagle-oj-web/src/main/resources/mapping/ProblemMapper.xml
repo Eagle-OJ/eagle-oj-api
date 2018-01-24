@@ -35,6 +35,10 @@
         ORDER BY pid ASC
     </select>
 
+    <select id="getAuditingProblems" resultMap="problemResultMap">
+        SELECT * FROM problem WHERE status=1 ORDER BY create_time DESC
+    </select>
+
     <select id="getSharedProblemsWithStatus" resultType="HashMap" parameterType="HashMap">
         SELECT problem.pid, title, difficult, submit_times, ac_times, problem_user.status FROM problem
         LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
@@ -74,6 +78,14 @@
             <if test="CETimes > 0"> ce_times = ce_times+1,</if>
         </set>
         WHERE pid=#{pid}
+    </update>
+
+    <update id="refuseProblem">
+        UPDATE problem SET status = 0 WHERE pid=#{pid}
+    </update>
+
+    <update id="acceptProblem">
+        UPDATE problem SET status = 2 WHERE pid=#{pid}
     </update>
 
     <resultMap id="problemResultMap" type="ProblemEntity">

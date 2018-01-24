@@ -75,6 +75,12 @@ public class PostmanRunner {
                 case 4:
                     sendGroupUserMessage((SendGroupUserMessageTask) baseTask);
                     break;
+                case 5:
+                    sendProblemAcceptedMessage((SendProblemAcceptedMessageTask) baseTask);
+                    break;
+                case 6:
+                    sendProblemRefusedMessage((SendProblemRefusedMessageTask) baseTask);
+                    break;
                 default:
                     LOGGER.error("Invalid postman task type:"+type);
             }
@@ -91,8 +97,7 @@ public class PostmanRunner {
             for (Map.Entry<String, Object> entry: userRank.entrySet()) {
                 int uid = Integer.valueOf(entry.getKey());
                 int rank = (int) entry.getValue();
-                messageService.addMessage(uid, 1,
-                        MessageTemplate.generateCloseContestMessage(cid, name, rank), null);
+                sendNormalMessage(uid, MessageTemplate.generateCloseContestMessage(cid, name, rank));
             }
 
             // 发送official全局比赛消息
@@ -124,9 +129,9 @@ public class PostmanRunner {
                 int uid = Long.valueOf((long)user.get("uid")).intValue();
                 boolean i = contestUserService.add(task.getCid(), uid, System.currentTimeMillis());
                 if (i) {
-                    messageService.addMessage(uid, 3,
+                    sendNormalMessage(uid,
                             MessageTemplate.generateUserPulledIntoContestMessage(task.getContestName(),
-                                    task.getCid(), task.getGroupName(), task.getGid()), null);
+                            task.getCid(), task.getGroupName(), task.getGid()));
                 }
             }
         }
@@ -136,10 +141,27 @@ public class PostmanRunner {
             List<Map<String, Object>> users = groupUserService.getMembers(task.getGid(), null);
             for (Map<String, Object> user: users) {
                 int uid = Long.valueOf((long)user.get("uid")).intValue();
-                messageService.addMessage(uid, 4,
-                        MessageTemplate.generateSendGroupUserMessage(task.getGid(),
-                              task.getGroupName(), task.getMessage()), null);
+                sendNormalMessage(uid, MessageTemplate.generateSendGroupUserMessage(task.getGid(),
+                        task.getGroupName(), task.getMessage()));
             }
+        }
+
+        // type = 5
+        private void sendProblemAcceptedMessage(SendProblemAcceptedMessageTask task) {
+            int uid = task.getUid();
+            sendNormalMessage(uid, MessageTemplate.generateSendProblemAcceptedMessage(task.getTitle(),
+                    task.getPid()));
+        }
+
+        // type = 6
+        private void sendProblemRefusedMessage(SendProblemRefusedMessageTask task) {
+            int uid = task.getUid();
+            sendNormalMessage(uid, MessageTemplate.generateSendProblemRefusedMessage(task.getTitle(),
+                    task.getPid()));
+        }
+
+        private void sendNormalMessage(int uid, String message) {
+            messageService.addMessage(uid, 0, message, null);
         }
     }
 }

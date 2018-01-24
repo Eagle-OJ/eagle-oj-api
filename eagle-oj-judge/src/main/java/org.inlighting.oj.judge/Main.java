@@ -5,6 +5,7 @@ import org.inlighting.oj.judge.entity.RequestEntity;
 import org.inlighting.oj.judge.entity.ResponseEntity;
 import org.inlighting.oj.judge.entity.TestCaseRequestEntity;
 import org.inlighting.oj.judge.judger.Judger;
+import org.inlighting.oj.judge.judger.eagle.Eagle;
 import org.inlighting.oj.judge.judger.judge0.Judge0;
 
 import java.util.ArrayList;
@@ -22,8 +23,16 @@ public class Main {
         list.add(testCaseRequestEntity2);
         RequestEntity requestEntity = new RequestEntity(LanguageEnum.PYTHON35, "print(\"hello\")", 3,
                 128, list);
-        Judger judger = new Judger("http://www.funnytu.com:3000", requestEntity, new Judge0());
+        Judger judger = eagle(requestEntity);
         ResponseEntity responseEntity = judger.judge();
         System.out.println(JSON.toJSONString(responseEntity));
+    }
+
+    private static Judger judge0(RequestEntity requestEntity) {
+        return new Judger("http://www.funnytu.com:3000", requestEntity, new Judge0());
+    }
+
+    private static Judger eagle(RequestEntity requestEntity) {
+        return new Judger("http://101.132.164.120:5000", requestEntity, new Eagle());
     }
 }

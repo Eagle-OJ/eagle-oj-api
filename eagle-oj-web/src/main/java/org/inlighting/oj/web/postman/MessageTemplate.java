@@ -13,6 +13,10 @@ public class MessageTemplate {
 
     private final static String SEND_GROUP_USER_MESSAGE = "<a href=\"/#/group/[%gid%]\">[%group%]</a>小组发送通知：[%message%]";
 
+    private final static String SEND_PROBLEM_ACCEPTED_MESSAGE = "您的<a href=\"/#/problem/[%pid%]\">[%title%]</a>题目已经审核通过";
+
+    private final static String SEND_PROBLEM_REFUSED_MESSAGE = "您的<a href=\"/#/problem/[%pid%]\">[%title%]</a>题目审核不通过，请修改后再次申请审核";
+
     public static String generateCloseContestMessage(int cid, String name, int rank) {
         return CLOSE_CONTEST
                 .replace("[%cid%]", String.valueOf(cid))
@@ -41,5 +45,17 @@ public class MessageTemplate {
                 .replace("[%gid%]", String.valueOf(gid))
                 .replace("[%group%]", groupName)
                 .replace("[%message%]", message);
+    }
+
+    public static String generateSendProblemAcceptedMessage(String title, int pid) {
+        return SEND_PROBLEM_ACCEPTED_MESSAGE
+                .replace("[%pid%]", String.valueOf(pid))
+                .replace("[%title%]", title);
+    }
+
+    public static String generateSendProblemRefusedMessage(String title, int pid) {
+        return SEND_PROBLEM_REFUSED_MESSAGE
+                .replace("[%pid%]", String.valueOf(pid))
+                .replace("[%title%]", title);
     }
 }
