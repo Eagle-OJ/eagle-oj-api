@@ -8,41 +8,41 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * @author Smith
  **/
 public class ContestEntity {
-    private int cid;
+    private Integer cid;
 
     private String name;
 
-    private int owner;
+    private Integer owner;
 
     private String slogan;
 
     private String description;
 
     @JSONField(name = "start_time")
-    private long startTime;
+    private Long startTime;
 
     @JSONField(name = "end_time")
-    private long endTime;
+    private Long endTime;
 
     @JSONField(name = "total_time")
     private Long totalTime;
 
     private String password;
 
-    private int official;
+    private Integer official;
 
-    private int type;
+    private Integer type;
 
-    private int status;
+    private Integer status;
 
     @JSONField(name = "create_time")
-    private long createTime;
+    private Long createTime;
 
-    public int getCid() {
+    public Integer getCid() {
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(Integer cid) {
         this.cid = cid;
     }
 
@@ -54,11 +54,11 @@ public class ContestEntity {
         this.name = name;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
@@ -78,19 +78,19 @@ public class ContestEntity {
         this.description = description;
     }
 
-    public long getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
@@ -110,35 +110,35 @@ public class ContestEntity {
         this.password = password;
     }
 
-    public int getOfficial() {
+    public Integer getOfficial() {
         return official;
     }
 
-    public void setOfficial(int official) {
+    public void setOfficial(Integer official) {
         this.official = official;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

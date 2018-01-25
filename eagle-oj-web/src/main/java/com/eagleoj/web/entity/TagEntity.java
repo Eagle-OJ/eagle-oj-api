@@ -5,17 +5,17 @@ package com.eagleoj.web.entity;
  **/
 public class TagEntity {
 
-    private int tid;
+    private Integer tid;
 
     private String name;
 
-    private int used;
+    private Integer used;
 
-    public int getTid() {
+    public Integer getTid() {
         return tid;
     }
 
-    public void setTid(int tid) {
+    public void setTid(Integer tid) {
         this.tid = tid;
     }
 
@@ -27,11 +27,11 @@ public class TagEntity {
         this.name = name;
     }
 
-    public int getUsed() {
+    public Integer getUsed() {
         return used;
     }
 
-    public void setUsed(int used) {
+    public void setUsed(Integer used) {
         this.used = used;
     }
 }

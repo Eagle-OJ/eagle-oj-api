@@ -8,9 +8,9 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class ProblemEntity {
-    private int pid;
+    private Integer pid;
 
-    private int owner;
+    private Integer owner;
 
     private String title;
 
@@ -19,7 +19,7 @@ public class ProblemEntity {
 
     private JSONObject description;
 
-    private int difficult;
+    private Integer difficult;
 
     @JSONField(name = "input_format")
     private JSONObject inputFormat;
@@ -29,49 +29,49 @@ public class ProblemEntity {
 
     private JSONArray samples;
 
-    private int time;
+    private Integer time;
 
-    private int memory;
+    private Integer memory;
 
     @JSONField(name = "submit_times")
-    private int submitTimes;
+    private Integer submitTimes;
 
     @JSONField(name = "used_times")
-    private int usedTimes;
+    private Integer usedTimes;
 
     @JSONField(name = "ac_times")
-    private int ACTimes;
+    private Integer ACTimes;
 
     @JSONField(name = "wa_times")
-    private int WATimes;
+    private Integer WATimes;
 
     @JSONField(name = "rte_times")
-    private int RTETimes;
+    private Integer RTETimes;
 
     @JSONField(name = "tle_times")
-    private int TLETimes;
+    private Integer TLETimes;
 
     @JSONField(name = "ce_times")
-    private int CETimes;
+    private Integer CETimes;
 
-    private int status;
+    private Integer status;
 
     @JSONField(name = "create_time")
-    private long createTime;
+    private Long createTime;
 
-    public int getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
@@ -99,11 +99,11 @@ public class ProblemEntity {
         this.description = description;
     }
 
-    public int getDifficult() {
+    public Integer getDifficult() {
         return difficult;
     }
 
-    public void setDifficult(int difficult) {
+    public void setDifficult(Integer difficult) {
         this.difficult = difficult;
     }
 
@@ -131,91 +131,91 @@ public class ProblemEntity {
         this.samples = samples;
     }
 
-    public int getSubmitTimes() {
-        return submitTimes;
-    }
-
-    public void setSubmitTimes(int submitTimes) {
-        this.submitTimes = submitTimes;
-    }
-
-    public int getUsedTimes() {
-        return usedTimes;
-    }
-
-    public void setUsedTimes(int usedTimes) {
-        this.usedTimes = usedTimes;
-    }
-
-    public int getACTimes() {
-        return ACTimes;
-    }
-
-    public void setACTimes(int ACTimes) {
-        this.ACTimes = ACTimes;
-    }
-
-    public int getWATimes() {
-        return WATimes;
-    }
-
-    public void setWATimes(int WATimes) {
-        this.WATimes = WATimes;
-    }
-
-    public int getRTETimes() {
-        return RTETimes;
-    }
-
-    public void setRTETimes(int RTETimes) {
-        this.RTETimes = RTETimes;
-    }
-
-    public int getTLETimes() {
-        return TLETimes;
-    }
-
-    public void setTLETimes(int TLETimes) {
-        this.TLETimes = TLETimes;
-    }
-
-    public int getCETimes() {
-        return CETimes;
-    }
-
-    public void setCETimes(int CETimes) {
-        this.CETimes = CETimes;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
-    public int getTime() {
+    public Integer getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(Integer time) {
         this.time = time;
     }
 
-    public int getMemory() {
+    public Integer getMemory() {
         return memory;
     }
 
-    public void setMemory(int memory) {
+    public void setMemory(Integer memory) {
         this.memory = memory;
+    }
+
+    public Integer getSubmitTimes() {
+        return submitTimes;
+    }
+
+    public void setSubmitTimes(Integer submitTimes) {
+        this.submitTimes = submitTimes;
+    }
+
+    public Integer getUsedTimes() {
+        return usedTimes;
+    }
+
+    public void setUsedTimes(Integer usedTimes) {
+        this.usedTimes = usedTimes;
+    }
+
+    public Integer getACTimes() {
+        return ACTimes;
+    }
+
+    public void setACTimes(Integer ACTimes) {
+        this.ACTimes = ACTimes;
+    }
+
+    public Integer getWATimes() {
+        return WATimes;
+    }
+
+    public void setWATimes(Integer WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public Integer getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(Integer RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public Integer getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(Integer TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public Integer getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(Integer CETimes) {
+        this.CETimes = CETimes;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 }

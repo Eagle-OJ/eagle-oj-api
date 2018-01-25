@@ -6,49 +6,49 @@ import com.eagleoj.judge.ResultEnum;
  * @author Smith
  **/
 public class ContestProblemUserEntity {
-    private int cid;
+    private Integer cid;
 
-    private int pid;
+    private Integer pid;
 
-    private int uid;
+    private Integer uid;
 
-    private int score;
+    private Integer score;
 
     private ResultEnum status;
 
-    private long solvedTime;
+    private Long solvedTime;
 
-    private long usedTime;
+    private Long usedTime;
 
-    public int getCid() {
+    public Integer getCid() {
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(Integer cid) {
         this.cid = cid;
     }
 
-    public int getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
-    public int getUid() {
+    public Integer getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(Integer uid) {
         this.uid = uid;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
@@ -60,19 +60,19 @@ public class ContestProblemUserEntity {
         this.status = status;
     }
 
-    public long getSolvedTime() {
+    public Long getSolvedTime() {
         return solvedTime;
     }
 
-    public void setSolvedTime(long solvedTime) {
+    public void setSolvedTime(Long solvedTime) {
         this.solvedTime = solvedTime;
     }
 
-    public long getUsedTime() {
+    public Long getUsedTime() {
         return usedTime;
     }
 
-    public void setUsedTime(long usedTime) {
+    public void setUsedTime(Long usedTime) {
         this.usedTime = usedTime;
     }
 }

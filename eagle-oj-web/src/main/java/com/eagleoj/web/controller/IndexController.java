@@ -9,14 +9,10 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
 import com.eagleoj.web.cache.CacheController;
-import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.entity.AttachmentEntity;
 import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.entity.UserEntity;
-import com.eagleoj.web.controller.format.index.IndexLoginFormat;
-import com.eagleoj.web.controller.format.index.IndexRegisterFormat;
 import com.eagleoj.web.service.AttachmentService;
-import com.eagleoj.web.service.SettingService;
 import com.eagleoj.web.service.UserService;
 import com.eagleoj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +85,7 @@ public class IndexController {
     @GetMapping("/avatar")
     public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {
-        AttachmentEntity entity = attachmentService.get(aid);
+        AttachmentEntity entity = attachmentService.getByAid(aid);
         String url;
         if (entity == null) {
             throw new WebErrorException("不存在此头像");

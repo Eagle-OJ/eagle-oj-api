@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class ResponseEntity {
 
     @JSONField(ordinal = 0)
-    private int status;
+    private Integer status;
 
     @JSONField(ordinal = 1)
     private String message;
@@ -28,17 +28,17 @@ public class ResponseEntity {
         this(200, message, data);
     }
 
-    public ResponseEntity(int status, String message, Object data) {
+    public ResponseEntity(Integer status, String message, Object data) {
         this.status = status;
         this.message = message;
         this.data = data;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

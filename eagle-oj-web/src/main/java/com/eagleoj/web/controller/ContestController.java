@@ -5,6 +5,8 @@ import com.eagleoj.web.service.ContestProblemService;
 import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.ProblemService;
 import com.eagleoj.web.service.UserService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import com.eagleoj.web.controller.exception.WebErrorException;
@@ -44,14 +46,14 @@ public class ContestController {
     @GetMapping
     public ResponseEntity getContests(@RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        Map<String, Object> data = new HashMap<>();
-        List<Map<String, Object>> contests = contestService.getValidContests(pager);
+        Page pager = PageHelper.startPage(page, pageSize);
+        List<Map<String, Object>> contests = contestService.listValid();
         for (Map<String, Object> contest: contests) {
             if (contest.get("password") != null) {
                 contest.replace("password", "You can't see it!");
             }
         }
+        Map<String, Object> data = new HashMap<>(2);
         data.put("data", contests);
         data.put("total", pager.getTotal());
         return new ResponseEntity(data);
@@ -78,7 +80,7 @@ public class ContestController {
         UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
 
         // 加载比赛信息
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         boolean contestStatus = false;
         if (contestEntity.getStatus() == 1) {
             contestStatus = true;
@@ -99,7 +101,7 @@ public class ContestController {
     @ApiOperation("获取某个比赛信息")
     @GetMapping("/{cid}")
     public ResponseEntity getContest(@PathVariable("cid") int cid) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         WebUtil.assertNotNull(contestEntity, "不存在次比赛");
         if (contestEntity.getPassword()!=null) {
             contestEntity.setPassword("You can't see it");

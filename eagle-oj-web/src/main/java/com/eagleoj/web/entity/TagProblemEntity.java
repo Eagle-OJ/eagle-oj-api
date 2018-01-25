@@ -4,23 +4,23 @@ package com.eagleoj.web.entity;
  * @author Smith
  **/
 public class TagProblemEntity {
-    private int tid;
+    private Integer tid;
 
-    private int pid;
+    private Integer pid;
 
-    public int getTid() {
+    public Integer getTid() {
         return tid;
     }
 
-    public void setTid(int tid) {
+    public void setTid(Integer tid) {
         this.tid = tid;
     }
 
-    public int getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 }

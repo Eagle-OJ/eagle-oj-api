@@ -7,15 +7,31 @@ import com.alibaba.fastjson.annotation.JSONField;
  **/
 public class GroupUserEntity {
 
-    private int gid;
+    private Integer gid;
 
-    private int uid;
+    private Integer uid;
 
     @JSONField(name = "real_name")
     private String realName;
 
     @JSONField(name = "join_time")
-    private long joinTime;
+    private Long joinTime;
+
+    public Integer getGid() {
+        return gid;
+    }
+
+    public void setGid(Integer gid) {
+        this.gid = gid;
+    }
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
 
     public String getRealName() {
         return realName;
@@ -25,27 +41,11 @@ public class GroupUserEntity {
         this.realName = realName;
     }
 
-    public int getGid() {
-        return gid;
-    }
-
-    public void setGid(int gid) {
-        this.gid = gid;
-    }
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    public long getJoinTime() {
+    public Long getJoinTime() {
         return joinTime;
     }
 
-    public void setJoinTime(long joinTime) {
+    public void setJoinTime(Long joinTime) {
         this.joinTime = joinTime;
     }
 }

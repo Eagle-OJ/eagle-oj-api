@@ -12,10 +12,8 @@ import com.eagleoj.judge.judger.Judger;
 import com.eagleoj.judge.judger.judge0.Judge0;
 import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.entity.*;
-import com.eagleoj.web.judger.JudgerQueue;
 import com.eagleoj.web.judger.JudgerResult;
 import com.eagleoj.web.judger.JudgerStatus;
-import com.eagleoj.web.judger.JudgerTask;
 import com.eagleoj.web.service.*;
 import com.eagleoj.web.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +130,7 @@ public class JudgerRunner {
         private void saveSubmission(JudgerTask task, JudgerResult result) {
             int uid = task.getOwner();
             String filePath = fileUtil.uploadCode(task.getLang(), task.getSourceCode());
-            int aid = attachmentService.add(uid, filePath);
+            int aid = attachmentService.save(uid, filePath);
             submissionService.add(uid, task.getProblemId(), task.getContestId(),
                     aid, task.getLang(), result.getResponse().getTime(), result.getResponse().getMemory(),
                     result.getResponse().getResult());
@@ -170,7 +168,7 @@ public class JudgerRunner {
             ResultEnum resultEnum = result.getResponse().getResult();
             ContestEntity contestEntity = task.getAddContestEntity();
             ContestUserEntity contestUserEntity = task.getAddContestUserEntity();
-            ContestProblemUserEntity contestProblemUserEntity = contestProblemUserService.get(cid, pid, uid);
+            ContestProblemUserEntity contestProblemUserEntity = contestProblemUserService.getByCidPidUid(cid, pid, uid);
             long usedTime = evaluateUsedTime(contestEntity, contestUserEntity);
             if (contestEntity.getType() == 0 || contestEntity.getType() == 1) {
                 score = evaluateScore(resultEnum, result.getResponse().getTestCases(),
@@ -179,9 +177,9 @@ public class JudgerRunner {
 
             if (contestProblemUserEntity == null) {
                 if (resultEnum == ResultEnum.AC) {
-                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, System.currentTimeMillis(), usedTime);
+                    contestProblemUserService.save(cid, pid, uid, score, resultEnum, System.currentTimeMillis(), usedTime);
                 } else {
-                    contestProblemUserService.add(cid, pid, uid, score, resultEnum, 0, 0);
+                    contestProblemUserService.save(cid, pid, uid, score, resultEnum, 0, 0);
                 }
                 // 更新contest_user里面的times
                 updateContestUserTimesAndData(cid, uid, score, usedTime, resultEnum);

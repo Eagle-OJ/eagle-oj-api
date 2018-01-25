@@ -117,7 +117,7 @@ public class UserController {
             throw new WebErrorException("文件上传失败");
         }
 
-        int aid = attachmentService.add(uid, filePath);
+        int aid = attachmentService.save(uid, filePath);
         if (! userService.updateUserAvatar(uid, aid)) {
             throw new WebErrorException("头像更新失败");
         }

@@ -6,20 +6,20 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class AnnouncementEntity {
-    private int aid;
+    private Integer aid;
 
     private String title;
 
     private String content;
 
     @JSONField(name = "create_time")
-    private long createTime;
+    private Long createTime;
 
-    public int getAid() {
+    public Integer getAid() {
         return aid;
     }
 
-    public void setAid(int aid) {
+    public void setAid(Integer aid) {
         this.aid = aid;
     }
 
@@ -39,11 +39,11 @@ public class AnnouncementEntity {
         this.content = content;
     }
 
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

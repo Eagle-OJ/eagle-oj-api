@@ -40,7 +40,7 @@ public class LeaderboardService {
 
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getContestLeaderboard(int cid) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         if (contestEntity == null) {
             return null;
         }

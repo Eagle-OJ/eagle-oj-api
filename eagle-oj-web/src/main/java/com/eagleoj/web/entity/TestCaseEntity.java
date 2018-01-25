@@ -7,24 +7,24 @@ import com.alibaba.fastjson.annotation.JSONField;
  **/
 public class TestCaseEntity {
 
-    private int tid;
+    private Integer tid;
 
-    private int pid;
+    private Integer pid;
 
     private String stdin;
 
     private String stdout;
 
-    private int strength;
+    private Integer strength;
 
     @JSONField(name = "create_time")
-    private long createTime;
+    private Long createTime;
 
 
     public TestCaseEntity() {
     }
 
-    public TestCaseEntity(int pid, String stdin, String stdout, int strength, long createTime) {
+    public TestCaseEntity(Integer pid, String stdin, String stdout, Integer strength, Long createTime) {
         this.pid = pid;
         this.stdin = stdin;
         this.stdout = stdout;
@@ -32,11 +32,19 @@ public class TestCaseEntity {
         this.createTime = createTime;
     }
 
-    public int getPid() {
+    public Integer getTid() {
+        return tid;
+    }
+
+    public void setTid(Integer tid) {
+        this.tid = tid;
+    }
+
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
@@ -56,27 +64,19 @@ public class TestCaseEntity {
         this.stdout = stdout;
     }
 
-    public int getStrength() {
+    public Integer getStrength() {
         return strength;
     }
 
-    public void setStrength(int strength) {
+    public void setStrength(Integer strength) {
         this.strength = strength;
     }
 
-    public int getTid() {
-        return tid;
-    }
-
-    public void setTid(int tid) {
-        this.tid = tid;
-    }
-
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

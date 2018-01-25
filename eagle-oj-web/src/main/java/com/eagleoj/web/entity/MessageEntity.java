@@ -7,11 +7,11 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class MessageEntity {
-    private int mid;
+    private Integer mid;
 
-    private int owner;
+    private Integer owner;
 
-    private int type;
+    private Integer type;
 
     private String content;
 
@@ -19,29 +19,29 @@ public class MessageEntity {
     private JSONObject jsonContent;
 
     @JSONField(name = "create_time")
-    private long createTime;
+    private Long createTime;
 
-    public int getMid() {
+    public Integer getMid() {
         return mid;
     }
 
-    public void setMid(int mid) {
+    public void setMid(Integer mid) {
         this.mid = mid;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -61,11 +61,11 @@ public class MessageEntity {
         this.jsonContent = jsonContent;
     }
 
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

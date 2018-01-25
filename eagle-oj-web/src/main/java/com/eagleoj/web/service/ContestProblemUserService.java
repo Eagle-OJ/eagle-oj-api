@@ -13,52 +13,18 @@ import java.util.Map;
 /**
  * @author Smith
  **/
-@Service
-public class ContestProblemUserService {
+public interface ContestProblemUserService {
 
-    @Autowired
-    private ContestProblemUserDao contestProblemUserDao;
+    ContestProblemUserEntity getByCidPidUid(int cid, int pid, int uid);
 
-    @Autowired
-    private SqlSession sqlSession;
+    List<ContestProblemUserEntity> listAllByCid(int cid);
 
-    public ContestProblemUserEntity get(int cid, int pid, int uid) {
-        ContestProblemUserEntity entity = new ContestProblemUserEntity();
-        entity.setCid(cid);
-        entity.setPid(pid);
-        entity.setUid(uid);
-        return contestProblemUserDao.get(sqlSession, entity);
-    }
+    List<Map<String, Object>> listNormalContestRankByCid(int cid);
 
-    public List<ContestProblemUserEntity> getAll(int cid) {
-        return contestProblemUserDao.getAll(sqlSession, cid);
-    }
+    boolean save(int cid, int pid, int uid, int score,
+                 ResultEnum status, long solvedTimes, long usedTime);
 
-    public List<Map<String, Object>> getNormalContestRank(int cid) {
-        return contestProblemUserDao.getNormalContestRank(sqlSession, cid);
-    }
+    boolean update(int cid, int pid, int uid, int score, ResultEnum status,
+                   long solvedTime, long usedTime);
 
-    public boolean add(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes, long usedTime) {
-        ContestProblemUserEntity entity = new ContestProblemUserEntity();
-        entity.setCid(cid);
-        entity.setPid(pid);
-        entity.setUid(uid);
-        entity.setScore(score);
-        entity.setStatus(status);
-        entity.setSolvedTime(solvedTimes);
-        entity.setUsedTime(usedTime);
-        return contestProblemUserDao.add(sqlSession, entity);
-    }
-
-    public boolean update(int cid, int pid, int uid, int score, ResultEnum status, long solvedTime, long usedTime) {
-        ContestProblemUserEntity entity = new ContestProblemUserEntity();
-        entity.setCid(cid);
-        entity.setPid(pid);
-        entity.setUid(uid);
-        entity.setScore(score);
-        entity.setStatus(status);
-        entity.setSolvedTime(solvedTime);
-        entity.setUsedTime(usedTime);
-        return contestProblemUserDao.update(sqlSession, entity);
-    }
 }

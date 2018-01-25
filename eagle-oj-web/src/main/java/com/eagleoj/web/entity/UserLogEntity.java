@@ -12,25 +12,25 @@ public class UserLogEntity {
     @JSONField(name = "date", format = "MM-dd")
     private Date date;
 
-    private int uid;
+    private Integer uid;
 
     @JSONField(name = "submit_times")
-    private int submitTimes;
+    private Integer submitTimes;
 
     @JSONField(name = "ac_times")
-    private int ACTimes;
+    private Integer ACTimes;
 
     @JSONField(name = "wa_times")
-    private int WATimes;
+    private Integer WATimes;
 
     @JSONField(name = "rte_times")
-    private int RTETimes;
+    private Integer RTETimes;
 
     @JSONField(name = "tle_times")
-    private int TLETimes;
+    private Integer TLETimes;
 
     @JSONField(name = "ce_times")
-    private int CETimes;
+    private Integer CETimes;
 
     public Date getDate() {
         return date;
@@ -40,59 +40,59 @@ public class UserLogEntity {
         this.date = date;
     }
 
-    public int getUid() {
+    public Integer getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(Integer uid) {
         this.uid = uid;
     }
 
-    public int getSubmitTimes() {
+    public Integer getSubmitTimes() {
         return submitTimes;
     }
 
-    public void setSubmitTimes(int submitTimes) {
+    public void setSubmitTimes(Integer submitTimes) {
         this.submitTimes = submitTimes;
     }
 
-    public int getACTimes() {
+    public Integer getACTimes() {
         return ACTimes;
     }
 
-    public void setACTimes(int ACTimes) {
+    public void setACTimes(Integer ACTimes) {
         this.ACTimes = ACTimes;
     }
 
-    public int getWATimes() {
+    public Integer getWATimes() {
         return WATimes;
     }
 
-    public void setWATimes(int WATimes) {
+    public void setWATimes(Integer WATimes) {
         this.WATimes = WATimes;
     }
 
-    public int getRTETimes() {
+    public Integer getRTETimes() {
         return RTETimes;
     }
 
-    public void setRTETimes(int RTETimes) {
+    public void setRTETimes(Integer RTETimes) {
         this.RTETimes = RTETimes;
     }
 
-    public int getTLETimes() {
+    public Integer getTLETimes() {
         return TLETimes;
     }
 
-    public void setTLETimes(int TLETimes) {
+    public void setTLETimes(Integer TLETimes) {
         this.TLETimes = TLETimes;
     }
 
-    public int getCETimes() {
+    public Integer getCETimes() {
         return CETimes;
     }
 
-    public void setCETimes(int CETimes) {
+    public void setCETimes(Integer CETimes) {
         this.CETimes = CETimes;
     }
 }

@@ -6,132 +6,132 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class ContestUserEntity {
-    private int cid;
+    private Integer cid;
 
-    private int uid;
+    private Integer uid;
 
     @JSONField(name = "submit_times")
-    private int submitTimes;
+    private Integer submitTimes;
 
     @JSONField(name = "finished_problems")
-    private int finishedProblems;
+    private Integer finishedProblems;
 
     @JSONField(name = "ac_times")
-    private int ACTimes;
+    private Integer ACTimes;
 
     @JSONField(name = "wa_times")
-    private int WATimes;
+    private Integer WATimes;
 
     @JSONField(name = "rte_times")
-    private int RTETimes;
+    private Integer RTETimes;
 
     @JSONField(name = "tle_times")
-    private int TLETimes;
+    private Integer TLETimes;
 
     @JSONField(name = "ce_times")
-    private int CETimes;
+    private Integer CETimes;
 
-    private int score;
+    private Integer score;
 
     @JSONField(name = "used_time")
-    private long usedTime;
+    private Long usedTime;
 
     @JSONField(name = "join_time")
-    private long joinTime;
+    private Long joinTime;
 
-    public int getCid() {
+    public Integer getCid() {
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(Integer cid) {
         this.cid = cid;
     }
 
-    public int getUid() {
+    public Integer getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(Integer uid) {
         this.uid = uid;
     }
 
-    public int getSubmitTimes() {
+    public Integer getSubmitTimes() {
         return submitTimes;
     }
 
-    public void setSubmitTimes(int submitTimes) {
+    public void setSubmitTimes(Integer submitTimes) {
         this.submitTimes = submitTimes;
     }
 
-    public int getACTimes() {
-        return ACTimes;
-    }
-
-    public void setACTimes(int ACTimes) {
-        this.ACTimes = ACTimes;
-    }
-
-    public int getWATimes() {
-        return WATimes;
-    }
-
-    public void setWATimes(int WATimes) {
-        this.WATimes = WATimes;
-    }
-
-    public int getRTETimes() {
-        return RTETimes;
-    }
-
-    public void setRTETimes(int RTETimes) {
-        this.RTETimes = RTETimes;
-    }
-
-    public int getTLETimes() {
-        return TLETimes;
-    }
-
-    public void setTLETimes(int TLETimes) {
-        this.TLETimes = TLETimes;
-    }
-
-    public int getCETimes() {
-        return CETimes;
-    }
-
-    public void setCETimes(int CETimes) {
-        this.CETimes = CETimes;
-    }
-
-    public long getJoinTime() {
-        return joinTime;
-    }
-
-    public void setJoinTime(long joinTime) {
-        this.joinTime = joinTime;
-    }
-
-    public int getFinishedProblems() {
+    public Integer getFinishedProblems() {
         return finishedProblems;
     }
 
-    public void setFinishedProblems(int finishedProblems) {
+    public void setFinishedProblems(Integer finishedProblems) {
         this.finishedProblems = finishedProblems;
     }
 
-    public int getScore() {
+    public Integer getACTimes() {
+        return ACTimes;
+    }
+
+    public void setACTimes(Integer ACTimes) {
+        this.ACTimes = ACTimes;
+    }
+
+    public Integer getWATimes() {
+        return WATimes;
+    }
+
+    public void setWATimes(Integer WATimes) {
+        this.WATimes = WATimes;
+    }
+
+    public Integer getRTETimes() {
+        return RTETimes;
+    }
+
+    public void setRTETimes(Integer RTETimes) {
+        this.RTETimes = RTETimes;
+    }
+
+    public Integer getTLETimes() {
+        return TLETimes;
+    }
+
+    public void setTLETimes(Integer TLETimes) {
+        this.TLETimes = TLETimes;
+    }
+
+    public Integer getCETimes() {
+        return CETimes;
+    }
+
+    public void setCETimes(Integer CETimes) {
+        this.CETimes = CETimes;
+    }
+
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 
-    public long getUsedTime() {
+    public Long getUsedTime() {
         return usedTime;
     }
 
-    public void setUsedTime(long usedTime) {
+    public void setUsedTime(Long usedTime) {
         this.usedTime = usedTime;
+    }
+
+    public Long getJoinTime() {
+        return joinTime;
+    }
+
+    public void setJoinTime(Long joinTime) {
+        this.joinTime = joinTime;
     }
 }

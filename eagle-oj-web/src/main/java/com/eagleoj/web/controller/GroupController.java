@@ -231,7 +231,7 @@ public class GroupController {
         haveGroup(groupEntity);
         havePermission(groupEntity);
 
-        ContestEntity contestEntity = contestService.getContestByCid(format.getCid());
+        ContestEntity contestEntity = contestService.getByCid(format.getCid());
         haveContest(contestEntity);
 
         String password = contestEntity.getPassword();

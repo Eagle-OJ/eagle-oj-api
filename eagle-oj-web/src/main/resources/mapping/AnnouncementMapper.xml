@@ -2,22 +2,22 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="announcement">
+<mapper namespace="com.eagleoj.web.dao.AnnouncementMapper">
 
-    <insert id="addOne">
+    <insert id="save" parameterType="AnnouncementEntity">
         INSERT INTO announcement (title, content, create_time) VALUES (#{title}, #{content}, #{createTime})
     </insert>
 
-    <select id="getAll" resultMap="announcementMap">
+    <select id="listAll" resultMap="announcementMap">
         SELECT * FROM announcement ORDER BY create_time DESC
     </select>
 
-    <delete id="deleteOne">
+    <delete id="deleteByAid">
         DELETE FROM announcement WHERE aid=#{aid}
     </delete>
 
-    <update id="updateOne">
-        UPDATE announcement SET title=#{title}, content=#{content} WHERE aid=#{aid}
+    <update id="updateByAid">
+        UPDATE announcement SET title=#{data.title}, content=#{data.content} WHERE aid=#{aid}
     </update>
 
     <resultMap id="announcementMap" type="AnnouncementEntity">

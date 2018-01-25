@@ -2,65 +2,80 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="contestProblem">
-    <insert id="insertContestProblem" parameterType="ContestProblemEntity">
+<mapper namespace="com.eagleoj.web.dao.ContestProblemMapper">
+    <insert id="save" parameterType="ContestProblemEntity">
         INSERT INTO `contest_problem` (`pid`, `cid`, `display_id`, `score`) VALUES (#{pid}, #{cid}, #{displayId}, #{score})
     </insert>
 
-    <select id="getContestProblem" resultMap="contestProblemMap">
-        <if test="displayId == 0">
-            SELECT * FROM `contest_problem` WHERE `pid`=#{pid} AND `cid`=#{cid}
-        </if>
-        <if test="displayId != 0">
-            SELECT * FROM `contest_problem` WHERE `cid`=#{cid} AND display_id=#{displayId}
-        </if>
+    <select id="getByCidPid" resultMap="contestProblemMap">
+        SELECT * FROM `contest_problem` WHERE `pid`=#{pid} AND `cid`=#{cid}
     </select>
 
-    <select id="getContestProblems" resultType="HashMap">
-        SELECT problem.title, problem.difficult, contest_problem.* FROM contest_problem
-        LEFT JOIN problem ON contest_problem.pid=problem.pid
+    <select id="getByCidDisplayId" resultMap="contestProblemMap">
+        SELECT * FROM `contest_problem` WHERE `cid`=#{cid} AND display_id=#{displayId}
+    </select>
+
+    <select id="listByCid" resultType="HashMap">
+        SELECT
+            problem.title,
+            problem.difficult,
+            contest_problem.*
+        FROM contest_problem
+        LEFT JOIN problem
+                ON contest_problem.pid=problem.pid
         WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
     </select>
 
-    <select id="getContestProblemsWithStatus" resultType="HashMap">
-        SELECT problem.title, problem.difficult, contest_problem.*, contest_problem_user.status FROM contest_problem
-        LEFT JOIN problem ON contest_problem.pid=problem.pid
-        LEFT JOIN contest_problem_user ON contest_problem_user.cid=contest_problem.cid
-                                          AND contest_problem_user.pid=contest_problem.pid
-                                          AND contest_problem_user.uid=#{uid}
-        WHERE contest_problem.cid = #{cid} ORDER BY contest_problem.display_id ASC
+    <select id="listByCidUidWithStatus" resultType="HashMap">
+        SELECT
+            problem.title,
+            problem.difficult,
+            contest_problem.*,
+            contest_problem_user.status
+        FROM contest_problem
+        LEFT JOIN problem
+                ON contest_problem.pid=problem.pid
+        LEFT JOIN contest_problem_user
+                ON contest_problem_user.cid=contest_problem.cid
+                   AND contest_problem_user.pid=contest_problem.pid
+                   AND contest_problem_user.uid=#{uid}
+        WHERE
+            contest_problem.cid = #{cid}
+        ORDER BY contest_problem.display_id ASC
     </select>
 
-    <update id="updateContestProblem">
-        UPDATE `contest_problem` SET score = #{score}, display_id=#{displayId} WHERE cid = #{cid} AND pid = #{pid}
-    </update>
-
-    <update id="updateTimes">
-        UPDATE contest_problem
+    <update id="updateByCidPid">
+        UPDATE `contest_problem`
         <set>
-            <if test="submitTimes > 0">
+            <if test="data.score != null">
+                score = #{data.score},
+            </if>
+            <if test="data.displayId != null">
+                display_id=#{data.displayId}
+            </if>
+            <if test="data.submitTimes != null">
                 submit_times = submit_times + 1,
             </if>
-            <if test="ACTimes > 0">
+            <if test="data.ACTimes != null">
                 ac_times = ac_times + 1,
             </if>
-            <if test="WATimes > 0">
+            <if test="data.WATimes != null">
                 wa_times = wa_times + 1,
             </if>
-            <if test="RTETimes > 0">
+            <if test="data.RTETimes != null">
                 rte_times = rte_times + 1,
             </if>
-            <if test="TLETimes > 0">
+            <if test="data.TLETimes != null">
                 tle_times = tle_times + 1,
             </if>
-            <if test="CETimes > 0">
+            <if test="data.CETimes != null">
                 ce_times = ce_times + 1,
             </if>
         </set>
         WHERE cid = #{cid} AND pid = #{pid}
     </update>
 
-    <delete id="deleteContestProblem">
+    <delete id="deleteByCidPid">
         DELETE FROM contest_problem WHERE cid=#{cid} AND pid=#{pid}
     </delete>
 

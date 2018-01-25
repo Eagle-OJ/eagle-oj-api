@@ -6,30 +6,30 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class AttachmentEntity {
-    private int aid;
+    private Integer aid;
 
-    private int owner;
+    private Integer owner;
 
     private String url;
 
-    private int status;
+    private Integer status;
 
     @JSONField(name = "upload_time")
-    private long uploadTime;
+    private Long uploadTime;
 
-    public int getAid() {
+    public Integer getAid() {
         return aid;
     }
 
-    public void setAid(int aid) {
+    public void setAid(Integer aid) {
         this.aid = aid;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
@@ -41,19 +41,19 @@ public class AttachmentEntity {
         this.url = url;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public long getUploadTime() {
+    public Long getUploadTime() {
         return uploadTime;
     }
 
-    public void setUploadTime(long uploadTime) {
+    public void setUploadTime(Long uploadTime) {
         this.uploadTime = uploadTime;
     }
 }

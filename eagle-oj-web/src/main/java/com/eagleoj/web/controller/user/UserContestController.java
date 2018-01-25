@@ -6,14 +6,9 @@ import com.eagleoj.web.controller.format.user.*;
 import com.eagleoj.web.entity.*;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.*;
-import com.github.pagehelper.PageRowBounds;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
-import com.eagleoj.web.DefaultConfig;
-import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.user.*;
-import com.eagleoj.web.entity.*;
-import com.eagleoj.web.security.SessionHelper;
-import com.eagleoj.web.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -76,7 +71,7 @@ public class UserContestController {
     @ApiOperation("获取比赛信息")
     @GetMapping("/{cid}")
     public ResponseEntity getContestDescription(@PathVariable("cid") int cid) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
         return new ResponseEntity(contestEntity);
@@ -87,9 +82,9 @@ public class UserContestController {
     public ResponseEntity getContests(@RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
         int owner = SessionHelper.get().getUid();
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        Page pager = PageHelper.startPage(page, pageSize);
         Map<String ,Object> data = new HashMap<>(2);
-        data.put("data", contestService.getUserContests(owner, pager));
+        data.put("data", contestService.listByUid(owner));
         data.put("total", pager.getTotal());
         return new ResponseEntity(data);
     }
@@ -99,9 +94,9 @@ public class UserContestController {
     public ResponseEntity createContest(@RequestBody @Valid CreateContestFormat format) {
         int owner = SessionHelper.get().getUid();
         checkContest(format);
-        int cid = contestService.addContest(format.getName(), owner,format.getSlogan(),
+        int cid = contestService.save(format.getName(), owner,format.getSlogan(),
                 format.getDescription(), format.getStartTime(), format.getEndTime(),
-                format.getTotalTime(), format.getPassword(), format.getType(), System.currentTimeMillis());
+                format.getTotalTime(), format.getPassword(), format.getType());
         if (cid == 0) {
             throw new WebErrorException("比赛创建失败");
         }
@@ -114,11 +109,11 @@ public class UserContestController {
                                       @RequestBody @Valid CreateContestFormat format) {
         checkContest(format);
 
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
 
-        if (! contestService.updateContestDescription(cid, format.getName(), format.getSlogan(), format.getDescription(),
+        if (! contestService.updateDescriptionByCid(cid, format.getName(), format.getSlogan(), format.getDescription(),
                 format.getStartTime(), format.getEndTime(), format.getTotalTime(), format.getPassword(), format.getType())) {
             throw new WebErrorException("比赛更新失败");
         }
@@ -137,7 +132,7 @@ public class UserContestController {
         }
 
         // 校验密码
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         if (contestEntity.getPassword() != null) {
             String password = contestEntity.getPassword();
             if (! password.equals(format.getPassword())) {
@@ -168,7 +163,7 @@ public class UserContestController {
         Map<String, Object> map = new HashMap<>(3);
         map.put("meta", leaderboardService.getUserMetaInContest(uid, cid));
         map.put("user", info);
-        map.put("problems", contestProblemService.getContestProblemsWithStatus(cid, info.getUid()));
+        map.put("problems", contestProblemService.listContestProblemsWithUserStatus(cid, info.getUid()));
         return new ResponseEntity(map);
     }
 
@@ -185,7 +180,7 @@ public class UserContestController {
         }
 
         // 校验比赛和权限
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
 
@@ -206,7 +201,7 @@ public class UserContestController {
             throw new WebErrorException("显示题号重复");
         }
 
-        if (! contestProblemService.addProblemInfo(pid, cid, displayId, score)) {
+        if (! contestProblemService.save(pid, cid, displayId, score)) {
             throw new WebErrorException("题目添加失败");
         }
 
@@ -216,10 +211,10 @@ public class UserContestController {
     @ApiOperation("获取比赛的题目列表")
     @GetMapping("/{cid}/problem")
     public ResponseEntity getContestProblems(@PathVariable("cid") int cid) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
-        return new ResponseEntity(contestProblemService.getContestProblems(cid));
+        return new ResponseEntity(contestProblemService.listContestProblemsByCid(cid));
     }
 
     @ApiOperation("更新比赛题目的分值和题号")
@@ -227,14 +222,14 @@ public class UserContestController {
     public ResponseEntity updateContestProblem(@PathVariable("cid") int cid,
                                                @PathVariable("pid") int pid,
                                                @RequestBody @Valid UpdateContestProblemFormat format) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
         if (contestProblemService.displayIdIsDuplicate(cid, format.getDisplayId())) {
             throw new WebErrorException("显示题号重复");
         }
 
-        if (! contestProblemService.updateContestProblem(cid, pid, format.getDisplayId(), format.getScore())) {
+        if (! contestProblemService.updateContestProblemInfo(cid, pid, format.getDisplayId(), format.getScore())) {
             throw new WebErrorException("更新失败");
         }
         return new ResponseEntity("更新成功");
@@ -244,11 +239,11 @@ public class UserContestController {
     @PostMapping("/{cid}/status")
     public ResponseEntity updateContestStatus(@PathVariable("cid") int cid,
                                               @RequestBody @Valid UpdateContestStatusFormat format) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
 
-        if (! contestService.updateContestStatus(cid, format.getStatus())) {
+        if (! contestService.updateStatusByCid(cid, format.getStatus())) {
             throw new WebErrorException("修改比赛状态失败");
         }
         return new ResponseEntity("成功修改比赛状态");
@@ -258,10 +253,10 @@ public class UserContestController {
     @DeleteMapping("/{cid}/problem/{pid}")
     public ResponseEntity deleteContestProblem(@PathVariable("cid") int cid,
                                                @PathVariable("pid") int pid) {
-        ContestEntity contestEntity = contestService.getContestByCid(cid);
+        ContestEntity contestEntity = contestService.getByCid(cid);
         haveContest(contestEntity);
         havePermission(contestEntity);
-        if (! contestProblemService.deleteContestProblem(cid, pid)) {
+        if (! contestProblemService.deleteByCidPid(cid, pid)) {
             throw new WebErrorException("删除失败");
         }
         return new ResponseEntity("删除成功");

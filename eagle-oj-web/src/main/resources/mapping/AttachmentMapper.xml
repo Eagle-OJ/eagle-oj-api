@@ -2,14 +2,14 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="attachment">
+<mapper namespace="com.eagleoj.web.dao.AttachmentMapper">
 
-    <insert id="addAttachment" parameterType="AttachmentEntity" useGeneratedKeys="true" keyProperty="aid">
+    <insert id="save" parameterType="AttachmentEntity" useGeneratedKeys="true" keyProperty="aid">
         INSERT INTO `attachment`(`owner`,`url`,`upload_time`)
             VALUES (#{owner},#{url},#{uploadTime})
     </insert>
 
-    <select id="getAttachment" resultMap="attachmentMap">
+    <select id="getByAid" resultMap="attachmentMap">
         SELECT * FROM `attachment` WHERE `aid` = #{aid}
     </select>
 

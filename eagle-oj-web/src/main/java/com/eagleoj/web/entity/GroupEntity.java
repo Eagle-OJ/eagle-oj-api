@@ -6,32 +6,32 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author Smith
  **/
 public class GroupEntity {
-    private int gid;
+    private Integer gid;
 
-    private int owner;
+    private Integer owner;
 
     private String name;
 
     private String password;
 
-    private int people;
+    private Integer people;
 
     @JSONField(name = "create_time")
-    private long createTime;
+    private Long createTime;
 
-    public int getGid() {
+    public Integer getGid() {
         return gid;
     }
 
-    public void setGid(int gid) {
+    public void setGid(Integer gid) {
         this.gid = gid;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
@@ -51,19 +51,19 @@ public class GroupEntity {
         this.password = password;
     }
 
-    public int getPeople() {
+    public Integer getPeople() {
         return people;
     }
 
-    public void setPeople(int people) {
+    public void setPeople(Integer people) {
         this.people = people;
     }
 
-    public long getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

@@ -6,13 +6,13 @@ import com.eagleoj.judge.ResultEnum;
  * @author Smith
  **/
 public class ProblemUserEntity {
-    private int pid;
+    private Integer pid;
 
-    private int uid;
+    private Integer uid;
 
     private ResultEnum status;
 
-    public ProblemUserEntity(int pid, int uid, ResultEnum status) {
+    public ProblemUserEntity(Integer pid, Integer uid, ResultEnum status) {
         this.pid = pid;
         this.uid = uid;
         this.status = status;
@@ -21,19 +21,19 @@ public class ProblemUserEntity {
     public ProblemUserEntity() {
     }
 
-    public int getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
-    public int getUid() {
+    public Integer getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(Integer uid) {
         this.uid = uid;
     }
 

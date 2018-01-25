@@ -8,68 +8,68 @@ import com.eagleoj.judge.ResultEnum;
  * @author Smith
  **/
 public class SubmissionEntity {
-    private int sid;
+    private Integer sid;
 
-    private int owner;
+    private Integer owner;
 
-    private int pid;
+    private Integer pid;
 
-    private int cid;
+    private Integer cid;
 
     @JSONField(name = "source_code")
-    private int sourceCode;
+    private Integer sourceCode;
 
     @JSONField(name = "lang")
     private LanguageEnum lang;
 
     @JSONField(name = "time")
-    private double time;
+    private Double time;
 
     @JSONField(name = "memory")
-    private int memory;
+    private Integer memory;
 
     private ResultEnum status;
 
     @JSONField(name = "submit_time")
-    private long submitTime;
+    private Long submitTime;
 
-    public int getSid() {
+    public Integer getSid() {
         return sid;
     }
 
-    public void setSid(int sid) {
+    public void setSid(Integer sid) {
         this.sid = sid;
     }
 
-    public int getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
-    public int getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
-    public int getCid() {
+    public Integer getCid() {
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(Integer cid) {
         this.cid = cid;
     }
 
-    public int getSourceCode() {
+    public Integer getSourceCode() {
         return sourceCode;
     }
 
-    public void setSourceCode(int sourceCode) {
+    public void setSourceCode(Integer sourceCode) {
         this.sourceCode = sourceCode;
     }
 
@@ -81,19 +81,19 @@ public class SubmissionEntity {
         this.lang = lang;
     }
 
-    public double getTime() {
+    public Double getTime() {
         return time;
     }
 
-    public void setTime(double time) {
+    public void setTime(Double time) {
         this.time = time;
     }
 
-    public int getMemory() {
+    public Integer getMemory() {
         return memory;
     }
 
-    public void setMemory(int memory) {
+    public void setMemory(Integer memory) {
         this.memory = memory;
     }
 
@@ -105,11 +105,11 @@ public class SubmissionEntity {
         this.status = status;
     }
 
-    public long getSubmitTime() {
+    public Long getSubmitTime() {
         return submitTime;
     }
 
-    public void setSubmitTime(long submitTime) {
+    public void setSubmitTime(Long submitTime) {
         this.submitTime = submitTime;
     }
 }
