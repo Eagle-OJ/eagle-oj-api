@@ -1,8 +1,8 @@
 package service;
 
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.entity.GroupUserEntity;
-import org.inlighting.oj.web.service.GroupUserService;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.entity.GroupUserEntity;
+import com.eagleoj.web.service.GroupUserService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

@@ -1,8 +1,8 @@
 package service;
 
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.entity.ContestUserEntity;
-import org.inlighting.oj.web.service.ContestUserService;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.entity.ContestUserEntity;
+import com.eagleoj.web.service.ContestUserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

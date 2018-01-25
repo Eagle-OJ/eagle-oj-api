@@ -2,8 +2,8 @@ package service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.service.ProblemService;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.service.ProblemService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,7 +1,7 @@
 package service;
 
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.service.GroupService;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.service.GroupService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,8 +1,8 @@
 package service;
 
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.entity.TestCaseEntity;
-import org.inlighting.oj.web.service.TestCasesService;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.entity.TestCaseEntity;
+import com.eagleoj.web.service.TestCasesService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

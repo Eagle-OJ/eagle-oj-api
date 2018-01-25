@@ -1,7 +1,7 @@
 package controller;
 
 import com.alibaba.fastjson.JSON;
-import org.inlighting.oj.web.WebApplication;
+import com.eagleoj.web.WebApplication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

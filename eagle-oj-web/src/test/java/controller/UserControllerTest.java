@@ -1,7 +1,7 @@
 package controller;
 
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.inlighting.oj.web.WebApplication;
+import com.eagleoj.web.WebApplication;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

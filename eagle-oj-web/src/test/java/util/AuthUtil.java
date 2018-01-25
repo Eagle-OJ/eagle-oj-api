@@ -2,8 +2,8 @@ package util;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.shiro.crypto.hash.Md5Hash;
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.util.JWTUtil;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.util.JWTUtil;
 import org.junit.Test;
 import org.junit.experimental.results.ResultMatchers;
 import org.junit.jupiter.api.BeforeAll;

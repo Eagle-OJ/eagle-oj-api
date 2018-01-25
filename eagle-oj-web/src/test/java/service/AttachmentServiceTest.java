@@ -1,8 +1,8 @@
 package service;
 
-import org.inlighting.oj.web.WebApplication;
-import org.inlighting.oj.web.dao.AttachmentDao;
-import org.inlighting.oj.web.service.AttachmentService;
+import com.eagleoj.web.WebApplication;
+import com.eagleoj.web.dao.AttachmentDao;
+import com.eagleoj.web.service.AttachmentService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eagleoj.web.dao.TestMapper">
+    <select id="getUser" resultMap="userEntityResultMap">
+        SELECT * FROM user WHERE uid=#{uid}
+    </select>
+
+
+
+    <resultMap id="userEntityResultMap" type="UserEntity">
+        <id property="uid" column="uid"/>
+        <result property="email" column="email"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+        <result property="password" column="password"/>
+        <result property="role" column="role"/>
+        <result property="permission" column="permission"/>
+        <result property="submitTimes" column="submit_times"/>
+        <result property="contestTimes" column="contest_times"/>
+        <result property="ACTimes" column="ac_times"/>
+        <result property="WATimes" column="wa_times"/>
+        <result property="RTETimes" column="rte_times"/>
+        <result property="TLETimes" column="tle_times"/>
+        <result property="CETimes" column="ce_times"/>
+        <result property="finishedProblems" column="finished_problems"/>
+        <result property="score" column="score"/>
+        <result property="gender" column="gender"/>
+        <result property="motto" column="motto"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="verified" column="verified"/>
+    </resultMap>
+</mapper>
