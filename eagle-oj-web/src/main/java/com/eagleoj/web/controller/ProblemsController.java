@@ -1,5 +1,7 @@
 package com.eagleoj.web.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -37,8 +39,8 @@ public class ProblemsController {
     public ResponseEntity getUserProblems(@RequestParam(name = "page") int page,
                                           @RequestParam(name = "page_size") int pageSize) {
         int uid = SessionHelper.get().getUid();
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.getProblemsByUid(uid, pager)));
+        Page pager = PageHelper.startPage(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listUserProblems(uid)));
     }
 
     @ApiOperation("获取公开题目列表")
@@ -48,22 +50,19 @@ public class ProblemsController {
                                       @RequestParam(name = "uid", defaultValue = "-1", required = false) int uid,
                                       @RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        Page pager = PageHelper.startPage(page, pageSize);
         if (tag.equals("null")) {
             tag = null;
         }
-        Map<String, Object> result = new HashMap<>(2);
         List<Map<String, Object>> data;
         if (uid != -1) {
             // 返回带status结果的数据
-            data = problemService.getSharedProblemsWithStatus(uid, difficult, tag, pager);
+            data = problemService.listSharedProblemsWithUserStatus(uid, difficult, tag);
         } else {
             // 返回不带status结果的数据
-            data = problemService.getSharedProblems(difficult, tag, pager);
+            data = problemService.listSharedProblems(difficult, tag);
         }
-        result.put("problems", data);
-        result.put("total", pager.getTotal());
-        return new ResponseEntity(result);
+        return new ResponseEntity(WebUtil.generatePageData(pager, data));
     }
 
     @RequiresAuthentication
@@ -71,7 +70,7 @@ public class ProblemsController {
     @GetMapping("/auditing")
     public ResponseEntity getAuditingProblems(@RequestParam("page") int page,
                                               @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.getAuditingProblems(pager)));
+        Page pager = PageHelper.startPage(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listAuditingProblems()));
     }
 }

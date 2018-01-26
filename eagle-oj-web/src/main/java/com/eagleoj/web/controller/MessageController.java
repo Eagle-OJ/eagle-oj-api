@@ -1,5 +1,8 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.util.WebUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import com.eagleoj.web.entity.ResponseEntity;
@@ -32,10 +35,7 @@ public class MessageController {
     public ResponseEntity getMessage(@RequestParam("page") int page,
                                      @RequestParam("page_size") int pageSize) {
         int owner = SessionHelper.get().getUid();
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("data", messageService.getMessage(owner, pager));
-        map.put("total", pager.getTotal());
-        return new ResponseEntity(map);
+        Page pager = PageHelper.startPage(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, messageService.listUserMessages(owner)));
     }
 }

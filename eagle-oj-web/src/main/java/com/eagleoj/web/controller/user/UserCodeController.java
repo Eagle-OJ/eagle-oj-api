@@ -3,14 +3,11 @@ package com.eagleoj.web.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.SubmitCodeFormat;
+import com.eagleoj.web.entity.*;
 import com.eagleoj.web.judger.JudgerManager;
 import io.swagger.annotations.ApiOperation;
 import com.eagleoj.judge.LanguageEnum;
 import com.eagleoj.judge.entity.TestCaseRequestEntity;
-import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.user.SubmitCodeFormat;
-import com.eagleoj.web.entity.*;
-import com.eagleoj.web.judger.JudgerManager;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.*;
 import com.eagleoj.web.util.WebUtil;
@@ -116,7 +113,7 @@ public class UserCodeController {
             }
         }
 
-        ProblemEntity problemEntity = problemService.getProblemByPid(problemId);
+        ProblemEntity problemEntity = problemService.getProblem(problemId);
         WebUtil.assertNotNull(problemEntity, "题目不存在");
 
         // 获取题目是否在次比赛中
@@ -147,7 +144,7 @@ public class UserCodeController {
     private ResponseEntity submitProblem(SubmitCodeFormat format) {
         int problemId = format.getProblemId();
         int uid = SessionHelper.get().getUid();
-        ProblemEntity problemEntity = problemService.getProblemByPid(problemId);
+        ProblemEntity problemEntity = problemService.getProblem(problemId);
 
         WebUtil.assertNotNull(problemEntity, "不存在此题");
         containLang(format.getLang(), problemEntity.getLang());

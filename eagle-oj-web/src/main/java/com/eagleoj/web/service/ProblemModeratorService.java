@@ -13,41 +13,15 @@ import java.util.Map;
 /**
  * @author Smith
  **/
-@Service
-public class ProblemModeratorService {
+public interface ProblemModeratorService {
 
-    @Autowired
-    private SqlSession sqlSession;
+    boolean save(int pid, int uid);
 
-    @Autowired
-    private ProblemModeratorDao problemModeratorDao;
+    boolean isExist(int pid, int uid);
 
-    public boolean add(int pid, int uid) {
-        ProblemModeratorEntity entity = new ProblemModeratorEntity();
-        entity.setUid(uid);
-        entity.setPid(pid);
-        return problemModeratorDao.add(sqlSession, entity);
-    }
+    ProblemModeratorEntity get(int pid, int uid);
 
-    public boolean isExist(int pid, int uid) {
-        return get(pid, uid) != null;
-    }
+    List<Map<String, Object>> listProblemModerators(int pid);
 
-    public ProblemModeratorEntity get(int pid, int uid) {
-        ProblemModeratorEntity entity = new ProblemModeratorEntity();
-        entity.setPid(pid);
-        entity.setUid(uid);
-        return problemModeratorDao.get(sqlSession, entity);
-    }
-
-    public List<Map<String, Object>> getModerators(int pid) {
-        return problemModeratorDao.getModerators(sqlSession, pid);
-    }
-
-    public boolean delete(int pid, int uid) {
-        ProblemModeratorEntity entity = new ProblemModeratorEntity();
-        entity.setPid(pid);
-        entity.setUid(uid);
-        return problemModeratorDao.delete(sqlSession, entity);
-    }
+    boolean delete(int pid, int uid);
 }

@@ -2,17 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="setting">
+<mapper namespace="com.eagleoj.web.dao.SettingMapper">
 
-    <select id="getAll" resultMap="settingMap">
+    <select id="listAll" resultMap="settingMap">
         SELECT * FROM setting
     </select>
 
-    <update id="updateOne">
-        UPDATE setting SET value=#{value} WHERE `key`=#{key}
+    <update id="updateByKey">
+        UPDATE setting SET value=${value} WHERE `key`=${key}
     </update>
 
-    <insert id="insertAll">
+    <insert id="batchSave">
         INSERT setting (`key`, value) VALUES
         <foreach item="item" index="index" collection="list" separator=",">
             (#{item.key}, #{item.value})

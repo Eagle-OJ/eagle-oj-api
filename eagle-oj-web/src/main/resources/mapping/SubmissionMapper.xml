@@ -2,15 +2,15 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="submission">
+<mapper namespace="com.eagleoj.web.dao.SubmissionMapper">
 
-    <insert id="insertSubmission" parameterType="SubmissionEntity" useGeneratedKeys="true" keyProperty="sid">
+    <insert id="save" parameterType="SubmissionEntity" useGeneratedKeys="true" keyProperty="sid">
         INSERT INTO `submission` (`owner`, `pid`, `cid`, `source_code`, `lang`,
                                   `time`, `memory`, `status`, `submit_time`)
         VALUES (#{owner}, #{pid}, #{cid}, #{sourceCode}, #{lang}, #{time}, #{memory}, #{status}, #{submitTime})
     </insert>
 
-    <select id="getSubmissions" resultType="HashMap">
+    <select id="listSubmissionsByOwnerPidCid" resultType="HashMap">
         SELECT * FROM submission LEFT JOIN attachment ON submission.source_code=attachment.aid
         WHERE submission.owner=#{owner} AND pid=#{pid}
         <if test="cid != 0">

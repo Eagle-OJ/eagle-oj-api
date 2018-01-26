@@ -1,49 +1,18 @@
 package com.eagleoj.web.service;
 
-import com.github.pagehelper.PageRowBounds;
-import org.apache.ibatis.session.SqlSession;
-import com.eagleoj.web.dao.GroupDao;
 import com.eagleoj.web.entity.GroupEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
  * @author Smith
  **/
-@Service
-public class GroupService {
+public interface GroupService {
 
-    @Autowired
-    private GroupDao groupDao;
+    int save(int owner, String name, String password);
 
-    @Autowired
-    private SqlSession sqlSession;
+    GroupEntity getGroup(int gid);
 
-    public int createGroup(int owner, String name, String password, long createTime) {
-        GroupEntity groupEntity = new GroupEntity();
-        groupEntity.setOwner(owner);
-        groupEntity.setPassword(password);
-        groupEntity.setName(name);
-        groupEntity.setCreateTime(createTime);
-        boolean flag= groupDao.createGroup(sqlSession,groupEntity);
-        return flag ? groupEntity.getGid():0;
-    }
+    List<GroupEntity> listUserGroups(int owner);
 
-    public GroupEntity getGroup(int gid) {
-        return groupDao.getGroup(sqlSession,gid);
-    }
-
-    public List<GroupEntity> getGroups(int owner, PageRowBounds pager) {
-        return groupDao.getGroups(sqlSession, owner, pager);
-    }
-
-    public boolean updateGroup(int gid, String name, String password) {
-        GroupEntity entity = new GroupEntity();
-        entity.setGid(gid);
-        entity.setName(name);
-        entity.setPassword(password);
-        return groupDao.updateGroup(sqlSession, entity);
-    }
+    boolean updateGroupByGid(int gid, String name, String password);
 }

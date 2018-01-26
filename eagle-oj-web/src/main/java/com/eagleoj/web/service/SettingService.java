@@ -35,7 +35,7 @@ public class SettingService {
         this.sqlSession = sqlSession;
         this.settingDao = settingDao;
         this.userDao = userDao;
-        init();
+        //init();
     }
 
     public SystemConfig getSystemConfig() {

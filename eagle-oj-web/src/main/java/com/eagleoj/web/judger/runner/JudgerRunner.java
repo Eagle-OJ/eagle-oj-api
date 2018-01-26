@@ -131,7 +131,7 @@ public class JudgerRunner {
             int uid = task.getOwner();
             String filePath = fileUtil.uploadCode(task.getLang(), task.getSourceCode());
             int aid = attachmentService.save(uid, filePath);
-            submissionService.add(uid, task.getProblemId(), task.getContestId(),
+            submissionService.save(uid, task.getProblemId(), task.getContestId(),
                     aid, task.getLang(), result.getResponse().getTime(), result.getResponse().getMemory(),
                     result.getResponse().getResult());
         }
@@ -144,14 +144,14 @@ public class JudgerRunner {
             ResultEnum resultEnum = result.getResponse().getResult();
             ProblemUserEntity problemUserEntity = problemUserService.get(pid, uid);
             if (problemUserEntity == null) {
-                problemUserService.add(pid, uid, resultEnum);
+                problemUserService.save(pid, uid, resultEnum);
                 updateUserTimes(uid, status, resultEnum);
                 updateProblemTimes(pid, resultEnum);
                 return;
             }
 
             if (problemUserEntity.getStatus() != ResultEnum.AC) {
-                problemUserService.update(pid, uid, resultEnum);
+                problemUserService.updateByPid(pid, uid, resultEnum);
                 updateUserTimes(uid, status, resultEnum);
                 updateProblemTimes(pid, resultEnum);
             }
@@ -284,7 +284,7 @@ public class JudgerRunner {
                     problemEntity.setCETimes(1);
                     break;
             }
-            problemService.updateProblemTimes(pid, problemEntity);
+            problemService.updateProblemTimesByPid(pid, problemEntity);
         }
 
         private void updateContestUserTimesAndData(int cid, int uid, int score, long usedTime, ResultEnum resultEnum) {
@@ -312,7 +312,7 @@ public class JudgerRunner {
                     entity.setTLETimes(1);
                     break;
             }
-            contestUserService.updateTimesAndData(cid, uid, entity);
+            contestUserService.updateByCidUid(cid, uid, entity);
         }
 
         private void updateContestProblemTimes(int cid, int pid, ResultEnum result) {

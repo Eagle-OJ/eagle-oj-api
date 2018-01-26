@@ -141,7 +141,7 @@ public class UserContestController {
         }
 
         // 加入比赛
-        if (! contestUserInfoService.add(cid, uid, System.currentTimeMillis())) {
+        if (! contestUserInfoService.save(cid, uid)) {
             throw new WebErrorException("加入比赛失败");
         }
 
@@ -189,7 +189,7 @@ public class UserContestController {
             throw new WebErrorException("题目已经被添加");
         }
 
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         if (problemEntity == null) {
             throw new WebErrorException("此题不存在");
         }

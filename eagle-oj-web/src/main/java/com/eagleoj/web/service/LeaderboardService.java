@@ -53,10 +53,10 @@ public class LeaderboardService {
         }
         if (type == 0 || type == 1) {
             // 普通比赛
-            list = contestUserService.getNormalContestRankList(cid);
+            list = contestUserService.listNormalContestRank(cid);
         } else {
             // ACM
-            list = contestUserService.getACMContestRankList(cid, DefaultConfig.ACM_PENALTY_TIME);
+            list = contestUserService.listACMContestRank(cid, DefaultConfig.ACM_PENALTY_TIME);
         }
         // 存放本次生成的基本信息
         Map<String, Object> meta = new HashMap<>(2);

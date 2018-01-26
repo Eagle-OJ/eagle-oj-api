@@ -63,7 +63,7 @@ public class ContestController {
     @GetMapping("/{cid}/problem/{pid}")
     public ResponseEntity getContestProblemInfo(@PathVariable("cid") int cid,
                                                 @PathVariable("pid") int pid) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
 
         // 加载本次比赛中此题的提交情况

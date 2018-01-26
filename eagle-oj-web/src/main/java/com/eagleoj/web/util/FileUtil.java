@@ -24,12 +24,13 @@ public class FileUtil {
 
     private OSSClient ossClient;
 
-    public FileUtil(SettingService settingService) {
+    // todo
+    /*public FileUtil(SettingService settingService) {
         OSSConfig ossConfig = settingService.getSystemConfig().getOssConfig();
         ossClient = new OSSClient(ossConfig.getEND_POINT(),
                 ossConfig.getACCESS_KEY(), ossConfig.getSECRET_KEY());
         BUCKET = ossConfig.getBUCKET();
-    }
+    }*/
 
 
     public String uploadCode(LanguageEnum lang, String code) {

@@ -1,11 +1,9 @@
 package com.eagleoj.web.service.impl;
 
 import com.eagleoj.judge.ResultEnum;
-import com.eagleoj.web.dao.ContestProblemUserDao;
 import com.eagleoj.web.dao.ContestProblemUserMapper;
 import com.eagleoj.web.entity.ContestProblemUserEntity;
 import com.eagleoj.web.service.ContestProblemUserService;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

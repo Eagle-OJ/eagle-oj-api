@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -80,9 +82,9 @@ public class UserController {
     @GetMapping("/contests")
     public ResponseEntity getUserContests(@RequestParam(name = "page") int page,
                                           @RequestParam(name = "page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        Page pager = PageHelper.startPage(page, pageSize);
         int uid = SessionHelper.get().getUid();
-        List<Map<String, Object>> list = contestUserService.getUserContests(uid, pager);
+        List<Map<String, Object>> list = contestUserService.listUserContests(uid);
         return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 
@@ -91,9 +93,9 @@ public class UserController {
     @GetMapping("/groups")
     public ResponseEntity getUserGroups(@RequestParam(name = "page") int page,
                                         @RequestParam(name = "page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        Page pager = PageHelper.startPage(page, pageSize);
         int uid = SessionHelper.get().getUid();
-        List<Map<String, Object>> list = groupUserService.getUserGroups(uid, pager);
+        List<Map<String, Object>> list = groupUserService.listGroupMembers(uid);
         return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 

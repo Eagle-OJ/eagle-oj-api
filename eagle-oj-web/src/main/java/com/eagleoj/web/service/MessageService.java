@@ -1,44 +1,16 @@
 package com.eagleoj.web.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.eagleoj.web.dao.MessageDao;
 import com.eagleoj.web.entity.MessageEntity;
-import com.github.pagehelper.PageRowBounds;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author Smith
  **/
-@Service
-public class MessageService {
+public interface MessageService {
 
-    @Autowired
-    private SqlSession sqlSession;
+    int save(int owner, int type, String content, JSONObject json);
 
-    @Autowired
-    private MessageDao messageDao;
-
-    public int addMessage(int owner, int type, String content, JSONObject json) {
-        MessageEntity entity = new MessageEntity();
-        entity.setOwner(owner);
-        entity.setType(type);
-        entity.setContent(content);
-
-        if (json == null) {
-            entity.setJsonContent(new JSONObject());
-        } else {
-            entity.setJsonContent(json);
-        }
-
-        entity.setCreateTime(System.currentTimeMillis());
-        return messageDao.add(sqlSession, entity)? entity.getMid(): 0;
-    }
-
-    public List<MessageEntity> getMessage(int owner, PageRowBounds pager) {
-        return messageDao.get(sqlSession, owner, pager);
-    }
+    List<MessageEntity> listUserMessages(int owner);
 }

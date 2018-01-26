@@ -12,26 +12,11 @@ import java.util.List;
  * @author Smith
  **/
 @Service
-public class TagProblemService {
+public interface TagProblemService {
 
-    @Autowired
-    private TagProblemDao tagProblemDao;
+    boolean save(int tid, int pid);
 
-    @Autowired
-    private SqlSession sqlSession;
+    boolean delete(int pid);
 
-    public boolean addTagProblem(int tid, int pid) {
-        TagProblemEntity entity = new TagProblemEntity();
-        entity.setTid(tid);
-        entity.setPid(pid);
-        return tagProblemDao.insertTagProblem(sqlSession, entity);
-    }
-
-    public boolean deleteTagProblems(int pid) {
-        return tagProblemDao.deleteProblemTags(sqlSession, pid);
-    }
-
-    public List<TagProblemEntity> getProblemTags(int pid) {
-        return tagProblemDao.getProblemTags(sqlSession, pid);
-    }
+    List<TagProblemEntity> getProblemTags(int pid);
 }

@@ -2,28 +2,28 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="problem">
-    <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
+<mapper namespace="com.eagleoj.web.dao.ProblemMapper">
+    <insert id="save" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
         INSERT INTO `problem` (owner, title, lang, description,
                                input_format, output_format, difficult, samples, time, memory, status, create_time) VALUES
         (#{owner}, #{title}, #{lang}, #{description},#{inputFormat}, #{outputFormat},
         #{difficult}, #{samples}, #{time}, #{memory}, #{status}, #{createTime})
     </insert>
 
-    <select id="getProblemByPid" resultMap="problemResultMap">
+    <select id="getByPid" resultMap="problemResultMap">
         SELECT * from `problem` WHERE `pid` = #{pid}
     </select>
 
-    <select id="getProblemTags" resultType="HashMap">
+    <select id="listProblemTagsByPid" resultType="HashMap">
         SELECT tag_problem.tid, tag_problem.pid,tags.name, tags.used
         FROM tag_problem LEFT JOIN tags ON tag_problem.tid = tags.tid WHERE tag_problem.pid = #{pid}
     </select>
 
-    <select id="getAllProblem" resultMap="problemResultMap">
+    <select id="listAll" resultMap="problemResultMap">
         SELECT * FROM `problem`
     </select>
 
-    <select id="getSharedProblems" resultType="HashMap" parameterType="HashMap">
+    <select id="listShared" resultType="HashMap" parameterType="HashMap">
         SELECT problem.pid, title, difficult, submit_times, ac_times FROM problem
         WHERE status=2
         <if test="difficult != -1">
@@ -35,11 +35,11 @@
         ORDER BY pid ASC
     </select>
 
-    <select id="getAuditingProblems" resultMap="problemResultMap">
+    <select id="listAuditing" resultMap="problemResultMap">
         SELECT * FROM problem WHERE status=1 ORDER BY create_time DESC
     </select>
 
-    <select id="getSharedProblemsWithStatus" resultType="HashMap" parameterType="HashMap">
+    <select id="listSharedWithUserStatus" resultType="HashMap" parameterType="HashMap">
         SELECT problem.pid, title, difficult, submit_times, ac_times, problem_user.status FROM problem
         LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
         WHERE problem.status=2
@@ -52,39 +52,41 @@
         ORDER BY pid ASC
     </select>
 
-    <select id="getProblemsByUid" resultMap="problemResultMap">
+    <select id="listByUid" resultMap="problemResultMap">
         SELECT * FROM `problem` WHERE owner=#{uid} ORDER BY create_time DESC
     </select>
 
-    <update id="updateProblemDescription" parameterType="ProblemEntity">
-        UPDATE `problem` SET `title`=#{title}, `description`=#{description}, `input_format`=#{inputFormat},
-            `output_format`=#{outputFormat}, `samples`=#{samples}, `difficult`=#{difficult}
+    <update id="updateDescriptionByPid" parameterType="ProblemEntity">
+        UPDATE `problem` SET `title`=#{data.title}, `description`=#{data.description},
+            `input_format`=#{data.inputFormat}, `output_format`=#{data.outputFormat},
+            `samples`=#{data.samples}, `difficult`=#{data.difficult}
         WHERE `pid`=#{pid}
     </update>
 
-    <update id="updateProblemSetting">
-        UPDATE problem SET lang=#{lang}, time=#{time}, memory=#{memory}, status=#{status} WHERE pid = #{pid}
+    <update id="updateSettingByPid">
+        UPDATE problem SET lang=#{data.lang}, time=#{data.time}, memory=#{data.memory},
+            status=#{data.status} WHERE pid = #{pid}
     </update>
 
-    <update id="updateProblemTimes">
+    <update id="updateTimesByPid">
         UPDATE problem
         <set>
-            <if test="submitTimes > 0">submit_times = submit_times+1,</if>
-            <if test="usedTimes > 0">used_times = used_times+1,</if>
-            <if test="ACTimes > 0">ac_times = ac_times+1,</if>
-            <if test="WATimes > 0">wa_times = wa_times+1,</if>
-            <if test="RTETimes > 0">rte_times = rte_times+1,</if>
-            <if test="TLETimes > 0">tle_times = tle_times+1,</if>
-            <if test="CETimes > 0"> ce_times = ce_times+1,</if>
+            <if test="data.submitTimes != null">submit_times = submit_times+1,</if>
+            <if test="data.usedTimes != null">used_times = used_times+1,</if>
+            <if test="data.ACTimes != null">ac_times = ac_times+1,</if>
+            <if test="data.WATimes != null">wa_times = wa_times+1,</if>
+            <if test="data.RTETimes != null">rte_times = rte_times+1,</if>
+            <if test="data.TLETimes != null">tle_times = tle_times+1,</if>
+            <if test="data.CETimes != null"> ce_times = ce_times+1,</if>
         </set>
         WHERE pid=#{pid}
     </update>
 
-    <update id="refuseProblem">
+    <update id="refuseByPid">
         UPDATE problem SET status = 0 WHERE pid=#{pid}
     </update>
 
-    <update id="acceptProblem">
+    <update id="acceptByPid">
         UPDATE problem SET status = 2 WHERE pid=#{pid}
     </update>
 

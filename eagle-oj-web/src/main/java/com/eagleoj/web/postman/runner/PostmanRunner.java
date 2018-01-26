@@ -5,13 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.postman.MessageTemplate;
 import com.eagleoj.web.postman.task.*;
 import com.eagleoj.web.postman.MessageQueue;
-import com.eagleoj.web.postman.MessageTemplate;
-import com.eagleoj.web.postman.task.*;
 import com.eagleoj.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -112,7 +109,7 @@ public class PostmanRunner {
                     jsonObject.put("nickname", leaderboard.get(i).get("nickname"));
                     rankList.add(jsonObject);
                 }
-                messageService.addMessage(0, 2, "",
+                messageService.save(0, 2, "",
                         MessageTemplate.generateOfficialContestClosedMessage(cid, name, rankList));
             }
 
@@ -126,10 +123,10 @@ public class PostmanRunner {
 
         // type = 3 将小组成员拉入比赛
         private void pullGroupUserIntoContest(PullGroupUserIntoContestTask task) {
-            List<Map<String, Object>> users = groupUserService.getMembers(task.getGid(), null);
+            List<Map<String, Object>> users = groupUserService.listGroupMembers(task.getGid());
             for (Map<String, Object> user: users) {
                 int uid = Long.valueOf((long)user.get("uid")).intValue();
-                boolean i = contestUserService.add(task.getCid(), uid, System.currentTimeMillis());
+                boolean i = contestUserService.save(task.getCid(), uid);
                 if (i) {
                     sendNormalMessage(uid,
                             MessageTemplate.generateUserPulledIntoContestMessage(task.getContestName(),
@@ -140,7 +137,7 @@ public class PostmanRunner {
 
         // type = 4 给小组成员发送通知
         private void sendGroupUserMessage(SendGroupUserMessageTask task) {
-            List<Map<String, Object>> users = groupUserService.getMembers(task.getGid(), null);
+            List<Map<String, Object>> users = groupUserService.listGroupMembers(task.getGid());
             for (Map<String, Object> user: users) {
                 int uid = Long.valueOf((long)user.get("uid")).intValue();
                 sendNormalMessage(uid, MessageTemplate.generateSendGroupUserMessage(task.getGid(),
@@ -163,7 +160,7 @@ public class PostmanRunner {
         }
 
         private void sendNormalMessage(int uid, String message) {
-            messageService.addMessage(uid, 0, message, null);
+            messageService.save(uid, 0, message, null);
         }
     }
 }

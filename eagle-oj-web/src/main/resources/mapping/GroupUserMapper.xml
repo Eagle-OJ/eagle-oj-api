@@ -2,33 +2,33 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="groupUser">
+<mapper namespace="com.eagleoj.web.dao.GroupUserMapper">
 
-    <insert id="add">
+    <insert id="save">
         INSERT INTO group_user (gid, uid, join_time) VALUES (#{gid}, #{uid}, #{joinTime})
     </insert>
 
-    <select id="get" resultMap="groupUserMap">
+    <select id="getByGidUid" resultMap="groupUserMap">
         SELECT * FROM group_user WHERE gid=#{gid} AND uid=#{uid}
     </select>
 
-    <select id="getUserGroups" resultType="HashMap">
+    <select id="listUserJoinedGroups" resultType="HashMap">
         SELECT group_user.*, `group`.name FROM group_user
             LEFT JOIN `group` ON group_user.gid=`group`.gid
         WHERE uid=#{uid} ORDER BY join_time DESC
     </select>
 
-    <update id="update">
-        UPDATE group_user SET real_name=#{realName} WHERE gid=#{gid} AND uid=#{uid}
+    <update id="updateByGidUid">
+        UPDATE group_user SET real_name=#{data.realName} WHERE gid=#{gid} AND uid=#{uid}
     </update>
 
-    <select id="getMembers" resultType="HashMap">
+    <select id="listGroupMembersByGid" resultType="HashMap">
         SELECT group_user.*, nickname, avatar FROM group_user
             LEFT JOIN user ON group_user.uid=user.uid
         WHERE gid=#{gid}
     </select>
 
-    <delete id="deleteMember">
+    <delete id="deleteGroupMemberByGidUid">
         DELETE FROM group_user WHERE gid=#{gid} AND uid=#{uid}
     </delete>
 

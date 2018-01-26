@@ -1,5 +1,8 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.util.WebUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -35,11 +38,9 @@ public class SubmissionsController {
                                              @RequestParam("pid") int pid,
                                              @RequestParam("page") int page,
                                              @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
+        Page pager = PageHelper.startPage(page, pageSize);
         int owner = SessionHelper.get().getUid();
-        Map<String, Object> data = new HashMap<>(2);
-        data.put("data", submissionService.getSubmissions(owner, cid, pid, pager));
-        data.put("total", pager.getTotal());
-        return new ResponseEntity(data);
+        return new ResponseEntity(WebUtil.generatePageData(pager,
+                submissionService.listSubmissions(owner, pid, cid)));
     }
 }

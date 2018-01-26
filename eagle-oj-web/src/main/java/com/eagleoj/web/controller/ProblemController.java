@@ -1,6 +1,5 @@
 package com.eagleoj.web.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.DefaultConfig;
@@ -13,20 +12,10 @@ import com.eagleoj.web.postman.MessageQueue;
 import com.eagleoj.web.postman.task.SendProblemAcceptedMessageTask;
 import com.eagleoj.web.postman.task.SendProblemRefusedMessageTask;
 import com.eagleoj.web.service.ProblemModeratorService;
-import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import com.eagleoj.web.DefaultConfig;
-import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.admin.ProblemAuditingFormat;
-import com.eagleoj.web.controller.format.user.AddProblemFormat;
-import com.eagleoj.web.controller.format.user.AddProblemModeratorFormat;
-import com.eagleoj.web.controller.format.user.AddProblemTestCaseFormat;
 import com.eagleoj.web.controller.format.user.UpdateProblemSettingFormat;
 import com.eagleoj.web.entity.*;
-import com.eagleoj.web.postman.MessageQueue;
-import com.eagleoj.web.postman.task.SendProblemAcceptedMessageTask;
-import com.eagleoj.web.postman.task.SendProblemRefusedMessageTask;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.*;
 import com.eagleoj.web.util.WebUtil;
@@ -74,7 +63,7 @@ public class ProblemController {
     @ApiOperation("获取指定题目的信息")
     @GetMapping("/{pid}")
     public ResponseEntity get(@PathVariable int pid) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
         Map<String, Object> dataMap = new HashMap<>(2);
@@ -89,9 +78,9 @@ public class ProblemController {
     @ApiOperation("获取该题的所有标签")
     @GetMapping("/{pid}/tags")
     public ResponseEntity getProblemTags(@PathVariable("pid") int pid) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
-        return new ResponseEntity(problemService.getProblemTags(pid));
+        return new ResponseEntity(problemService.listProblemTags(pid));
     }
 
     @ApiOperation("创建题目")
@@ -113,7 +102,7 @@ public class ProblemController {
             throw new WebErrorException("标签非法");
         }
 
-        int pid = problemService.addProblem(owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
+        int pid = problemService.save(owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
                 format.getOutputFormat(), format.getDifficult(), format.getSamples(), DefaultConfig.TIME, DefaultConfig.MEMORY);
 
         if (pid == 0) {
@@ -122,7 +111,7 @@ public class ProblemController {
 
         // 添加题目和标签的关联
         for(Integer tid: tags) {
-            tagProblemService.addTagProblem(tid, pid);
+            tagProblemService.save(tid, pid);
         }
 
         return new ResponseEntity("题目添加成功", pid);
@@ -136,7 +125,7 @@ public class ProblemController {
         // 检验数据
         checkProblemFormat(format);
 
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
@@ -163,15 +152,15 @@ public class ProblemController {
         }
 
         // 更新数据
-        if (!problemService.updateProblemDescription(pid, format.getTitle(), format.getDescription(), format.getInputFormat(),
+        if (!problemService.updateProblemDescriptionByPid(pid, format.getTitle(), format.getDescription(), format.getInputFormat(),
                 format.getOutputFormat(), format.getSamples(), format.getDifficult())) {
             throw new WebErrorException("题目更新失败");
         }
 
         // 删除旧标签
-        tagProblemService.deleteTagProblems(pid);
+        tagProblemService.delete(pid);
         for(Integer tid: finalTags) {
-            tagProblemService.addTagProblem(tid, pid);
+            tagProblemService.save(tid, pid);
         }
 
         return new ResponseEntity("题目更新成功");
@@ -181,7 +170,7 @@ public class ProblemController {
     @RequiresAuthentication
     @GetMapping("/{pid}/test_cases")
     public ResponseEntity getProblemTestCase(@PathVariable int pid) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
@@ -195,7 +184,7 @@ public class ProblemController {
     public ResponseEntity addProblemTestCase(
             @PathVariable("pid") int pid,
             @RequestBody @Valid AddProblemTestCaseFormat format) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
@@ -214,7 +203,7 @@ public class ProblemController {
     @DeleteMapping("/{pid}/test_case/{tid}")
     public ResponseEntity deleteProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
@@ -232,7 +221,7 @@ public class ProblemController {
     public ResponseEntity updateProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
@@ -246,7 +235,7 @@ public class ProblemController {
     @ApiOperation("获取题目的moderator")
     @GetMapping("/{pid}/moderators")
     public ResponseEntity getProblemModerators(@PathVariable("pid") int pid) {
-        List<Map<String, Object>> list = problemModeratorService.getModerators(pid);
+        List<Map<String, Object>> list = problemModeratorService.listProblemModerators(pid);
         return new ResponseEntity(list);
     }
 
@@ -255,7 +244,7 @@ public class ProblemController {
     @PostMapping("/{pid}/moderator")
     public ResponseEntity addProblemModerator(@PathVariable("pid") int pid,
                                               @RequestBody @Valid AddProblemModeratorFormat format) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
 
         if (SessionHelper.get().getUid() != problemEntity.getOwner()) {
@@ -269,7 +258,7 @@ public class ProblemController {
             throw new WebErrorException("已存在此用户");
         }
 
-        if (! problemModeratorService.add(pid, userEntity.getUid())) {
+        if (! problemModeratorService.save(pid, userEntity.getUid())) {
             throw new WebErrorException("添加用户失败");
         }
 
@@ -282,7 +271,7 @@ public class ProblemController {
     @DeleteMapping("/{pid}/moderator/{uid}")
     public ResponseEntity deleteProblemModerator(@PathVariable("pid") int pid,
                                                  @PathVariable("uid") int uid) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
 
         haveProblem(problemEntity);
 
@@ -306,7 +295,7 @@ public class ProblemController {
         if (format.getLang().size() == 0) {
             throw new WebErrorException("至少支持一种编程语言");
         }
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
@@ -319,7 +308,7 @@ public class ProblemController {
             }
         }
 
-        if (! problemService.updateProblemSetting(pid, format.getLang(), format.getTime(), format.getMemory(), status)) {
+        if (! problemService.updateProblemSettingByPid(pid, format.getLang(), format.getTime(), format.getMemory(), status)) {
             throw new WebErrorException("更新设置失败");
         }
         return new ResponseEntity("更新成功");
@@ -330,7 +319,7 @@ public class ProblemController {
     @PostMapping("/{pid}/auditing")
     public ResponseEntity problemAuditing(@PathVariable int pid,
                                           @RequestBody @Valid ProblemAuditingFormat format) {
-        ProblemEntity problemEntity = problemService.getProblemByPid(pid);
+        ProblemEntity problemEntity = problemService.getProblem(pid);
         haveProblem(problemEntity);
         boolean status;
         if (format.getAccepted()) {

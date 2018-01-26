@@ -12,20 +12,9 @@ import java.util.List;
 /**
  * @author Smith
  **/
-@Service
-public class TagsService {
+public interface TagsService {
 
-    @Autowired
-    private SqlSession sqlSession;
+    List<TagEntity> listAll();
 
-    @Autowired
-    private TagsDao tagsDao;
-
-    public List<TagEntity> getTags() {
-        return tagsDao.getTags(sqlSession);
-    }
-
-    public boolean addUsedTimes(int tid) {
-        return tagsDao.addUsedTimes(sqlSession, tid);
-    }
+    boolean addUsedTimes(int tid);
 }

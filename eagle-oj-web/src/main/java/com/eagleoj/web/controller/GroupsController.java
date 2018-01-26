@@ -1,5 +1,8 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.util.WebUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -49,12 +52,9 @@ public class GroupsController {
                 throw new UnauthorizedException();
             }
 
-            PageRowBounds pager = new PageRowBounds(page, pageSize);
-            List<GroupEntity> groups = groupService.getGroups(uid, pager);
-            Map<String, Object> data = new HashMap<>(2);
-            data.put("data", groups);
-            data.put("total", pager.getTotal());
-            return new ResponseEntity(data);
+            Page pager = PageHelper.startPage(page, pageSize);
+            List<GroupEntity> groups = groupService.listUserGroups(uid);
+            return new ResponseEntity(WebUtil.generatePageData(pager, groups));
         } else {
             return new ResponseEntity(new ArrayList<>());
         }

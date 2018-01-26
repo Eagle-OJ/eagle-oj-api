@@ -2,23 +2,23 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="group">
+<mapper namespace="com.eagleoj.web.dao.GroupMapper">
 
-    <insert id="createGroup" useGeneratedKeys="true" keyProperty="gid">
+    <insert id="save" useGeneratedKeys="true" keyProperty="gid">
         INSERT INTO `group`(`owner`,`name`,`password`,`create_time`) VALUES
             (#{owner},#{name},#{password},#{createTime})
     </insert>
 
-    <select id="getGroup" resultMap="groupMap">
+    <select id="getGroupByGid" resultMap="groupMap">
         SELECT * FROM `group` WHERE `gid` = #{gid}
     </select>
 
-    <select id="getGroups" resultMap="groupMap">
+    <select id="listGroupsByOwner" resultMap="groupMap">
         SELECT * FROM `group` WHERE owner = #{owner}
     </select>
 
-    <update id="updateGroup">
-        UPDATE `group` SET name=#{name}, password=#{password} WHERE gid=#{gid}
+    <update id="updateByGid">
+        UPDATE `group` SET name=#{data.name}, password=#{data.password} WHERE gid=#{gid}
     </update>
 
     <resultMap id="groupMap" type="GroupEntity">

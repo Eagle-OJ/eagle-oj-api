@@ -2,6 +2,9 @@ package com.eagleoj.web.controller;
 
 import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.service.ProblemUserService;
+import com.eagleoj.web.util.WebUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import com.eagleoj.web.entity.ResponseEntity;
@@ -34,11 +37,8 @@ public class ProblemUserController {
     public ResponseEntity getProblemUser(@RequestParam("uid") int uid,
                                          @RequestParam("page") int page,
                                          @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        List<Map<String, Object>> list = problemUserService.getProblemUser(uid, pager);
-        Map<String, Object> data = new HashMap<>(2);
-        data.put("data", list);
-        data.put("total", pager.getTotal());
-        return new ResponseEntity(data);
+        Page pager = PageHelper.startPage(page, pageSize);
+        List<Map<String, Object>> list = problemUserService.listUserProblemHistory(uid);
+        return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 }

@@ -6,7 +6,8 @@ import com.eagleoj.web.DefaultConfig;
 import com.eagleoj.web.controller.format.user.PullUsersIntoContestFormat;
 import com.eagleoj.web.controller.format.user.SendGroupUserMessageFormat;
 import com.eagleoj.web.postman.task.SendGroupUserMessageTask;
-import com.github.pagehelper.PageRowBounds;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -85,7 +86,7 @@ public class GroupController {
     @PostMapping
     public ResponseEntity createGroup(@RequestBody @Valid CreateGroupFormat format) {
         int owner = SessionHelper.get().getUid();
-        int gid = groupService.createGroup(owner, format.getName(), format.getPassword(), System.currentTimeMillis());
+        int gid = groupService.save(owner, format.getName(), format.getPassword());
 
         if (gid == 0) {
             throw new WebErrorException("小组创建失败");
@@ -102,7 +103,7 @@ public class GroupController {
         haveGroup(groupEntity);
         havePermission(groupEntity);
 
-        if (! groupService.updateGroup(gid, format.getName(), format.getPassword())) {
+        if (! groupService.updateGroupByGid(gid, format.getName(), format.getPassword())) {
             throw new WebErrorException("小组更新失败");
         }
         return new ResponseEntity("小组更新成功");
@@ -117,8 +118,8 @@ public class GroupController {
         GroupEntity groupEntity = groupService.getGroup(gid);
         haveGroup(groupEntity);
 
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        List<Map<String, Object>> members = groupUserService.getMembers(gid, pager);
+        Page pager = PageHelper.startPage(page, pageSize);
+        List<Map<String, Object>> members = groupUserService.listGroupMembers(gid);
         if (isDetail && SecurityUtils.getSubject().isAuthenticated()) {
             int uid = SessionHelper.get().getUid();
             if (uid != groupEntity.getOwner()) {
@@ -130,10 +131,7 @@ public class GroupController {
                 member.remove("real_name");
             }
         }
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("data", members);
-        map.put("total", pager.getTotal());
-        return new ResponseEntity(map);
+        return new ResponseEntity(WebUtil.generatePageData(pager, members));
     }
 
     @ApiOperation("加入小组")
@@ -153,12 +151,12 @@ public class GroupController {
 
         // 查看是否已经在小组里面
         int uid = SessionHelper.get().getUid();
-        if (groupUserService.isIn(gid, uid)) {
+        if (groupUserService.isUserInGroup(gid, uid)) {
             throw new WebErrorException("已经在小组里面了");
         }
 
         // 加入小组
-        if (! groupUserService.add(gid, uid)) {
+        if (! groupUserService.save(gid, uid)) {
             throw new WebErrorException("加入小组失败");
         }
 
@@ -174,7 +172,7 @@ public class GroupController {
             throw new UnauthorizedException();
         }
 
-        GroupUserEntity entity = groupUserService.getMember(gid, uid);
+        GroupUserEntity entity = groupUserService.getGroupMember(gid, uid);
         if (entity == null) {
             throw new WebErrorException("用户不在小组中");
         }
@@ -199,7 +197,7 @@ public class GroupController {
         }
 
         // 删除用户
-        if (! groupUserService.deleteMember(gid, uid)) {
+        if (! groupUserService.deleteGroupMember(gid, uid)) {
             throw new WebErrorException("删除用户失败");
         }
         return new ResponseEntity("用户删除成功");
@@ -215,7 +213,7 @@ public class GroupController {
             throw new UnauthorizedException();
         }
 
-        if (! groupUserService.updateRealName(gid, uid, format.getRealName())) {
+        if (! groupUserService.updateRealNameByGidUid(gid, uid, format.getRealName())) {
             throw new WebErrorException("更新失败");
         }
 
