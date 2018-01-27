@@ -1,5 +1,6 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.TagProblemMapper;
 import com.eagleoj.web.entity.TagProblemEntity;
 import com.eagleoj.web.service.TagProblemService;
@@ -18,16 +19,22 @@ public class TagProblemServiceImpl implements TagProblemService {
     private TagProblemMapper tagProblemMapper;
 
     @Override
-    public boolean save(int tid, int pid) {
+    public void saveProblemTag(int tid, int pid) {
         TagProblemEntity entity = new TagProblemEntity();
         entity.setTid(tid);
         entity.setPid(pid);
-        return tagProblemMapper.save(entity) == 1;
+        boolean flag = tagProblemMapper.save(entity) == 1;
+        if (! flag) {
+            throw new WebErrorException("题目标签添加失败");
+        }
     }
 
     @Override
-    public boolean delete(int pid) {
-        return tagProblemMapper.deleteByPid(pid) == 1;
+    public void deleteProblemTags(int pid) {
+        boolean flag = tagProblemMapper.deleteByPid(pid) > 0;
+        if (! flag) {
+            throw new WebErrorException("题目标签删除失败");
+        }
     }
 
     @Override

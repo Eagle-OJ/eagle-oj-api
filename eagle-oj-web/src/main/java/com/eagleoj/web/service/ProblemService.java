@@ -12,8 +12,12 @@ import java.util.Map;
  **/
 public interface ProblemService {
 
-    int save(int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
+    int save(JSONArray tags, int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
              int difficult, JSONArray samples, int time, int memory);
+
+    void updateProblem(int pid, JSONArray tags, ProblemEntity problemEntity);
+
+    void updateProblem(int pid, ProblemEntity problemEntity);
 
     List<ProblemEntity> listUserProblems(int uid);
 
@@ -29,10 +33,4 @@ public interface ProblemService {
 
     List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid);
 
-    boolean updateProblemDescriptionByPid(int pid, String title, JSONObject description, JSONObject inputFormat,
-                                  JSONObject outputFormat, JSONArray samples, int difficult);
-
-    boolean updateProblemSettingByPid(int pid, JSONArray lang, int time, int memory, int status);
-
-    boolean updateProblemTimesByPid(int pid, ProblemEntity problemEntity);
 }

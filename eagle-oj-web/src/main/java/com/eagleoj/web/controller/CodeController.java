@@ -50,7 +50,8 @@ public class CodeController {
             testCases.add(testCaseRequestEntity);
         }
         String id = judgerManager.addTask(true, 0, 0, 0,
-                format.getLang(), format.getSourceCode(), DefaultConfig.TIME, DefaultConfig.MEMORY, testCases,
+                format.getLang(), format.getSourceCode(),
+                DefaultConfig.PROGRAM_USED_TIME, DefaultConfig.PROGRAM_USED_MEMORY, testCases,
                 null, null,
                 null, null, null);
         return new ResponseEntity(null, id);

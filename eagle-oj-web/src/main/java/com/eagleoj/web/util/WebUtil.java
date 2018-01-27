@@ -26,9 +26,15 @@ public class WebUtil {
         return map;
     }
 
-    public static void assertNotNull(Object obj, String message) {
+    public static void assertNotNull(Object obj, String errorMessage) {
         if (obj == null) {
-            throw new WebErrorException(message);
+            throw new WebErrorException(errorMessage);
+        }
+    }
+
+    public static void assertIsSuccess(boolean flag, String errorMessage) {
+        if (! flag) {
+            throw new WebErrorException(errorMessage);
         }
     }
 }

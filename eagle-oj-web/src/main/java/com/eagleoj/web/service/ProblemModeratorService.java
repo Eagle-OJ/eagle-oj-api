@@ -10,13 +10,11 @@ import java.util.Map;
  **/
 public interface ProblemModeratorService {
 
-    boolean save(int pid, int uid);
-
-    boolean isExistModeratorInProblem(int pid, int uid);
-
-    ProblemModeratorEntity get(int pid, int uid);
+    void addProblemModerator(int pid, String email);
 
     List<Map<String, Object>> listProblemModerators(int pid);
 
-    boolean delete(int pid, int uid);
+    void deleteModerator(int pid, int uid);
+
+    boolean isExistModeratorInProblem(int pid, int uid);
 }

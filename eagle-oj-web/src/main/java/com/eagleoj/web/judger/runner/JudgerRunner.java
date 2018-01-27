@@ -284,7 +284,7 @@ public class JudgerRunner {
                     problemEntity.setCETimes(1);
                     break;
             }
-            problemService.updateProblemTimesByPid(pid, problemEntity);
+            problemService.updateProblem(pid, problemEntity);
         }
 
         private void updateContestUserTimesAndData(int cid, int uid, int score, long usedTime, ResultEnum resultEnum) {

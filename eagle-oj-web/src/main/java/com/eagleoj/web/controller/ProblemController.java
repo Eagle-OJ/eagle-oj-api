@@ -6,9 +6,7 @@ import com.eagleoj.web.DefaultConfig;
 import com.eagleoj.web.controller.exception.UnauthorizedException;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.admin.ProblemAuditingFormat;
-import com.eagleoj.web.controller.format.user.AddProblemFormat;
-import com.eagleoj.web.controller.format.user.AddProblemModeratorFormat;
-import com.eagleoj.web.controller.format.user.AddProblemTestCaseFormat;
+import com.eagleoj.web.controller.format.user.*;
 import com.eagleoj.web.data.status.ProblemStatus;
 import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.postman.MessageQueue;
@@ -17,7 +15,6 @@ import com.eagleoj.web.postman.task.SendProblemRefusedMessageTask;
 import com.eagleoj.web.service.ProblemModeratorService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import com.eagleoj.web.controller.format.user.UpdateProblemSettingFormat;
 import com.eagleoj.web.entity.*;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.*;
@@ -55,12 +52,6 @@ public class ProblemController {
     private TestCasesService testCasesService;
 
     @Autowired
-    private TagsService tagsService;
-
-    @Autowired
-    private TagProblemService tagProblemService;
-
-    @Autowired
     private MessageQueue messageQueue;
 
     @ApiOperation("获取指定题目的信息")
@@ -88,31 +79,11 @@ public class ProblemController {
     @PostMapping
     public ResponseEntity addProblem(@RequestBody @Valid AddProblemFormat format) {
         int owner = SessionHelper.get().getUid();
-
         checkProblemFormat(format);
 
-        List<Integer> tags = new ArrayList<>(format.getTags().size());
-        for(int i=0; i<format.getTags().size(); i++) {
-            int tid = format.getTags().getInteger(i);
-            if (tagsService.addUsedTimes(tid)) {
-                tags.add(tid);
-            }
-        }
-        if (tags.size() == 0) {
-            throw new WebErrorException("标签非法");
-        }
-
-        int pid = problemService.save(owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
-                format.getOutputFormat(), format.getDifficult(), format.getSamples(), DefaultConfig.TIME, DefaultConfig.MEMORY);
-
-        if (pid == 0) {
-            throw new WebErrorException("添加题目失败");
-        }
-
-        // 添加题目和标签的关联
-        for(Integer tid: tags) {
-            tagProblemService.save(tid, pid);
-        }
+        int pid = problemService.save(format.getTags(), owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
+                format.getOutputFormat(), format.getDifficult(), format.getSamples(),
+                DefaultConfig.PROGRAM_USED_TIME, DefaultConfig.PROGRAM_USED_MEMORY);
 
         return new ResponseEntity("题目添加成功", pid);
     }
@@ -121,56 +92,70 @@ public class ProblemController {
     @RequiresAuthentication
     @PutMapping("/{pid}")
     public ResponseEntity updateProblem(@PathVariable("pid") int pid,
-                                                   @RequestBody @Valid AddProblemFormat format) {
-        // 检验数据
-        checkProblemFormat(format);
-
+                                                   @RequestBody @Valid UpdateProblemFormat format) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
         accessToEditProblem(problemEntity);
 
-        // tags 过滤
-        List<Integer> originTags= tagProblemService.getProblemTags(pid)
-                .stream()
-                .map(TagProblemEntity::getTid).collect(Collectors.toList());
-        JSONArray newTags = format.getTags();
-        List<Integer> finalTags = new ArrayList<>(newTags.size());
+        ProblemEntity newProblemEntity = new ProblemEntity();
 
-        for(int i=0; i<newTags.size(); i++) {
-            int tid = newTags.getInteger(i);
-            if (originTags.contains(tid)) {
-                finalTags.add(tid);
-            } else {
-                if (tagsService.addUsedTimes(tid)) {
-                    finalTags.add(tid);
+        if (format.getTitle() != null) {
+            newProblemEntity.setTitle(format.getTitle());
+        }
+        if (format.getDescription() != null) {
+            newProblemEntity.setDescription(format.getDescription());
+        }
+        if (format.getInputFormat() != null) {
+            newProblemEntity.setInputFormat(format.getInputFormat());
+        }
+        if (format.getOutputFormat() != null) {
+            newProblemEntity.setOutputFormat(format.getOutputFormat());
+        }
+        if (format.getDifficult() != null) {
+            newProblemEntity.setDifficult(format.getDifficult());
+        }
+        if (format.getSamples() != null) {
+            checkProblemSamples(format.getSamples());
+            newProblemEntity.setSamples(format.getSamples());
+        }
+        JSONArray tags = null;
+        if (format.getTags() != null) {
+            checkProblemTags(format.getTags());
+            tags = format.getTags();
+        }
+        if (format.getLang() != null) {
+            checkProblemLang(format.getLang());
+            newProblemEntity.setLang(format.getLang());
+        }
+        if (format.getTime() != null) {
+            newProblemEntity.setTime(format.getTime());
+        }
+        if (format.getMemory() != null) {
+            newProblemEntity.setMemory(format.getMemory());
+        }
+        Integer status = problemEntity.getStatus();
+        if (format.getShared() != null) {
+            if (format.getShared()) {
+                if (status == ProblemStatus.EDITING.getNumber()) {
+                    status = ProblemStatus.AUDITING.getNumber();
                 }
+            } else {
+                status = ProblemStatus.EDITING.getNumber();
             }
+            newProblemEntity.setStatus(status);
         }
 
-        if (finalTags.size() == 0) {
-            throw new WebErrorException("非法标签");
-        }
-
-        // 更新数据
-        if (!problemService.updateProblemDescriptionByPid(pid, format.getTitle(), format.getDescription(), format.getInputFormat(),
-                format.getOutputFormat(), format.getSamples(), format.getDifficult())) {
-            throw new WebErrorException("题目更新失败");
-        }
-
-        // 删除旧标签
-        tagProblemService.delete(pid);
-        for(Integer tid: finalTags) {
-            tagProblemService.save(tid, pid);
-        }
-
+        problemService.updateProblem(pid, tags, newProblemEntity);
         return new ResponseEntity("题目更新成功");
     }
+
 
     @ApiOperation("获取一道题目的测试用例")
     @RequiresAuthentication
     @GetMapping("/{pid}/test_cases")
-    public ResponseEntity getProblemTestCase(@PathVariable int pid) {
+    public ResponseEntity listProblemTestCase(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        accessToEditProblem(problemEntity);
+
+        accessToView(problemEntity);
 
         List<TestCaseEntity> testCaseEntities = testCasesService.listProblemTestCases(problemEntity.getPid());
         return new ResponseEntity(testCaseEntities);
@@ -178,7 +163,7 @@ public class ProblemController {
 
     @ApiOperation("添加一道题目的一个测试用例")
     @RequiresAuthentication
-    @PostMapping("/{pid}/test_cases")
+    @PostMapping("/{pid}/test_case")
     public ResponseEntity addProblemTestCase(
             @PathVariable("pid") int pid,
             @RequestBody @Valid AddProblemTestCaseFormat format) {
@@ -187,10 +172,6 @@ public class ProblemController {
 
         // 添加test_case
         int tid = testCasesService.save(pid, format.getStdin(), format.getStdout(), format.getStrength());
-
-        if (tid == 0) {
-            throw new WebErrorException("添加失败");
-        }
 
         return new ResponseEntity("添加成功", tid);
     }
@@ -204,9 +185,7 @@ public class ProblemController {
         accessToEditProblem(problemEntity);
 
         // 删除test_case
-        if (! testCasesService.deleteTestCase(tid)) {
-            throw new WebErrorException("删除失败");
-        }
+        testCasesService.deleteTestCaseByTidPid(tid, pid);
 
         return new ResponseEntity("删除成功");
     }
@@ -220,10 +199,8 @@ public class ProblemController {
         ProblemEntity problemEntity = problemService.getProblem(pid);
         accessToEditProblem(problemEntity);
 
-        if (! testCasesService.updateTestCaseByTidPid(tid, pid, format.getStdin(), format.getStdout(),
-                format.getStrength())) {
-            throw new WebErrorException("更新失败");
-        }
+        testCasesService.updateTestCaseByTidPid(tid, pid, format.getStdin(), format.getStdout(),
+                format.getStrength());
         return new ResponseEntity("更新成功");
     }
 
@@ -241,22 +218,9 @@ public class ProblemController {
                                               @RequestBody @Valid AddProblemModeratorFormat format) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
 
-        if (SessionHelper.get().getUid() != problemEntity.getOwner()) {
-            throw new WebErrorException("非法操作");
-        }
+        accessToEditModerator(problemEntity);
 
-        UserEntity userEntity = userService.getUserByEmail(format.getEmail());
-        WebUtil.assertNotNull(userEntity, "此用户不存在");
-
-        if (problemModeratorService.isExistModeratorInProblem(pid, userEntity.getUid())) {
-            throw new WebErrorException("已存在此用户");
-        }
-
-        if (! problemModeratorService.save(pid, userEntity.getUid())) {
-            throw new WebErrorException("添加用户失败");
-        }
-
-
+        problemModeratorService.addProblemModerator(pid, format.getEmail());
         return new ResponseEntity("添加成功");
     }
 
@@ -266,43 +230,15 @@ public class ProblemController {
     public ResponseEntity deleteProblemModerator(@PathVariable("pid") int pid,
                                                  @PathVariable("uid") int uid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
+        accessToEditModerator(problemEntity);
 
         if (SessionHelper.get().getUid() != problemEntity.getOwner()) {
             throw new WebErrorException("非法操作");
         }
 
-        if (! problemModeratorService.delete(pid, uid)) {
-            throw new WebErrorException("删除用户失败");
-        }
+        problemModeratorService.deleteModerator(pid, uid);
 
         return new ResponseEntity("删除用户成功");
-    }
-
-    @ApiOperation("更新题目设置")
-    @RequiresAuthentication
-    @PutMapping("/{pid}/setting")
-    public ResponseEntity updateProblemSetting(@PathVariable("pid") int pid,
-                                               @RequestBody @Valid UpdateProblemSettingFormat format) {
-        // check data
-        if (format.getLang().size() == 0) {
-            throw new WebErrorException("至少支持一种编程语言");
-        }
-        ProblemEntity problemEntity = problemService.getProblem(pid);
-        accessToEditProblem(problemEntity);
-
-        int status = 0;
-        if (format.getShared()) {
-            if (problemEntity.getStatus() == 0) {
-                status = 1;
-            } else {
-                status = problemEntity.getStatus();
-            }
-        }
-
-        if (! problemService.updateProblemSettingByPid(pid, format.getLang(), format.getTime(), format.getMemory(), status)) {
-            throw new WebErrorException("更新设置失败");
-        }
-        return new ResponseEntity("更新成功");
     }
 
     @ApiOperation("题目是否审核通过")
@@ -310,6 +246,7 @@ public class ProblemController {
     @PostMapping("/{pid}/auditing")
     public ResponseEntity problemAuditing(@PathVariable int pid,
                                           @RequestBody @Valid ProblemAuditingFormat format) {
+        // todo
         ProblemEntity problemEntity = problemService.getProblem(pid);
         boolean status;
         if (format.getAccepted()) {
@@ -341,21 +278,33 @@ public class ProblemController {
 
 
     private void checkProblemFormat(AddProblemFormat format) {
-
         // valid sample
-        if (format.getSamples().size()==0)
-            throw new WebErrorException("样本不得为空");
+        checkProblemSamples(format.getSamples());
 
-        for (Object obj: format.getSamples()) {
+        // valid tags
+        checkProblemTags(format.getTags());
+    }
+
+    private void checkProblemSamples(JSONArray samples) {
+        if (samples.size()==0)
+            throw new WebErrorException("样本不得为空");
+        for (Object obj: samples) {
             boolean input = !((JSONObject) obj).containsKey("input");
             boolean output = !((JSONObject) obj).containsKey("output");
             if (input || output)
                 throw new WebErrorException("样本格式不符");
         }
+    }
 
-        // valid tags
-        if (format.getTags().size()==0) {
+    private void checkProblemTags(JSONArray tags) {
+        if (tags.size()==0) {
             throw new WebErrorException("标签不得为空");
+        }
+    }
+
+    private void checkProblemLang(JSONArray lang) {
+        if (lang.size() == 0) {
+            throw new WebErrorException("至少支持一种编程语言");
         }
     }
 
@@ -371,6 +320,40 @@ public class ProblemController {
                 throw new WebErrorException("题目已经全局分享，只有管理员能够进行修改");
             }
         }
+
+        if (uid == problemEntity.getOwner()) {
+            return;
+        }
+
+        if (role >= RoleStatus.ADMIN.getNumber()) {
+            return;
+        }
+
+        if (problemModeratorService.isExistModeratorInProblem(problemEntity.getPid(), uid)) {
+            return;
+        }
+
+        throw new UnauthorizedException("非法操作");
+    }
+
+    private void accessToEditModerator(ProblemEntity problemEntity) {
+        int uid = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+
+        if (uid == problemEntity.getOwner()) {
+            return;
+        }
+
+        if (role >= RoleStatus.ADMIN.getNumber()) {
+            return;
+        }
+        throw new UnauthorizedException();
+    }
+
+    // 是否有权限查看
+    private void accessToView(ProblemEntity problemEntity) {
+        int uid = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
 
         if (uid == problemEntity.getOwner()) {
             return;

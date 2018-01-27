@@ -1,8 +1,10 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.TestCasesMapper;
 import com.eagleoj.web.entity.TestCaseEntity;
 import com.eagleoj.web.service.TestCasesService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,8 @@ public class TestCasesServiceImpl implements TestCasesService {
         testCaseEntity.setStrength(strength);
         testCaseEntity.setCreateTime(System.currentTimeMillis());
         boolean flag = testCasesMapper.save(testCaseEntity) == 1;
-        return flag ? testCaseEntity.getTid() : 0;
+        WebUtil.assertIsSuccess(flag, "测试用例保存失败");
+        return testCaseEntity.getTid();
     }
 
     @Override
@@ -42,18 +45,19 @@ public class TestCasesServiceImpl implements TestCasesService {
     }
 
     @Override
-    public boolean updateTestCaseByTidPid(int tid, int pid, String stdin, String stdout, int strength) {
+    public void updateTestCaseByTidPid(int tid, int pid, String stdin, String stdout, int strength) {
         //通过TestCase的ID来修改TestCase
         TestCaseEntity testCaseEntity = new TestCaseEntity();
         testCaseEntity.setStdin(stdin);
         testCaseEntity.setStdout(stdout);
         testCaseEntity.setStrength(strength);
-        return testCasesMapper.updateByTidPid(tid, pid, testCaseEntity) == 1;
+
+        boolean flag = testCasesMapper.updateByTidPid(tid, pid, testCaseEntity) == 1;
+        WebUtil.assertIsSuccess(flag, "测试用例更新失败");
     }
 
     @Override
-    public boolean deleteTestCase(int tid) {
-        //通过TestCase的ID删除TestCase
-        return testCasesMapper.deleteByTid(tid) == 1;
+    public void deleteTestCaseByTidPid(int tid, int pid) {
+        WebUtil.assertIsSuccess(testCasesMapper.deleteByTidPid(tid, pid) == 1, "测试用例删除失败");
     }
 }

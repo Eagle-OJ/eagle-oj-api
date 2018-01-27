@@ -14,6 +14,8 @@ import java.util.Map;
 public interface ProblemMapper {
     int save(ProblemEntity problemEntity);
 
+    int updateByPid(@Param("pid") int pid, @Param("data") ProblemEntity data);
+
     ProblemEntity getByPid(int pid);
 
     List<Map<String, Object>> listProblemTagsByPid(int pid);

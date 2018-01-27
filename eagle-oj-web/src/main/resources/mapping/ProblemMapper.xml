@@ -54,6 +54,31 @@
         SELECT * FROM `problem` WHERE owner=#{uid} ORDER BY create_time DESC
     </select>
 
+    <update id="updateByPid">
+        UPDATE problem
+        <set>
+            <if test="data.owner != null">owner = #{data.owner},</if>
+            <if test="data.title != null">title = #{data.title},</if>
+            <if test="data.lang != null">lang = #{data.lang},</if>
+            <if test="data.description != null">description = #{data.description},</if>
+            <if test="data.difficult != null">difficult = #{data.difficult},</if>
+            <if test="data.inputFormat != null">input_format = #{data.inputFormat},</if>
+            <if test="data.outputFormat != null">output_format = #{data.outputFormat},</if>
+            <if test="data.samples != null">samples = #{data.samples},</if>
+            <if test="data.time != null">`time` = #{data.time},</if>
+            <if test="data.memory != null">`memory` = #{data.memory},</if>
+            <if test="data.submitTimes != null">submit_times = submit_times+1,</if>
+            <if test="data.usedTimes != null">used_times = used_times+1,</if>
+            <if test="data.ACTimes != null">ac_times = ac_times+1,</if>
+            <if test="data.WATimes != null">wa_times = wa_times+1,</if>
+            <if test="data.RTETimes != null">rte_times = rte_times+1,</if>
+            <if test="data.TLETimes != null">tle_times = tle_times+1,</if>
+            <if test="data.CETimes != null"> ce_times = ce_times+1,</if>
+            <if test="data.status != null">`status` = #{data.status},</if>
+        </set>
+        WHERE pid = #{pid}
+    </update>
+
     <update id="updateDescriptionByPid" parameterType="ProblemEntity">
         UPDATE `problem` SET `title`=#{data.title}, `description`=#{data.description},
             `input_format`=#{data.inputFormat}, `output_format`=#{data.outputFormat},

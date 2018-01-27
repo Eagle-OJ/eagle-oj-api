@@ -1,8 +1,13 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ProblemModeratorMapper;
 import com.eagleoj.web.entity.ProblemModeratorEntity;
+import com.eagleoj.web.entity.UserEntity;
+import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.ProblemModeratorService;
+import com.eagleoj.web.service.UserService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,22 +23,25 @@ public class ProblemModeratorServiceImpl implements ProblemModeratorService {
     @Autowired
     private ProblemModeratorMapper problemModeratorMapper;
 
-    @Override
-    public boolean save(int pid, int uid) {
-        ProblemModeratorEntity entity = new ProblemModeratorEntity();
-        entity.setUid(uid);
-        entity.setPid(pid);
-        return problemModeratorMapper.save(entity) == 1;
-    }
+    @Autowired
+    private UserService userService;
 
     @Override
-    public boolean isExistModeratorInProblem(int pid, int uid) {
-        return get(pid, uid) != null;
-    }
-
-    @Override
-    public ProblemModeratorEntity get(int pid, int uid) {
-        return problemModeratorMapper.getByPidUid(pid, uid);
+    public void addProblemModerator(int pid, String email) {
+        UserEntity userEntity = userService.getUserByEmail(email);
+        WebUtil.assertNotNull(userEntity, "不存在此用户");
+        int uid = userEntity.getUid();
+        if (uid == SessionHelper.get().getUid()) {
+            throw new WebErrorException("不能添加自己");
+        }
+        if (problemModeratorMapper.getByPidUid(pid, uid) != null) {
+            throw new WebErrorException("已经存在此用户");
+        }
+        ProblemModeratorEntity problemModeratorEntity = new ProblemModeratorEntity();
+        problemModeratorEntity.setPid(pid);
+        problemModeratorEntity.setUid(uid);
+        boolean flag = problemModeratorMapper.save(problemModeratorEntity) == 1;
+        WebUtil.assertIsSuccess(flag, "添加用户失败");
     }
 
     @Override
@@ -41,7 +49,14 @@ public class ProblemModeratorServiceImpl implements ProblemModeratorService {
         return problemModeratorMapper.listModeratorsByPid(pid);
     }
 
-    public boolean delete(int pid, int uid) {
-        return problemModeratorMapper.deleteByPidUid(pid, uid) == 1;
+    @Override
+    public void deleteModerator(int pid, int uid) {
+        boolean flag = problemModeratorMapper.deleteByPidUid(pid, uid) == 1;
+        WebUtil.assertIsSuccess(flag, "删除用户失败");
+    }
+
+    @Override
+    public boolean isExistModeratorInProblem(int pid, int uid) {
+        return problemModeratorMapper.getByPidUid(pid, uid) != null;
     }
 }

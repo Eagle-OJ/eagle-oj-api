@@ -15,11 +15,11 @@
     <update id="updateByTidPid" >
         UPDATE `test_cases` SET `stdin` = #{data.stdin}, `stdout` = #{data.stdout},
             `strength` = #{data.strength}
-        WHERE  `tid` = #{tid} AND `pid`=#{pid}
+        WHERE  `tid` = #{tid} AND pid=#{pid}
     </update>
 
-    <delete id="deleteByTid">
-        DELETE From test_cases WHERE  `tid` = #{tid}
+    <delete id="deleteByTidPid">
+        DELETE From test_cases WHERE  `tid` = #{tid} AND pid = #{pid}
     </delete>
 
     <select id="countByPid" resultType="java.lang.Integer">
