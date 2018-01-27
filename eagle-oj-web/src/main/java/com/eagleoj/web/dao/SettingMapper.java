@@ -12,7 +12,7 @@ import java.util.List;
 public interface SettingMapper {
     List<SettingEntity> listAll();
 
-    int updateByKey(String key);
+    int updateByKey(String key, String value);
 
     int batchSave(List<SettingEntity> list);
 }

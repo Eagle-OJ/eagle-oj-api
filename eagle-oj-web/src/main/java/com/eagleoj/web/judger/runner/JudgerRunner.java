@@ -358,7 +358,7 @@ public class JudgerRunner {
                     entity.setCETimes(1);
                     break;
             }
-            userLogService.updateLog(uid, entity);
+            userLogService.save(uid, entity);
         }
 
         private long evaluateUsedTime(ContestEntity contestEntity, ContestUserEntity contestUserEntity) {

@@ -4,6 +4,8 @@ import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.service.LeaderboardService;
 import com.eagleoj.web.util.WebUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,7 +54,7 @@ public class LeaderboardController {
     @GetMapping
     public ResponseEntity getLeaderboard(@RequestParam("page") int page,
                                          @RequestParam("page_size") int pageSize) {
-        PageRowBounds pager = new PageRowBounds(page, pageSize);
-        return new ResponseEntity(WebUtil.generatePageData(pager, leaderboardService.getLeaderboard(pager)));
+        Page pager = PageHelper.startPage(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, leaderboardService.getLeaderboard()));
     }
 }

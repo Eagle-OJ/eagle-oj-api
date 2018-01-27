@@ -123,7 +123,7 @@ public class UserCodeController {
         containLang(format.getLang(), problemEntity.getLang());
 
         // 组装testCases
-        List<TestCaseEntity> tempTestCases = testCaseService.getAllTestCasesByPid(problemId);
+        List<TestCaseEntity> tempTestCases = testCaseService.listProblemTestCases(problemId);
         if (tempTestCases.size()==0) {
             throw new WebErrorException("此题没有测试用例");
         }
@@ -152,7 +152,7 @@ public class UserCodeController {
         if (problemEntity.getStatus() != 2) {
             throw new WebErrorException("此题不能提交");
         }
-        List<TestCaseEntity> tempTestCases = testCaseService.getAllTestCasesByPid(problemId);
+        List<TestCaseEntity> tempTestCases = testCaseService.listProblemTestCases(problemId);
         List<TestCaseRequestEntity> testCases = new ArrayList<>(tempTestCases.size());
         for(TestCaseEntity entity: tempTestCases) {
             testCases.add(new TestCaseRequestEntity(entity.getStdin(), entity.getStdout()));

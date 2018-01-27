@@ -2,26 +2,27 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="testCases">
-    <insert id="addTestCase" parameterType="TestCaseEntity" useGeneratedKeys="true" keyProperty="tid">
+<mapper namespace="com.eagleoj.web.dao.TestCasesMapper">
+    <insert id="save" parameterType="TestCaseEntity" useGeneratedKeys="true" keyProperty="tid">
         INSERT INTO `test_cases` (`pid`,`stdin`,`stdout`,`strength`,`create_time`)
         VALUES (#{pid},#{stdin},#{stdout},#{strength},#{createTime})
     </insert>
 
-    <select id="getAllTestCaseByPid" resultMap="testCaseMap">
+    <select id="listTestCasesByPid" resultMap="testCaseMap">
         SELECT * FROM test_cases WHERE `pid` = #{pid}
     </select>
 
-    <update id="updateTestCaseByTidPid" >
-        UPDATE `test_cases` SET `stdin` = #{stdin}, `stdout` = #{stdout}, `strength` = #{strength}
+    <update id="updateByTidPid" >
+        UPDATE `test_cases` SET `stdin` = #{data.stdin}, `stdout` = #{data.stdout},
+            `strength` = #{data.strength}
         WHERE  `tid` = #{tid} AND `pid`=#{pid}
     </update>
 
-    <delete id="deleteOneTestCaseByTid">
+    <delete id="deleteByTid">
         DELETE From test_cases WHERE  `tid` = #{tid}
     </delete>
 
-    <select id="getTestCaseCountByPid" resultType="java.lang.Integer">
+    <select id="countByPid" resultType="java.lang.Integer">
         SELECT  count(`pid`) FROM  `test_cases` WHERE `pid` = #{pid}
     </select>
 

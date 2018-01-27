@@ -174,7 +174,7 @@ public class ProblemController {
         haveProblem(problemEntity);
         havePermission(problemEntity);
 
-        List<TestCaseEntity> testCaseEntities = testCasesService.getAllTestCasesByPid(problemEntity.getPid());
+        List<TestCaseEntity> testCaseEntities = testCasesService.listProblemTestCases(problemEntity.getPid());
         return new ResponseEntity(testCaseEntities);
     }
 
@@ -189,7 +189,7 @@ public class ProblemController {
         havePermission(problemEntity);
 
         // 添加test_case
-        int tid = testCasesService.addTestCase(pid, format.getStdin(), format.getStdout(), format.getStrength());
+        int tid = testCasesService.save(pid, format.getStdin(), format.getStdout(), format.getStrength());
 
         if (tid == 0) {
             throw new WebErrorException("添加失败");
@@ -208,7 +208,7 @@ public class ProblemController {
         havePermission(problemEntity);
 
         // 删除test_case
-        if (! testCasesService.deleteTestCaseByTid(tid)) {
+        if (! testCasesService.deleteTestCase(tid)) {
             throw new WebErrorException("删除失败");
         }
 

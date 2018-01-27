@@ -2,68 +2,68 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="user">
+<mapper namespace="com.eagleoj.web.dao.UserMapper">
 
-    <insert id="insertUser" parameterType="UserEntity" useGeneratedKeys="true" keyProperty="uid">
+    <insert id="save" parameterType="UserEntity" useGeneratedKeys="true" keyProperty="uid">
         INSERT INTO `user` (`email`,`nickname`,`password`,`permission`,`register_time`)
         VALUES (#{email}, #{nickname}, #{password}, #{permission}, #{registerTime})
     </insert>
 
-    <insert id="insertRoot">
+    <insert id="saveRoot">
         INSERT IGNORE INTO user (uid, email, nickname, password, permission, role, register_time)
                 VALUES (#{uid}, #{email}, #{nickname}, #{password}, #{permission}, #{role}, #{registerTime})
     </insert>
 
-    <select id="getUserRankList" resultMap="userEntityResultMap">
+    <select id="listUserRank" resultMap="userEntityResultMap">
         SELECT uid, nickname, avatar, ac_times, finished_problems, submit_times FROM user ORDER BY finished_problems DESC, ac_times DESC, submit_times DESC
     </select>
 
-    <select id="selectUserByUid" resultMap="userEntityResultMap">
+    <select id="getByUid" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `uid` = #{uid}
     </select>
 
-    <select id="selectUserByEmail" resultMap="userEntityResultMap">
+    <select id="getByEmail" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `email` = #{email}
     </select>
 
-    <select id="selectUserByLogin" resultMap="userEntityResultMap">
+    <select id="getByEmailPassword" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `email` = #{email} AND `password` = #{password}
     </select>
 
-    <select id="selectUserInUidList" resultMap="userEntityResultMap">
+    <select id="listInUidList" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `uid` IN
-        <foreach item="item" index="index" collection="list"
+        <foreach item="item" index="index" collection="uidList"
                  open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
 
-    <select id="selectModeratorsInUidList" resultMap="moderatorsMap">
+    <select id="listModeratorsInUidList" resultMap="moderatorsMap">
         SELECT attachment.url, user.uid, user.nickname FROM user LEFT JOIN attachment ON user.avatar=attachment.aid
         WHERE uid IN
-        <foreach item="item" index="index" collection="list"
+        <foreach item="item" index="index" collection="uidList"
                  open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
 
-    <update id="updateUserTimes">
+    <update id="updateTimesByUid">
         UPDATE `user`
         <set>
-            <if test="submitTimes > 0">submit_times = submit_times+1,</if>
-            <if test="contestTimes > 0">contest_times = contest_times+1,</if>
-            <if test="ACTimes > 0">ac_times = ac_times+1,</if>
-            <if test="WATimes > 0">wa_times = wa_times+1,</if>
-            <if test="RTETimes > 0">rte_times = rte_times+1,</if>
-            <if test="TLETimes > 0">tle_times = tle_times+1,</if>
-            <if test="CETimes > 0"> ce_times = ce_times+1,</if>
-            <if test="finishedProblems">finished_problems = finished_problems+1,</if>
+            <if test="data.submitTimes != null">submit_times = submit_times+1,</if>
+            <if test="data.contestTimes != null">contest_times = contest_times+1,</if>
+            <if test="data.ACTimes != null">ac_times = ac_times+1,</if>
+            <if test="data.WATimes != null">wa_times = wa_times+1,</if>
+            <if test="data.RTETimes != null">rte_times = rte_times+1,</if>
+            <if test="data.TLETimes != null">tle_times = tle_times+1,</if>
+            <if test="data.CETimes != null"> ce_times = ce_times+1,</if>
+            <if test="data.finishedProblems != null">finished_problems = finished_problems+1,</if>
         </set>
         WHERE `uid`=#{uid}
     </update>
 
-    <update id="updateUserProfile">
-        UPDATE `user` SET `nickname`=#{nickname}, `motto`=#{motto}, `gender`=#{gender}
+    <update id="updateProfileByUid">
+        UPDATE `user` SET `nickname`=#{data.nickname}, `motto`=#{data.motto}, `gender`=#{data.gender}
         WHERE `uid`=#{uid}
     </update>
 

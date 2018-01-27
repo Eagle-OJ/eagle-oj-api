@@ -53,7 +53,7 @@ public class IndexController {
         }
 
         // 注册用户
-        int uid = userService.addUser(format.getEmail(),
+        int uid = userService.save(format.getEmail(),
                 format.getNickname(),
                 new Md5Hash(format.getPassword()).toString());
         if (uid == 0) {
@@ -65,7 +65,7 @@ public class IndexController {
     @ApiOperation("用户登入")
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
-        UserEntity userEntity = userService.getUserByLogin(format.getEmail(), format.getPassword());
+        UserEntity userEntity = userService.getUserByEmailPassword(format.getEmail(), format.getPassword());
         if (userEntity == null)
             throw new WebErrorException("用户名密码错误");
 

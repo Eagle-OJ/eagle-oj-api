@@ -3,8 +3,6 @@ package com.eagleoj.web.controller;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.entity.ResponseEntity;
 import io.swagger.annotations.ApiOperation;
-import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.entity.UserLogEntity;
 import com.eagleoj.web.service.UserLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +32,10 @@ public class UserLogController {
         List<UserLogEntity> tempList;
         int timeLength = 0;
         if (time.equals("week")) {
-            tempList = userLogService.getInWeek(uid);
+            tempList = userLogService.listUserLogInWeek(uid);
             timeLength = 7;
         } else if (time.equals("month")) {
-            tempList = userLogService.getInMonth(uid);
+            tempList = userLogService.listUserLogInMonth(uid);
             timeLength = 30;
         } else {
             throw new WebErrorException("非法时间");

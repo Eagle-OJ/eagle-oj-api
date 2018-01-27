@@ -11,25 +11,11 @@ import java.util.List;
 /**
  * @author Smith
  **/
-@Service
-public class UserLogService {
+public interface UserLogService {
 
-    @Autowired
-    private SqlSession sqlSession;
+    boolean save(int uid, UserLogEntity entity);
 
-    @Autowired
-    private UserLogDao userLogDao;
+    List<UserLogEntity> listUserLogInWeek(int uid);
 
-    public boolean updateLog(int uid, UserLogEntity entity) {
-        entity.setUid(uid);
-        return userLogDao.updateLog(sqlSession, entity);
-    }
-
-    public List<UserLogEntity> getInWeek(int uid) {
-        return userLogDao.getInWeek(sqlSession, uid);
-    }
-
-    public List<UserLogEntity> getInMonth(int uid) {
-        return userLogDao.getInMonth(sqlSession, uid);
-    }
+    List<UserLogEntity> listUserLogInMonth(int uid);
 }
