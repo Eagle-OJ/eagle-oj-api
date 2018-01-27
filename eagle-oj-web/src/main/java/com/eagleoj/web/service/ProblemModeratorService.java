@@ -1,11 +1,6 @@
 package com.eagleoj.web.service;
 
 import com.eagleoj.web.entity.ProblemModeratorEntity;
-import org.apache.ibatis.session.SqlSession;
-import com.eagleoj.web.dao.ProblemModeratorDao;
-import com.eagleoj.web.entity.ProblemModeratorEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +12,7 @@ public interface ProblemModeratorService {
 
     boolean save(int pid, int uid);
 
-    boolean isExist(int pid, int uid);
+    boolean isExistModeratorInProblem(int pid, int uid);
 
     ProblemModeratorEntity get(int pid, int uid);
 

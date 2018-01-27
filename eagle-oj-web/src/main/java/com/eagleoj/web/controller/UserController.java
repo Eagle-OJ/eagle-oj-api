@@ -43,9 +43,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private AttachmentService attachmentService;
-
-    @Autowired
     private GroupUserService groupUserService;
 
     @Autowired
@@ -60,9 +57,8 @@ public class UserController {
     public ResponseEntity getUserInfo() {
         int uid = SessionHelper.get().getUid();
         UserEntity userEntity = userService.getUserByUid(uid);
-        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(userEntity));
-        jsonObject.remove("password");
-        return new ResponseEntity(jsonObject);
+        userEntity.setPassword(null);
+        return new ResponseEntity(userEntity);
     }
 
     @ApiOperation("更新用户的信息")
@@ -70,10 +66,7 @@ public class UserController {
     @RequiresAuthentication
     public ResponseEntity updateUserProfile(@Valid @RequestBody UpdateUserProfileFormat format) {
         int uid = SessionHelper.get().getUid();
-        if (! userService.updateUserProfile(uid, format.getNickname(), format.getMotto(),
-                format.getGender())) {
-            throw new WebErrorException("更新用户失败");
-        }
+        userService.updateUserProfile(uid, format.getNickname(), format.getMotto(), format.getGender());
         return new ResponseEntity("更新成功");
     }
 
@@ -113,16 +106,8 @@ public class UserController {
         if (! file.getContentType().equals("image/jpeg")) {
             throw new WebErrorException("文件格式非法");
         }
-        String filePath = fileUtil.uploadAvatar(file.getInputStream(), "jpg");
 
-        if (filePath == null) {
-            throw new WebErrorException("文件上传失败");
-        }
-
-        int aid = attachmentService.save(uid, filePath);
-        if (! userService.updateUserAvatar(uid, aid)) {
-            throw new WebErrorException("头像更新失败");
-        }
+        userService.uploadUserAvatar(uid, file);
         return new ResponseEntity("头像更新成功");
     }
 }

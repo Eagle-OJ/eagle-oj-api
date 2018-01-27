@@ -6,6 +6,7 @@ import com.eagleoj.judge.JudgeHelper;
 import com.eagleoj.web.dao.ProblemMapper;
 import com.eagleoj.web.entity.ProblemEntity;
 import com.eagleoj.web.service.ProblemService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,9 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     public ProblemEntity getProblem(int pid) {
-        return problemMapper.getByPid(pid);
+        ProblemEntity problemEntity = problemMapper.getByPid(pid);
+        WebUtil.assertNotNull(problemEntity, "不存在此题目");
+        return problemEntity;
     }
 
     @Override

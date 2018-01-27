@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.UUID;
@@ -65,16 +66,11 @@ public class FileUtil {
         }
     }
 
-    public String uploadAvatar(InputStream is, String postfix) {
+    public String uploadAvatar(InputStream is, String postfix) throws Exception {
         String file = UUID.randomUUID().toString()+"."+postfix;
         String filePath = generateFilePath(file);
-        try {
-            ossClient.putObject(BUCKET, filePath, is);
-            return "/"+filePath;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            return null;
-        }
+        ossClient.putObject(BUCKET, filePath, is);
+        return "/"+filePath;
     }
 
     private String generateFilePath(String fileName) {

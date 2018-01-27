@@ -27,7 +27,7 @@ public class ProblemModeratorServiceImpl implements ProblemModeratorService {
     }
 
     @Override
-    public boolean isExist(int pid, int uid) {
+    public boolean isExistModeratorInProblem(int pid, int uid) {
         return get(pid, uid) != null;
     }
 

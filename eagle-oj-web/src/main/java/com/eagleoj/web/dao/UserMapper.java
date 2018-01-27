@@ -25,14 +25,8 @@ public interface UserMapper {
 
     UserEntity getByEmailPassword(@Param("email") String email, @Param("password") String password);
 
-    List<UserEntity> listInUidList(List<Integer> uidList);
-
     // todo
     List<Map<String, Object>> listModeratorsInUidList(List<Integer> uidList);
 
-    int updateTimesByUid(@Param("uid") int uid, @Param("data") UserEntity data);
-
-    int updateProfileByUid(@Param("uid") int uid, @Param("data") UserEntity data);
-
-    int updateAvatarByUid(@Param("uid") int uid, @Param("avatar") int avatar);
+    int updateByUid(@Param("uid") int uid, @Param("data") UserEntity data);
 }

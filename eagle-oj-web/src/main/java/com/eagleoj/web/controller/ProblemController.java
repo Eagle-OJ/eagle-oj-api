@@ -3,11 +3,14 @@ package com.eagleoj.web.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.DefaultConfig;
+import com.eagleoj.web.controller.exception.UnauthorizedException;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.admin.ProblemAuditingFormat;
 import com.eagleoj.web.controller.format.user.AddProblemFormat;
 import com.eagleoj.web.controller.format.user.AddProblemModeratorFormat;
 import com.eagleoj.web.controller.format.user.AddProblemTestCaseFormat;
+import com.eagleoj.web.data.status.ProblemStatus;
+import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.postman.MessageQueue;
 import com.eagleoj.web.postman.task.SendProblemAcceptedMessageTask;
 import com.eagleoj.web.postman.task.SendProblemRefusedMessageTask;
@@ -64,7 +67,6 @@ public class ProblemController {
     @GetMapping("/{pid}")
     public ResponseEntity get(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
         UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
         Map<String, Object> dataMap = new HashMap<>(2);
         dataMap.put("problem", problemEntity);
@@ -78,8 +80,6 @@ public class ProblemController {
     @ApiOperation("获取该题的所有标签")
     @GetMapping("/{pid}/tags")
     public ResponseEntity getProblemTags(@PathVariable("pid") int pid) {
-        ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
         return new ResponseEntity(problemService.listProblemTags(pid));
     }
 
@@ -126,8 +126,7 @@ public class ProblemController {
         checkProblemFormat(format);
 
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
-        havePermission(problemEntity);
+        accessToEditProblem(problemEntity);
 
         // tags 过滤
         List<Integer> originTags= tagProblemService.getProblemTags(pid)
@@ -171,8 +170,7 @@ public class ProblemController {
     @GetMapping("/{pid}/test_cases")
     public ResponseEntity getProblemTestCase(@PathVariable int pid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
-        havePermission(problemEntity);
+        accessToEditProblem(problemEntity);
 
         List<TestCaseEntity> testCaseEntities = testCasesService.listProblemTestCases(problemEntity.getPid());
         return new ResponseEntity(testCaseEntities);
@@ -185,8 +183,7 @@ public class ProblemController {
             @PathVariable("pid") int pid,
             @RequestBody @Valid AddProblemTestCaseFormat format) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
-        havePermission(problemEntity);
+        accessToEditProblem(problemEntity);
 
         // 添加test_case
         int tid = testCasesService.save(pid, format.getStdin(), format.getStdout(), format.getStrength());
@@ -204,8 +201,7 @@ public class ProblemController {
     public ResponseEntity deleteProblemTestCase(@PathVariable("pid") int pid,
                                                 @PathVariable("tid") int tid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
-        havePermission(problemEntity);
+        accessToEditProblem(problemEntity);
 
         // 删除test_case
         if (! testCasesService.deleteTestCase(tid)) {
@@ -222,8 +218,7 @@ public class ProblemController {
                                                 @PathVariable("tid") int tid,
                                                 @RequestBody @Valid AddProblemTestCaseFormat format) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
-        havePermission(problemEntity);
+        accessToEditProblem(problemEntity);
 
         if (! testCasesService.updateTestCaseByTidPid(tid, pid, format.getStdin(), format.getStdout(),
                 format.getStrength())) {
@@ -245,7 +240,6 @@ public class ProblemController {
     public ResponseEntity addProblemModerator(@PathVariable("pid") int pid,
                                               @RequestBody @Valid AddProblemModeratorFormat format) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
 
         if (SessionHelper.get().getUid() != problemEntity.getOwner()) {
             throw new WebErrorException("非法操作");
@@ -254,7 +248,7 @@ public class ProblemController {
         UserEntity userEntity = userService.getUserByEmail(format.getEmail());
         WebUtil.assertNotNull(userEntity, "此用户不存在");
 
-        if (problemModeratorService.isExist(pid, userEntity.getUid())) {
+        if (problemModeratorService.isExistModeratorInProblem(pid, userEntity.getUid())) {
             throw new WebErrorException("已存在此用户");
         }
 
@@ -272,8 +266,6 @@ public class ProblemController {
     public ResponseEntity deleteProblemModerator(@PathVariable("pid") int pid,
                                                  @PathVariable("uid") int uid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-
-        haveProblem(problemEntity);
 
         if (SessionHelper.get().getUid() != problemEntity.getOwner()) {
             throw new WebErrorException("非法操作");
@@ -296,8 +288,7 @@ public class ProblemController {
             throw new WebErrorException("至少支持一种编程语言");
         }
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
-        havePermission(problemEntity);
+        accessToEditProblem(problemEntity);
 
         int status = 0;
         if (format.getShared()) {
@@ -320,7 +311,6 @@ public class ProblemController {
     public ResponseEntity problemAuditing(@PathVariable int pid,
                                           @RequestBody @Valid ProblemAuditingFormat format) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        haveProblem(problemEntity);
         boolean status;
         if (format.getAccepted()) {
             status = problemService.acceptProblem(pid);
@@ -349,21 +339,6 @@ public class ProblemController {
         return new ResponseEntity("审核成功");
     }
 
-    private void havePermission(ProblemEntity problemEntity) {
-        int uid = SessionHelper.get().getUid();
-        int role = SessionHelper.get().getRole();
-
-        if (uid == problemEntity.getOwner())
-            return;
-
-        if (role == DefaultConfig.ADMIN_ROLE)
-            return;
-
-        if (problemModeratorService.isExist(problemEntity.getPid(), uid))
-            return;
-
-        throw new WebErrorException("非法操作");
-    }
 
     private void checkProblemFormat(AddProblemFormat format) {
 
@@ -384,7 +359,31 @@ public class ProblemController {
         }
     }
 
-    private void haveProblem(ProblemEntity entity) {
-        WebUtil.assertNotNull(entity, "题目不存在");
+    // 题目一旦全局使用，则只有管理员才能修改
+    private void accessToEditProblem(ProblemEntity problemEntity) {
+        int uid = SessionHelper.get().getUid();
+        int role = SessionHelper.get().getRole();
+
+        if (problemEntity.getStatus() == ProblemStatus.SHARING.getNumber()) {
+            if (role >= RoleStatus.ADMIN.getNumber()) {
+                return;
+            } else {
+                throw new WebErrorException("题目已经全局分享，只有管理员能够进行修改");
+            }
+        }
+
+        if (uid == problemEntity.getOwner()) {
+            return;
+        }
+
+        if (role >= RoleStatus.ADMIN.getNumber()) {
+            return;
+        }
+
+        if (problemModeratorService.isExistModeratorInProblem(problemEntity.getPid(), uid)) {
+            return;
+        }
+
+        throw new UnauthorizedException("非法操作");
     }
 }

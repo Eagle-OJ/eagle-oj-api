@@ -1,6 +1,8 @@
 package com.eagleoj.web.service;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.entity.UserEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -10,19 +12,17 @@ import java.util.Map;
  **/
 public interface UserService {
 
-    int save(String email, String nickname, String password);
+    int register(String email, String nickname, String password);
 
-    UserEntity getUserByEmailPassword(String email, String password);
+    UserEntity login(String email, String password);
 
-    UserEntity getUserByUid(int uid);
+    UserEntity getUserByUid(Integer uid);
 
     UserEntity getUserByEmail(String email);
 
-    List<Map<String, Object>> listModeratorsInUidList(List<Integer> uidList);
+    void updateUserProfile(Integer uid, String nickname, String motto, Integer gender);
 
-    boolean updateUserProfile(int uid, String nickname, String motto, int gender);
+    void updateUserTimes(Integer uid, UserEntity userEntity);
 
-    boolean updateUserAvatar(int uid, int avatar);
-
-    boolean updateUserTimes(int uid, UserEntity userEntity);
+    void uploadUserAvatar(Integer uid, MultipartFile file);
 }

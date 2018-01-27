@@ -46,15 +46,8 @@ public class IndexController {
     @ApiOperation("用户注册")
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
-        // 检查用户是否存在
-        UserEntity userEntity = userService.getUserByEmail(format.getEmail());
-        if (userEntity != null) {
-            throw new WebErrorException("邮箱已经注册");
-        }
-
         // 注册用户
-        int uid = userService.save(format.getEmail(),
-                format.getNickname(),
+        int uid = userService.register(format.getEmail(), format.getNickname(),
                 new Md5Hash(format.getPassword()).toString());
         if (uid == 0) {
             throw new WebErrorException("注册失败");
@@ -65,10 +58,7 @@ public class IndexController {
     @ApiOperation("用户登入")
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
-        UserEntity userEntity = userService.getUserByEmailPassword(format.getEmail(), format.getPassword());
-        if (userEntity == null)
-            throw new WebErrorException("用户名密码错误");
-
+        UserEntity userEntity = userService.login(format.getEmail(), format.getPassword());
         JSONArray array = userEntity.getPermission();
         Iterator<Object> it = array.iterator();
         Set<String> permission = new HashSet<>();
@@ -85,14 +75,9 @@ public class IndexController {
     @GetMapping("/avatar")
     public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {
-        AttachmentEntity entity = attachmentService.getByAid(aid);
-        String url;
-        if (entity == null) {
-            throw new WebErrorException("不存在此头像");
-        }
+        AttachmentEntity entity = attachmentService.getAvatar(aid);
         String OSS_URL = settingService.getSystemConfig().getOssConfig().getURL();
-        url = OSS_URL+entity.getUrl();
-        response.sendRedirect(url);
+        response.sendRedirect(OSS_URL+entity.getUrl());
     }
 
     @RequestMapping("/401")

@@ -9,5 +9,5 @@ public interface AttachmentService {
 
     int save(int owner, String url);
 
-    AttachmentEntity getByAid(int aid);
+    AttachmentEntity getAvatar(int aid);
 }

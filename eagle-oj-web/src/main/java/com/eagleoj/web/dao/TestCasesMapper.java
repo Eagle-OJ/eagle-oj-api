@@ -15,7 +15,6 @@ public interface TestCasesMapper {
 
     List<TestCaseEntity> listTestCasesByPid(int pid);
 
-    // todo wait to refactor
     int updateByTidPid(@Param("tid") int tid, @Param("pid")int pid, @Param("data") TestCaseEntity data);
 
     int deleteByTid(int tid);

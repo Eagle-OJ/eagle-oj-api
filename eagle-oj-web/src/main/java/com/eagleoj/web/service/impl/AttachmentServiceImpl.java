@@ -1,5 +1,6 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.AttachmentMapper;
 import com.eagleoj.web.entity.AttachmentEntity;
 import com.eagleoj.web.service.AttachmentService;
@@ -26,7 +27,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AttachmentEntity getByAid(int aid) {
+    public AttachmentEntity getAvatar(int aid) throws WebErrorException {
+        AttachmentEntity entity = mapper.getByAid(aid);
+        if (entity == null) {
+            throw new WebErrorException("不存在此头像");
+        }
         return mapper.getByAid(aid);
     }
 }
