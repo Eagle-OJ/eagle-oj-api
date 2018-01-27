@@ -27,9 +27,7 @@ public interface ProblemService {
 
     List<Map<String, Object>> listProblemTags(int pid);
 
-    List<Map<String, Object>> listSharedProblems(int difficult, String tag);
-
-    List<Map<String, Object>> listSharedProblemsWithUserStatus(int uid, int difficult, String tag);
+    List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid);
 
     boolean updateProblemDescriptionByPid(int pid, String title, JSONObject description, JSONObject inputFormat,
                                   JSONObject outputFormat, JSONArray samples, int difficult);

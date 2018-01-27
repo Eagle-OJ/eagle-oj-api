@@ -341,6 +341,11 @@ public class JudgerRunner {
         private void saveUserLog(int uid, ResultEnum result) {
             UserLogEntity entity = new UserLogEntity();
             entity.setSubmitTimes(1);
+            entity.setACTimes(0);
+            entity.setTLETimes(0);
+            entity.setRTETimes(0);
+            entity.setWATimes(0);
+            entity.setCETimes(0);
             switch (result) {
                 case AC:
                     entity.setACTimes(1);

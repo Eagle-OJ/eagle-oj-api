@@ -7,6 +7,8 @@ import com.eagleoj.web.config.OSSConfig;
 import com.eagleoj.web.service.SettingService;
 import com.eagleoj.web.config.OSSConfig;
 import com.eagleoj.web.service.SettingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -20,17 +22,18 @@ import java.util.UUID;
 @Component
 public class FileUtil {
 
+    private Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
+
     private String BUCKET;
 
     private OSSClient ossClient;
 
-    // todo
-    /*public FileUtil(SettingService settingService) {
+    public FileUtil(SettingService settingService) {
         OSSConfig ossConfig = settingService.getSystemConfig().getOssConfig();
         ossClient = new OSSClient(ossConfig.getEND_POINT(),
                 ossConfig.getACCESS_KEY(), ossConfig.getSECRET_KEY());
         BUCKET = ossConfig.getBUCKET();
-    }*/
+    }
 
 
     public String uploadCode(LanguageEnum lang, String code) {
@@ -57,6 +60,7 @@ public class FileUtil {
             ossClient.putObject(BUCKET, filePath, is, metadata);
             return "/"+filePath;
         } catch (Exception e) {
+
             return null;
         }
     }
@@ -68,6 +72,7 @@ public class FileUtil {
             ossClient.putObject(BUCKET, filePath, is);
             return "/"+filePath;
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             return null;
         }
     }

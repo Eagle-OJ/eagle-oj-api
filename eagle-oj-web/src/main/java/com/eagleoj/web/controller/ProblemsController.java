@@ -45,9 +45,9 @@ public class ProblemsController {
 
     @ApiOperation("获取公开题目列表")
     @GetMapping
-    public ResponseEntity getProblems(@RequestParam(name = "difficult", defaultValue = "-1", required = false) int difficult,
-                                      @RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
-                                      @RequestParam(name = "uid", defaultValue = "-1", required = false) int uid,
+    public ResponseEntity getProblems(@RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
+                                      @RequestParam(name = "difficult", defaultValue = "-1", required = false) Integer difficult,
+                                      @RequestParam(name = "uid", defaultValue = "-1", required = false) Integer uid,
                                       @RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
@@ -55,13 +55,16 @@ public class ProblemsController {
             tag = null;
         }
         List<Map<String, Object>> data;
-        if (uid != -1) {
-            // 返回带status结果的数据
-            data = problemService.listSharedProblemsWithUserStatus(uid, difficult, tag);
-        } else {
-            // 返回不带status结果的数据
-            data = problemService.listSharedProblems(difficult, tag);
+
+        if (difficult == -1) {
+            difficult = null;
         }
+
+        if (uid == -1) {
+            uid = null;
+        }
+
+        data = problemService.listSharedProblems(tag, difficult, uid);
         return new ResponseEntity(WebUtil.generatePageData(pager, data));
     }
 

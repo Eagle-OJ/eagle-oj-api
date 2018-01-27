@@ -73,13 +73,8 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public List<Map<String, Object>> listSharedProblems(int difficult, String tag) {
-        return problemMapper.listShared(difficult, tag);
-    }
-
-    @Override
-    public List<Map<String, Object>> listSharedProblemsWithUserStatus(int uid, int difficult, String tag) {
-        return problemMapper.listSharedWithUserStatus(difficult, tag, uid);
+    public List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid) {
+        return problemMapper.listShared(uid, difficult, tag);
     }
 
     @Override

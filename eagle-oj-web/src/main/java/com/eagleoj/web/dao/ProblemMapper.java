@@ -20,7 +20,9 @@ public interface ProblemMapper {
 
     List<ProblemEntity> listAll();
 
-    List<Map<String, Object>> listShared(@Param("difficult") int difficult, @Param("tag") String tag);
+    List<Map<String, Object>> listShared(@Param("uid") Integer uid,
+                                         @Param("difficult") Integer difficult,
+                                         @Param("tag") String tag);
 
     List<ProblemEntity> listAuditing();
 

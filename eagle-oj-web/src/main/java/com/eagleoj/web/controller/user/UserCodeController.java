@@ -117,7 +117,7 @@ public class UserCodeController {
         WebUtil.assertNotNull(problemEntity, "题目不存在");
 
         // 获取题目是否在次比赛中
-        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(problemId, contestId);
+        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(contestId, problemId);
         WebUtil.assertNotNull(contestProblemEntity, "题目不在比赛中");
 
         containLang(format.getLang(), problemEntity.getLang());

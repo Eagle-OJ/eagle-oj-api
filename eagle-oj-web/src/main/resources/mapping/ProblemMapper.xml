@@ -24,32 +24,30 @@
     </select>
 
     <select id="listShared" resultType="HashMap" parameterType="HashMap">
-        SELECT problem.pid, title, difficult, submit_times, ac_times FROM problem
-        WHERE status=2
-        <if test="difficult != -1">
+        SELECT
+            problem.pid,
+            title, difficult,
+            submit_times,
+            ac_times
+        <if test="uid != null">
+            , problem_user.status
+        </if>
+        FROM problem
+        <if test="uid != null">
+            LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
+        </if>
+        WHERE problem.status=2
+        <if test="difficult != null">
           AND difficult=#{difficult}
         </if>
         <if test="tag != null">
-            AND pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
+            AND problem.pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
         </if>
         ORDER BY pid ASC
     </select>
 
     <select id="listAuditing" resultMap="problemResultMap">
         SELECT * FROM problem WHERE status=1 ORDER BY create_time DESC
-    </select>
-
-    <select id="listSharedWithUserStatus" resultType="HashMap" parameterType="HashMap">
-        SELECT problem.pid, title, difficult, submit_times, ac_times, problem_user.status FROM problem
-        LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
-        WHERE problem.status=2
-        <if test="difficult != -1">
-            AND difficult=#{difficult}
-        </if>
-        <if test="tag != null">
-            AND problem.pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
-        </if>
-        ORDER BY pid ASC
     </select>
 
     <select id="listByUid" resultMap="problemResultMap">

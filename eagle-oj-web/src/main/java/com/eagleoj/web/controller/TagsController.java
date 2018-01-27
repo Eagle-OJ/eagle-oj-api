@@ -23,7 +23,7 @@ public class TagsController {
     private TagsService tagsService;
 
     @GetMapping
-    public ResponseEntity getTags() {
+    public ResponseEntity listTags() {
         return new ResponseEntity(tagsService.listAll());
     }
 

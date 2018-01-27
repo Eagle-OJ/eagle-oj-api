@@ -40,32 +40,32 @@
     <update id="updateByCidUid">
         UPDATE contest_user
         <set>
-            <if test="submitTimes != null">
+            <if test="data.submitTimes != null">
                 submit_times = submit_times + 1,
             </if>
-            <if test="finishedProblems != null">
+            <if test="data.finishedProblems != null">
                 finished_problems = finished_problems + 1,
             </if>
-            <if test="ACTimes != null">
+            <if test="data.ACTimes != null">
                 ac_times = ac_times + 1,
             </if>
-            <if test="WATimes != null">
+            <if test="data.WATimes != null">
                 wa_times = wa_times + 1,
             </if>
-            <if test="RTETimes != null">
+            <if test="data.RTETimes != null">
                 rte_times = rte_times + 1,
             </if>
-            <if test="TLETimes != null">
+            <if test="data.TLETimes != null">
                 tle_times = tle_times + 1,
             </if>
-            <if test="CETimes != null">
+            <if test="data.CETimes != null">
                 ce_times = ce_times + 1,
             </if>
-            <if test="score != null">
-                score = score + #{score},
+            <if test="data.score != null">
+                score = score + #{data.score},
             </if>
-            <if test="usedTime != null">
-                used_time = used_time + #{usedTime}
+            <if test="data.usedTime != null">
+                used_time = used_time + #{data.usedTime}
             </if>
         </set>
         WHERE `cid` = #{cid} AND `uid` = #{uid}

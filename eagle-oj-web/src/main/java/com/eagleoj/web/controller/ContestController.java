@@ -67,7 +67,7 @@ public class ContestController {
         haveProblem(problemEntity);
 
         // 加载本次比赛中此题的提交情况
-        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(pid, cid);
+        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(cid, pid);
         WebUtil.assertNotNull(contestProblemEntity, "本次比赛不包含此题");
         problemEntity.setSubmitTimes(contestProblemEntity.getSubmitTimes());
         problemEntity.setACTimes(contestProblemEntity.getACTimes());
