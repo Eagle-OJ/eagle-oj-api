@@ -238,7 +238,7 @@ public class GroupController {
         }
 
         PullGroupUserIntoContestTask task = new PullGroupUserIntoContestTask(gid, groupEntity.getName(),
-                format.getCid(), contestEntity.getName());
+                format.getCid(), contestEntity.getName(), contestEntity.getPassword());
         task.setType(3);
         messageQueue.addTask(task);
         return new ResponseEntity("操作成功");

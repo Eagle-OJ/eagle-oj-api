@@ -103,7 +103,6 @@ public class UserCodeController {
 
         // 获取用户是否参加比赛
         ContestUserEntity contestUserEntity = contestUserService.get(contestId, uid);
-        WebUtil.assertNotNull(contestUserEntity, "用户没有参加此比赛");
 
         // 查询如果为时间限制模式，用户是否能提交判卷
         if (contestEntity.getType() == 1 || contestEntity.getType() == 3) {
@@ -117,7 +116,6 @@ public class UserCodeController {
 
         // 获取题目是否在次比赛中
         ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(contestId, problemId);
-        WebUtil.assertNotNull(contestProblemEntity, "题目不在比赛中");
 
         containLang(format.getLang(), problemEntity.getLang());
 

@@ -18,10 +18,10 @@ public interface ContestProblemService {
 
     void saveContestProblem(int cid, int pid, int displayId, int score);
 
-    boolean updateContestProblemInfo(int cid, int pid, int displayId, int score);
+    void updateContestProblem(int cid, int pid, int displayId, int score);
 
     boolean updateContestProblemTimes(int cid, int pid, ContestProblemEntity entity);
 
-    boolean deleteByCidPid(int cid, int pid);
+    void deleteContestProblem(int cid, int pid);
 
 }

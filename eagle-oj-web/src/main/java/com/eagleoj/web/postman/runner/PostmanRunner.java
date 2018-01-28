@@ -38,6 +38,9 @@ public class PostmanRunner {
     private ContestUserService contestUserService;
 
     @Autowired
+    private ContestService contestService;
+
+    @Autowired
     private GroupUserService groupUserService;
 
     public PostmanRunner(TaskQueue messageQueue) {
@@ -126,12 +129,14 @@ public class PostmanRunner {
             List<Map<String, Object>> users = groupUserService.listGroupMembers(task.getGid());
             for (Map<String, Object> user: users) {
                 int uid = Long.valueOf((long)user.get("uid")).intValue();
-                boolean i = contestUserService.save(task.getCid(), uid);
-                if (i) {
-                    sendNormalMessage(uid,
+                try {
+                    contestUserService.joinContest(task.getCid(), uid, task.getPassword());
+                } catch (Exception e) {
+                    continue;
+                }
+                sendNormalMessage(uid,
                             MessageTemplate.generateUserPulledIntoContestMessage(task.getContestName(),
                             task.getCid(), task.getGroupName(), task.getGid()));
-                }
             }
         }
 

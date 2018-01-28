@@ -22,7 +22,7 @@ public interface UserService {
 
     void updateUserProfile(Integer uid, String nickname, String motto, Integer gender);
 
-    void updateUserTimes(Integer uid, UserEntity userEntity);
+    void updateUser(int uid, UserEntity userEntity);
 
     void uploadUserAvatar(Integer uid, MultipartFile file);
 }

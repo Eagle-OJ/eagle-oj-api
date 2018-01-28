@@ -261,7 +261,7 @@ public class JudgerRunner {
                     userEntity.setTLETimes(1);
                     break;
             }
-            userService.updateUserTimes(uid, userEntity);
+            userService.updateUser(uid, userEntity);
         }
 
         private void updateProblemTimes(int pid, ResultEnum resultEnum) {

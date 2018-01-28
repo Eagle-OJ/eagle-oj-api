@@ -27,7 +27,9 @@ public class ContestProblemServiceImpl implements ContestProblemService {
 
     @Override
     public ContestProblemEntity getContestProblem(int cid, int pid) {
-        return contestProblemMapper.getByCidPid(cid, pid);
+        ContestProblemEntity contestProblemEntity = contestProblemMapper.getByCidPid(cid, pid);
+        WebUtil.assertNotNull(contestProblemEntity, "本次比赛中不存在此题目");
+        return contestProblemEntity;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ContestProblemServiceImpl implements ContestProblemService {
             throw new WebErrorException("显示题号重复");
         }
 
-        ContestProblemEntity contestProblemEntity = getContestProblem(cid, pid);
+        ContestProblemEntity contestProblemEntity = contestProblemMapper.getByCidPid(cid, pid);
         WebUtil.assertNull(contestProblemEntity, "此题已经添加过了");
 
         ContestProblemEntity newEntity = new ContestProblemEntity();
@@ -63,13 +65,20 @@ public class ContestProblemServiceImpl implements ContestProblemService {
     }
 
     @Override
-    public boolean updateContestProblemInfo(int cid, int pid, int displayId, int score) {
+    public void updateContestProblem(int cid, int pid, int displayId, int score) {
+        ContestProblemEntity contestProblemEntity = getContestProblem(cid, pid);
+
+        if (displayId != contestProblemEntity.getDisplayId()) {
+            if (displayIdIsDuplicate(cid, displayId)) {
+                throw new WebErrorException("显示题号重复");
+            }
+        }
+
         ContestProblemEntity data = new ContestProblemEntity();
-        data.setCid(cid);
-        data.setPid(pid);
         data.setDisplayId(displayId);
         data.setScore(score);
-        return contestProblemMapper.updateByCidPid(cid, pid, data) == 1;
+        boolean flag =  contestProblemMapper.updateByCidPid(cid, pid, data) == 1;
+        WebUtil.assertIsSuccess(flag, "题目更新失败");
     }
 
     @Override
@@ -80,8 +89,9 @@ public class ContestProblemServiceImpl implements ContestProblemService {
     }
 
     @Override
-    public boolean deleteByCidPid(int cid, int pid) {
-        return contestProblemMapper.deleteByCidPid(cid, pid) == 1;
+    public void deleteContestProblem(int cid, int pid) {
+        boolean flag = contestProblemMapper.deleteByCidPid(cid, pid) == 1;
+        WebUtil.assertIsSuccess(flag, "删除比赛题目失败");
     }
 
     private boolean displayIdIsDuplicate(int cid, int displayId) {

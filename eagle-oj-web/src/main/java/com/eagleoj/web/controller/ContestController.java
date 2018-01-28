@@ -3,6 +3,8 @@ package com.eagleoj.web.controller;
 import com.eagleoj.web.controller.exception.UnauthorizedException;
 import com.eagleoj.web.controller.format.user.AddContestProblemFormat;
 import com.eagleoj.web.controller.format.user.CreateContestFormat;
+import com.eagleoj.web.controller.format.user.EnterContestFormat;
+import com.eagleoj.web.controller.format.user.UpdateContestProblemFormat;
 import com.eagleoj.web.data.status.ContestStatus;
 import com.eagleoj.web.data.status.ContestTypeStatus;
 import com.eagleoj.web.data.status.RoleStatus;
@@ -55,6 +57,9 @@ public class ContestController {
     @Autowired
     private ProblemService problemService;
 
+    @Autowired
+    private LeaderboardService leaderboardService;
+
     @ApiOperation("获取某个比赛信息")
     @GetMapping("/{cid}")
     public ResponseEntity getContest(@PathVariable("cid") int cid,
@@ -69,6 +74,44 @@ public class ContestController {
         }
         return new ResponseEntity(contestEntity);
     }
+
+    @ApiOperation("获取比赛中题目的信息")
+    @GetMapping("/{cid}/problem/{pid}")
+    public ResponseEntity getContestProblem(@PathVariable("cid") int cid,
+                                            @PathVariable("pid") int pid) {
+        ProblemEntity problemEntity = problemService.getProblem(pid);
+
+        // 加载本次比赛中此题的提交情况
+        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(cid, pid);
+        problemEntity.setSubmitTimes(contestProblemEntity.getSubmitTimes());
+        problemEntity.setACTimes(contestProblemEntity.getACTimes());
+        problemEntity.setCETimes(contestProblemEntity.getCETimes());
+        problemEntity.setWATimes(contestProblemEntity.getWATimes());
+        problemEntity.setTLETimes(contestProblemEntity.getTLETimes());
+        problemEntity.setRTETimes(contestProblemEntity.getRTETimes());
+
+        // 加载用户信息
+        UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
+
+        // 加载比赛信息
+        ContestEntity contestEntity = contestService.getContest(cid);
+        boolean contestStatus = false;
+        if (contestEntity.getStatus() == ContestStatus.USING.getNumber()) {
+            contestStatus = true;
+        }
+        Map<String, Object> map = new HashMap<>(3);
+        map.put("problem", problemEntity);
+        Map<String, Object> userMap = new HashMap<>(2);
+        userMap.put("nickname", userEntity.getNickname());
+        userMap.put("avatar", userEntity.getAvatar());
+        map.put("author", userMap);
+        Map<String, Object> contestMap = new HashMap<>(2);
+        contestMap.put("status", contestStatus);
+        contestMap.put("name", contestEntity.getName());
+        map.put("contest", contestMap);
+        return new ResponseEntity(map);
+    }
+
 
     @ApiOperation("创建比赛")
     @RequiresAuthentication
@@ -120,7 +163,8 @@ public class ContestController {
         } else {
             // 前台显示题目列表，附带用户提交信息
             int uid = SessionHelper.get().getUid();
-            accessJoinContest(contestEntity);
+            // 检验是否加入了比赛
+            contestUserService.get(cid, uid);
             list = contestProblemService.listContestProblems(cid, uid);
         }
         return new ResponseEntity(list);
@@ -148,42 +192,51 @@ public class ContestController {
         return new ResponseEntity("题目添加成功");
     }
 
-
-    @ApiOperation("获取比赛中题目的信息")
-    @GetMapping("/{cid}/problem/{pid}")
-    public ResponseEntity getContestProblem(@PathVariable("cid") int cid,
-                                                @PathVariable("pid") int pid) {
-        ProblemEntity problemEntity = problemService.getProblem(pid);
-
-        // 加载本次比赛中此题的提交情况
-        ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(cid, pid);
-        WebUtil.assertNotNull(contestProblemEntity, "本次比赛不包含此题");
-        problemEntity.setSubmitTimes(contestProblemEntity.getSubmitTimes());
-        problemEntity.setACTimes(contestProblemEntity.getACTimes());
-        problemEntity.setCETimes(contestProblemEntity.getCETimes());
-        problemEntity.setWATimes(contestProblemEntity.getWATimes());
-        problemEntity.setTLETimes(contestProblemEntity.getTLETimes());
-        problemEntity.setRTETimes(contestProblemEntity.getRTETimes());
-
-        // 加载用户信息
-        UserEntity userEntity = userService.getUserByUid(problemEntity.getOwner());
-
-        // 加载比赛信息
+    @ApiOperation("更新比赛题目的分值和题号")
+    @RequiresAuthentication
+    @PutMapping("/{cid}/problem/{pid}")
+    public ResponseEntity updateContestProblem(@PathVariable("cid") int cid,
+                                               @PathVariable("pid") int pid,
+                                               @RequestBody @Valid UpdateContestProblemFormat format) {
         ContestEntity contestEntity = contestService.getContest(cid);
-        boolean contestStatus = false;
-        if (contestEntity.getStatus() == ContestStatus.USING.getNumber()) {
-            contestStatus = true;
-        }
+        accessToEditContest(contestEntity);
+
+        contestProblemService.updateContestProblem(cid, pid, format.getDisplayId(), format.getScore());
+        return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("删除比赛的题目")
+    @RequiresAuthentication
+    @DeleteMapping("/{cid}/problem/{pid}")
+    public ResponseEntity deleteContestProblem(@PathVariable("cid") int cid,
+                                               @PathVariable("pid") int pid) {
+        ContestEntity contestEntity = contestService.getContest(cid);
+        accessToEditContest(contestEntity);
+        contestProblemService.deleteContestProblem(cid, pid);
+        return new ResponseEntity("删除成功");
+    }
+
+    @ApiOperation("参加比赛")
+    @RequiresAuthentication
+    @PostMapping("/{cid}/enter")
+    public ResponseEntity enterContest(@PathVariable("cid") int cid,
+                                       @RequestBody @Valid EnterContestFormat format) {
+        int uid = SessionHelper.get().getUid();
+        contestUserService.joinContest(cid, uid, format.getPassword());
+        return new ResponseEntity("加入比赛成功");
+    }
+
+    @ApiOperation("获取本人在某个比赛中的状况+题目列表")
+    @RequiresAuthentication
+    @GetMapping("/{cid}/data")
+    public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid) {
+        int uid = SessionHelper.get().getUid();
+        ContestUserEntity info = contestUserService.get(cid, uid);
+
         Map<String, Object> map = new HashMap<>(3);
-        map.put("problem", problemEntity);
-        Map<String, Object> userMap = new HashMap<>(2);
-        userMap.put("nickname", userEntity.getNickname());
-        userMap.put("avatar", userEntity.getAvatar());
-        map.put("author", userMap);
-        Map<String, Object> contestMap = new HashMap<>(2);
-        contestMap.put("status", contestStatus);
-        contestMap.put("name", contestEntity.getName());
-        map.put("contest", contestMap);
+        map.put("meta", leaderboardService.getUserMetaInContest(uid, cid));
+        map.put("user", info);
+        map.put("problems", contestProblemService.listContestProblems(cid, info.getUid()));
         return new ResponseEntity(map);
     }
 
@@ -215,12 +268,4 @@ public class ContestController {
 
         throw new UnauthorizedException();
     }
-
-    private void accessJoinContest(ContestEntity contestEntity) {
-        ContestUserEntity entity = contestUserService.get(contestEntity.getCid(), SessionHelper.get().getUid());
-        if (entity == null) {
-            throw new WebErrorException("你没有加入此比赛");
-        }
-    }
-
 }

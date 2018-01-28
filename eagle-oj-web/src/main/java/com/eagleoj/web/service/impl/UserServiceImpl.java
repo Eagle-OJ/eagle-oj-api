@@ -78,10 +78,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserTimes(Integer uid, UserEntity userEntity) {
-        if (userMapper.updateByUid(uid, userEntity) != 1) {
-            throw new WebErrorException("更新用户提交记录失败");
-        }
+    public void updateUser(int uid, UserEntity userEntity) {
+        WebUtil.assertIsSuccess(userMapper.updateByUid(uid, userEntity) == 1, "用户信息更新失败");
     }
 
     @Transactional

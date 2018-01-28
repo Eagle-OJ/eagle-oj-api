@@ -51,7 +51,7 @@
                 score = #{data.score},
             </if>
             <if test="data.displayId != null">
-                display_id=#{data.displayId}
+                display_id=#{data.displayId},
             </if>
             <if test="data.submitTimes != null">
                 submit_times = submit_times + 1,

@@ -1,11 +1,17 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ContestUserMapper;
+import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.ContestUserEntity;
+import com.eagleoj.web.entity.UserEntity;
+import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.ContestUserService;
-import com.github.pagehelper.PageRowBounds;
+import com.eagleoj.web.service.UserService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,23 +26,17 @@ public class ContestUserServiceImpl implements ContestUserService {
     @Autowired
     private ContestUserMapper contestUserMapper;
 
-    /**
-     * 联合主键（cid,uid），所以没有自增主键
-     */
-    @Override
-    public boolean save(int cid, int uid) {
-        //添加contestUserInfo
-        ContestUserEntity contestUserEntity = new ContestUserEntity();
-        contestUserEntity.setCid(cid);
-        contestUserEntity.setUid(uid);
-        contestUserEntity.setJoinTime(System.currentTimeMillis());
-        return contestUserMapper.save(contestUserEntity) == 1;
-    }
+    @Autowired
+    private ContestService contestService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public ContestUserEntity get(int cid, int uid) {
-        // 通过cid和uid来获取实体
-        return contestUserMapper.getByCidUid(cid, uid);
+        ContestUserEntity contestUserEntity = contestUserMapper.getByCidUid(cid, uid);
+        WebUtil.assertNotNull(contestUserEntity, "你没有加入比赛");
+        return contestUserEntity;
     }
 
     @Override
@@ -57,5 +57,32 @@ public class ContestUserServiceImpl implements ContestUserService {
     @Override
     public boolean updateByCidUid(int cid, int uid, ContestUserEntity entity) {
         return contestUserMapper.updateByCidUid(cid, uid, entity) == 1;
+    }
+
+    @Transactional
+    @Override
+    public void joinContest(int cid, int uid, String password) {
+        ContestUserEntity contestUserEntity = contestUserMapper.getByCidUid(cid, uid);
+        WebUtil.assertNull(contestUserEntity, "你已经加入比赛");
+
+        // 校验密码
+        ContestEntity contestEntity = contestService.getContest(cid);
+        if (contestEntity.getPassword() != null) {
+            String originPassword = contestEntity.getPassword();
+            if (! password.equals(originPassword)) {
+                throw new WebErrorException("密码错误");
+            }
+        }
+
+        ContestUserEntity newContestUserEntity = new ContestUserEntity();
+        newContestUserEntity.setCid(cid);
+        newContestUserEntity.setUid(uid);
+        newContestUserEntity.setJoinTime(System.currentTimeMillis());
+        WebUtil.assertIsSuccess(contestUserMapper.save(newContestUserEntity) == 1, "比赛加入失败");
+
+        // 添加加入比赛的记录
+        UserEntity userEntity = new UserEntity();
+        userEntity.setContestTimes(1);
+        userService.updateUser(uid, userEntity);
     }
 }

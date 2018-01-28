@@ -12,11 +12,22 @@ public class PullGroupUserIntoContestTask extends BaseTask {
 
     private String contestName;
 
-    public PullGroupUserIntoContestTask(int gid, String groupName, int cid, String contestName) {
+    private String password;
+
+    public PullGroupUserIntoContestTask(int gid, String groupName, int cid, String contestName, String password) {
         this.gid = gid;
         this.groupName = groupName;
         this.cid = cid;
         this.contestName = contestName;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getGid() {

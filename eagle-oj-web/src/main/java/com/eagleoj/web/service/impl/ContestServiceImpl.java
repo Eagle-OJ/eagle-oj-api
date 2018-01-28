@@ -7,6 +7,7 @@ import com.eagleoj.web.postman.TaskQueue;
 import com.eagleoj.web.postman.task.CloseNormalContestTask;
 import com.eagleoj.web.postman.task.CloseOfficialContestTask;
 import com.eagleoj.web.service.ContestService;
+import com.eagleoj.web.service.ContestUserService;
 import com.eagleoj.web.service.async.AsyncTaskService;
 import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
