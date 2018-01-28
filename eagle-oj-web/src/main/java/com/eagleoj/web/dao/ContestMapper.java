@@ -15,15 +15,17 @@ import java.util.Map;
 public interface ContestMapper {
     int save(ContestEntity entity);
 
-    List<Map<String, Object>> listValid();
-
     List<ContestEntity> listByUid(int uid);
+
+    List<Map<String, Object>> listContests(@Param("isAll") boolean isAll);
 
     int deleteByCid(int cid);
 
     int updateDescriptionByCid(@Param("cid") int cid, @Param("data") ContestEntity data);
 
     int updateStatusByCid(@Param("cid") int cid, @Param("status") int status);
+
+    int updateByCid(@Param("cid") int cid, @Param("data") ContestEntity contestEntity);
 
     ContestEntity getByCid(int cid);
 }

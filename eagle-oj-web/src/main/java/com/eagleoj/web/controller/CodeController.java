@@ -77,7 +77,7 @@ public class CodeController {
         return new ResponseEntity(map);
     }
 
-    @ApiOperation("根据id获取判卷任务状况")
+    @ApiOperation("根据id获取判卷任务状况-DEBUG模式")
     @GetMapping("/debug/{id}")
     public ResponseEntity getDebugStatus(@PathVariable("id") String id) {
         JudgerResult result = judgerManager.getTask(id);

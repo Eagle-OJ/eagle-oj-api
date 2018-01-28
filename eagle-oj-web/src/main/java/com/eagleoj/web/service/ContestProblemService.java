@@ -12,11 +12,11 @@ public interface ContestProblemService {
 
     ContestProblemEntity getContestProblem(int cid, int pid);
 
-    List<Map<String, Object>> listContestProblemsByCid(int cid);
+    List<Map<String, Object>> listContestProblems(int cid);
 
-    List<Map<String, Object>> listContestProblemsWithUserStatus (int cid, int uid);
+    List<Map<String, Object>> listContestProblems (int cid, int uid);
 
-    boolean save(int pid, int cid, int displayId, int score);
+    void saveContestProblem(int cid, int pid, int displayId, int score);
 
     boolean updateContestProblemInfo(int cid, int pid, int displayId, int score);
 
@@ -24,5 +24,4 @@ public interface ContestProblemService {
 
     boolean deleteByCidPid(int cid, int pid);
 
-    boolean displayIdIsDuplicate(int cid, int displayId);
 }

@@ -9,7 +9,7 @@ import com.eagleoj.web.controller.format.admin.ProblemAuditingFormat;
 import com.eagleoj.web.controller.format.user.*;
 import com.eagleoj.web.data.status.ProblemStatus;
 import com.eagleoj.web.data.status.RoleStatus;
-import com.eagleoj.web.postman.MessageQueue;
+import com.eagleoj.web.postman.TaskQueue;
 import com.eagleoj.web.postman.task.SendProblemAcceptedMessageTask;
 import com.eagleoj.web.postman.task.SendProblemRefusedMessageTask;
 import com.eagleoj.web.service.ProblemModeratorService;
@@ -18,18 +18,15 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import com.eagleoj.web.entity.*;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.*;
-import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Smith
@@ -51,8 +48,6 @@ public class ProblemController {
     @Autowired
     private TestCasesService testCasesService;
 
-    @Autowired
-    private MessageQueue messageQueue;
 
     @ApiOperation("获取指定题目的信息")
     @GetMapping("/{pid}")
@@ -246,32 +241,12 @@ public class ProblemController {
     @PostMapping("/{pid}/auditing")
     public ResponseEntity problemAuditing(@PathVariable int pid,
                                           @RequestBody @Valid ProblemAuditingFormat format) {
-        // todo
         ProblemEntity problemEntity = problemService.getProblem(pid);
-        boolean status;
         if (format.getAccepted()) {
-            status = problemService.acceptProblem(pid);
-            if (status) {
-                SendProblemAcceptedMessageTask task = new SendProblemAcceptedMessageTask();
-                task.setTitle(problemEntity.getTitle());
-                task.setUid(problemEntity.getOwner());
-                task.setPid(problemEntity.getPid());
-                task.setType(5);
-                messageQueue.addTask(task);
-            }
+            problemService.acceptProblem(problemEntity);
         } else {
-            status = problemService.refuseProblem(pid);
-            if (status) {
-                SendProblemRefusedMessageTask task = new SendProblemRefusedMessageTask();
-                task.setTitle(problemEntity.getTitle());
-                task.setUid(problemEntity.getOwner());
-                task.setPid(problemEntity.getPid());
-                task.setType(6);
-                messageQueue.addTask(task);
-            }
-        }
-        if (! status) {
-            throw  new WebErrorException("审核失败");
+            problemService.refuseProblem(problemEntity);
+
         }
         return new ResponseEntity("审核成功");
     }

@@ -10,20 +10,19 @@ import java.util.Map;
  **/
 public interface ContestService {
 
-    int save(String name, int owner, String slogan, String description,
+    int saveContest(String name, int owner, int group, String slogan, String description,
                    long startTime, long endTime, Long totalTime, String password,
                    int type);
 
-    List<ContestEntity> listByUid(int uid);
+    List<ContestEntity> listUserContests(int uid);
 
-    ContestEntity getByCid(int cid);
+    ContestEntity getContest(int cid);
 
-    boolean deleteByCid(int cid);
 
-    boolean updateDescriptionByCid (int cid, String name, String slogan, String description, long startTime,
-                                           long endTime, Long totalTime, String password, int type);
+    void updateContest(int cid, String name, String slogan, String description, long startTime,
+                      long endTime, Long totalTime, String password, int type, int status);
 
-    boolean updateStatusByCid(int cid, int status);
+    List<Map<String, Object>> listOpenedContests();
 
-    List<Map<String, Object>> listValid();
+    List<Map<String, Object>> listAllContests();
 }

@@ -32,6 +32,12 @@ public class WebUtil {
         }
     }
 
+    public static void assertNull(Object obj, String errorMessage) {
+        if (obj != null) {
+            throw new WebErrorException(errorMessage);
+        }
+    }
+
     public static void assertIsSuccess(boolean flag, String errorMessage) {
         if (! flag) {
             throw new WebErrorException(errorMessage);

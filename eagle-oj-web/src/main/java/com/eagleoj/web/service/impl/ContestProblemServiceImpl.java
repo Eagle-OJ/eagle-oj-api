@@ -1,8 +1,12 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ContestProblemMapper;
 import com.eagleoj.web.entity.ContestProblemEntity;
+import com.eagleoj.web.entity.ProblemEntity;
 import com.eagleoj.web.service.ContestProblemService;
+import com.eagleoj.web.service.ProblemService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,29 +22,44 @@ public class ContestProblemServiceImpl implements ContestProblemService {
     @Autowired
     private ContestProblemMapper contestProblemMapper;
 
+    @Autowired
+    private ProblemService problemService;
+
     @Override
     public ContestProblemEntity getContestProblem(int cid, int pid) {
         return contestProblemMapper.getByCidPid(cid, pid);
     }
 
     @Override
-    public List<Map<String, Object>> listContestProblemsByCid(int cid) {
+    public List<Map<String, Object>> listContestProblems(int cid) {
         return contestProblemMapper.listByCid(cid);
     }
 
     @Override
-    public List<Map<String, Object>> listContestProblemsWithUserStatus (int cid, int uid) {
+    public List<Map<String, Object>> listContestProblems (int cid, int uid) {
         return contestProblemMapper.listByCidUidWithStatus(cid, uid);
     }
 
     @Override
-    public boolean save(int pid, int cid, int displayId, int score) {
-        ContestProblemEntity contestProblemEntity = new ContestProblemEntity();
-        contestProblemEntity.setPid(pid);
-        contestProblemEntity.setCid(cid);
-        contestProblemEntity.setDisplayId(displayId);
-        contestProblemEntity.setScore(score);
-        return contestProblemMapper.save(contestProblemEntity) == 1;
+    public void saveContestProblem(int cid, int pid, int displayId, int score) {
+        ProblemEntity problemEntity = problemService.getProblem(cid);
+        WebUtil.assertNotNull(problemEntity, "题目不存在");
+
+        boolean flag = displayIdIsDuplicate(cid, displayId);
+        if (flag) {
+            throw new WebErrorException("显示题号重复");
+        }
+
+        ContestProblemEntity contestProblemEntity = getContestProblem(cid, pid);
+        WebUtil.assertNull(contestProblemEntity, "此题已经添加过了");
+
+        ContestProblemEntity newEntity = new ContestProblemEntity();
+        newEntity.setCid(cid);
+        newEntity.setPid(pid);
+        newEntity.setDisplayId(displayId);
+        newEntity.setScore(score);
+        boolean res = contestProblemMapper.save(newEntity) == 1;
+        WebUtil.assertIsSuccess(res, "题目添加失败");
     }
 
     @Override
@@ -65,8 +84,7 @@ public class ContestProblemServiceImpl implements ContestProblemService {
         return contestProblemMapper.deleteByCidPid(cid, pid) == 1;
     }
 
-    @Override
-    public boolean displayIdIsDuplicate(int cid, int displayId) {
+    private boolean displayIdIsDuplicate(int cid, int displayId) {
         ContestProblemEntity result = contestProblemMapper.getByCidDisplayId(cid, displayId);
         return result != null;
     }

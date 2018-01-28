@@ -14,6 +14,8 @@ public class ContestEntity {
 
     private Integer owner;
 
+    private Integer group;
+
     private String slogan;
 
     private String description;
@@ -88,6 +90,14 @@ public class ContestEntity {
 
     public Long getEndTime() {
         return endTime;
+    }
+
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
     }
 
     public void setEndTime(Long endTime) {

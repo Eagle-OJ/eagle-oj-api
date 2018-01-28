@@ -12,6 +12,7 @@ import com.eagleoj.web.entity.TagProblemEntity;
 import com.eagleoj.web.service.ProblemService;
 import com.eagleoj.web.service.TagProblemService;
 import com.eagleoj.web.service.TagsService;
+import com.eagleoj.web.service.async.AsyncTaskService;
 import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Autowired
     private TagProblemService tagProblemService;
+
+    @Autowired
+    private AsyncTaskService asyncTaskService;
 
     @Transactional
     @Override
@@ -133,14 +137,18 @@ public class ProblemServiceImpl implements ProblemService {
         return problemMapper.listAuditing();
     }
 
+    @Transactional
     @Override
-    public boolean refuseProblem(int pid) {
-        return problemMapper.refuseByPid(pid) == 1;
+    public void acceptProblem(ProblemEntity problemEntity) {
+        WebUtil.assertIsSuccess(problemMapper.acceptByPid(problemEntity.getPid()) == 1, "审核失败");
+        asyncTaskService.sendAcceptAuditingProblem(problemEntity.getTitle(), problemEntity.getOwner(), problemEntity.getPid());
     }
 
+    @Transactional
     @Override
-    public boolean acceptProblem(int pid) {
-        return problemMapper.acceptByPid(pid) == 1;
+    public void refuseProblem(ProblemEntity problemEntity) {
+        WebUtil.assertIsSuccess(problemMapper.refuseByPid(problemEntity.getPid()) == 1, "审核失败");
+        asyncTaskService.sendRefuseAuditingProblem(problemEntity.getTitle(), problemEntity.getOwner(), problemEntity.getPid());
     }
 
     @Override

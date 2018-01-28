@@ -94,8 +94,7 @@ public class UserCodeController {
         int problemId = format.getProblemId();
         int uid = SessionHelper.get().getUid();
 
-        ContestEntity contestEntity = contestService.getByCid(contestId);
-        WebUtil.assertNotNull(contestEntity, "比赛不存在");;
+        ContestEntity contestEntity = contestService.getContest(contestId);
 
         // 检验比赛状态是否合法
         if (contestEntity.getStatus()!=1) {

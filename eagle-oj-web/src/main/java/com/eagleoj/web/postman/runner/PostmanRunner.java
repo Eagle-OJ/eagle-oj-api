@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.postman.MessageTemplate;
 import com.eagleoj.web.postman.task.*;
-import com.eagleoj.web.postman.MessageQueue;
+import com.eagleoj.web.postman.TaskQueue;
 import com.eagleoj.web.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class PostmanRunner {
     @Autowired
     private GroupUserService groupUserService;
 
-    public PostmanRunner(MessageQueue messageQueue) {
+    public PostmanRunner(TaskQueue messageQueue) {
         new Thread(() -> {
             while (true) {
                 BaseTask task = messageQueue.take();

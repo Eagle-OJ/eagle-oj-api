@@ -23,9 +23,9 @@ public interface ProblemService {
 
     List<ProblemEntity> listAuditingProblems();
 
-    boolean refuseProblem(int pid);
+    void acceptProblem(ProblemEntity problemEntity);
 
-    boolean acceptProblem(int pid);
+    void refuseProblem(ProblemEntity problemEntity);
 
     ProblemEntity getProblem(int pid);
 

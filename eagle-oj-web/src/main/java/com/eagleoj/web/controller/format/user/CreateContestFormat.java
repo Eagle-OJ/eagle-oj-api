@@ -12,6 +12,9 @@ import javax.validation.constraints.NotNull;
  **/
 public class CreateContestFormat {
 
+    @Range(min = 0)
+    private Integer group;
+
     @NotNull
     @Length(min = 1, max = 50)
     private String name;
@@ -41,6 +44,9 @@ public class CreateContestFormat {
     @NotNull
     @Range(min = 0, max = 3)
     private Integer type;
+
+    @Range(min = 0, max = 1)
+    private Integer status;
 
     public String getName() {
         return name;
@@ -102,7 +108,23 @@ public class CreateContestFormat {
         return type;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
     }
 }

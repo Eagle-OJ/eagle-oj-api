@@ -5,9 +5,9 @@
 <mapper namespace="com.eagleoj.web.dao.ContestMapper">
 
         <insert id="save" parameterType="ContestEntity" useGeneratedKeys="true" keyProperty="cid">
-            INSERT INTO `contest`(`name`,`owner`,`slogan`,`description`,`start_time`,
+            INSERT INTO `contest`(`name`,`owner`,`group`,`slogan`,`description`,`start_time`,
             `end_time`,`total_time`,`password`,`official`,`type`,`status`,`create_time`)
-            VALUES (#{name},#{owner},#{slogan},#{description},#{startTime},
+            VALUES (#{name},#{owner},#{group},#{slogan},#{description},#{startTime},
             #{endTime},#{totalTime},#{password},#{official},#{type},#{status},#{createTime})
         </insert>
 
@@ -20,6 +20,17 @@
             WHERE status!=0 ORDER BY status ASC, official DESC, create_time DESC
         </select>
 
+        <select id="listContests" resultType="HashMap">
+            SELECT
+                contest.*,
+                user.nickname
+            FROM contest LEFT JOIN user ON contest.owner=user.uid
+            <if test="! isAll">
+                WHERE status != 0
+            </if>
+            ORDER BY create_time DESC
+        </select>
+
         <select id="listByUid" resultMap="contestMap">
             SELECT * FROM contest WHERE owner = #{uid} ORDER BY create_time DESC
         </select>
@@ -27,6 +38,52 @@
         <delete id="deleteByCid">
             DELETE FROM `contest` WHERE `cid` = #{cid}
         </delete>
+
+        <update id="updateByCid">
+            UPDATE contest
+            <set>
+                <if test="data.name != null">
+                    name = #{data.name},
+                </if>
+                <if test="data.owner != null">
+                    owner = #{data.owner},
+                </if>
+                <if test="data.group != null">
+                    group = #{data.group},
+                </if>
+                <if test="data.slogan != null">
+                    slogan = #{data.slogan},
+                </if>
+                <if test="data.description != null">
+                    description = #{data.description},
+                </if>
+                <if test="data.startTime != null">
+                    start_time = #{data.startTime},
+                </if>
+                <if test="data.endTime != null">
+                    end_time = #{data.endTime},
+                </if>
+                <if test="data.totalTime != null">
+                    total_time = #{data.totalTime},
+                </if>
+                <if test="data.password != null">
+                    password = #{data.password},
+                </if>
+                <if test="data.official != null">
+                    official = #{data.official},
+                </if>
+                <if test="data.type != null">
+                    type = #{data.type},
+                </if>
+                <if test="data.status != null">
+                    status = #{data.status},
+                </if>
+                <if test="data.createTime != null">
+                    create_time = #{data.createTime},
+                </if>
+            </set>
+            WHERE cid = #{cid}
+        </update>
 
         <update id="updateDescriptionByCid">
             UPDATE `contest` SET
@@ -54,6 +111,7 @@
             <id column="cid" property="cid"/>
             <result column="name" property="name"/>
             <result column="owner" property="owner"/>
+            <result column="group" property="group"/>
             <result column="slogan" property="slogan"/>
             <result column="description" property="description"/>
             <result column="start_time" property="startTime"/>

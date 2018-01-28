@@ -15,7 +15,7 @@ import com.eagleoj.web.controller.exception.UnauthorizedException;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.*;
 import com.eagleoj.web.entity.*;
-import com.eagleoj.web.postman.MessageQueue;
+import com.eagleoj.web.postman.TaskQueue;
 import com.eagleoj.web.postman.task.PullGroupUserIntoContestTask;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.ContestService;
@@ -29,7 +29,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +53,7 @@ public class GroupController {
     private ContestService contestService;
 
     @Autowired
-    private MessageQueue messageQueue;
+    private TaskQueue messageQueue;
 
     @ApiOperation("获取小组的信息")
     @GetMapping("/{gid}")
@@ -229,8 +228,7 @@ public class GroupController {
         haveGroup(groupEntity);
         havePermission(groupEntity);
 
-        ContestEntity contestEntity = contestService.getByCid(format.getCid());
-        haveContest(contestEntity);
+        ContestEntity contestEntity = contestService.getContest(format.getCid());
 
         String password = contestEntity.getPassword();
         if (password!= null) {

@@ -8,7 +8,6 @@ import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.ContestUserService;
 import com.eagleoj.web.service.LeaderboardService;
-import org.apache.ibatis.session.SqlSession;
 import org.ehcache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,10 +39,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     @SuppressWarnings("unchecked")
     @Override
     public List<Map<String, Object>> getContestLeaderboard(int cid) {
-        ContestEntity contestEntity = contestService.getByCid(cid);
-        if (contestEntity == null) {
-            return null;
-        }
+        ContestEntity contestEntity = contestService.getContest(cid);
         int type = contestEntity.getType();
         Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();
         List<Map<String, Object>> list = (List<Map<String, Object>>) leaderboard.get(cid);

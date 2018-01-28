@@ -1,5 +1,6 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.data.status.RoleStatus;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
@@ -68,8 +69,9 @@ public class ProblemsController {
         return new ResponseEntity(WebUtil.generatePageData(pager, data));
     }
 
+    @ApiOperation("获取待审核的题目列表")
     @RequiresAuthentication
-    @RequiresRoles("9")
+    @RequiresRoles({"8", "9"})
     @GetMapping("/auditing")
     public ResponseEntity getAuditingProblems(@RequestParam("page") int page,
                                               @RequestParam("page_size") int pageSize) {

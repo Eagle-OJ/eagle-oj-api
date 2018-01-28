@@ -28,9 +28,7 @@ public class AnnouncementController {
     @RequiresRoles("9")
     @PostMapping
     public ResponseEntity add(@RequestBody @Valid AddAnnouncementFormat format) {
-        if(! announcementService.save(format.getTitle(), format.getContent())) {
-            throw new WebErrorException("公告添加失败");
-        }
+        announcementService.saveAnnouncement(format.getTitle(), format.getContent());
         return new ResponseEntity("公告添加成功");
     }
 
@@ -39,9 +37,7 @@ public class AnnouncementController {
     @PutMapping("/{aid}")
     public ResponseEntity update(@PathVariable int aid,
                                  @RequestBody @Valid AddAnnouncementFormat format) {
-        if (! announcementService.updateByAid(aid, format.getTitle(), format.getContent())) {
-            throw new WebErrorException("公告更新失败");
-        }
+        announcementService.updateAnnouncement(aid, format.getTitle(), format.getContent());
         return new ResponseEntity("公告更新成功");
     }
 
@@ -49,9 +45,7 @@ public class AnnouncementController {
     @RequiresRoles("9")
     @DeleteMapping("/{aid}")
     public ResponseEntity delete(@PathVariable int aid) {
-        if (! announcementService.deleteByAid(aid)) {
-            throw new WebErrorException("公告删除失败");
-        }
+        announcementService.deleteAnnouncement(aid);
         return new ResponseEntity("公告删除成功");
     }
 }

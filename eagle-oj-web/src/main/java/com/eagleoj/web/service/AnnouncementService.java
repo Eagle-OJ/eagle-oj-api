@@ -9,12 +9,12 @@ import java.util.List;
  **/
 public interface AnnouncementService {
 
-    boolean save(String title, String content);
+    void saveAnnouncement(String title, String content);
 
-    List<AnnouncementEntity> listAll();
+    List<AnnouncementEntity> listAllAnnouncements();
 
-    boolean updateByAid(int aid, String title, String content);
+    void updateAnnouncement(int aid, String title, String content);
 
-    boolean deleteByAid(int aid);
+    void deleteAnnouncement(int aid);
 
 }

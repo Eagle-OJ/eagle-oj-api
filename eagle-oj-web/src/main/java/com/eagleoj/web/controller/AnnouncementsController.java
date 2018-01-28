@@ -21,6 +21,6 @@ public class AnnouncementsController {
 
     @GetMapping
     public ResponseEntity get() {
-        return new ResponseEntity(announcementService.listAll());
+        return new ResponseEntity(announcementService.listAllAnnouncements());
     }
 }

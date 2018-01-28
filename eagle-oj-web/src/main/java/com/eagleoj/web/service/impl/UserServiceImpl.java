@@ -40,9 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public int register(String email, String nickname, String password) throws WebErrorException {
         UserEntity userEntity = getUserByEmail(email);
-        if (userEntity != null) {
-            throw new WebErrorException("用户已经存在");
-        }
+        WebUtil.assertNull(userEntity, "邮箱已被注册");
 
         return save(email, nickname, password);
     }

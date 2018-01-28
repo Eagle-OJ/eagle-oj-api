@@ -13,23 +13,23 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author Smith
  **/
 @Component
-public class MessageQueue {
+public class TaskQueue {
 
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    private BlockingQueue<BaseTask> messageQueue;
+    private BlockingQueue<BaseTask> taskQueue;
 
-    public MessageQueue() {
-        messageQueue = new LinkedBlockingQueue<>();
+    public TaskQueue() {
+        taskQueue = new LinkedBlockingQueue<>();
     }
 
     public void addTask(BaseTask task) {
-        messageQueue.add(task);
+        taskQueue.add(task);
     }
 
     public BaseTask take() {
         try {
-            return messageQueue.take();
+            return taskQueue.take();
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage(), e);
             return null;
