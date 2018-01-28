@@ -40,8 +40,8 @@ public class ContestUserServiceImpl implements ContestUserService {
     }
 
     @Override
-    public List<Map<String, Object>> listUserContests(int uid) {
-        return contestUserMapper.listUserContestsByUid(uid);
+    public List<Map<String, Object>> listUserJoinedContests(int uid) {
+        return contestUserMapper.listUserJoinedContestsByUid(uid);
     }
 
     @Override

@@ -2,9 +2,9 @@ package com.eagleoj.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.eagleoj.web.DefaultConfig;
 import com.eagleoj.web.controller.format.user.PullUsersIntoContestFormat;
 import com.eagleoj.web.controller.format.user.SendGroupUserMessageFormat;
+import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.postman.task.SendGroupUserMessageTask;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -58,9 +58,8 @@ public class GroupController {
     @ApiOperation("获取小组的信息")
     @GetMapping("/{gid}")
     public ResponseEntity getGroup(@PathVariable("gid") int gid,
-                                   @RequestParam(name = "isDetail", defaultValue = "false", required = false) boolean isDetail) {
+                                   @RequestParam(name = "is_detail", defaultValue = "false", required = false) boolean isDetail) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
         UserEntity userEntity = userService.getUserByUid(groupEntity.getOwner());
         String json = JSON.toJSONString(groupEntity);
         JSONObject jsonObject = JSON.parseObject(json);
@@ -85,11 +84,7 @@ public class GroupController {
     @PostMapping
     public ResponseEntity createGroup(@RequestBody @Valid CreateGroupFormat format) {
         int owner = SessionHelper.get().getUid();
-        int gid = groupService.save(owner, format.getName(), format.getPassword());
-
-        if (gid == 0) {
-            throw new WebErrorException("小组创建失败");
-        }
+        int gid = groupService.saveGroup(owner, format.getName(), format.getPassword());
         return new ResponseEntity("小组创建成功", gid);
     }
 
@@ -99,8 +94,7 @@ public class GroupController {
     public ResponseEntity updateGroup(@PathVariable int gid,
                                       @RequestBody @Valid CreateGroupFormat format) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
-        havePermission(groupEntity);
+        accessToEditGroup(groupEntity);
 
         if (! groupService.updateGroupByGid(gid, format.getName(), format.getPassword())) {
             throw new WebErrorException("小组更新失败");
@@ -115,7 +109,7 @@ public class GroupController {
                                           @RequestParam("page_size") int pageSize,
                                           @RequestParam(name = "isDetail", required = false, defaultValue = "false") boolean isDetail) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
+        accessToEditGroup(groupEntity);
 
         Page pager = PageHelper.startPage(page, pageSize);
         List<Map<String, Object>> members = groupUserService.listGroupMembers(gid);
@@ -139,7 +133,6 @@ public class GroupController {
     public ResponseEntity enterGroup(@PathVariable("gid") int gid,
                                      @RequestBody @Valid EnterGroupFormat format) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
 
         // 密码校对
         if (groupEntity.getPassword() != null) {
@@ -188,11 +181,10 @@ public class GroupController {
     public ResponseEntity kickUser(@PathVariable int gid,
                                    @PathVariable int uid) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
 
         //  校验被踢出或者自己退出
         if (! (SessionHelper.get().getUid() == uid)) {
-            havePermission(groupEntity);
+            accessToEditGroup(groupEntity);
         }
 
         // 删除用户
@@ -225,8 +217,7 @@ public class GroupController {
     public ResponseEntity pullUsersIntoContest(@PathVariable int gid,
                                                @RequestBody @Valid PullUsersIntoContestFormat format) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
-        havePermission(groupEntity);
+        accessToEditGroup(groupEntity);
 
         ContestEntity contestEntity = contestService.getContest(format.getCid());
 
@@ -250,9 +241,7 @@ public class GroupController {
     public ResponseEntity sendGroupUserMessage(@PathVariable int gid,
                                                @RequestBody @Valid SendGroupUserMessageFormat format) {
         GroupEntity groupEntity = groupService.getGroup(gid);
-        haveGroup(groupEntity);
-        havePermission(groupEntity);
-
+        accessToEditGroup(groupEntity);
         SendGroupUserMessageTask task = new SendGroupUserMessageTask(groupEntity.getGid(), groupEntity.getName(),
                 format.getMessage());
         task.setType(4);
@@ -260,19 +249,18 @@ public class GroupController {
         return new ResponseEntity("通知发送成功");
     }
 
-    private void haveGroup(GroupEntity entity) {
-        WebUtil.assertNotNull(entity, "小组不存在");
-    }
-
-    private void haveContest(ContestEntity entity) {
-        WebUtil.assertNotNull(entity, "比赛不存在");
-    }
-
-    private void havePermission(GroupEntity groupEntity) {
+    private void accessToEditGroup(GroupEntity groupEntity) {
         int uid = SessionHelper.get().getUid();
         int role = SessionHelper.get().getRole();
-        if (! (uid == groupEntity.getOwner() || role == DefaultConfig.ADMIN_ROLE)) {
-            throw new WebErrorException("只允许本人操作");
+
+        if (uid == groupEntity.getOwner()) {
+            return;
         }
+
+        if (role >= RoleStatus.ADMIN.getNumber()) {
+            return;
+        }
+
+        throw new UnauthorizedException();
     }
 }

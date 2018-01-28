@@ -13,7 +13,7 @@
         SELECT * FROM `contest_user` WHERE `cid` = #{cid} AND `uid` = #{uid}
     </select>
 
-    <select id="listUserContestsByUid" resultType="HashMap">
+    <select id="listUserJoinedContestsByUid" resultType="HashMap">
         SELECT contest_user.*, contest.name
         FROM contest_user
             LEFT JOIN contest

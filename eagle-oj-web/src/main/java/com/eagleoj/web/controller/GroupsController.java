@@ -36,27 +36,13 @@ public class GroupsController {
     @Autowired
     private GroupService groupService;
 
-    @ApiOperation("获取小组列表")
-    @GetMapping
+    @ApiOperation("获取用户创建的小组")
+    @GetMapping("/user")
     public ResponseEntity getGroups(@RequestParam("page") int page,
-                                    @RequestParam("page_size") int pageSize,
-                                    @RequestParam(name = "owner", required = false, defaultValue = "0") int owner) {
-        if (owner > 0) {
-            // 鉴权
-            Subject subject = SecurityUtils.getSubject();
-            if (! subject.isAuthenticated()) {
-                throw new UnauthorizedException();
-            }
-            int uid = SessionHelper.get().getUid();
-            if (uid != owner) {
-                throw new UnauthorizedException();
-            }
-
-            Page pager = PageHelper.startPage(page, pageSize);
-            List<GroupEntity> groups = groupService.listUserGroups(uid);
-            return new ResponseEntity(WebUtil.generatePageData(pager, groups));
-        } else {
-            return new ResponseEntity(new ArrayList<>());
-        }
+                                    @RequestParam("page_size") int pageSize) {
+        Page pager = PageHelper.startPage(page, pageSize);
+        int uid = SessionHelper.get().getUid();
+        List<GroupEntity> groups = groupService.listUserGroups(uid);
+        return new ResponseEntity(WebUtil.generatePageData(pager, groups));
     }
 }

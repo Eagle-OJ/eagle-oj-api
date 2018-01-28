@@ -12,7 +12,7 @@ public interface ContestUserService {
 
     ContestUserEntity get(int cid, int uid);
 
-    List<Map<String, Object>> listUserContests(int uid);
+    List<Map<String, Object>> listUserJoinedContests(int uid);
 
     List<Map<String, Object>> listNormalContestRank(int cid);
 

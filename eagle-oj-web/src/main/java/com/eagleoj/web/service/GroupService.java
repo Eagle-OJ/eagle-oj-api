@@ -8,7 +8,7 @@ import java.util.List;
  **/
 public interface GroupService {
 
-    int save(int owner, String name, String password);
+    int saveGroup(int owner, String name, String password);
 
     GroupEntity getGroup(int gid);
 

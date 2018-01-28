@@ -16,7 +16,7 @@ public interface ContestUserMapper {
 
     ContestUserEntity getByCidUid(@Param("cid") int cid, @Param("uid") int uid);
 
-    List<Map<String, Object>> listUserContestsByUid(int uid);
+    List<Map<String, Object>> listUserJoinedContestsByUid(int uid);
 
     List<Map<String, Object>> listNormalContestRankByCid(int cid);
 

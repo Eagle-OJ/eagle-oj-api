@@ -77,7 +77,7 @@ public class UserController {
                                           @RequestParam(name = "page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
         int uid = SessionHelper.get().getUid();
-        List<Map<String, Object>> list = contestUserService.listUserContests(uid);
+        List<Map<String, Object>> list = contestUserService.listUserJoinedContests(uid);
         return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 

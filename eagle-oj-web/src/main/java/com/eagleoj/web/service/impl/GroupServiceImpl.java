@@ -3,6 +3,7 @@ package com.eagleoj.web.service.impl;
 import com.eagleoj.web.dao.GroupMapper;
 import com.eagleoj.web.entity.GroupEntity;
 import com.eagleoj.web.service.GroupService;
+import com.eagleoj.web.util.WebUtil;
 import com.github.pagehelper.PageRowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,19 +20,22 @@ public class GroupServiceImpl implements GroupService {
     private GroupMapper groupMapper;
 
     @Override
-    public int save(int owner, String name, String password) {
+    public int saveGroup(int owner, String name, String password) {
         GroupEntity groupEntity = new GroupEntity();
         groupEntity.setOwner(owner);
         groupEntity.setPassword(password);
         groupEntity.setName(name);
         groupEntity.setCreateTime(System.currentTimeMillis());
         boolean flag= groupMapper.save(groupEntity) == 1;
-        return flag ? groupEntity.getGid(): 0;
+        WebUtil.assertIsSuccess(flag, "小组创建失败");
+        return groupEntity.getGid();
     }
 
     @Override
     public GroupEntity getGroup(int gid) {
-        return groupMapper.getGroupByGid(gid);
+        GroupEntity groupEntity = groupMapper.getGroupByGid(gid);
+        WebUtil.assertNotNull(groupEntity, "小组不存在");
+        return groupEntity;
     }
 
     @Override
