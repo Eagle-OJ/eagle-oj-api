@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         List<TestCaseRequestEntity> list = new ArrayList<>(2);
         TestCaseRequestEntity testCaseRequestEntity1 = new TestCaseRequestEntity(null, "hello");
-        TestCaseRequestEntity testCaseRequestEntity2 = new TestCaseRequestEntity(null, "world");
+        TestCaseRequestEntity testCaseRequestEntity2 = new TestCaseRequestEntity(null, "hello");
         list.add(testCaseRequestEntity1);
         list.add(testCaseRequestEntity2);
         RequestEntity requestEntity = new RequestEntity(LanguageEnum.PYTHON35, "print(\"hello\")", 3,

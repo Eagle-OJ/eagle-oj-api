@@ -1,5 +1,6 @@
 package com.eagleoj.web.judger.runner;
 
+import com.eagleoj.judge.judger.eagle.Eagle;
 import com.eagleoj.web.judger.JudgerQueue;
 import com.eagleoj.web.judger.JudgerTask;
 import com.eagleoj.web.service.ProblemUserService;
@@ -97,7 +98,8 @@ public class JudgerRunner {
             RequestEntity requestEntity = new RequestEntity(judgerTask.getLang(), judgerTask.getSourceCode(),
                     judgerTask.getTime(), judgerTask.getMemory(), judgerTask.getTestCases());
 
-            Judger judger = new Judger(JUDGE_URL, requestEntity, new Judge0());
+            //Judger judger = new Judger(JUDGE_URL, requestEntity, new Judge0());
+            Judger judger = new Judger("http://101.132.164.120:5000", requestEntity, new Eagle());
             ResponseEntity response = judger.judge();
             // 判卷完成
             judgerResult.setResponse(response);
