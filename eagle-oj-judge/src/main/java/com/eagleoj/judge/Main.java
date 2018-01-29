@@ -17,15 +17,16 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         List<TestCaseRequestEntity> list = new ArrayList<>(2);
-        TestCaseRequestEntity testCaseRequestEntity1 = new TestCaseRequestEntity(null, "hello");
+        TestCaseRequestEntity testCaseRequestEntity1 = new TestCaseRequestEntity(null, "hll\n");
         TestCaseRequestEntity testCaseRequestEntity2 = new TestCaseRequestEntity(null, "hello");
         list.add(testCaseRequestEntity1);
         list.add(testCaseRequestEntity2);
-        RequestEntity requestEntity = new RequestEntity(LanguageEnum.PYTHON35, "print(\"hello\")", 3,
+        /*RequestEntity requestEntity = new RequestEntity(LanguageEnum.PYTHON35, "print(\"hello\")", 3,public class Main {public static void main(String[] args) {System.out.println(\"hll\");}}
+                128, list);*/
+        RequestEntity requestEntity = new RequestEntity(LanguageEnum.JAVA8, "public class Main {public static void main(String[] args) {System.out.println(\"hll\");}}", 3,
                 128, list);
         Judger judger = eagle(requestEntity);
         ResponseEntity responseEntity = judger.judge();
-        System.out.println(JSON.toJSONString(responseEntity));
     }
 
     private static Judger judge0(RequestEntity requestEntity) {

@@ -39,12 +39,11 @@ public class Eagle implements JudgerApi {
                 .header("Content-Type", "application/json")
                 .post(formRequestBody())
                 .build();
-        String json;
         Response response = CLIENT.newCall(request).execute();
         if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
         }
-        json = response.body().string();
+        String json = response.body().string();
         return parseResponse(json);
     }
 
@@ -55,7 +54,6 @@ public class Eagle implements JudgerApi {
     }
 
     private ResponseEntity parseResponse(String json) throws Exception {
-        System.out.println(json);
         JSONObject obj = JSON.parseObject(json);
         ResultEnum result = convertStringToResult(obj.getString("result"));
         if (result.equals(ResultEnum.SE)) {

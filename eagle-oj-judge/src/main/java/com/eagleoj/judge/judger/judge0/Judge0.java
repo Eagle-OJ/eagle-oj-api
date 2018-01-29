@@ -95,15 +95,9 @@ public class Judge0 implements JudgerApi {
         return parse(json);
     }
 
-    private ResponseEntity parse(String json) {
+    private ResponseEntity parse(String json) throws Exception {
         // System.out.println(json);
         JSONObject jsonObject = JSON.parseObject(json);
-        if (json == null) {
-            List<TestCaseResponseEntity> testCases = new ArrayList<>(1);
-            TestCaseResponseEntity testCase = new TestCaseResponseEntity(ResultEnum.SE, ResultEnum.SE.getName());
-            testCases.add(testCase);
-            return new ResponseEntity(0, 0, ResultEnum.SE, testCases);
-        }
         JSONObject status = jsonObject.getJSONObject("status");
         ResultEnum result = getResult(status.getInteger("id"));
         double time = 0;
