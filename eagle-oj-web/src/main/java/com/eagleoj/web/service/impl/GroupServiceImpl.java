@@ -1,6 +1,8 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.dao.ContestMapper;
 import com.eagleoj.web.dao.GroupMapper;
+import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.GroupEntity;
 import com.eagleoj.web.service.GroupService;
 import com.eagleoj.web.util.WebUtil;
@@ -18,6 +20,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Autowired
     private GroupMapper groupMapper;
+
+    @Autowired
+    private ContestMapper contestMapper;
 
     @Override
     public int saveGroup(int owner, String name, String password) {
@@ -41,6 +46,11 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupEntity> listUserGroups(int owner) {
         return groupMapper.listGroupsByOwner(owner);
+    }
+
+    @Override
+    public List<ContestEntity> listGroupContests(int gid) {
+        return contestMapper.listContestsByGid(gid);
     }
 
     @Override

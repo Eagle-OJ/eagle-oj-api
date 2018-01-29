@@ -26,7 +26,6 @@
         <result column="owner" property="owner"/>
         <result column="name" property="name"/>
         <result column="password" property="password"/>
-        <result column="people" property="people"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
 </mapper>

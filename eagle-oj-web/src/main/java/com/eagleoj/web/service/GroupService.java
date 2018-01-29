@@ -1,5 +1,6 @@
 package com.eagleoj.web.service;
 
+import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.GroupEntity;
 import java.util.List;
 
@@ -13,6 +14,8 @@ public interface GroupService {
     GroupEntity getGroup(int gid);
 
     List<GroupEntity> listUserGroups(int owner);
+
+    List<ContestEntity> listGroupContests(int gid);
 
     boolean updateGroupByGid(int gid, String name, String password);
 }

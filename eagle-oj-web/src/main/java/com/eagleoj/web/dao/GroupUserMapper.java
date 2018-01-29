@@ -16,11 +16,13 @@ public interface GroupUserMapper {
 
     GroupUserEntity getByGidUid(@Param("gid") int gid, @Param("uid") int uid);
 
+    Map<String, Object> getUserInfoByGidUid(@Param("gid") int gid, @Param("uid") int uid);
+
     List<Map<String, Object>> listUserJoinedGroups(int uid);
 
     int updateByGidUid(@Param("gid") int gid, @Param("uid") int uid, @Param("data") GroupUserEntity data);
 
-    List<Map<String, Object>> listGroupMembersByGid(int gid);
+    List<GroupUserEntity> listGroupMembersByGid(int gid);
 
     int deleteGroupMemberByGidUid(@Param("gid") int gid, @Param("uid") int uid);
 }

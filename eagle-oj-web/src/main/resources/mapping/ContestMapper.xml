@@ -26,8 +26,13 @@
                 user.nickname
             FROM contest LEFT JOIN user ON contest.owner=user.uid
             <if test="! isAll">
-                WHERE status != 0
+                WHERE status != 0 AND `group`=0
             </if>
+            ORDER BY create_time DESC
+        </select>
+
+        <select id="listContestsByGid" resultMap="contestMap">
+            SELECT * FROM contest WHERE status != 0 AND `group`=#{group}
             ORDER BY create_time DESC
         </select>
 

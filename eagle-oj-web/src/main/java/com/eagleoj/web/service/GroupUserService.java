@@ -9,17 +9,20 @@ import java.util.Map;
  * @author Smith
  **/
 public interface GroupUserService {
-    boolean save(int gid, int uid);
 
     List<Map<String, Object>> listUserJoinedGroups(int uid);
 
     GroupUserEntity getGroupMember(int gid, int uid);
 
-    boolean updateRealNameByGidUid(int gid, int uid, String realName);
-
     boolean isUserInGroup(int gid, int uid);
 
-    List<Map<String, Object>> listGroupMembers(int gid);
+    Map<String, Object> getGroupUserInfo(int gid, int uid);
 
-    boolean deleteGroupMember(int gid, int uid);
+    void updateGroupName(int gid, int uid, String groupName);
+
+    List<GroupUserEntity> listGroupMembers(int gid);
+
+    void deleteGroupMember(int gid, int uid);
+
+    void joinGroup(int gid, int uid, String password);
 }

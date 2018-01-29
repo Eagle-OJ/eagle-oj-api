@@ -2,11 +2,14 @@ package com.eagleoj.web.service.impl;
 
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ContestUserMapper;
+import com.eagleoj.web.dao.GroupUserMapper;
 import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.ContestUserEntity;
+import com.eagleoj.web.entity.GroupUserEntity;
 import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.ContestUserService;
+import com.eagleoj.web.service.GroupUserService;
 import com.eagleoj.web.service.UserService;
 import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public class ContestUserServiceImpl implements ContestUserService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupUserService groupUserService;
 
     @Override
     public ContestUserEntity get(int cid, int uid) {
@@ -65,14 +71,22 @@ public class ContestUserServiceImpl implements ContestUserService {
         ContestUserEntity contestUserEntity = contestUserMapper.getByCidUid(cid, uid);
         WebUtil.assertNull(contestUserEntity, "你已经加入比赛");
 
-        // 校验密码
         ContestEntity contestEntity = contestService.getContest(cid);
-        if (contestEntity.getPassword() != null) {
-            String originPassword = contestEntity.getPassword();
-            if (! password.equals(originPassword)) {
-                throw new WebErrorException("密码错误");
+        if (contestEntity.getGroup() > 0) {
+            // 小组赛
+            boolean flag = groupUserService.isUserInGroup(contestEntity.getGroup(), uid);
+            WebUtil.assertIsSuccess(flag, "你不在本小组中，无法加入此比赛");
+        } else {
+            // 非小组赛
+            // 校验密码
+            if (contestEntity.getPassword() != null) {
+                String originPassword = contestEntity.getPassword();
+                if (! password.equals(originPassword)) {
+                    throw new WebErrorException("密码错误");
+                }
             }
         }
+
 
         ContestUserEntity newContestUserEntity = new ContestUserEntity();
         newContestUserEntity.setCid(cid);

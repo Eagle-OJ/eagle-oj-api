@@ -2,6 +2,7 @@ package com.eagleoj.web.postman.runner;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eagleoj.web.entity.GroupUserEntity;
 import com.eagleoj.web.postman.MessageTemplate;
 import com.eagleoj.web.postman.task.*;
 import com.eagleoj.web.postman.TaskQueue;
@@ -126,9 +127,9 @@ public class PostmanRunner {
 
         // type = 3 将小组成员拉入比赛
         private void pullGroupUserIntoContest(PullGroupUserIntoContestTask task) {
-            List<Map<String, Object>> users = groupUserService.listGroupMembers(task.getGid());
-            for (Map<String, Object> user: users) {
-                int uid = Long.valueOf((long)user.get("uid")).intValue();
+            List<GroupUserEntity> users = groupUserService.listGroupMembers(task.getGid());
+            for (GroupUserEntity user: users) {
+                int uid = user.getUid();
                 try {
                     contestUserService.joinContest(task.getCid(), uid, task.getPassword());
                 } catch (Exception e) {
@@ -142,9 +143,9 @@ public class PostmanRunner {
 
         // type = 4 给小组成员发送通知
         private void sendGroupUserMessage(SendGroupUserMessageTask task) {
-            List<Map<String, Object>> users = groupUserService.listGroupMembers(task.getGid());
-            for (Map<String, Object> user: users) {
-                int uid = Long.valueOf((long)user.get("uid")).intValue();
+            List<GroupUserEntity> users = groupUserService.listGroupMembers(task.getGid());
+            for (GroupUserEntity user: users) {
+                int uid = user.getUid();
                 sendNormalMessage(uid, MessageTemplate.generateSendGroupUserMessage(task.getGid(),
                         task.getGroupName(), task.getMessage()));
             }

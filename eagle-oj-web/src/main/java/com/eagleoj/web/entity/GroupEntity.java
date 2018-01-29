@@ -14,8 +14,6 @@ public class GroupEntity {
 
     private String password;
 
-    private Integer people;
-
     @JSONField(name = "create_time")
     private Long createTime;
 
@@ -49,14 +47,6 @@ public class GroupEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Integer getPeople() {
-        return people;
-    }
-
-    public void setPeople(Integer people) {
-        this.people = people;
     }
 
     public Long getCreateTime() {

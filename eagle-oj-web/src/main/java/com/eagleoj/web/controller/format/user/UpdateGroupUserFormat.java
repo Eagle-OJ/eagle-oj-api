@@ -12,14 +12,14 @@ public class UpdateGroupUserFormat {
 
     @NotNull
     @Length(max = 20)
-    @JSONField(name = "real_name")
-    private String realName;
+    @JSONField(name = "group_name")
+    private String groupName;
 
-    public String getRealName() {
-        return realName;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setRealName(String realName) {
-        this.realName = realName;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

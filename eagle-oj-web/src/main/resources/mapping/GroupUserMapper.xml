@@ -5,11 +5,18 @@
 <mapper namespace="com.eagleoj.web.dao.GroupUserMapper">
 
     <insert id="save">
-        INSERT INTO group_user (gid, uid, join_time) VALUES (#{gid}, #{uid}, #{joinTime})
+        INSERT INTO group_user (gid, uid, group_name, join_time) VALUES (#{gid}, #{uid}, #{groupName}, #{joinTime})
     </insert>
 
     <select id="getByGidUid" resultMap="groupUserMap">
         SELECT * FROM group_user WHERE gid=#{gid} AND uid=#{uid}
+    </select>
+
+    <select id="getUserInfoByGidUid" resultType="HashMap">
+        SELECT group_user.*, user.nickname, user.avatar
+        FROM group_user LEFT JOIN user
+            ON group_user.uid = user.uid
+        WHERE gid=#{gid} AND group_user.uid=#{uid}
     </select>
 
     <select id="listUserJoinedGroups" resultType="HashMap">
@@ -19,13 +26,41 @@
     </select>
 
     <update id="updateByGidUid">
-        UPDATE group_user SET real_name=#{data.realName} WHERE gid=#{gid} AND uid=#{uid}
+        UPDATE group_user
+        <set>
+            <if test="data.groupName != null">
+                group_name = #{data.groupName},
+            </if>
+            <if test="data.submitTimes != null">
+                submit_times = submit_times + 1,
+            </if>
+            <if test="data.finishedProblems != null">
+                finished_problems = finished_problems + 1,
+            </if>
+            <if test="data.score != null">
+                score = score + #{data.score},
+            </if>
+            <if test="data.ACTimes != null">
+                ac_times = ac_times + 1,
+            </if>
+            <if test="data.WATimes != null">
+                wa_times = wa_times + 1,
+            </if>
+            <if test="data.RTETimes != null">
+                rte_times = rte_times + 1,
+            </if>
+            <if test="data.TLETimes != null">
+                tle_times = tle_times + 1,
+            </if>
+            <if test="data.CETimes != null">
+                ce_times = ce_times + 1,
+            </if>
+        </set>
+        WHERE gid=#{gid} AND uid=#{uid}
     </update>
 
-    <select id="listGroupMembersByGid" resultType="HashMap">
-        SELECT group_user.*, nickname, avatar FROM group_user
-            LEFT JOIN user ON group_user.uid=user.uid
-        WHERE gid=#{gid}
+    <select id="listGroupMembersByGid" resultMap="groupUserMap">
+        SELECT * FROM group_user WHERE gid=#{gid}
     </select>
 
     <delete id="deleteGroupMemberByGidUid">
@@ -35,7 +70,15 @@
     <resultMap id="groupUserMap" type="GroupUserEntity">
         <result column="gid" property="gid"/>
         <result column="uid" property="uid"/>
-        <result column="real_name" property="realName"/>
+        <result column="group_name" property="groupName"/>
+        <result column="submit_times" property="submitTimes"/>
+        <result column="finished_problems" property="finishedProblems"/>
+        <result column="score" property="score"/>
+        <result column="ac_times" property="ACTimes"/>
+        <result column="wa_times" property="WATimes"/>
+        <result column="rte_times" property="RTETimes"/>
+        <result column="tle_times" property="TLETimes"/>
+        <result column="ce_times" property="CETimes"/>
         <result column="join_time" property="joinTime" />
     </resultMap>
 </mapper>

@@ -19,6 +19,8 @@ public interface ContestMapper {
 
     List<Map<String, Object>> listContests(@Param("isAll") boolean isAll);
 
+    List<ContestEntity> listContestsByGid(int gid);
+
     int deleteByCid(int cid);
 
     int updateDescriptionByCid(@Param("cid") int cid, @Param("data") ContestEntity data);

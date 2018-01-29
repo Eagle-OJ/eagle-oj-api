@@ -14,4 +14,6 @@ public interface AsyncTaskService {
     void sendAcceptAuditingProblem(String title, int owner, int pid);
 
     void sendRefuseAuditingProblem(String title, int owner, int pid);
+
+    void sendGroupMessage(String message, String groupName, int gid);
 }

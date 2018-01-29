@@ -1,10 +1,7 @@
 package com.eagleoj.web.service.impl.async;
 
 import com.eagleoj.web.postman.TaskQueue;
-import com.eagleoj.web.postman.task.BaseTask;
-import com.eagleoj.web.postman.task.CloseNormalContestTask;
-import com.eagleoj.web.postman.task.CloseOfficialContestTask;
-import com.eagleoj.web.postman.task.SendProblemAcceptedMessageTask;
+import com.eagleoj.web.postman.task.*;
 import com.eagleoj.web.service.async.AsyncTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +28,14 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
     }
 
     @Override
+    public void sendGroupMessage(String message, String groupName, int gid) {
+        SendGroupUserMessageTask task = new SendGroupUserMessageTask(gid, groupName,
+                message);
+        task.setType(4);
+        taskQueue.addTask(task);
+    }
+
+    @Override
     public void sendAcceptAuditingProblem(String title, int owner, int pid) {
         SendProblemAcceptedMessageTask task = new SendProblemAcceptedMessageTask();
         task.setTitle(title);
@@ -49,6 +54,7 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
         task.setType(6);
         addTask(task);
     }
+
 
     private void addTask(BaseTask task) {
         taskQueue.addTask(task);
