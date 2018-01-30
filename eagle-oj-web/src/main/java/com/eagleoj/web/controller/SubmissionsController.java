@@ -3,7 +3,6 @@ package com.eagleoj.web.controller;
 import com.eagleoj.web.util.WebUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import com.eagleoj.web.entity.ResponseEntity;
@@ -36,11 +35,12 @@ public class SubmissionsController {
     @GetMapping
     public ResponseEntity getUserSubmissions(@RequestParam("cid") int cid,
                                              @RequestParam("pid") int pid,
+                                             @RequestParam("gid") int gid,
                                              @RequestParam("page") int page,
                                              @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
         int owner = SessionHelper.get().getUid();
         return new ResponseEntity(WebUtil.generatePageData(pager,
-                submissionService.listSubmissions(owner, pid, cid)));
+                submissionService.listSubmissions(owner, pid, cid, gid)));
     }
 }

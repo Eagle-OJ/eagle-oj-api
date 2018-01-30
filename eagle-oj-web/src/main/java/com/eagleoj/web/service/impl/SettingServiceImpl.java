@@ -129,6 +129,9 @@ public class SettingServiceImpl implements SettingService {
             case "title":
                 systemConfig.setTitle(entity.getValue());
                 break;
+            case "judge_url":
+                systemConfig.setJudgerUrl(entity.getValue());
+                break;
             case "oss_access_key":
                 ossConfig.setACCESS_KEY(entity.getValue());
                 break;

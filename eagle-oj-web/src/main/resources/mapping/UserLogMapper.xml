@@ -5,8 +5,58 @@
 <mapper namespace="com.eagleoj.web.dao.UserLogMapper">
 
     <update id="saveByUid">
-        INSERT INTO user_log VALUES (CURRENT_DATE(), #{uid}, #{data.submitTimes}, #{data.ACTimes},
-        #{data.WATimes}, #{data.RTETimes}, #{data.TLETimes}, #{data.CETimes}) ON DUPLICATE KEY UPDATE
+        INSERT INTO user_log VALUES (CURRENT_DATE(),
+        #{uid},
+        <choose>
+            <when test="data.submitTimes != null">
+                #{data.submitTimes},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="data.ACTimes != null">
+                #{data.ACTimes},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="data.WATimes != null">
+                #{data.WATimes},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="data.RTETimes != null">
+                #{data.RTETimes},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="data.TLETimes != null">
+                #{data.TLETimes},
+            </when>
+            <otherwise>
+                0,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="data.CETimes != null">
+                #{data.CETimes}
+            </when>
+            <otherwise>
+                0
+            </otherwise>
+        </choose>
+        )
+        ON DUPLICATE KEY UPDATE
         <trim prefix="" suffixOverrides=",">
             <if test="data.submitTimes != null">
                 submit_times = submit_times + 1,

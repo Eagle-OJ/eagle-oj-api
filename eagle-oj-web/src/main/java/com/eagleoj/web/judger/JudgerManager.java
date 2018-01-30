@@ -16,10 +16,10 @@ import java.util.List;
 @Service
 public class JudgerManager {
 
-    @Autowired
+   /* @Autowired
     private JudgerQueue judgerQueue;
 
-    private Cache<String, JudgerResult> submissionCache = CacheController.getSubmissionCache();
+    private Cache<String, JudgeResult> submissionCache = CacheController.getSubmissionCache();
 
     public String addTask(boolean testMode,
                           int problemId,
@@ -53,9 +53,9 @@ public class JudgerManager {
         return judgerQueue.addTask(task);
     }
 
-    public JudgerResult getTask(String id) {
+    public JudgeResult getTask(String id) {
         return submissionCache.get(id);
     }
 
-
+*/
 }

@@ -2,7 +2,7 @@ package com.eagleoj.web.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.user.SubmitCodeFormat;
+import com.eagleoj.web.controller.format.user.UserSubmitCodeFormat;
 import com.eagleoj.web.entity.*;
 import com.eagleoj.web.judger.JudgerManager;
 import io.swagger.annotations.ApiOperation;
@@ -79,7 +79,7 @@ public class UserCodeController {
 
     @ApiOperation("用户提交代码进行判卷")
     @PostMapping
-    public ResponseEntity submitCode(@RequestBody @Valid SubmitCodeFormat format) {
+    public ResponseEntity submitCode(@RequestBody @Valid UserSubmitCodeFormat format) {
         Integer contestId = format.getContestId();
         if (contestId == 0) {
             return submitProblem(format);
@@ -89,7 +89,7 @@ public class UserCodeController {
     }
 
     // 提交比赛模式下面的题目
-    private ResponseEntity submitContestProblem(SubmitCodeFormat format) {
+    private ResponseEntity submitContestProblem(UserSubmitCodeFormat format) {
         int contestId = format.getContestId();
         int problemId = format.getProblemId();
         int uid = SessionHelper.get().getUid();
@@ -130,15 +130,16 @@ public class UserCodeController {
             testCases.add(new TestCaseRequestEntity(entity.getStdin(), entity.getStdout()));
         }
 
-        String id = judgerManager.addTask(false, problemId, contestId, uid, format.getLang(),
+        /*String id = judgerManager.addTask(false, problemId, contestId, uid, format.getLang(),
                 format.getSourceCode(), problemEntity.getTime(),
                 problemEntity.getMemory(), testCases, tempTestCases,
-                problemEntity, contestEntity, contestProblemEntity, contestUserEntity);
-        return new ResponseEntity(null, id);
+                problemEntity, contestEntity, contestProblemEntity, contestUserEntity);*/
+        //return new ResponseEntity(null, id);
+        return null;
     }
 
     // 提交非比赛模式下面的代码
-    private ResponseEntity submitProblem(SubmitCodeFormat format) {
+    private ResponseEntity submitProblem(UserSubmitCodeFormat format) {
         int problemId = format.getProblemId();
         int uid = SessionHelper.get().getUid();
         ProblemEntity problemEntity = problemService.getProblem(problemId);
@@ -154,11 +155,12 @@ public class UserCodeController {
         for(TestCaseEntity entity: tempTestCases) {
             testCases.add(new TestCaseRequestEntity(entity.getStdin(), entity.getStdout()));
         }
-        String id = judgerManager.addTask(false, problemId, 0, uid, format.getLang(),
+        /*String id = judgerManager.addTask(false, problemId, 0, uid, format.getLang(),
                 format.getSourceCode(), problemEntity.getTime(), problemEntity.getMemory(),
                 testCases, tempTestCases, problemEntity,
-                null, null, null);
-        return new ResponseEntity(null, id);
+                null, null, null);*/
+        //return new ResponseEntity(null, id);
+        return null;
     }
 
     private void containLang(LanguageEnum lang, JSONArray langArray) {

@@ -1,19 +1,24 @@
 package com.eagleoj.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.eagleoj.judge.LanguageEnum;
 import com.eagleoj.web.DefaultConfig;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.index.SubmitCodeFormat;
+import com.eagleoj.web.controller.format.user.UserSubmitCodeFormat;
+import com.eagleoj.web.entity.TestCaseEntity;
 import com.eagleoj.web.judger.JudgerManager;
-import com.eagleoj.web.judger.JudgerResult;
+import com.eagleoj.web.judger.JudgeResult;
+import com.eagleoj.web.judger.task.JudgeTask;
+import com.eagleoj.web.judger.task.ProblemJudgeTask;
+import com.eagleoj.web.judger.task.TestJudgeTask;
+import com.eagleoj.web.security.SessionHelper;
+import com.eagleoj.web.service.JudgeService;
+import com.eagleoj.web.service.async.AsyncJudgeService;
 import io.swagger.annotations.ApiOperation;
 import com.eagleoj.judge.entity.TestCaseRequestEntity;
-import com.eagleoj.web.DefaultConfig;
-import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.index.SubmitCodeFormat;
 import com.eagleoj.web.entity.ResponseEntity;
-import com.eagleoj.web.judger.JudgerManager;
-import com.eagleoj.web.judger.JudgerResult;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +39,10 @@ import java.util.Map;
 public class CodeController {
 
     @Autowired
-    private JudgerManager judgerManager;
+    private AsyncJudgeService asyncJudgeService;
+
+    @Autowired
+    private JudgeService judgeService;
 
     @ApiOperation("测试提交判卷，优先级为0")
     @PostMapping
@@ -43,44 +51,55 @@ public class CodeController {
         if (length == 0) {
             throw new WebErrorException("没有测试用例");
         }
-        List<TestCaseRequestEntity> testCases = new ArrayList<>(length);
+        List<TestCaseEntity> testCases = new ArrayList<>(length);
         for(int i=0; i<length; i++) {
             JSONObject obj = format.getTestCases().getJSONObject(i);
-            TestCaseRequestEntity testCaseRequestEntity = new TestCaseRequestEntity(obj.getString("stdin"), obj.getString("stdout"));
-            testCases.add(testCaseRequestEntity);
+            String stdin = obj.getString("stdin");
+            String stdout = obj.getString("stdout");
+            TestCaseEntity testCaseEntity = new TestCaseEntity(0, stdin, stdout, 0, 0L);
+            testCases.add(testCaseEntity);
         }
-        String id = judgerManager.addTask(true, 0, 0, 0,
-                format.getLang(), format.getSourceCode(),
-                DefaultConfig.PROGRAM_USED_TIME, DefaultConfig.PROGRAM_USED_MEMORY, testCases,
-                null, null,
-                null, null, null);
+        String id = asyncJudgeService.addTestJudge(format.getSourceCode(), format.getLang(), DefaultConfig.PROGRAM_USED_TIME,
+                DefaultConfig.PROGRAM_USED_MEMORY, testCases);
+        return new ResponseEntity(null, id);
+    }
+
+    @ApiOperation("提交普通题目判卷-优先级1")
+    @RequiresAuthentication
+    @PostMapping("/user")
+    public ResponseEntity submitCode(@RequestBody @Valid UserSubmitCodeFormat format) {
+        int pid = format.getProblemId();
+        int cid = format.getContestId();
+        int gid = format.getGroupId();
+        String sourceCode = format.getSourceCode();
+        LanguageEnum lang = format.getLang();
+        int owner = SessionHelper.get().getUid();
+        String id;
+        if (gid != 0 && cid != 0) {
+            id = asyncJudgeService.addGroupJudge(sourceCode, lang, owner, pid, cid, gid);
+        } else if (cid != 0) {
+            id = asyncJudgeService.addContestJudge(sourceCode, lang, owner, pid, cid);
+        } else {
+            id = asyncJudgeService.addProblemJudge(sourceCode, lang, owner, pid);
+        }
         return new ResponseEntity(null, id);
     }
 
     @ApiOperation("根据id获取判卷任务状况")
     @GetMapping("/{id}")
     public ResponseEntity getStatus(@PathVariable("id") String id) {
-        JudgerResult result = judgerManager.getTask(id);
-        if (result == null) {
-            throw new WebErrorException("不存在此任务");
-        }
-        Map<String, Object> map = new HashMap<>(5);
-        boolean testMode = result.getJudgerTask().isTestMode();
+        JudgeResult result = judgeService.getJudgeResult(id);
+        Map<String, Object> map = new HashMap<>(3);
         map.put("response", result.getResponse());
         map.put("id", result.getId());
         map.put("status", result.getStatus().getMessage());
-        map.put("test_mode", testMode);
-        if (! testMode) {
-            map.put("pid", result.getJudgerTask().getProblemId());
-            map.put("title", result.getJudgerTask().getAddProblemEntity().getTitle());
-        }
         return new ResponseEntity(map);
     }
 
     @ApiOperation("根据id获取判卷任务状况-DEBUG模式")
     @GetMapping("/debug/{id}")
     public ResponseEntity getDebugStatus(@PathVariable("id") String id) {
-        JudgerResult result = judgerManager.getTask(id);
+        JudgeResult result = judgeService.getJudgeResult(id);
         if (result == null) {
             throw new WebErrorException("不存在此任务");
         }

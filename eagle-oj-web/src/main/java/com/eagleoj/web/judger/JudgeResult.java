@@ -2,32 +2,33 @@ package com.eagleoj.web.judger;
 
 
 import com.eagleoj.judge.entity.ResponseEntity;
+import com.eagleoj.web.judger.task.JudgeTask;
 
 /**
  * @author Smith
  **/
-public class JudgerResult {
+public class JudgeResult {
     private String id;
 
-    private JudgerStatus status;
+    private JudgeStatus status;
 
     private ResponseEntity response;
 
-    private JudgerTask judgerTask;
+    private JudgeTask judgeTask;
 
-    public JudgerResult(String id, JudgerStatus status, ResponseEntity response, JudgerTask judgerTask) {
+    public JudgeResult(String id, JudgeStatus status, ResponseEntity response, JudgeTask judgeTask) {
         this.id = id;
         this.status = status;
         this.response = response;
-        this.judgerTask = judgerTask;
+        this.judgeTask = judgeTask;
     }
 
-    public JudgerTask getJudgerTask() {
-        return judgerTask;
+    public JudgeTask getJudgeTask() {
+        return judgeTask;
     }
 
-    public void setJudgerTask(JudgerTask judgerTask) {
-        this.judgerTask = judgerTask;
+    public void setJudgeTask(JudgeTask judgeTask) {
+        this.judgeTask = judgeTask;
     }
 
     public String getId() {
@@ -38,11 +39,11 @@ public class JudgerResult {
         this.id = id;
     }
 
-    public JudgerStatus getStatus() {
+    public JudgeStatus getStatus() {
         return status;
     }
 
-    public void setStatus(JudgerStatus status) {
+    public void setStatus(JudgeStatus status) {
         this.status = status;
     }
 

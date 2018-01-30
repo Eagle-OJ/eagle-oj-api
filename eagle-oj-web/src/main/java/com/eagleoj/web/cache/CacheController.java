@@ -1,8 +1,7 @@
 package com.eagleoj.web.cache;
 
 import com.eagleoj.web.DefaultConfig;
-import com.eagleoj.web.judger.JudgerResult;
-import org.assertj.core.util.CheckReturnValue;
+import com.eagleoj.web.judger.JudgeResult;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -11,13 +10,7 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.expiry.Duration;
 import org.ehcache.expiry.Expirations;
-import com.eagleoj.web.DefaultConfig;
-import com.eagleoj.web.judger.JudgerResult;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +23,7 @@ public class CacheController {
      */
     private static Cache<String, String> authCache;
 
-    private static Cache<String, JudgerResult> submissionCache;
+    private static Cache<String, JudgeResult> submissionCache;
 
     private static Cache<Integer, Object> leaderboardCache;
 
@@ -47,7 +40,7 @@ public class CacheController {
                 .createCache("submissionCache",
                         CacheConfigurationBuilder.newCacheConfigurationBuilder(
                                 String.class,
-                                JudgerResult.class,
+                                JudgeResult.class,
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(1, TimeUnit.HOURS)))
                                 .build());
@@ -65,7 +58,7 @@ public class CacheController {
         return authCache;
     }
 
-    public static Cache<String, JudgerResult> getSubmissionCache() { return submissionCache; }
+    public static Cache<String, JudgeResult> getSubmissionCache() { return submissionCache; }
 
     public static Cache<Integer, Object> getLeaderboard() {
         return leaderboardCache;

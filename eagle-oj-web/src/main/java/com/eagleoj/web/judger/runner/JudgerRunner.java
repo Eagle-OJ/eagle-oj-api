@@ -1,8 +1,9 @@
 package com.eagleoj.web.judger.runner;
 
 import com.eagleoj.judge.judger.eagle.Eagle;
-import com.eagleoj.web.judger.JudgerQueue;
+import com.eagleoj.web.judger.JudgeQueue;
 import com.eagleoj.web.judger.JudgerTask;
+import com.eagleoj.web.judger.task.JudgeTask;
 import com.eagleoj.web.service.ProblemUserService;
 import org.ehcache.Cache;
 import com.eagleoj.judge.ResultEnum;
@@ -10,11 +11,10 @@ import com.eagleoj.judge.entity.RequestEntity;
 import com.eagleoj.judge.entity.ResponseEntity;
 import com.eagleoj.judge.entity.TestCaseResponseEntity;
 import com.eagleoj.judge.judger.Judger;
-import com.eagleoj.judge.judger.judge0.Judge0;
 import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.entity.*;
-import com.eagleoj.web.judger.JudgerResult;
-import com.eagleoj.web.judger.JudgerStatus;
+import com.eagleoj.web.judger.JudgeResult;
+import com.eagleoj.web.judger.JudgeStatus;
 import com.eagleoj.web.service.*;
 import com.eagleoj.web.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +29,14 @@ import java.util.concurrent.Executors;
 /**
  * @author Smith
  **/
-@Service
+//@Service
 public class JudgerRunner {
 
     private final int MAX_THREADS = 3;
 
     private final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(MAX_THREADS);
 
-    private final Cache<String, JudgerResult> submissionCache = CacheController.getSubmissionCache();
+    private final Cache<String, JudgeResult> submissionCache = CacheController.getSubmissionCache();
 
     @Autowired
     private SubmissionService submissionService;
@@ -68,14 +68,14 @@ public class JudgerRunner {
     @Autowired
     private FileUtil fileUtil;
 
-    @Value("${eagle-oj.judge.url}")
     private String JUDGE_URL;
 
-    public JudgerRunner(JudgerQueue queue) {
+    public JudgerRunner(JudgeQueue queue, SettingService settingService) {
+        JUDGE_URL = settingService.getSystemConfig().getJudgerUrl();
         new Thread(() -> {
             while (true) {
-                JudgerTask judgerTask = queue.take();
-                THREAD_POOL.execute(new Runner(judgerTask));
+                JudgeTask judgeTask = queue.take();
+                //THREAD_POOL.execute(new Runner(judgeTask));
             }
         }).start();
     }
@@ -88,37 +88,41 @@ public class JudgerRunner {
             this.judgerTask = task;
         }
 
+        private void dispatcher() {
+
+        }
+
         @Override
         public void run() {
             String id = judgerTask.getId();
-            JudgerResult judgerResult = submissionCache.get(id);
+            JudgeResult judgerResult = submissionCache.get(id);
             // 更改正在判卷状态
-            judgerResult.setStatus(JudgerStatus.Judging);
+            judgerResult.setStatus(JudgeStatus.Judging);
             // 组装判卷格式
             RequestEntity requestEntity = new RequestEntity(judgerTask.getLang(), judgerTask.getSourceCode(),
                     judgerTask.getTime(), judgerTask.getMemory(), judgerTask.getTestCases());
 
-            //Judger judger = new Judger(JUDGE_URL, requestEntity, new Judge0());
-            Judger judger = new Judger("http://101.132.164.120:5000", requestEntity, new Eagle());
+            Judger judger = new Judger(JUDGE_URL, requestEntity, new Eagle());
+            //Judger judger = new Judger("http://101.132.164.120:5000", requestEntity, new Eagle());
             ResponseEntity response = judger.judge();
             // 判卷完成
             judgerResult.setResponse(response);
 
             // 判卷错误直接返回
             if (judgerResult.getResponse().getResult() == ResultEnum.SE) {
-                judgerResult.setStatus(JudgerStatus.Error);
+                judgerResult.setStatus(JudgeStatus.Error);
                 return;
             }
 
             // 进行数据的保存
             if (! judgerTask.isTestMode()){
-                judgerResult.setStatus(JudgerStatus.Saving);
+                judgerResult.setStatus(JudgeStatus.Saving);
                 save(judgerTask, judgerResult);
             }
-            judgerResult.setStatus(JudgerStatus.Finished);
+            judgerResult.setStatus(JudgeStatus.Finished);
         }
 
-        private void save(JudgerTask task, JudgerResult result) {
+        private void save(JudgerTask task, JudgeResult result) {
             saveSubmission(task, result);
             saveUserLog(task.getOwner(), result.getResponse().getResult());
             int contestId = task.getContestId();
@@ -129,17 +133,17 @@ public class JudgerRunner {
             }
         }
 
-        private void saveSubmission(JudgerTask task, JudgerResult result) {
+        private void saveSubmission(JudgerTask task, JudgeResult result) {
             int uid = task.getOwner();
             String filePath = fileUtil.uploadCode(task.getLang(), task.getSourceCode());
             int aid = attachmentService.save(uid, filePath);
-            submissionService.save(uid, task.getProblemId(), task.getContestId(),
+            /*submissionService.save(uid, task.getProblemId(), task.getContestId(),
                     aid, task.getLang(), result.getResponse().getTime(), result.getResponse().getMemory(),
-                    result.getResponse().getResult());
+                    result.getResponse().getResult());*/
         }
 
         // 保存普通代码提交
-        private void saveProblem(JudgerTask task, JudgerResult result) {
+        private void saveProblem(JudgerTask task, JudgeResult result) {
             int pid = task.getProblemId();
             int uid = task.getOwner();
             int status = task.getAddProblemEntity().getStatus();
@@ -153,7 +157,7 @@ public class JudgerRunner {
             }
 
             if (problemUserEntity.getStatus() != ResultEnum.AC) {
-                problemUserService.updateByPid(pid, uid, resultEnum);
+                problemUserService.updateByPidUid(pid, uid, resultEnum);
                 updateUserTimes(uid, status, resultEnum);
                 updateProblemTimes(pid, resultEnum);
             }
@@ -161,7 +165,7 @@ public class JudgerRunner {
         }
 
         // 保存比赛中的代码提交
-        private void saveContestProblem(JudgerTask task, JudgerResult result) {
+        private void saveContestProblem(JudgerTask task, JudgeResult result) {
             int cid = task.getContestId();
             int uid = task.getOwner();
             int pid = task.getProblemId();

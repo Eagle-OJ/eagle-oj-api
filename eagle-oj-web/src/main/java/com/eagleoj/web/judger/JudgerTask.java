@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Smith
  **/
-public class JudgerTask {
+public class  JudgerTask {
     private String id;
 
     private int priority;

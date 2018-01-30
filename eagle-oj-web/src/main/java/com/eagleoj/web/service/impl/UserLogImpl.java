@@ -3,6 +3,7 @@ package com.eagleoj.web.service.impl;
 import com.eagleoj.web.dao.UserLogMapper;
 import com.eagleoj.web.entity.UserLogEntity;
 import com.eagleoj.web.service.UserLogService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,9 @@ public class UserLogImpl implements UserLogService {
     private UserLogMapper userLogMapper;
 
     @Override
-    public boolean save(int uid, UserLogEntity entity) {
-        return userLogMapper.saveByUid(uid, entity) == 1;
+    public void save(int uid, UserLogEntity entity) {
+        boolean flag = userLogMapper.saveByUid(uid, entity) > 0;
+        WebUtil.assertIsSuccess(flag, "用户提交记录保存失败");
     }
 
     @Override

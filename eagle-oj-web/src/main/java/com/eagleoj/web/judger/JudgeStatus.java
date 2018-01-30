@@ -3,12 +3,12 @@ package com.eagleoj.web.judger;
 /**
  * @author Smith
  **/
-public enum  JudgerStatus {
+public enum JudgeStatus {
     InQueue("排队中"), Judging("正在判卷"), Saving("保存中"), Finished("完成"), Error("错误");
 
     private String message;
 
-    private JudgerStatus(String msg) {
+    private JudgeStatus(String msg) {
         this.message = msg;
     }
 

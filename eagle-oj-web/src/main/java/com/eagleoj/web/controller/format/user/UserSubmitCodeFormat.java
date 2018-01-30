@@ -10,17 +10,22 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Smith
  **/
-public class SubmitCodeFormat {
+public class UserSubmitCodeFormat {
+
+    @NotNull
+    @Range(min = 1)
+    @JSONField(name = "problem_id")
+    private Integer problemId;
 
     @Range(min = 0)
     @NotNull
     @JSONField(name = "contest_id")
     private Integer contestId;
 
+    @Range(min = 0)
     @NotNull
-    @Range(min = 1)
-    @JSONField(name = "problem_id")
-    private Integer problemId;
+    @JSONField(name = "group_id")
+    private Integer groupId;
 
     @NotNull
     @JSONField(name = "lang")
@@ -61,5 +66,13 @@ public class SubmitCodeFormat {
 
     public void setSourceCode(String sourceCode) {
         SourceCode = sourceCode;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }

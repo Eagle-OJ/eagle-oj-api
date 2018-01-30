@@ -16,6 +16,8 @@ public class SubmissionEntity {
 
     private Integer cid;
 
+    private Integer gid;
+
     @JSONField(name = "source_code")
     private Integer sourceCode;
 
@@ -111,5 +113,13 @@ public class SubmissionEntity {
 
     public void setSubmitTime(Long submitTime) {
         this.submitTime = submitTime;
+    }
+
+    public Integer getGid() {
+        return gid;
+    }
+
+    public void setGid(Integer gid) {
+        this.gid = gid;
     }
 }
