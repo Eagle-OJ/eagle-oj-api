@@ -3,6 +3,7 @@ package com.eagleoj.web.postman.task;
 /**
  * @author Smith
  **/
+@Deprecated
 public class PullGroupUserIntoContestTask extends BaseTask {
     private int gid;
 
