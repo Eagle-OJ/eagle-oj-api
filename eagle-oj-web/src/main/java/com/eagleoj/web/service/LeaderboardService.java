@@ -17,4 +17,6 @@ public interface LeaderboardService {
     Map<String, Object> getUserMetaInContest(int uid, int cid);
 
     List<UserEntity> getLeaderboard();
+
+    List<Map<String, Object>> getUserDetailInContest(int cid, int uid);
 }

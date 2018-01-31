@@ -22,6 +22,5 @@ public interface AsyncJudgeService {
 
     String addGroupJudge(String sourceCode, LanguageEnum lang,
                          int owner, int pid,
-                         int cid,
-                         int gid);
+                         int cid);
 }

@@ -18,9 +18,5 @@ public interface ContestUserMapper {
 
     List<Map<String, Object>> listUserJoinedContestsByUid(int uid);
 
-    List<Map<String, Object>> listNormalContestRankByCid(int cid);
-
-    List<Map<String, Object>> listACMContestRankByCid(@Param("cid") int cid, @Param("penalty") int penalty);
-
     int updateByCidUid(@Param("cid") int cid, @Param("uid") int uid, @Param("data") ContestUserEntity data);
 }

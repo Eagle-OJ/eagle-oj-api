@@ -117,9 +117,7 @@ public class ProblemServiceImpl implements ProblemService {
             }
         }
         boolean flag = problemMapper.updateByPid(pid, problemEntity) == 1;
-        if (! flag) {
-            throw new WebErrorException("题目更新失败");
-        }
+        WebUtil.assertIsSuccess(flag, "题目更新失败");
     }
 
     @Override
@@ -166,5 +164,10 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     public List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid) {
         return problemMapper.listShared(uid, difficult, tag);
+    }
+
+    @Override
+    public List<ProblemEntity> listProblemsForContest(int uid) {
+        return problemMapper.listProblemsForContest(uid);
     }
 }

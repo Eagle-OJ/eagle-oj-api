@@ -46,6 +46,10 @@
         ORDER BY pid ASC
     </select>
 
+    <select id="listProblemsForContest" resultType="HashMap">
+        SELECT * FROM problem WHERE status=2 OR owner=#{uid}
+    </select>
+
     <select id="listAuditing" resultMap="problemResultMap">
         SELECT * FROM problem WHERE status=1 ORDER BY create_time DESC
     </select>

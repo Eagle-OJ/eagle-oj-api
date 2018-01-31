@@ -1,10 +1,10 @@
 package com.eagleoj.web.judger.runner;
 
 import com.eagleoj.judge.LanguageEnum;
+import com.eagleoj.judge.ResultEnum;
 import com.eagleoj.judge.entity.RequestEntity;
 import com.eagleoj.judge.entity.ResponseEntity;
 import com.eagleoj.judge.entity.TestCaseRequestEntity;
-import com.eagleoj.judge.entity.TestCaseResponseEntity;
 import com.eagleoj.judge.judger.Judger;
 import com.eagleoj.judge.judger.eagle.Eagle;
 import com.eagleoj.web.cache.CacheController;
@@ -18,7 +18,6 @@ import com.eagleoj.web.service.SettingService;
 import org.ehcache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -89,6 +88,9 @@ public class JudgeRunner {
             RequestEntity requestEntity = new RequestEntity(lang, sourceCode, time, memory, testCases);
             Judger judger = new Judger(JUDGE_URL, requestEntity, new Eagle());
             ResponseEntity responseEntity = judger.judge();
+            if (responseEntity.getResult() == ResultEnum.SE) {
+                throw new RuntimeException("判卷失败");
+            }
             judgeResult.setResponse(responseEntity);
             save();
         }
@@ -98,15 +100,17 @@ public class JudgeRunner {
             judgeResult.setStatus(JudgeStatus.Saving);
 
             if (judgeTask instanceof GroupJudgeTask) {
-                System.out.println("save group");
+                LOGGER.info("Saving group");
+                judgeService.saveGroupContestCode((GroupJudgeTask) judgeTask, judgeResult.getResponse());
             } else if (judgeTask instanceof ContestJudgeTask) {
-                System.out.println("save contest ");
+                LOGGER.info("Saving contest");
+                judgeService.saveContestCode((ContestJudgeTask) judgeTask, judgeResult.getResponse());
             } else if (judgeTask instanceof ProblemJudgeTask) {
-                System.out.println("save problem");
+                LOGGER.info("Saving problem");
                 judgeService.saveProblemCode((ProblemJudgeTask) judgeTask, judgeResult.getResponse());
             } else {
                 // do nothing
-                System.out.println("save test");
+                LOGGER.info("Saving test");
             }
             judgeResult.setStatus(JudgeStatus.Finished);
         }

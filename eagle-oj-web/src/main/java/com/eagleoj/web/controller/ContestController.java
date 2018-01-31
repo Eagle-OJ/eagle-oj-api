@@ -76,6 +76,7 @@ public class ContestController {
     }
 
     @ApiOperation("获取比赛中题目的信息")
+    @RequiresAuthentication
     @GetMapping("/{cid}/problem/{pid}")
     public ResponseEntity getContestProblem(@PathVariable("cid") int cid,
                                             @PathVariable("pid") int pid) {
@@ -95,9 +96,17 @@ public class ContestController {
 
         // 加载比赛信息
         ContestEntity contestEntity = contestService.getContest(cid);
-        boolean contestStatus = false;
-        if (contestEntity.getStatus() == ContestStatus.USING.getNumber()) {
-            contestStatus = true;
+        boolean contestStatus = true;
+        if (contestEntity.getStatus() != ContestStatus.USING.getNumber()) {
+            contestStatus = false;
+        }
+        // 判断用户在此比赛中是否能继续答题
+        if (contestEntity.getType() == ContestTypeStatus.OI_CONTEST_LIMIT_TIME.getNumber() ||
+                contestEntity.getType() == ContestTypeStatus.ACM_CONTEST_LIMIT_TIME.getNumber()) {
+            ContestUserEntity contestUserEntity = contestUserService.get(cid, SessionHelper.get().getUid());
+            if (System.currentTimeMillis() > (contestUserEntity.getJoinTime() + contestEntity.getTotalTime())) {
+                contestStatus = false;
+            }
         }
         Map<String, Object> map = new HashMap<>(3);
         map.put("problem", problemEntity);
@@ -108,6 +117,7 @@ public class ContestController {
         Map<String, Object> contestMap = new HashMap<>(2);
         contestMap.put("status", contestStatus);
         contestMap.put("name", contestEntity.getName());
+        contestMap.put("group", contestEntity.getGroup());
         map.put("contest", contestMap);
         return new ResponseEntity(map);
     }

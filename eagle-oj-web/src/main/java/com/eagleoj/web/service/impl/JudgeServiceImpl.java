@@ -4,12 +4,12 @@ import com.eagleoj.judge.LanguageEnum;
 import com.eagleoj.judge.ResultEnum;
 import com.eagleoj.judge.entity.ResponseEntity;
 import com.eagleoj.web.cache.CacheController;
+import com.eagleoj.web.data.status.ContestTypeStatus;
 import com.eagleoj.web.data.status.ProblemStatus;
-import com.eagleoj.web.entity.ProblemEntity;
-import com.eagleoj.web.entity.ProblemUserEntity;
-import com.eagleoj.web.entity.UserEntity;
-import com.eagleoj.web.entity.UserLogEntity;
+import com.eagleoj.web.entity.*;
 import com.eagleoj.web.judger.JudgeResult;
+import com.eagleoj.web.judger.task.ContestJudgeTask;
+import com.eagleoj.web.judger.task.GroupJudgeTask;
 import com.eagleoj.web.judger.task.ProblemJudgeTask;
 import com.eagleoj.web.service.*;
 import com.eagleoj.web.util.FileUtil;
@@ -17,6 +17,9 @@ import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Smith
@@ -51,6 +54,12 @@ public class JudgeServiceImpl implements JudgeService {
     @Autowired
     private ProblemService problemService;
 
+    @Autowired
+    private ContestUserService contestUserService;
+
+    @Autowired
+    private GroupUserService groupUserService;
+
     @Override
     public JudgeResult getJudgeResult(String id) {
         JudgeResult result = CacheController.getSubmissionCache().get(id);
@@ -70,7 +79,6 @@ public class JudgeServiceImpl implements JudgeService {
         updateUserLog(owner, result);
 
         boolean isAC = false;
-        boolean isNeedUpdate = false;
         try {
             ProblemUserEntity problemUserEntity = problemUserService.get(pid, owner);
             if (problemUserEntity.getStatus() == ResultEnum.AC) {
@@ -78,7 +86,7 @@ public class JudgeServiceImpl implements JudgeService {
             }
 
             if (problemUserEntity.getStatus() != result) {
-                isNeedUpdate = true;
+                updateProblemUserStatus(owner, pid, result);
             }
         } catch (Exception e) {
             addProblemUserStatus(owner, pid, result);
@@ -88,9 +96,6 @@ public class JudgeServiceImpl implements JudgeService {
             return;
         }
 
-        if (isNeedUpdate) {
-            updateProblemUserStatus(owner, pid, result);
-        }
         updateProblemTimes(pid, result);
         if (task.getProblemEntity().getStatus() == ProblemStatus.SHARING.getNumber()) {
             updateUserTimes(owner, result);
@@ -99,14 +104,59 @@ public class JudgeServiceImpl implements JudgeService {
 
     @Transactional
     @Override
-    public void saveContestCode(ProblemJudgeTask task, ResponseEntity response) {
-
+    public void saveContestCode(ContestJudgeTask task, ResponseEntity response) {
+        saveContestCode(task, response, 0);
     }
 
     @Transactional
     @Override
-    public void saveGroupContestCode(ProblemJudgeTask task, ResponseEntity response) {
+    public void saveGroupContestCode(GroupJudgeTask task, ResponseEntity response) {
+        int gid = task.getGid();
+        saveContestCode(task, response, gid);
 
+        // 更新组内用户记录
+        updateGroupUserTimes(task.getGid(), task.getOwner(), response.getResult());
+    }
+
+    private void saveContestCode(ContestJudgeTask task, ResponseEntity response, int gid) {
+        int pid = task.getPid();
+        int cid = task.getCid();
+        int owner = task.getOwner();
+        ResultEnum result = response.getResult();
+        saveSubmission(task.getSourceCode(), task.getLang(), response.getTime(), response.getMemory(),
+                result, owner, task.getPid(), cid, gid);
+
+        updateUserLog(owner, result);
+
+        boolean isAC = false;
+        long usedTime = evaluateUsedTime(result, task.getContestEntity(), task.getContestUserEntity());
+        long solvedTime = (result == ResultEnum.AC ? System.currentTimeMillis(): 0);
+        int score = evaluateProblemScore(task.getContestEntity().getType(), result,
+                task.getContestProblemEntity().getScore(), task.getTestCases(), response);
+
+        try {
+            ContestProblemUserEntity contestProblemUserEntity = contestProblemUserService.getByCidPidUid(cid, pid, owner);
+            if (contestProblemUserEntity.getStatus() == ResultEnum.AC) {
+                isAC = true;
+            }
+            if (! isAC) {
+                contestProblemUserService.update(cid, pid, owner, score, result, solvedTime, usedTime);
+            }
+        } catch (Exception e) {
+            contestProblemUserService.save(cid, pid, owner, score, result, solvedTime, usedTime);
+        }
+
+        if (isAC) {
+            return;
+        }
+
+        updateContestProblemTimes(cid, pid, result);
+        updateContestUserTimes(cid, owner, result);
+        updateProblemTimes(pid, result);
+
+        if (task.getContestEntity().getOfficial() == 1) {
+            updateUserTimes(owner, result);
+        }
     }
 
     private void saveSubmission(String sourceCode, LanguageEnum lang, double time, int memory, ResultEnum result,
@@ -192,5 +242,117 @@ public class JudgeServiceImpl implements JudgeService {
                 break;
         }
         problemService.updateProblem(pid, problemEntity);
+    }
+
+    private void updateContestProblemTimes(int cid, int pid, ResultEnum result) {
+        ContestProblemEntity contestProblemEntity = new ContestProblemEntity();
+        contestProblemEntity.setSubmitTimes(1);
+        switch (result) {
+            case AC:
+                contestProblemEntity.setACTimes(1);
+                break;
+            case TLE:
+                contestProblemEntity.setTLETimes(1);
+                break;
+            case RTE:
+                contestProblemEntity.setRTETimes(1);
+                break;
+            case WA:
+                contestProblemEntity.setWATimes(1);
+                break;
+            case CE:
+                contestProblemEntity.setCETimes(1);
+                break;
+        }
+        contestProblemService.updateContestProblemTimes(cid, pid, contestProblemEntity);
+    }
+
+    private void updateContestUserTimes(int cid, int uid, ResultEnum result) {
+        ContestUserEntity contestUserEntity = new ContestUserEntity();
+        contestUserEntity.setSubmitTimes(1);
+        switch (result) {
+            case AC:
+                contestUserEntity.setFinishedProblems(1);
+                contestUserEntity.setACTimes(1);
+                break;
+            case TLE:
+                contestUserEntity.setTLETimes(1);
+                break;
+            case RTE:
+                contestUserEntity.setRTETimes(1);
+                break;
+            case WA:
+                contestUserEntity.setWATimes(1);
+                break;
+            case CE:
+                contestUserEntity.setCETimes(1);
+                break;
+        }
+        contestUserService.updateByCidUid(cid, uid, contestUserEntity);
+    }
+
+    private void updateGroupUserTimes(int gid, int uid, ResultEnum result) {
+        GroupUserEntity groupUserEntity = new GroupUserEntity();
+        groupUserEntity.setSubmitTimes(1);
+        switch (result) {
+            case AC:
+                groupUserEntity.setFinishedProblems(1);
+                groupUserEntity.setACTimes(1);
+                break;
+            case TLE:
+                groupUserEntity.setTLETimes(1);
+                break;
+            case RTE:
+                groupUserEntity.setRTETimes(1);
+                break;
+            case WA:
+                groupUserEntity.setWATimes(1);
+                break;
+            case CE:
+                groupUserEntity.setCETimes(1);
+                break;
+        }
+        groupUserService.updateGroup(gid, uid, groupUserEntity);
+    }
+
+
+    private long evaluateUsedTime(ResultEnum result, ContestEntity contestEntity, ContestUserEntity contestUserEntity) {
+        if (result != ResultEnum.AC) {
+            return 0;
+        }
+        int contestType = contestEntity.getType();
+        if (contestType == ContestTypeStatus.OI_CONTEST_NORMAL_TIME.getNumber() ||
+                contestType == ContestTypeStatus.ACM_CONTEST_NORMAL_TIME.getNumber()) {
+            return System.currentTimeMillis() - contestEntity.getStartTime();
+        } else {
+            return System.currentTimeMillis() - contestUserEntity.getJoinTime();
+        }
+    }
+
+    private int evaluateProblemScore(int contestType, ResultEnum result, int totalScore, List<TestCaseEntity> testCases,
+                                     ResponseEntity response) {
+        if (result == ResultEnum.AC) {
+            return totalScore;
+        }
+
+        if (contestType == ContestTypeStatus.ACM_CONTEST_NORMAL_TIME.getNumber() ||
+                contestType == ContestTypeStatus.ACM_CONTEST_LIMIT_TIME.getNumber()) {
+            return 0;
+        }
+
+        List<Integer> strengthList = new ArrayList<>(testCases.size());
+        double totalPoint = 0;
+        for (TestCaseEntity entity: testCases) {
+            strengthList.add(entity.getStrength());
+            totalPoint = totalPoint + entity.getStrength();
+        }
+        int rightPoint = 0;
+        for (int i=0; i<response.getTestCases().size(); i++) {
+            ResultEnum tempResult = response.getTestCases().get(i).getResult();
+            if (tempResult == ResultEnum.AC) {
+                rightPoint = rightPoint + strengthList.get(i);
+            }
+        }
+        return (int) Math.floor((totalScore / totalPoint)*rightPoint);
     }
 }

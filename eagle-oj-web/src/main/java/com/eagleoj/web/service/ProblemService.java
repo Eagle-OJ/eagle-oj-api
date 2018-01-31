@@ -33,4 +33,5 @@ public interface ProblemService {
 
     List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid);
 
+    List<ProblemEntity> listProblemsForContest(int uid);
 }

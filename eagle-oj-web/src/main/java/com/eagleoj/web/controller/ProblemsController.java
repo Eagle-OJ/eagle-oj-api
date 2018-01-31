@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import com.eagleoj.web.entity.ResponseEntity;
@@ -44,7 +45,7 @@ public class ProblemsController {
         return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listUserProblems(uid)));
     }
 
-    @ApiOperation("获取公开题目列表")
+    @ApiOperation("获取公开题目列表-否是附带用户提交状态")
     @GetMapping
     public ResponseEntity getProblems(@RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
                                       @RequestParam(name = "difficult", defaultValue = "-1", required = false) Integer difficult,
@@ -67,6 +68,16 @@ public class ProblemsController {
 
         data = problemService.listSharedProblems(tag, difficult, uid);
         return new ResponseEntity(WebUtil.generatePageData(pager, data));
+    }
+
+    @ApiOperation("获取比赛添加题目列表")
+    @RequiresAuthentication
+    @GetMapping("/contest")
+    public ResponseEntity listContestProblemsForAdding(@RequestParam("page") int page,
+                                                       @RequestParam("page_size") int pageSize) {
+        int uid = SessionHelper.get().getUid();
+        Page pager = PageHelper.startPage(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listProblemsForContest(uid)));
     }
 
     @ApiOperation("获取待审核的题目列表")

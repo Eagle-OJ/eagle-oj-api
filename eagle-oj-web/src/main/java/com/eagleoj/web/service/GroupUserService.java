@@ -20,6 +20,8 @@ public interface GroupUserService {
 
     void updateGroupName(int gid, int uid, String groupName);
 
+    void updateGroup(int gid, int uid, GroupUserEntity entity);
+
     List<GroupUserEntity> listGroupMembers(int gid);
 
     void deleteGroupMember(int gid, int uid);

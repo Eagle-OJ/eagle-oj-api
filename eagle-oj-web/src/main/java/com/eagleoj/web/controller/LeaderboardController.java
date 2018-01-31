@@ -38,9 +38,9 @@ public class LeaderboardController {
     private LeaderboardService leaderboardService;
 
     @ApiOperation("获取某个比赛的排行榜")
-    @GetMapping("/contest/{cid}")
+    @GetMapping("/contest")
     @SuppressWarnings("unchecked")
-    public ResponseEntity getContestLeaderboard(@PathVariable int cid) {
+    public ResponseEntity getContestLeaderboard(@RequestParam int cid) {
         List<Map<String, Object>> list = leaderboardService.getContestLeaderboard(cid);
         if (list == null) {
             throw new WebErrorException("不存在此比赛");
@@ -48,6 +48,13 @@ public class LeaderboardController {
         List<Map<String, Object>> targetList = new LinkedList<>(list);
         targetList.remove(1);
         return new ResponseEntity(targetList);
+    }
+
+    @ApiOperation("获取某个比赛中某个用户的详情")
+    @GetMapping("/user")
+    public ResponseEntity getUserInContestDetail(@RequestParam int cid,
+                                                 @RequestParam int uid) {
+        return new ResponseEntity(leaderboardService.getUserDetailInContest(cid, uid));
     }
 
     @ApiOperation("获取网站比赛排行榜")

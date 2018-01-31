@@ -16,7 +16,7 @@ public class UpdateContestProblemFormat {
     private Integer displayId;
 
     @NotNull
-    @Range(min = 1)
+    @Range(min = 1, max = 100)
     private Integer score;
 
     public int getScore() {

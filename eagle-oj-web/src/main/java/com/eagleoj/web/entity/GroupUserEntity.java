@@ -20,8 +20,6 @@ public class GroupUserEntity {
     @JSONField(name = "finished_problems")
     private Integer finishedProblems;
 
-    private Integer score;
-
     @JSONField(name = "ac_times")
     private Integer ACTimes;
 
@@ -78,14 +76,6 @@ public class GroupUserEntity {
 
     public void setFinishedProblems(Integer finishedProblems) {
         this.finishedProblems = finishedProblems;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
     }
 
     public Integer getACTimes() {

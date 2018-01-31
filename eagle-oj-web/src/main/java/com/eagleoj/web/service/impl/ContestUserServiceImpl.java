@@ -3,6 +3,7 @@ package com.eagleoj.web.service.impl;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ContestUserMapper;
 import com.eagleoj.web.dao.GroupUserMapper;
+import com.eagleoj.web.data.status.ContestStatus;
 import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.ContestUserEntity;
 import com.eagleoj.web.entity.GroupUserEntity;
@@ -51,18 +52,9 @@ public class ContestUserServiceImpl implements ContestUserService {
     }
 
     @Override
-    public List<Map<String, Object>> listNormalContestRank(int cid) {
-        return contestUserMapper.listNormalContestRankByCid(cid);
-    }
-
-    @Override
-    public List<Map<String, Object>> listACMContestRank(int cid, int penalty) {
-        return contestUserMapper.listACMContestRankByCid(cid, penalty);
-    }
-
-    @Override
-    public boolean updateByCidUid(int cid, int uid, ContestUserEntity entity) {
-        return contestUserMapper.updateByCidUid(cid, uid, entity) == 1;
+    public void updateByCidUid(int cid, int uid, ContestUserEntity entity) {
+        boolean flag = contestUserMapper.updateByCidUid(cid, uid, entity) == 1;
+        WebUtil.assertIsSuccess(flag, "比赛中用户信息更新失败");
     }
 
     @Transactional
@@ -72,6 +64,9 @@ public class ContestUserServiceImpl implements ContestUserService {
         WebUtil.assertNull(contestUserEntity, "你已经加入比赛");
 
         ContestEntity contestEntity = contestService.getContest(cid);
+        if (contestEntity.getStatus() != ContestStatus.USING.getNumber()) {
+            throw new WebErrorException("当前比赛不得加入");
+        }
         if (contestEntity.getGroup() > 0) {
             // 小组赛
             boolean flag = groupUserService.isUserInGroup(contestEntity.getGroup(), uid);

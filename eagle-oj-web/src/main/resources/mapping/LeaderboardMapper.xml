@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eagleoj.web.dao.LeaderboardMapper">
+
+    <select id="listOIRankByCid" resultType="HashMap">
+        SELECT
+            contest_problem_user.uid,
+            contest_user.submit_times,
+            contest_user.ac_times,
+            contest_user.finished_problems,
+            SUM(score) AS score,
+            SUM(used_time) AS used_time,
+            nickname,
+            avatar
+        FROM
+            contest_problem_user
+            LEFT JOIN
+            user ON contest_problem_user.uid = user.uid
+            LEFT JOIN
+            contest_user ON contest_problem_user.uid = contest_user.uid
+                            AND contest_problem_user.cid = contest_user.cid
+        WHERE
+            contest_problem_user.cid = 10
+        GROUP BY contest_problem_user.uid
+        ORDER BY score DESC , used_time ASC
+    </select>
+
+    <select id="listACMRankByCid" resultType="HashMap">
+        SELECT
+            contest_problem_user.uid,
+            contest_user.submit_times,
+            contest_user.ac_times,
+            contest_user.finished_problems,
+            SUM(score) AS score,
+            SUM(used_time) AS used_time,
+            (contest_user.submit_times - contest_user.ac_times) * 60 * 1000 * #{penalty} AS penalty_time,
+            nickname,
+            avatar
+        FROM
+            contest_problem_user
+            LEFT JOIN
+            user ON contest_problem_user.uid = user.uid
+            LEFT JOIN
+            contest_user ON contest_problem_user.cid = contest_user.cid
+                            AND contest_problem_user.uid = contest_user.uid
+        WHERE
+            contest_problem_user.cid = #{cid}
+        GROUP BY contest_problem_user.uid
+        ORDER BY score DESC , (used_time + penalty_time) ASC
+    </select>
+</mapper>

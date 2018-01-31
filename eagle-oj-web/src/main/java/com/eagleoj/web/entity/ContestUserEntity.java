@@ -31,11 +31,6 @@ public class ContestUserEntity {
     @JSONField(name = "ce_times")
     private Integer CETimes;
 
-    private Integer score;
-
-    @JSONField(name = "used_time")
-    private Long usedTime;
-
     @JSONField(name = "join_time")
     private Long joinTime;
 
@@ -109,22 +104,6 @@ public class ContestUserEntity {
 
     public void setCETimes(Integer CETimes) {
         this.CETimes = CETimes;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public Long getUsedTime() {
-        return usedTime;
-    }
-
-    public void setUsedTime(Long usedTime) {
-        this.usedTime = usedTime;
     }
 
     public Long getJoinTime() {

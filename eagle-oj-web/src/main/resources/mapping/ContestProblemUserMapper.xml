@@ -16,15 +16,18 @@
         WHERE `cid`=#{cid} AND `pid`=#{pid} AND `uid`=#{uid}
     </select>
 
-    <select id="listNormalContestRankByCid" resultType="HashMap">
+    <select id="listByCidUid" resultType="HashMap">
         SELECT
-            contest_problem_user.uid,
-            user.nickname,
-            SUM(score) AS score,
-            SUM(used_time) AS used_time
-        FROM contest_problem_user
-            LEFT JOIN user ON contest_problem_user.uid=user.uid
-        WHERE cid=#{cid} group by uid order by SUM(score) DESC, SUM(used_time) DESC
+            contest_problem_user.*, contest_problem.display_id
+        FROM
+            contest_problem_user
+            LEFT JOIN
+            contest_problem ON contest_problem_user.pid = contest_problem.pid
+                               AND contest_problem_user.cid = contest_problem.cid
+        WHERE
+            contest_problem_user.cid = #{cid}
+            AND contest_problem_user.uid = #{uid}
+        ORDER BY display_id ASC
     </select>
 
     <select id="listAllByCid" resultMap="contestProblemUserMap">
@@ -32,11 +35,21 @@
     </select>
 
     <update id="updateByCidPidUid">
-        UPDATE `contest_problem_user` SET
-            score = #{data.score},
-            status = #{data.status},
-            solved_time = #{data.solvedTime},
-            used_time=#{data.usedTime}
+        UPDATE `contest_problem_user`
+        <set>
+            <if test="data.score != null">
+                score = #{data.score},
+            </if>
+            <if test="data.status != null">
+                status = #{data.status},
+            </if>
+            <if test="data.solvedTime != null">
+                solved_time = #{data.solvedTime},
+            </if>
+            <if test="data.usedTime != null">
+                used_time = #{data.usedTime},
+            </if>
+        </set>
         WHERE cid = #{cid} AND pid = #{pid} AND uid = #{uid}
     </update>
 

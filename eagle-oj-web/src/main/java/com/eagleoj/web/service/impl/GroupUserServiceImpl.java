@@ -53,7 +53,12 @@ public class GroupUserServiceImpl implements GroupUserService {
         GroupUserEntity entity = new GroupUserEntity();
         entity.setGroupName(groupName);
         boolean flag = groupUserMapper.updateByGidUid(gid, uid, entity) == 1;
-        WebUtil.assertIsSuccess(flag, "组内名称更换失败");
+        WebUtil.assertIsSuccess(flag, "组内成员名称更换失败");
+    }
+
+    public void updateGroup(int gid, int uid, GroupUserEntity entity) {
+        boolean flag = groupUserMapper.updateByGidUid(gid, uid, entity) == 1;
+        WebUtil.assertIsSuccess(flag, "组内成员信息更新失败");
     }
 
     @Override

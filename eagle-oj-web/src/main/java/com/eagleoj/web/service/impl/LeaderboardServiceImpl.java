@@ -2,11 +2,13 @@ package com.eagleoj.web.service.impl;
 
 import com.eagleoj.web.DefaultConfig;
 import com.eagleoj.web.cache.CacheController;
+import com.eagleoj.web.dao.LeaderboardMapper;
 import com.eagleoj.web.dao.UserMapper;
+import com.eagleoj.web.data.status.ContestTypeStatus;
 import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.UserEntity;
+import com.eagleoj.web.service.ContestProblemUserService;
 import com.eagleoj.web.service.ContestService;
-import com.eagleoj.web.service.ContestUserService;
 import com.eagleoj.web.service.LeaderboardService;
 import org.ehcache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,18 @@ import java.util.Map;
  **/
 @Service
 public class LeaderboardServiceImpl implements LeaderboardService {
+
     @Autowired
-    private ContestUserService contestUserService;
+    private ContestProblemUserService contestProblemUserService;
 
     @Autowired
     private ContestService contestService;
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LeaderboardMapper leaderboardMapper;
 
     @Override
     public void refreshContestLeaderboard(int cid) {
@@ -41,22 +47,25 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     public List<Map<String, Object>> getContestLeaderboard(int cid) {
         ContestEntity contestEntity = contestService.getContest(cid);
         int type = contestEntity.getType();
+        boolean isACM = false;
         Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();
         List<Map<String, Object>> list = (List<Map<String, Object>>) leaderboard.get(cid);
-
         if (list!=null) {
             return list;
         }
-        if (type == 0 || type == 1) {
-            // 普通比赛
-            list = contestUserService.listNormalContestRank(cid);
+        if (type == ContestTypeStatus.OI_CONTEST_NORMAL_TIME.getNumber()
+                || type == ContestTypeStatus.OI_CONTEST_LIMIT_TIME.getNumber()) {
+            // OI比赛
+            list = leaderboardMapper.listOIRankByCid(cid);
         } else {
             // ACM
-            list = contestUserService.listACMContestRank(cid, DefaultConfig.ACM_PENALTY_TIME);
+            list = leaderboardMapper.listACMRankByCid(cid, DefaultConfig.ACM_PENALTY_TIME);
+            isACM = true;
         }
         // 存放本次生成的基本信息
         Map<String, Object> meta = new HashMap<>(2);
         meta.put("name", contestEntity.getName());
+        meta.put("is_acm", isACM);
         meta.put("cid", contestEntity.getCid());
         meta.put("total", list.size());
         meta.put("create_time", System.currentTimeMillis());
@@ -93,5 +102,10 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     @Override
     public List<UserEntity> getLeaderboard() {
         return userMapper.listUserRank();
+    }
+
+    @Override
+    public List<Map<String, Object>> getUserDetailInContest(int cid, int uid) {
+        return contestProblemUserService.listUserDetailInContest(cid, uid);
     }
 }

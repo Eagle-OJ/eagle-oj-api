@@ -15,9 +15,9 @@ public interface ContestProblemUserService {
 
     List<ContestProblemUserEntity> listAllByCid(int cid);
 
-    List<Map<String, Object>> listNormalContestRankByCid(int cid);
+    List<Map<String, Object>> listUserDetailInContest(int cid, int uid);
 
-    boolean save(int cid, int pid, int uid, int score,
+    void save(int cid, int pid, int uid, int score,
                  ResultEnum status, long solvedTimes, long usedTime);
 
     boolean update(int cid, int pid, int uid, int score, ResultEnum status,

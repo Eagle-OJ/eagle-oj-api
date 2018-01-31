@@ -22,7 +22,7 @@
     <select id="listUserJoinedGroups" resultType="HashMap">
         SELECT group_user.*, `group`.name FROM group_user
             LEFT JOIN `group` ON group_user.gid=`group`.gid
-        WHERE uid=#{uid} ORDER BY join_time DESC
+        WHERE uid=#{uid} ORDER BY finished_problems DESC
     </select>
 
     <update id="updateByGidUid">
@@ -36,9 +36,6 @@
             </if>
             <if test="data.finishedProblems != null">
                 finished_problems = finished_problems + 1,
-            </if>
-            <if test="data.score != null">
-                score = score + #{data.score},
             </if>
             <if test="data.ACTimes != null">
                 ac_times = ac_times + 1,
@@ -73,7 +70,6 @@
         <result column="group_name" property="groupName"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="finished_problems" property="finishedProblems"/>
-        <result column="score" property="score"/>
         <result column="ac_times" property="ACTimes"/>
         <result column="wa_times" property="WATimes"/>
         <result column="rte_times" property="RTETimes"/>

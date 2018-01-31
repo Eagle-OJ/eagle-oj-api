@@ -4,6 +4,7 @@ import com.eagleoj.judge.ResultEnum;
 import com.eagleoj.web.dao.ContestProblemUserMapper;
 import com.eagleoj.web.entity.ContestProblemUserEntity;
 import com.eagleoj.web.service.ContestProblemUserService;
+import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,9 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
 
     @Override
     public ContestProblemUserEntity getByCidPidUid(int cid, int pid, int uid) {
-        return contestProblemUserMapper.getByCidPidUid(cid, pid, uid);
+        ContestProblemUserEntity entity = contestProblemUserMapper.getByCidPidUid(cid, pid, uid);
+        WebUtil.assertNotNull(entity, "不存在比赛中该用户做题记录");
+        return entity;
     }
 
     @Override
@@ -30,12 +33,12 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
     }
 
     @Override
-    public List<Map<String, Object>> listNormalContestRankByCid(int cid) {
-        return contestProblemUserMapper.listNormalContestRankByCid(cid);
+    public List<Map<String, Object>> listUserDetailInContest(int cid, int uid) {
+        return contestProblemUserMapper.listByCidUid(cid, uid);
     }
 
     @Override
-    public boolean save(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes, long usedTime) {
+    public void save(int cid, int pid, int uid, int score, ResultEnum status, long solvedTimes, long usedTime) {
         ContestProblemUserEntity entity = new ContestProblemUserEntity();
         entity.setCid(cid);
         entity.setPid(pid);
@@ -44,7 +47,8 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
         entity.setStatus(status);
         entity.setSolvedTime(solvedTimes);
         entity.setUsedTime(usedTime);
-        return contestProblemUserMapper.save(entity) == 1;
+        boolean flag = contestProblemUserMapper.save(entity) == 1;
+        WebUtil.assertIsSuccess(flag, "比赛题目用户记录保存失败");
     }
 
     @Override

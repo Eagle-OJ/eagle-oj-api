@@ -22,21 +22,6 @@
         ORDER BY join_time DESC
     </select>
 
-    <select id="listNormalContestRankByCid" resultType="HashMap">
-        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
-            score, used_time, contest_user.ac_times,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
-        WHERE contest_user.cid=#{cid} ORDER BY score DESC, used_time ASC
-    </select>
-
-    <select id="listACMContestRankByCid" resultType="HashMap">
-        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
-            score, contest_user.ac_times,
-            #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times) as penalty,
-            (used_time + #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times)) as used_time
-            ,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
-        WHERE contest_user.cid=#{cid} ORDER BY contest_user.finished_problems DESC, used_time ASC
-    </select>
-
     <update id="updateByCidUid">
         UPDATE contest_user
         <set>
@@ -61,12 +46,6 @@
             <if test="data.CETimes != null">
                 ce_times = ce_times + 1,
             </if>
-            <if test="data.score != null">
-                score = score + #{data.score},
-            </if>
-            <if test="data.usedTime != null">
-                used_time = used_time + #{data.usedTime}
-            </if>
         </set>
         WHERE `cid` = #{cid} AND `uid` = #{uid}
     </update>
@@ -81,8 +60,6 @@
         <result column="rte_times" property="RTETimes"/>
         <result column="tle_times" property="TLETimes"/>
         <result column="ce_times" property="CETimes"/>
-        <result column="score" property="score"/>
-        <result column="used_time" property="usedTime"/>
         <result column="join_time" property="joinTime"/>
     </resultMap>
 </mapper>

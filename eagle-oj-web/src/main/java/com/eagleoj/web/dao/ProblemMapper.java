@@ -26,6 +26,8 @@ public interface ProblemMapper {
                                          @Param("difficult") Integer difficult,
                                          @Param("tag") String tag);
 
+    List<ProblemEntity> listProblemsForContest(int uid);
+
     List<ProblemEntity> listAuditing();
 
     List<Map<String, Object>> listSharedWithUserStatus(@Param("difficult") int difficult,

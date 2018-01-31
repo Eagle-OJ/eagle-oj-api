@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 /**
  * @author Smith
  **/
-//@Service
+@Deprecated
 public class JudgerRunner {
 
     private final int MAX_THREADS = 3;
@@ -297,8 +297,6 @@ public class JudgerRunner {
             ContestUserEntity entity = new ContestUserEntity();
             entity.setCid(cid);
             entity.setUid(uid);
-            entity.setScore(score);
-            entity.setUsedTime(usedTime);
             entity.setSubmitTimes(1);
             switch (resultEnum) {
                 case AC:

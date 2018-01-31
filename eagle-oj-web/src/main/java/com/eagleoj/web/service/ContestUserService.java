@@ -14,11 +14,7 @@ public interface ContestUserService {
 
     List<Map<String, Object>> listUserJoinedContests(int uid);
 
-    List<Map<String, Object>> listNormalContestRank(int cid);
-
-    List<Map<String, Object>> listACMContestRank(int cid, int penalty);
-
-    boolean updateByCidUid(int cid, int uid, ContestUserEntity entity);
+    void updateByCidUid(int cid, int uid, ContestUserEntity entity);
 
     void joinContest(int cid, int uid, String password);
 }

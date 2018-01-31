@@ -62,6 +62,11 @@ public class ContestProblemServiceImpl implements ContestProblemService {
         newEntity.setScore(score);
         boolean res = contestProblemMapper.save(newEntity) == 1;
         WebUtil.assertIsSuccess(res, "题目添加失败");
+
+        // 更新题目被调用记录
+        ProblemEntity newProblemEntity = new ProblemEntity();
+        newProblemEntity.setUsedTimes(1);
+        problemService.updateProblem(pid, newProblemEntity);
     }
 
     @Override

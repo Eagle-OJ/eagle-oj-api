@@ -16,7 +16,7 @@ public interface ContestProblemUserMapper {
 
     ContestProblemUserEntity getByCidPidUid(@Param("cid") int cid, @Param("pid") int pid, @Param("uid")int uid);
 
-    List<Map<String, Object>> listNormalContestRankByCid(int cid);
+    List<Map<String, Object>> listByCidUid(@Param("cid") int cid, @Param("uid") int uid);
 
     List<ContestProblemUserEntity> listAllByCid(int cid);
 

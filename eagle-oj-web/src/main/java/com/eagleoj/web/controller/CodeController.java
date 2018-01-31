@@ -7,16 +7,11 @@ import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.index.SubmitCodeFormat;
 import com.eagleoj.web.controller.format.user.UserSubmitCodeFormat;
 import com.eagleoj.web.entity.TestCaseEntity;
-import com.eagleoj.web.judger.JudgerManager;
 import com.eagleoj.web.judger.JudgeResult;
-import com.eagleoj.web.judger.task.JudgeTask;
-import com.eagleoj.web.judger.task.ProblemJudgeTask;
-import com.eagleoj.web.judger.task.TestJudgeTask;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.JudgeService;
 import com.eagleoj.web.service.async.AsyncJudgeService;
 import io.swagger.annotations.ApiOperation;
-import com.eagleoj.judge.entity.TestCaseRequestEntity;
 import com.eagleoj.web.entity.ResponseEntity;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +71,7 @@ public class CodeController {
         int owner = SessionHelper.get().getUid();
         String id;
         if (gid != 0 && cid != 0) {
-            id = asyncJudgeService.addGroupJudge(sourceCode, lang, owner, pid, cid, gid);
+            id = asyncJudgeService.addGroupJudge(sourceCode, lang, owner, pid, cid);
         } else if (cid != 0) {
             id = asyncJudgeService.addContestJudge(sourceCode, lang, owner, pid, cid);
         } else {
