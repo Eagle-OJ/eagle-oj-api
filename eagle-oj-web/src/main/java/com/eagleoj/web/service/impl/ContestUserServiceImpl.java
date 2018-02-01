@@ -47,6 +47,11 @@ public class ContestUserServiceImpl implements ContestUserService {
     }
 
     @Override
+    public int countContestUsers(int cid) {
+        return contestUserMapper.countByCid(cid);
+    }
+
+    @Override
     public List<Map<String, Object>> listUserJoinedContests(int uid) {
         return contestUserMapper.listUserJoinedContestsByUid(uid);
     }

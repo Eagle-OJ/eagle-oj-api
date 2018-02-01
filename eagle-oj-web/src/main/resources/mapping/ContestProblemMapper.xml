@@ -44,6 +44,10 @@
         ORDER BY contest_problem.display_id ASC
     </select>
 
+    <select id="countByPid" resultType="Integer">
+        SELECT count(*) FROM contest_problem WHERE pid=#{pid}
+    </select>
+
     <update id="updateByCidPid">
         UPDATE `contest_problem`
         <set>
@@ -77,6 +81,10 @@
 
     <delete id="deleteByCidPid">
         DELETE FROM contest_problem WHERE cid=#{cid} AND pid=#{pid}
+    </delete>
+
+    <delete id="deleteByCid">
+        DELETE FROM contest_problem WHERE cid=#{cid}
     </delete>
 
     <resultMap id="contestProblemMap" type="ContestProblemEntity">

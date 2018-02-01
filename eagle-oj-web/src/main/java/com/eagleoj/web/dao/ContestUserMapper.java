@@ -14,6 +14,8 @@ import java.util.Map;
 public interface ContestUserMapper {
     int save(ContestUserEntity entity);
 
+    int countByCid(int cid);
+
     ContestUserEntity getByCidUid(@Param("cid") int cid, @Param("uid") int uid);
 
     List<Map<String, Object>> listUserJoinedContestsByUid(int uid);

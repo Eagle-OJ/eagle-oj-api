@@ -57,7 +57,13 @@ public class TestCasesServiceImpl implements TestCasesService {
     }
 
     @Override
-    public void deleteTestCaseByTidPid(int tid, int pid) {
+    public void deleteTestCase(int tid, int pid) {
         WebUtil.assertIsSuccess(testCasesMapper.deleteByTidPid(tid, pid) == 1, "测试用例删除失败");
+    }
+
+    @Override
+    public void deleteProblemTestCases(int pid) {
+        boolean flag = testCasesMapper.deleteByPid(pid) > 0;
+        WebUtil.assertIsSuccess(flag, "测试用例删除失败");
     }
 }

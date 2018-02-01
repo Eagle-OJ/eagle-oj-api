@@ -12,6 +12,8 @@ public interface ContestProblemService {
 
     ContestProblemEntity getContestProblem(int cid, int pid);
 
+    int countContestProblems(int pid);
+
     List<Map<String, Object>> listContestProblems(int cid);
 
     List<Map<String, Object>> listContestProblems (int cid, int uid);
@@ -20,8 +22,9 @@ public interface ContestProblemService {
 
     void updateContestProblem(int cid, int pid, int displayId, int score);
 
-    boolean updateContestProblemTimes(int cid, int pid, ContestProblemEntity entity);
+    void updateContestProblemTimes(int cid, int pid, ContestProblemEntity entity);
 
     void deleteContestProblem(int cid, int pid);
 
+    void deleteContestProblems(int cid);
 }

@@ -12,6 +12,8 @@ public interface ContestUserService {
 
     ContestUserEntity get(int cid, int uid);
 
+    int countContestUsers(int cid);
+
     List<Map<String, Object>> listUserJoinedContests(int uid);
 
     void updateByCidUid(int cid, int uid, ContestUserEntity entity);

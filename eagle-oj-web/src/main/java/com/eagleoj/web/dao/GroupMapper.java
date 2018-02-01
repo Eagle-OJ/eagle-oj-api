@@ -18,4 +18,6 @@ public interface GroupMapper {
     List<GroupEntity> listGroupsByOwner(int owner);
 
     int updateByGid(@Param("gid") int gid, @Param("data") GroupEntity data);
+
+    int deleteByGid(int gid);
 }

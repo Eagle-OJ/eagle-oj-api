@@ -14,6 +14,10 @@ public interface ContestService {
                    long startTime, long endTime, Long totalTime, String password,
                    int type);
 
+    int countGroupContests(int gid);
+
+    void deleteContest(int cid);
+
     List<ContestEntity> listUserContests(int uid);
 
     ContestEntity getContest(int cid);
@@ -25,4 +29,6 @@ public interface ContestService {
     List<Map<String, Object>> listOpenedContests();
 
     List<Map<String, Object>> listAllContests();
+
+    List<ContestEntity> listGroupContests(int gid);
 }

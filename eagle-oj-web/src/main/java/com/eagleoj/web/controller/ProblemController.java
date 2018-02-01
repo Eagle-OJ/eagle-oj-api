@@ -143,6 +143,15 @@ public class ProblemController {
         return new ResponseEntity("题目更新成功");
     }
 
+    @ApiOperation("删除指定题目")
+    @RequiresAuthentication
+    @DeleteMapping("/{pid}")
+    public ResponseEntity deleteProblem(@PathVariable int pid) {
+        ProblemEntity problemEntity = problemService.getProblem(pid);
+        accessToEditProblem(problemEntity);
+        problemService.deleteProblem(pid);
+        return new ResponseEntity("题目删除成功");
+    }
 
     @ApiOperation("获取一道题目的测试用例")
     @RequiresAuthentication
@@ -180,7 +189,7 @@ public class ProblemController {
         accessToEditProblem(problemEntity);
 
         // 删除test_case
-        testCasesService.deleteTestCaseByTidPid(tid, pid);
+        testCasesService.deleteTestCase(tid, pid);
 
         return new ResponseEntity("删除成功");
     }

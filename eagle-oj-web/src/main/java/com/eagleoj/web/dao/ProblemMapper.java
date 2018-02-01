@@ -45,4 +45,6 @@ public interface ProblemMapper {
 
     int acceptByPid(int pid);
 
+    int deleteByPid(int pid);
+
 }

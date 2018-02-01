@@ -138,6 +138,16 @@ public class ContestController {
         return new ResponseEntity("比赛创建成功", cid);
     }
 
+    @ApiOperation("删除比赛")
+    @RequiresAuthentication
+    @DeleteMapping("/{cid}")
+    public ResponseEntity deleteContest(@PathVariable int cid) {
+        ContestEntity contestEntity = contestService.getContest(cid);
+        accessToEditContest(contestEntity);
+        contestService.deleteContest(cid);
+        return new ResponseEntity("比赛删除成功");
+    }
+
     @ApiOperation("编辑比赛")
     @RequiresAuthentication
     @PutMapping("/{cid}")

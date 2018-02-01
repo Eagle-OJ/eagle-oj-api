@@ -12,6 +12,8 @@ public interface GroupUserService {
 
     List<Map<String, Object>> listUserJoinedGroups(int uid);
 
+    int countGroupMembers(int gid);
+
     GroupUserEntity getGroupMember(int gid, int uid);
 
     boolean isUserInGroup(int gid, int uid);
@@ -25,6 +27,8 @@ public interface GroupUserService {
     List<GroupUserEntity> listGroupMembers(int gid);
 
     void deleteGroupMember(int gid, int uid);
+
+    void deleteGroupMembers(int gid);
 
     void joinGroup(int gid, int uid, String password);
 }

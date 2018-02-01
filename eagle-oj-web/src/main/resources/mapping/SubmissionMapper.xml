@@ -10,14 +10,15 @@
         VALUES (#{owner}, #{pid}, #{cid}, #{gid}, #{sourceCode}, #{lang}, #{time}, #{memory}, #{status}, #{submitTime})
     </insert>
 
-    <select id="listSubmissionsByOwnerPidCidGid" resultType="HashMap">
+    <select id="countByPid" resultType="Integer">
+        SELECT count(*) FROM submission WHERE pid = #{pid}
+    </select>
+
+    <select id="listSubmissionsByOwnerPidCid" resultType="HashMap">
         SELECT * FROM submission LEFT JOIN attachment ON submission.source_code=attachment.aid
         WHERE submission.owner=#{owner} AND pid=#{pid}
         <if test="cid != 0">
             AND cid=#{cid}
-        </if>
-        <if test="gid != 0">
-            AND gid=#{gid}
         </if>
         ORDER BY submit_time DESC
     </select>

@@ -117,6 +117,10 @@
         UPDATE problem SET status = 2 WHERE pid=#{pid}
     </update>
 
+    <delete id="deleteByPid">
+        DELETE FROM problem WHERE pid=#{pid}
+    </delete>
+
     <resultMap id="problemResultMap" type="ProblemEntity">
         <id column="pid" property="pid"/>
         <result column="owner" property="owner"/>

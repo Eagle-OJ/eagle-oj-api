@@ -20,9 +20,13 @@ public interface GroupUserMapper {
 
     List<Map<String, Object>> listUserJoinedGroups(int uid);
 
+    int countByGid(int gid);
+
     int updateByGidUid(@Param("gid") int gid, @Param("uid") int uid, @Param("data") GroupUserEntity data);
 
     List<GroupUserEntity> listGroupMembersByGid(int gid);
 
-    int deleteGroupMemberByGidUid(@Param("gid") int gid, @Param("uid") int uid);
+    int deleteByGidUid(@Param("gid") int gid, @Param("uid") int uid);
+
+    int deleteByGid(int gid);
 }

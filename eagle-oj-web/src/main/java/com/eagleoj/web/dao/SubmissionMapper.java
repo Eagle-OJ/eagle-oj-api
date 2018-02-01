@@ -15,8 +15,9 @@ public interface SubmissionMapper {
 
     int save(SubmissionEntity submissionEntity);
 
-    List<Map<String, Object>> listSubmissionsByOwnerPidCidGid(@Param("owner") int owner,
+    int countByPid(int pid);
+
+    List<Map<String, Object>> listSubmissionsByOwnerPidCid(@Param("owner") int owner,
                                                               @Param("pid") int pid,
-                                                              @Param("cid") int cid,
-                                                              @Param("gid") int gid);
+                                                              @Param("cid") int cid);
 }

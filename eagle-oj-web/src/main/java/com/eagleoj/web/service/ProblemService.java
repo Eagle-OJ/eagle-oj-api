@@ -15,6 +15,8 @@ public interface ProblemService {
     int save(JSONArray tags, int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
              int difficult, JSONArray samples, int time, int memory);
 
+    void deleteProblem(int pid);
+
     void updateProblem(int pid, JSONArray tags, ProblemEntity problemEntity);
 
     void updateProblem(int pid, ProblemEntity problemEntity);
@@ -34,4 +36,5 @@ public interface ProblemService {
     List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid);
 
     List<ProblemEntity> listProblemsForContest(int uid);
+
 }

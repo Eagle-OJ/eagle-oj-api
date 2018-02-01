@@ -16,5 +16,7 @@ public interface TestCasesService {
 
     void updateTestCaseByTidPid(int tid, int pid, String stdin, String stdout, int strength);
 
-    void deleteTestCaseByTidPid(int tid, int pid);
+    void deleteTestCase(int tid, int pid);
+
+    void deleteProblemTestCases(int pid);
 }

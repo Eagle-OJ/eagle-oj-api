@@ -15,6 +15,8 @@ import java.util.Map;
 public interface ContestMapper {
     int save(ContestEntity entity);
 
+    int countByGid(int gid);
+
     List<ContestEntity> listByUid(int uid);
 
     List<Map<String, Object>> listContests(@Param("isAll") boolean isAll);

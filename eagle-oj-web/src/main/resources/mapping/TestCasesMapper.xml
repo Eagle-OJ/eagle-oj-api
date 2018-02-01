@@ -12,6 +12,10 @@
         SELECT * FROM test_cases WHERE `pid` = #{pid}
     </select>
 
+    <select id="countByPid" resultType="java.lang.Integer">
+        SELECT  count(`pid`) FROM  `test_cases` WHERE `pid` = #{pid}
+    </select>
+
     <update id="updateByTidPid" >
         UPDATE `test_cases` SET `stdin` = #{data.stdin}, `stdout` = #{data.stdout},
             `strength` = #{data.strength}
@@ -22,9 +26,9 @@
         DELETE From test_cases WHERE  `tid` = #{tid} AND pid = #{pid}
     </delete>
 
-    <select id="countByPid" resultType="java.lang.Integer">
-        SELECT  count(`pid`) FROM  `test_cases` WHERE `pid` = #{pid}
-    </select>
+    <delete id="deleteByPid">
+        DELETE FROM test_cases WHERE pid=#{pid}
+    </delete>
 
     <resultMap id="testCaseMap" type="TestCaseEntity">
         <id column="tid" property="tid"/>

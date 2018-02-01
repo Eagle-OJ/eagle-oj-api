@@ -9,9 +9,7 @@ import com.eagleoj.web.dao.TagProblemMapper;
 import com.eagleoj.web.dao.TagsMapper;
 import com.eagleoj.web.entity.ProblemEntity;
 import com.eagleoj.web.entity.TagProblemEntity;
-import com.eagleoj.web.service.ProblemService;
-import com.eagleoj.web.service.TagProblemService;
-import com.eagleoj.web.service.TagsService;
+import com.eagleoj.web.service.*;
 import com.eagleoj.web.service.async.AsyncTaskService;
 import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,18 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Autowired
     private AsyncTaskService asyncTaskService;
+
+    @Autowired
+    private SubmissionService submissionService;
+
+    @Autowired
+    private ContestProblemService contestProblemService;
+
+    @Autowired
+    private ProblemModeratorService problemModeratorService;
+
+    @Autowired
+    private TestCasesService testCasesService;
 
     @Transactional
     @Override
@@ -73,9 +83,7 @@ public class ProblemServiceImpl implements ProblemService {
         problemEntity.setStatus(0);
         problemEntity.setCreateTime(System.currentTimeMillis());
         boolean flag = problemMapper.save(problemEntity) == 1;
-        if (! flag) {
-            throw new WebErrorException("题目添加失败");
-        }
+        WebUtil.assertIsSuccess(flag, "题目添加失败");
         int pid = problemEntity.getPid();
 
         // 添加pid和tag之间的关联
@@ -84,6 +92,37 @@ public class ProblemServiceImpl implements ProblemService {
         }
         return pid;
     }
+
+    @Transactional
+    @Override
+    public void deleteProblem(int pid) {
+
+        // 检查题目是否有提交记录
+        int submissions = submissionService.countProblemSubmissions(pid);
+        if (submissions > 0) {
+            throw new WebErrorException("该题目已有人提交，无法删除");
+        }
+        // 检查题目是否有被比赛使用
+        int contestUsed = contestProblemService.countContestProblems(pid);
+        if (contestUsed > 0) {
+            throw new WebErrorException("该题目已被比赛调用，无法删除");
+        }
+
+        // 删除problem-tag
+        tagProblemService.deleteProblemTags(pid);
+        // 删除problem-moderator
+        if (problemModeratorService.countProblemModerators(pid) > 0) {
+            problemModeratorService.deleteModerators(pid);
+        }
+        // 删除problem-testCases
+        if (testCasesService.countProblemTestCases(pid) > 0) {
+            testCasesService.deleteProblemTestCases(pid);
+        }
+        // 删除problem
+        boolean flag = problemMapper.deleteByPid(pid) == 1;
+        WebUtil.assertIsSuccess(flag, "删除题目失败");
+    }
+
 
     @Transactional
     @Override

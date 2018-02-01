@@ -21,6 +21,10 @@
         UPDATE `group` SET name=#{data.name}, password=#{data.password} WHERE gid=#{gid}
     </update>
 
+    <delete id="deleteByGid">
+        DELETE FROM `group` WHERE gid=#{gid}
+    </delete>
+
     <resultMap id="groupMap" type="GroupEntity">
         <id column="gid" property="gid"/>
         <result column="owner" property="owner"/>

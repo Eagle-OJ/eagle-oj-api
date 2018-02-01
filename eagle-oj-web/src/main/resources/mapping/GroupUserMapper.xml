@@ -25,6 +25,10 @@
         WHERE uid=#{uid} ORDER BY finished_problems DESC
     </select>
 
+    <select id="countByGid" resultType="Integer">
+        SELECT count(*) FROM group_user WHERE gid=#{gid}
+    </select>
+
     <update id="updateByGidUid">
         UPDATE group_user
         <set>
@@ -60,8 +64,12 @@
         SELECT * FROM group_user WHERE gid=#{gid}
     </select>
 
-    <delete id="deleteGroupMemberByGidUid">
+    <delete id="deleteByGidUid">
         DELETE FROM group_user WHERE gid=#{gid} AND uid=#{uid}
+    </delete>
+
+    <delete id="deleteByGid">
+        DELETE FROM group_user WHERE gid=#{gid}
     </delete>
 
     <resultMap id="groupUserMap" type="GroupUserEntity">

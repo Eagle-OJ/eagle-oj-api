@@ -8,6 +8,10 @@
         INSERT INTO problem_moderator VALUES (#{pid}, #{uid})
     </insert>
 
+    <select id="countByPid" resultType="Integer">
+        SELECT count(*) FROM problem_moderator WHERE pid=#{pid}
+    </select>
+
     <select id="getByPidUid" resultMap="problemModeratorMap">
         SELECT * FROM problem_moderator WHERE pid=#{pid} AND uid=#{uid}
     </select>
@@ -20,6 +24,10 @@
 
     <delete id="deleteByPidUid">
         DELETE FROM problem_moderator WHERE pid=#{pid} AND uid=#{uid}
+    </delete>
+
+    <delete id="deleteByPid">
+        DELETE FROM problem_moderator WHERE pid = #{pid}
     </delete>
 
     <resultMap id="problemModeratorMap" type="ProblemModeratorEntity">

@@ -14,5 +14,7 @@ public interface SubmissionService {
     void save(int owner, int pid, int cid, int gid, int sourceCode, LanguageEnum lang, double time, int memory,
              ResultEnum status);
 
-    List<Map<String, Object>> listSubmissions(int owner, int pid, int cid, int gid);
+    int countProblemSubmissions(int pid);
+
+    List<Map<String, Object>> listSubmissions(int owner, int pid, int cid);
 }

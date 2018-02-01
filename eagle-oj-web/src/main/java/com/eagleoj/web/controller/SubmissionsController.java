@@ -35,12 +35,11 @@ public class SubmissionsController {
     @GetMapping
     public ResponseEntity getUserSubmissions(@RequestParam("cid") int cid,
                                              @RequestParam("pid") int pid,
-                                             @RequestParam("gid") int gid,
                                              @RequestParam("page") int page,
                                              @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
         int owner = SessionHelper.get().getUid();
         return new ResponseEntity(WebUtil.generatePageData(pager,
-                submissionService.listSubmissions(owner, pid, cid, gid)));
+                submissionService.listSubmissions(owner, pid, cid)));
     }
 }

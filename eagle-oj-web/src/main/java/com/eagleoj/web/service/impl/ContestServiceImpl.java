@@ -1,17 +1,20 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ContestMapper;
 import com.eagleoj.web.data.status.ContestStatus;
 import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.postman.TaskQueue;
 import com.eagleoj.web.postman.task.CloseNormalContestTask;
 import com.eagleoj.web.postman.task.CloseOfficialContestTask;
+import com.eagleoj.web.service.ContestProblemService;
 import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.ContestUserService;
 import com.eagleoj.web.service.async.AsyncTaskService;
 import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -28,6 +31,12 @@ public class ContestServiceImpl implements ContestService {
 
     @Autowired
     private AsyncTaskService asyncTaskService;
+
+    @Autowired
+    private ContestUserService contestUserService;
+
+    @Autowired
+    private ContestProblemService contestProblemService;
 
     @Override
     public int saveContest(String name, int owner, int group, String slogan, String description,
@@ -51,6 +60,27 @@ public class ContestServiceImpl implements ContestService {
         boolean flag = contestMapper.save(contestEntity) == 1;
         WebUtil.assertIsSuccess(flag, "比赛创建失败");
         return contestEntity.getCid();
+    }
+
+    @Override
+    public int countGroupContests(int gid) {
+        return contestMapper.countByGid(gid);
+    }
+
+    @Transactional
+    @Override
+    public void deleteContest(int cid) {
+        int users = contestUserService.countContestUsers(cid);
+        if (users > 0) {
+            throw new WebErrorException("该比赛已经有人参加，无法删除");
+        }
+
+        if (contestProblemService.countContestProblems(cid) > 0) {
+            contestProblemService.deleteContestProblems(cid);
+        }
+
+        boolean flag = contestMapper.deleteByCid(cid) == 1;
+        WebUtil.assertIsSuccess(flag, "删除比赛失败");
     }
 
     @Override
@@ -78,6 +108,11 @@ public class ContestServiceImpl implements ContestService {
             checkContestValid(each);
         }
         return list;
+    }
+
+    @Override
+    public List<ContestEntity> listGroupContests(int gid) {
+        return contestMapper.listContestsByGid(gid);
     }
 
     @Override

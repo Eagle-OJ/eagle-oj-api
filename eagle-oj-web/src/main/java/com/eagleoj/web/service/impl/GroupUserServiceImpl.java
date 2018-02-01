@@ -37,6 +37,11 @@ public class GroupUserServiceImpl implements GroupUserService {
     }
 
     @Override
+    public int countGroupMembers(int gid) {
+        return groupUserMapper.countByGid(gid);
+    }
+
+    @Override
     public GroupUserEntity getGroupMember(int gid, int uid) {
         GroupUserEntity groupUserEntity = groupUserMapper.getByGidUid(gid, uid);
         WebUtil.assertNotNull(groupUserEntity, "你不在小组中");
@@ -75,8 +80,14 @@ public class GroupUserServiceImpl implements GroupUserService {
 
     @Override
     public void deleteGroupMember(int gid, int uid) {
-        boolean flag = groupUserMapper.deleteGroupMemberByGidUid(gid, uid) == 1;
+        boolean flag = groupUserMapper.deleteByGidUid(gid, uid) == 1;
         WebUtil.assertIsSuccess(flag, "删除组内用户失败");
+    }
+
+    @Override
+    public void deleteGroupMembers(int gid) {
+        boolean flag = groupUserMapper.deleteByGid(gid) > 0;
+        WebUtil.assertIsSuccess(flag, "删除组内所有用户失败");
     }
 
     @Override

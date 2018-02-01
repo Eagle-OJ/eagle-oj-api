@@ -11,11 +11,11 @@ public interface GroupService {
 
     int saveGroup(int owner, String name, String password);
 
+    void deleteGroup(int gid);
+
     GroupEntity getGroup(int gid);
 
     List<GroupEntity> listUserGroups(int owner);
-
-    List<ContestEntity> listGroupContests(int gid);
 
     boolean updateGroupByGid(int gid, String name, String password);
 }

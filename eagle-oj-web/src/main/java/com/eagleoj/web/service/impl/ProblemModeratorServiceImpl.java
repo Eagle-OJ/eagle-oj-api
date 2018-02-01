@@ -45,6 +45,11 @@ public class ProblemModeratorServiceImpl implements ProblemModeratorService {
     }
 
     @Override
+    public int countProblemModerators(int pid) {
+        return problemModeratorMapper.countByPid(pid);
+    }
+
+    @Override
     public List<Map<String, Object>> listProblemModerators(int pid) {
         return problemModeratorMapper.listModeratorsByPid(pid);
     }
@@ -53,6 +58,12 @@ public class ProblemModeratorServiceImpl implements ProblemModeratorService {
     public void deleteModerator(int pid, int uid) {
         boolean flag = problemModeratorMapper.deleteByPidUid(pid, uid) == 1;
         WebUtil.assertIsSuccess(flag, "删除用户失败");
+    }
+
+    @Override
+    public void deleteModerators(int pid) {
+        boolean flag = problemModeratorMapper.deleteByPid(pid) > 0;
+        WebUtil.assertIsSuccess(flag, "删除题目维护者失败");
     }
 
     @Override

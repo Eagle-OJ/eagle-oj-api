@@ -20,4 +20,6 @@ public interface TestCasesMapper {
     int deleteByTidPid(@Param("tid") int tid, @Param("pid") int pid);
 
     int countByPid(int pid);
+
+    int deleteByPid(int pid);
 }

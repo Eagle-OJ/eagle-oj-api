@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.controller.format.user.SendGroupUserMessageFormat;
 import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.postman.task.SendGroupUserMessageTask;
+import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.async.AsyncTaskService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -48,6 +49,9 @@ public class GroupController {
 
     @Autowired
     private AsyncTaskService asyncTaskService;
+
+    @Autowired
+    private ContestService contestService;
 
     @Autowired
     private TaskQueue messageQueue;
@@ -95,6 +99,16 @@ public class GroupController {
         return new ResponseEntity("小组创建成功", gid);
     }
 
+    @ApiOperation("删除小组")
+    @RequiresAuthentication
+    @DeleteMapping("/{gid}")
+    public ResponseEntity deleteGroup(@PathVariable int gid) {
+        GroupEntity groupEntity = groupService.getGroup(gid);
+        accessToEditGroup(groupEntity);
+        groupService.deleteGroup(gid);
+        return new ResponseEntity("小组解散成功");
+    }
+
     @ApiOperation("更新小组信息")
     @RequiresAuthentication
     @PutMapping("/{gid}")
@@ -128,7 +142,7 @@ public class GroupController {
     public ResponseEntity getGroupContests(@PathVariable int gid) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         accessToViewGroup(groupEntity);
-        return new ResponseEntity(groupService.listGroupContests(gid));
+        return new ResponseEntity(contestService.listGroupContests(gid));
     }
 
     @ApiOperation("加入小组")

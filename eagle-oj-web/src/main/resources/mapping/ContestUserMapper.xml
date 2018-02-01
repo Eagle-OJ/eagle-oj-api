@@ -22,6 +22,10 @@
         ORDER BY join_time DESC
     </select>
 
+    <select id="countByCid" resultType="Integer">
+        SELECT count(*) FROM contest_user WHERE cid=#{cid}
+    </select>
+
     <update id="updateByCidUid">
         UPDATE contest_user
         <set>

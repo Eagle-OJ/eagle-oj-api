@@ -4,128 +4,133 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eagleoj.web.dao.ContestMapper">
 
-        <insert id="save" parameterType="ContestEntity" useGeneratedKeys="true" keyProperty="cid">
-            INSERT INTO `contest`(`name`,`owner`,`group`,`slogan`,`description`,`start_time`,
-            `end_time`,`total_time`,`password`,`official`,`type`,`status`,`create_time`)
-            VALUES (#{name},#{owner},#{group},#{slogan},#{description},#{startTime},
-            #{endTime},#{totalTime},#{password},#{official},#{type},#{status},#{createTime})
-        </insert>
 
-        <select id="listValid" resultType="HashMap">
-            SELECT
-                contest.*,
-                user.nickname
-            FROM `contest`
-                LEFT JOIN user ON contest.owner=user.uid
-            WHERE status!=0 ORDER BY status ASC, official DESC, create_time DESC
-        </select>
+    <insert id="save" parameterType="ContestEntity" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO `contest`(`name`,`owner`,`group`,`slogan`,`description`,`start_time`,
+        `end_time`,`total_time`,`password`,`official`,`type`,`status`,`create_time`)
+        VALUES (#{name},#{owner},#{group},#{slogan},#{description},#{startTime},
+        #{endTime},#{totalTime},#{password},#{official},#{type},#{status},#{createTime})
+    </insert>
 
-        <select id="listContests" resultType="HashMap">
-            SELECT
-                contest.*,
-                user.nickname
-            FROM contest LEFT JOIN user ON contest.owner=user.uid
-            <if test="! isAll">
-                WHERE status != 0 AND `group`=0
+    <select id="countByGid" resultType="Integer">
+        SELECT count(*) FROM contest WHERE `group`=#{gid}
+    </select>
+
+    <select id="listValid" resultType="HashMap">
+        SELECT
+            contest.*,
+            user.nickname
+        FROM `contest`
+            LEFT JOIN user ON contest.owner=user.uid
+        WHERE status!=0 ORDER BY status ASC, official DESC, create_time DESC
+    </select>
+
+    <select id="listContests" resultType="HashMap">
+        SELECT
+            contest.*,
+            user.nickname
+        FROM contest LEFT JOIN user ON contest.owner=user.uid
+        <if test="! isAll">
+            WHERE status != 0 AND `group`=0
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listContestsByGid" resultMap="contestMap">
+        SELECT * FROM contest WHERE status != 0 AND `group`=#{group}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listByUid" resultMap="contestMap">
+        SELECT * FROM contest WHERE owner = #{uid} ORDER BY create_time DESC
+    </select>
+
+    <delete id="deleteByCid">
+        DELETE FROM `contest` WHERE `cid` = #{cid}
+    </delete>
+
+    <update id="updateByCid">
+        UPDATE contest
+        <set>
+            <if test="data.name != null">
+                name = #{data.name},
             </if>
-            ORDER BY create_time DESC
-        </select>
+            <if test="data.owner != null">
+                owner = #{data.owner},
+            </if>
+            <if test="data.group != null">
+                group = #{data.group},
+            </if>
+            <if test="data.slogan != null">
+                slogan = #{data.slogan},
+            </if>
+            <if test="data.description != null">
+                description = #{data.description},
+            </if>
+            <if test="data.startTime != null">
+                start_time = #{data.startTime},
+            </if>
+            <if test="data.endTime != null">
+                end_time = #{data.endTime},
+            </if>
+            <if test="data.totalTime != null">
+                total_time = #{data.totalTime},
+            </if>
+            <if test="data.password != null">
+                password = #{data.password},
+            </if>
+            <if test="data.official != null">
+                official = #{data.official},
+            </if>
+            <if test="data.type != null">
+                type = #{data.type},
+            </if>
+            <if test="data.status != null">
+                status = #{data.status},
+            </if>
+            <if test="data.createTime != null">
+                create_time = #{data.createTime},
+            </if>
+        </set>
+        WHERE cid = #{cid}
+    </update>
 
-        <select id="listContestsByGid" resultMap="contestMap">
-            SELECT * FROM contest WHERE status != 0 AND `group`=#{group}
-            ORDER BY create_time DESC
-        </select>
+    <update id="updateDescriptionByCid">
+        UPDATE `contest` SET
+            `name` = #{data.name},
+            `slogan` = #{data.slogan},
+            `description` = #{data.description},
+            `start_time` = #{data.startTime},
+            `end_time` = #{data.endTime},
+            `total_time` = #{data.totalTime},
+            `password` = #{data.password},
+            `type` = #{data.type},
+            `status`=0
+        WHERE `cid` = #{cid}
+    </update>
 
-        <select id="listByUid" resultMap="contestMap">
-            SELECT * FROM contest WHERE owner = #{uid} ORDER BY create_time DESC
-        </select>
+    <update id="updateStatusByCid">
+        UPDATE contest SET status=#{status} WHERE cid=#{cid}
+    </update>
 
-        <delete id="deleteByCid">
-            DELETE FROM `contest` WHERE `cid` = #{cid}
-        </delete>
+    <select id="getByCid" resultMap="contestMap">
+        SELECT * FROM `contest` WHERE `cid` = #{cid}
+    </select>
 
-        <update id="updateByCid">
-            UPDATE contest
-            <set>
-                <if test="data.name != null">
-                    name = #{data.name},
-                </if>
-                <if test="data.owner != null">
-                    owner = #{data.owner},
-                </if>
-                <if test="data.group != null">
-                    group = #{data.group},
-                </if>
-                <if test="data.slogan != null">
-                    slogan = #{data.slogan},
-                </if>
-                <if test="data.description != null">
-                    description = #{data.description},
-                </if>
-                <if test="data.startTime != null">
-                    start_time = #{data.startTime},
-                </if>
-                <if test="data.endTime != null">
-                    end_time = #{data.endTime},
-                </if>
-                <if test="data.totalTime != null">
-                    total_time = #{data.totalTime},
-                </if>
-                <if test="data.password != null">
-                    password = #{data.password},
-                </if>
-                <if test="data.official != null">
-                    official = #{data.official},
-                </if>
-                <if test="data.type != null">
-                    type = #{data.type},
-                </if>
-                <if test="data.status != null">
-                    status = #{data.status},
-                </if>
-                <if test="data.createTime != null">
-                    create_time = #{data.createTime},
-                </if>
-            </set>
-            WHERE cid = #{cid}
-        </update>
-
-        <update id="updateDescriptionByCid">
-            UPDATE `contest` SET
-                `name` = #{data.name},
-                `slogan` = #{data.slogan},
-                `description` = #{data.description},
-                `start_time` = #{data.startTime},
-                `end_time` = #{data.endTime},
-                `total_time` = #{data.totalTime},
-                `password` = #{data.password},
-                `type` = #{data.type},
-                `status`=0
-            WHERE `cid` = #{cid}
-        </update>
-
-        <update id="updateStatusByCid">
-            UPDATE contest SET status=#{status} WHERE cid=#{cid}
-        </update>
-
-        <select id="getByCid" resultMap="contestMap">
-            SELECT * FROM `contest` WHERE `cid` = #{cid}
-        </select>
-
-        <resultMap id="contestMap" type="ContestEntity">
-            <id column="cid" property="cid"/>
-            <result column="name" property="name"/>
-            <result column="owner" property="owner"/>
-            <result column="group" property="group"/>
-            <result column="slogan" property="slogan"/>
-            <result column="description" property="description"/>
-            <result column="start_time" property="startTime"/>
-            <result column="end_time" property="endTime"/>
-            <result column="total_time" property="totalTime"/>
-            <result column="password" property="password"/>
-            <result column="official" property="official"/>
-            <result column="type" property="type"/>
-            <result column="status" property="status"/>
-            <result column="create_time" property="createTime"/>
-        </resultMap>
+    <resultMap id="contestMap" type="ContestEntity">
+        <id column="cid" property="cid"/>
+        <result column="name" property="name"/>
+        <result column="owner" property="owner"/>
+        <result column="group" property="group"/>
+        <result column="slogan" property="slogan"/>
+        <result column="description" property="description"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="total_time" property="totalTime"/>
+        <result column="password" property="password"/>
+        <result column="official" property="official"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
 </mapper>

@@ -33,6 +33,12 @@ public class ContestProblemServiceImpl implements ContestProblemService {
     }
 
     @Override
+    public int countContestProblems(int pid) {
+        return contestProblemMapper.countByPid(pid);
+    }
+
+
+    @Override
     public List<Map<String, Object>> listContestProblems(int cid) {
         return contestProblemMapper.listByCid(cid);
     }
@@ -87,15 +93,21 @@ public class ContestProblemServiceImpl implements ContestProblemService {
     }
 
     @Override
-    public boolean updateContestProblemTimes(int cid, int pid, ContestProblemEntity entity) {
+    public void updateContestProblemTimes(int cid, int pid, ContestProblemEntity entity) {
         entity.setCid(cid);
         entity.setPid(pid);
-        return contestProblemMapper.updateByCidPid(cid, pid, entity) == 1;
+        boolean flag = contestProblemMapper.updateByCidPid(cid, pid, entity) == 1;
+        WebUtil.assertIsSuccess(flag, "更新比赛题目次数失败");
     }
 
     @Override
     public void deleteContestProblem(int cid, int pid) {
         boolean flag = contestProblemMapper.deleteByCidPid(cid, pid) == 1;
+        WebUtil.assertIsSuccess(flag, "删除比赛题目失败");
+    }
+
+    public void deleteContestProblems(int cid) {
+        boolean flag = contestProblemMapper.deleteByCid(cid) > 0;
         WebUtil.assertIsSuccess(flag, "删除比赛题目失败");
     }
 

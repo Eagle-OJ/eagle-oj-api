@@ -1,14 +1,18 @@
 package com.eagleoj.web.service.impl;
 
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ContestMapper;
 import com.eagleoj.web.dao.GroupMapper;
 import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.GroupEntity;
+import com.eagleoj.web.service.ContestService;
 import com.eagleoj.web.service.GroupService;
+import com.eagleoj.web.service.GroupUserService;
 import com.eagleoj.web.util.WebUtil;
 import com.github.pagehelper.PageRowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +26,10 @@ public class GroupServiceImpl implements GroupService {
     private GroupMapper groupMapper;
 
     @Autowired
-    private ContestMapper contestMapper;
+    private ContestService contestService;
+
+    @Autowired
+    private GroupUserService groupUserService;
 
     @Override
     public int saveGroup(int owner, String name, String password) {
@@ -36,6 +43,21 @@ public class GroupServiceImpl implements GroupService {
         return groupEntity.getGid();
     }
 
+    @Transactional
+    @Override
+    public void deleteGroup(int gid) {
+        int contests = contestService.countGroupContests(gid);
+        if (contests != 0) {
+            throw new WebErrorException("小组内已有比赛开设，无法解散小组");
+        }
+
+        if (groupUserService.countGroupMembers(gid) > 0) {
+            groupUserService.deleteGroupMembers(gid);
+        }
+        boolean flag = groupMapper.deleteByGid(gid) == 1;
+        WebUtil.assertIsSuccess(flag, "小组解散失败");
+    }
+
     @Override
     public GroupEntity getGroup(int gid) {
         GroupEntity groupEntity = groupMapper.getGroupByGid(gid);
@@ -46,11 +68,6 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupEntity> listUserGroups(int owner) {
         return groupMapper.listGroupsByOwner(owner);
-    }
-
-    @Override
-    public List<ContestEntity> listGroupContests(int gid) {
-        return contestMapper.listContestsByGid(gid);
     }
 
     @Override
