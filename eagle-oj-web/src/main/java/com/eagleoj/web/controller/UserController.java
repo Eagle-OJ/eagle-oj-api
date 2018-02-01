@@ -3,6 +3,7 @@ package com.eagleoj.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.controller.exception.WebErrorException;
+import com.eagleoj.web.controller.format.user.UpdateUserPasswordFormat;
 import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -48,9 +49,6 @@ public class UserController {
     @Autowired
     private ContestUserService contestUserService;
 
-    @Autowired
-    private FileUtil fileUtil;
-
     @ApiOperation("获取用户的所有信息")
     @GetMapping("/info")
     @RequiresAuthentication
@@ -68,6 +66,15 @@ public class UserController {
         int uid = SessionHelper.get().getUid();
         userService.updateUserProfile(uid, format.getNickname(), format.getMotto(), format.getGender());
         return new ResponseEntity("更新成功");
+    }
+
+    @ApiOperation("更新用户的密码")
+    @RequiresAuthentication
+    @PutMapping("/password")
+    public ResponseEntity updateUserPassword(@Valid @RequestBody UpdateUserPasswordFormat format) {
+        int uid = SessionHelper.get().getUid();
+        userService.updateUserPassword(uid, format.getOriginPassword(), format.getNewPassword());
+        return new ResponseEntity("密码更新成功");
     }
 
     @ApiOperation("获取用户参加的比赛")

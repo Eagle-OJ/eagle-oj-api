@@ -25,4 +25,6 @@ public interface UserService {
     void updateUser(int uid, UserEntity userEntity);
 
     void uploadUserAvatar(Integer uid, MultipartFile file);
+
+    void updateUserPassword(int uid, String oldPassword, String newPassword);
 }

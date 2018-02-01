@@ -90,11 +90,25 @@ public class UserServiceImpl implements UserService {
             int aid = attachmentService.save(uid, filePath);
             UserEntity userEntity = new UserEntity();
             userEntity.setAvatar(aid);
-            userMapper.updateByUid(uid, userEntity);
+            boolean flag = userMapper.updateByUid(uid, userEntity) == 1;
+            WebUtil.assertIsSuccess(flag, "头像更新失败");
         } catch (Exception e) {
             throw new WebErrorException("头像更新失败");
         }
 
+    }
+
+    @Override
+    public void updateUserPassword(int uid, String oldPassword, String newPassword) {
+        UserEntity userEntity = getUserByUid(uid);
+        if (! userEntity.getPassword().equals(new Md5Hash(oldPassword).toString())) {
+            throw new WebErrorException("原密码错误");
+        }
+
+        UserEntity newUserEntity = new UserEntity();
+        newUserEntity.setPassword(new Md5Hash(newPassword).toString());
+        boolean flag = userMapper.updateByUid(uid, newUserEntity) == 1;
+        WebUtil.assertIsSuccess(flag, "密码更新失败");
     }
 
     private int save(String email, String nickname, String password) {
