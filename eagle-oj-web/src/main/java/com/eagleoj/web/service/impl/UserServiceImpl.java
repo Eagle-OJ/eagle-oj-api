@@ -34,9 +34,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AttachmentService attachmentService;
 
-    @Value("${eagle-oj.default.avatar}")
-    private String DEFAULT_AVATAR;
-
     @Override
     public int register(String email, String nickname, String password) throws WebErrorException {
         UserEntity userEntity = getUserByEmail(email);

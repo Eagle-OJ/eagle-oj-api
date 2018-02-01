@@ -41,10 +41,10 @@ public class JudgeRunner {
 
     private JudgeService judgeService;
 
-    private String JUDGE_URL;
+    private SettingService settingService;
 
     public JudgeRunner(JudgeQueue queue, SettingService settingService, JudgeService judgeService) {
-        JUDGE_URL = settingService.getSystemConfig().getJudgerUrl();
+        this.settingService = settingService;
         this.judgeService = judgeService;
         new Thread(() -> {
             while (true) {
@@ -57,6 +57,10 @@ public class JudgeRunner {
                 }
             }
         }).start();
+    }
+
+    private String getJudgerUrl() {
+        return settingService.getSystemConfig().getJudgerUrl();
     }
 
 
@@ -86,10 +90,15 @@ public class JudgeRunner {
                 testCases.add(requestEntity);
             }
             RequestEntity requestEntity = new RequestEntity(lang, sourceCode, time, memory, testCases);
-            Judger judger = new Judger(JUDGE_URL, requestEntity, new Eagle());
+            String judgerUrl = getJudgerUrl();
+            if (judgerUrl == null) {
+                setJudgeFailed();
+                LOGGER.error("判卷地址不得为空");
+            }
+            Judger judger = new Judger(judgerUrl, requestEntity, new Eagle());
             ResponseEntity responseEntity = judger.judge();
             if (responseEntity.getResult() == ResultEnum.SE) {
-                throw new RuntimeException("判卷失败");
+                setJudgeFailed();
             }
             judgeResult.setResponse(responseEntity);
             save();
@@ -115,5 +124,8 @@ public class JudgeRunner {
             judgeResult.setStatus(JudgeStatus.Finished);
         }
 
+        private void setJudgeFailed() {
+            judgeResult.setStatus(JudgeStatus.Error);
+        }
     }
 }

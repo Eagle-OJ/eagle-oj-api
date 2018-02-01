@@ -15,5 +15,7 @@ public interface TagProblemService {
 
     void deleteProblemTags(int pid);
 
+    int countTagProblems(int tid);
+
     List<TagProblemEntity> getProblemTags(int pid);
 }

@@ -9,7 +9,17 @@ import java.util.List;
  **/
 public interface TagsService {
 
+    TagEntity getByName(String name);
+
+    void save(String name);
+
+    void deleteTag(int tid);
+
+    void updateTag(int tid, String name);
+
     List<TagEntity> listAll();
 
-    boolean addUsedTimes(int tid);
+    void addUsedTimes(int tid);
+
+    void updateTagName(int tid, String name);
 }

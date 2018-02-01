@@ -60,9 +60,8 @@ public class ProblemServiceImpl implements ProblemService {
         List<Integer> tagList = new ArrayList<>(tags.size());
         for(int i=0; i<tags.size(); i++) {
             int tid = tags.getInteger(i);
-            if (tagsService.addUsedTimes(tid)) {
-                tagList.add(tid);
-            }
+            tagsService.addUsedTimes(tid);
+            tagList.add(tid);
         }
         if (tagList.size() == 0) {
             throw new WebErrorException("标签非法");
@@ -139,9 +138,8 @@ public class ProblemServiceImpl implements ProblemService {
                 if (originTags.contains(tid)) {
                     finalTags.add(tid);
                 } else {
-                    if (tagsService.addUsedTimes(tid)) {
-                        finalTags.add(tid);
-                    }
+                    tagsService.addUsedTimes(tid);
+                    finalTags.add(tid);
                 }
             }
 

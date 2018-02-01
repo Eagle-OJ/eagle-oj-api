@@ -15,4 +15,6 @@ public interface TagProblemMapper {
     List<TagProblemEntity> listByPid(int pid);
 
     int deleteByPid(int pid);
+
+    int countByTid(int tid);
 }

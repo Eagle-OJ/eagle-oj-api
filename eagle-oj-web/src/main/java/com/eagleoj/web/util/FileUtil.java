@@ -29,13 +29,11 @@ public class FileUtil {
 
     private OSSClient ossClient;
 
-    public FileUtil(SettingService settingService) {
-        OSSConfig ossConfig = settingService.getSystemConfig().getOssConfig();
-        ossClient = new OSSClient(ossConfig.getEND_POINT(),
-                ossConfig.getACCESS_KEY(), ossConfig.getSECRET_KEY());
-        BUCKET = ossConfig.getBUCKET();
-    }
+    private SettingService settingService;
 
+    public FileUtil(SettingService settingService) {
+        this.settingService = settingService;
+    }
 
     public String uploadCode(LanguageEnum lang, String code) {
         InputStream is = new ByteArrayInputStream(code.getBytes());
@@ -58,7 +56,7 @@ public class FileUtil {
         metadata.setContentType("text/plain");
         String filePath = generateFilePath(fileName.toString());
         try {
-            ossClient.putObject(BUCKET, filePath, is, metadata);
+            getOSSClient().putObject(BUCKET, filePath, is, metadata);
             return "/"+filePath;
         } catch (Exception e) {
 
@@ -69,8 +67,20 @@ public class FileUtil {
     public String uploadAvatar(InputStream is, String postfix) throws Exception {
         String file = UUID.randomUUID().toString()+"."+postfix;
         String filePath = generateFilePath(file);
-        ossClient.putObject(BUCKET, filePath, is);
+        getOSSClient().putObject(BUCKET, filePath, is);
         return "/"+filePath;
+    }
+
+    private OSSClient getOSSClient() {
+        if (ossClient == null) {
+            OSSConfig ossConfig = settingService.getSystemConfig().getOssConfig();
+            BUCKET = ossConfig.getBUCKET();
+            ossClient = new OSSClient(ossConfig.getEND_POINT(),
+                    ossConfig.getACCESS_KEY(), ossConfig.getSECRET_KEY());
+            return ossClient;
+        } else {
+            return ossClient;
+        }
     }
 
     private String generateFilePath(String fileName) {

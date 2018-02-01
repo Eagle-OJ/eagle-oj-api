@@ -1,6 +1,7 @@
 package com.eagleoj.web.dao;
 
 import com.eagleoj.web.entity.TagEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +11,14 @@ import java.util.List;
  **/
 @Repository
 public interface TagsMapper {
+
+    int save(String name);
+
+    TagEntity getByName(String name);
+
+    int deleteByTid(int tid);
+
     List<TagEntity> listAll();
 
-    int addUsedTimesByTid(int tid);
+    int updateByTid(@Param("tid") int tid, @Param("data") TagEntity data);
 }

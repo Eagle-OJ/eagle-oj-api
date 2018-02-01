@@ -28,6 +28,9 @@ public class UpdateSettingFormat {
     @NotNull
     private String url;
 
+    @NotNull
+    private String judgerUrl;
+
     public String getTitle() {
         return title;
     }
@@ -74,5 +77,13 @@ public class UpdateSettingFormat {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getJudgerUrl() {
+        return judgerUrl;
+    }
+
+    public void setJudgerUrl(String judgerUrl) {
+        this.judgerUrl = judgerUrl;
     }
 }

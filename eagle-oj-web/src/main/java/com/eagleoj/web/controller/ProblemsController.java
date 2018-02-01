@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import com.eagleoj.web.entity.ResponseEntity;
@@ -82,7 +83,7 @@ public class ProblemsController {
 
     @ApiOperation("获取待审核的题目列表")
     @RequiresAuthentication
-    @RequiresRoles({"8", "9"})
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @GetMapping("/auditing")
     public ResponseEntity getAuditingProblems(@RequestParam("page") int page,
                                               @RequestParam("page_size") int pageSize) {

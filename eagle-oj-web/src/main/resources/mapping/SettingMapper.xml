@@ -9,7 +9,7 @@
     </select>
 
     <update id="updateByKey">
-        UPDATE setting SET value=${value} WHERE `key`=${key}
+        UPDATE setting SET value=#{value} WHERE `key`=#{key}
     </update>
 
     <insert id="batchSave">

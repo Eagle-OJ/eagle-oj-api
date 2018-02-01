@@ -38,6 +38,11 @@ public class TagProblemServiceImpl implements TagProblemService {
     }
 
     @Override
+    public int countTagProblems(int tid) {
+        return tagProblemMapper.countByTid(tid);
+    }
+
+    @Override
     public List<TagProblemEntity> getProblemTags(int pid) {
         return tagProblemMapper.listByPid(pid);
     }

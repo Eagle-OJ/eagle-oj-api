@@ -4,13 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.judge.LanguageEnum;
 import com.eagleoj.web.config.OSSConfig;
 import com.eagleoj.web.config.SystemConfig;
+import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.SettingMapper;
 import com.eagleoj.web.dao.UserMapper;
 import com.eagleoj.web.entity.SettingEntity;
 import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.service.SettingService;
+import com.eagleoj.web.util.WebUtil;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,10 +48,11 @@ public class SettingServiceImpl implements SettingService {
         return settingMapper.listAll();
     }
 
+    @Transactional
     @Override
-    public boolean installWeb(String email, String nickname, String password,
+    public void installWeb(String email, String nickname, String password,
                               String title, String accessKey, String secretKey,
-                              String endPoint, String bucket, String url) {
+                              String endPoint, String bucket, String url, String judgerUrl) {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
         userEntity.setNickname(nickname);
@@ -57,9 +61,9 @@ public class SettingServiceImpl implements SettingService {
         userEntity.setUid(1);
         userEntity.setRole(9);
         userEntity.setRegisterTime(System.currentTimeMillis());
-        boolean res1 = userMapper.save(userEntity) == 1;
+        boolean res1 = userMapper.saveRoot(userEntity) == 1;
         if (! res1) {
-            return false;
+            throw new WebErrorException("管理员注册失败");
         }
         List<SettingEntity> list = new ArrayList<>();
         SettingEntity setting1 = new SettingEntity("title", title);
@@ -68,18 +72,22 @@ public class SettingServiceImpl implements SettingService {
         SettingEntity setting4 = new SettingEntity("oss_end_point", endPoint);
         SettingEntity setting5 = new SettingEntity("oss_bucket", bucket);
         SettingEntity setting6 = new SettingEntity("oss_url", url);
+        SettingEntity setting7 = new SettingEntity("judger_url", judgerUrl);
         list.add(setting1);
         list.add(setting2);
         list.add(setting3);
         list.add(setting4);
         list.add(setting5);
         list.add(setting6);
-        return settingMapper.batchSave(list) > 0;
+        list.add(setting7);
+        boolean flag = settingMapper.batchSave(list) > 0;
+        WebUtil.assertIsSuccess(flag, "网站安装失败");
     }
 
+    @Transactional
     @Override
-    public boolean updateSetting(String title, String accessKey, String secretKey,
-                                 String endPoint, String bucket, String url) {
+    public void updateSetting(String title, String accessKey, String secretKey,
+                                 String endPoint, String bucket, String url, String judgerUrl) {
         // todo 待优化
         boolean res1 = settingMapper.updateByKey("title" , title) == 1;
         boolean res2 = settingMapper.updateByKey("oss_access_key", accessKey) == 1;
@@ -87,7 +95,8 @@ public class SettingServiceImpl implements SettingService {
         boolean res4 = settingMapper.updateByKey("oss_end_point", endPoint) == 1;
         boolean res5 = settingMapper.updateByKey("oss_bucket", bucket) == 1;
         boolean res6 = settingMapper.updateByKey("oss_url", url) == 1;
-        return res1 && res2 && res3 && res4 && res5 && res6;
+        boolean res7 = settingMapper.updateByKey("judger_url", judgerUrl) == 1;
+        WebUtil.assertIsSuccess(res1 && res2 && res3 && res4 && res5 && res6 && res7, "网站配置更新失败");
     }
 
     @Override
@@ -129,7 +138,7 @@ public class SettingServiceImpl implements SettingService {
             case "title":
                 systemConfig.setTitle(entity.getValue());
                 break;
-            case "judge_url":
+            case "judger_url":
                 systemConfig.setJudgerUrl(entity.getValue());
                 break;
             case "oss_access_key":

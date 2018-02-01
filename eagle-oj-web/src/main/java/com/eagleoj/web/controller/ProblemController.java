@@ -14,10 +14,12 @@ import com.eagleoj.web.postman.task.SendProblemAcceptedMessageTask;
 import com.eagleoj.web.postman.task.SendProblemRefusedMessageTask;
 import com.eagleoj.web.service.ProblemModeratorService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import com.eagleoj.web.entity.*;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.*;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -247,6 +249,7 @@ public class ProblemController {
 
     @ApiOperation("题目是否审核通过")
     @RequiresAuthentication
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @PostMapping("/{pid}/auditing")
     public ResponseEntity problemAuditing(@PathVariable int pid,
                                           @RequestBody @Valid ProblemAuditingFormat format) {

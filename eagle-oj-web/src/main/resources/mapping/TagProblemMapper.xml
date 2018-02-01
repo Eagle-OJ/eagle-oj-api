@@ -8,6 +8,10 @@
         INSERT INTO tag_problem VALUES (#{tid}, #{pid})
     </insert>
 
+    <select id="countByTid" resultType="Integer">
+        SELECT count(*) FROM tag_problem WHERE tid=#{tid}
+    </select>
+
     <select id="listByPid" resultMap="tagProblemMap">
         SELECT * FROM tag_problem WHERE pid = #{pid}
     </select>

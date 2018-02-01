@@ -62,11 +62,10 @@ public class SettingController {
             throw new WebErrorException("系统已经配置过了");
         }
 
-        if (! settingService.installWeb(format.getEmail(), format.getNickname(), format.getPassword(),
+        settingService.installWeb(format.getEmail(), format.getNickname(), format.getPassword(),
                 format.getTitle(), format.getAccessKey(), format.getSecretKey(), format.getEndPoint(),
-                format.getBucket(), format.getUrl())) {
-            throw new WebErrorException("网站安装失败");
-        }
+                format.getBucket(), format.getUrl(), format.getJudgerUrl());
+        settingService.reloadSetting();
         return new ResponseEntity("安装成功");
     }
 
@@ -74,10 +73,8 @@ public class SettingController {
     @RequiresRoles("9")
     @PutMapping
     public ResponseEntity updateSetting(@RequestBody @Valid UpdateSettingFormat format) {
-        if (! settingService.updateSetting(format.getTitle(), format.getAccessKey(), format.getSecretKey(),
-                format.getEndPoint(), format.getBucket(), format.getUrl())) {
-            throw new WebErrorException("网站配置更新失败");
-        }
+        settingService.updateSetting(format.getTitle(), format.getAccessKey(), format.getSecretKey(),
+                format.getEndPoint(), format.getBucket(), format.getUrl(), format.getJudgerUrl());
         settingService.reloadSetting();
         return new ResponseEntity("网站配置更新成功，刷新网页后生效");
     }
