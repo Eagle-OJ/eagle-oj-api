@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserEntity> listAll() {
+        return userMapper.listAll();
+    }
+
+    @Override
     public void updateUserProfile(Integer uid, String nickname, String motto, Integer gender) throws WebErrorException {
         UserEntity userEntity = new UserEntity();
         userEntity.setNickname(nickname);

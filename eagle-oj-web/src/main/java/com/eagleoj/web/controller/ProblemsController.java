@@ -81,6 +81,16 @@ public class ProblemsController {
         return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listProblemsForContest(uid)));
     }
 
+    @ApiOperation("获取所有题目")
+    @RequiresAuthentication
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
+    @GetMapping("/all")
+    public ResponseEntity getAllProblems(@RequestParam("page") int page,
+                                              @RequestParam("page_size") int pageSize) {
+        Page pager = PageHelper.startPage(page, pageSize);
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listAllProblems()));
+    }
+
     @ApiOperation("获取待审核的题目列表")
     @RequiresAuthentication
     @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)

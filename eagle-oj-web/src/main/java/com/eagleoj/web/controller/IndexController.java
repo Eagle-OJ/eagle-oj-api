@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.index.IndexLoginFormat;
 import com.eagleoj.web.controller.format.index.IndexRegisterFormat;
-import com.eagleoj.web.service.SettingService;
+import com.eagleoj.web.setting.SettingKeyMapper;
+import com.eagleoj.web.setting.SettingService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.ehcache.Cache;
@@ -76,7 +77,7 @@ public class IndexController {
     public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {
         AttachmentEntity entity = attachmentService.getAvatar(aid);
-        String OSS_URL = settingService.getSystemConfig().getOssConfig().getURL();
+        String OSS_URL = settingService.getSetting(SettingKeyMapper.OSS_URL);
         response.sendRedirect(OSS_URL+entity.getUrl());
     }
 

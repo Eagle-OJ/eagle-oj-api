@@ -25,8 +25,7 @@ public interface UserMapper {
 
     UserEntity getByEmailPassword(@Param("email") String email, @Param("password") String password);
 
-    // todo
-    List<Map<String, Object>> listModeratorsInUidList(List<Integer> uidList);
+    List<UserEntity> listAll();
 
     int updateByUid(@Param("uid") int uid, @Param("data") UserEntity data);
 }

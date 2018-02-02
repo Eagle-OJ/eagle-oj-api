@@ -19,10 +19,6 @@
         FROM tag_problem LEFT JOIN tags ON tag_problem.tid = tags.tid WHERE tag_problem.pid = #{pid}
     </select>
 
-    <select id="listAll" resultMap="problemResultMap">
-        SELECT * FROM `problem`
-    </select>
-
     <select id="listShared" resultType="HashMap" parameterType="HashMap">
         SELECT
             problem.pid,
@@ -58,6 +54,10 @@
         SELECT * FROM `problem` WHERE owner=#{uid} ORDER BY create_time DESC
     </select>
 
+    <select id="listAll" resultMap="problemResultMap">
+        SELECT * FROM problem ORDER BY create_time DESC
+    </select>
+
     <update id="updateByPid">
         UPDATE problem
         <set>
@@ -81,32 +81,6 @@
             <if test="data.status != null">`status` = #{data.status},</if>
         </set>
         WHERE pid = #{pid}
-    </update>
-
-    <update id="updateDescriptionByPid" parameterType="ProblemEntity">
-        UPDATE `problem` SET `title`=#{data.title}, `description`=#{data.description},
-            `input_format`=#{data.inputFormat}, `output_format`=#{data.outputFormat},
-            `samples`=#{data.samples}, `difficult`=#{data.difficult}
-        WHERE `pid`=#{pid}
-    </update>
-
-    <update id="updateSettingByPid">
-        UPDATE problem SET lang=#{data.lang}, time=#{data.time}, memory=#{data.memory},
-            status=#{data.status} WHERE pid = #{pid}
-    </update>
-
-    <update id="updateTimesByPid">
-        UPDATE problem
-        <set>
-            <if test="data.submitTimes != null">submit_times = submit_times+1,</if>
-            <if test="data.usedTimes != null">used_times = used_times+1,</if>
-            <if test="data.ACTimes != null">ac_times = ac_times+1,</if>
-            <if test="data.WATimes != null">wa_times = wa_times+1,</if>
-            <if test="data.RTETimes != null">rte_times = rte_times+1,</if>
-            <if test="data.TLETimes != null">tle_times = tle_times+1,</if>
-            <if test="data.CETimes != null"> ce_times = ce_times+1,</if>
-        </set>
-        WHERE pid=#{pid}
     </update>
 
     <update id="refuseByPid">

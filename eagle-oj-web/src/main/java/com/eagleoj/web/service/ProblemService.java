@@ -37,4 +37,6 @@ public interface ProblemService {
 
     List<ProblemEntity> listProblemsForContest(int uid);
 
+    List<ProblemEntity> listAllProblems();
+
 }

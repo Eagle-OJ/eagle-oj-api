@@ -12,9 +12,9 @@ import com.eagleoj.web.entity.TestCaseEntity;
 import com.eagleoj.web.judger.JudgeQueue;
 import com.eagleoj.web.judger.JudgeResult;
 import com.eagleoj.web.judger.JudgeStatus;
+import com.eagleoj.web.judger.JudgerDispatcher;
 import com.eagleoj.web.judger.task.*;
 import com.eagleoj.web.service.JudgeService;
-import com.eagleoj.web.service.SettingService;
 import org.ehcache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,11 +41,13 @@ public class JudgeRunner {
 
     private JudgeService judgeService;
 
-    private SettingService settingService;
+    private JudgerDispatcher judgerDispatcher;
 
-    public JudgeRunner(JudgeQueue queue, SettingService settingService, JudgeService judgeService) {
-        this.settingService = settingService;
+    public JudgeRunner(JudgeQueue queue,
+                       JudgeService judgeService,
+                       JudgerDispatcher judgerDispatcher) {
         this.judgeService = judgeService;
+        this.judgerDispatcher = judgerDispatcher;
         new Thread(() -> {
             while (true) {
                 JudgeTask judgeTask = queue.take();
@@ -58,11 +60,6 @@ public class JudgeRunner {
             }
         }).start();
     }
-
-    private String getJudgerUrl() {
-        return settingService.getSystemConfig().getJudgerUrl();
-    }
-
 
     class Runner implements Runnable {
 
@@ -90,15 +87,18 @@ public class JudgeRunner {
                 testCases.add(requestEntity);
             }
             RequestEntity requestEntity = new RequestEntity(lang, sourceCode, time, memory, testCases);
-            String judgerUrl = getJudgerUrl();
+            String judgerUrl = judgerDispatcher.getJudgerUrl();
             if (judgerUrl == null) {
                 setJudgeFailed();
                 LOGGER.error("判卷地址不得为空");
+                return;
             }
             Judger judger = new Judger(judgerUrl, requestEntity, new Eagle());
             ResponseEntity responseEntity = judger.judge();
             if (responseEntity.getResult() == ResultEnum.SE) {
                 setJudgeFailed();
+                judgeResult.setResponse(responseEntity);
+                return;
             }
             judgeResult.setResponse(responseEntity);
             save();

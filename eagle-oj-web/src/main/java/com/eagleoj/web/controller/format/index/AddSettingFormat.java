@@ -41,10 +41,6 @@ public class AddSettingFormat {
     @NotNull
     private String url;
 
-    @JSONField(name = "judger_url")
-    @NotNull
-    private String judgerUrl;
-
     public String getNickname() {
         return nickname;
     }
@@ -117,11 +113,4 @@ public class AddSettingFormat {
         this.url = url;
     }
 
-    public String getJudgerUrl() {
-        return judgerUrl;
-    }
-
-    public void setJudgerUrl(String judgerUrl) {
-        this.judgerUrl = judgerUrl;
-    }
 }

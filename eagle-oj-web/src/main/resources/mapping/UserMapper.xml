@@ -14,6 +14,10 @@
                 VALUES (#{uid}, #{email}, #{nickname}, #{password}, #{permission}, #{role}, #{registerTime})
     </insert>
 
+    <select id="listAll" resultMap="userEntityResultMap">
+        SELECT * FROM user ORDER BY register_time DESC
+    </select>
+
     <select id="listUserRank" resultMap="userEntityResultMap">
         SELECT uid, nickname, avatar, ac_times, finished_problems, submit_times FROM user ORDER BY finished_problems DESC, ac_times DESC, submit_times DESC
     </select>
@@ -28,15 +32,6 @@
 
     <select id="getByEmailPassword" resultMap="userEntityResultMap">
         SELECT * FROM `user` WHERE `email` = #{email} AND `password` = #{password}
-    </select>
-
-    <select id="listModeratorsInUidList" resultMap="moderatorsMap">
-        SELECT attachment.url, user.uid, user.nickname FROM user LEFT JOIN attachment ON user.avatar=attachment.aid
-        WHERE uid IN
-        <foreach item="item" index="index" collection="uidList"
-                 open="(" separator="," close=")">
-            #{item}
-        </foreach>
     </select>
 
     <update id="updateByUid">

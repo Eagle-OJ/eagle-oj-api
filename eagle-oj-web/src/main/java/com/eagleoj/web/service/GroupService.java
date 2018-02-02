@@ -17,5 +17,7 @@ public interface GroupService {
 
     List<GroupEntity> listUserGroups(int owner);
 
+    List<GroupEntity> listAll();
+
     boolean updateGroupByGid(int gid, String name, String password);
 }

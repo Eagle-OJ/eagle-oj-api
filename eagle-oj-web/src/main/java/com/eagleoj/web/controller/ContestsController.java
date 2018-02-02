@@ -8,6 +8,7 @@ import com.eagleoj.web.util.WebUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,7 @@ public class ContestsController {
     }
 
     @ApiOperation("获取所有比赛列表")
-    @RequiresAuthentication
-    @RequiresRoles({"8", "9"})
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @GetMapping("/all")
     public ResponseEntity listAllContests(@RequestParam("page") int page,
                                           @RequestParam("page_size") int pageSize) {

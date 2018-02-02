@@ -1,18 +1,17 @@
 package com.eagleoj.web.util;
 
+import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.eagleoj.judge.LanguageEnum;
-import com.eagleoj.web.config.OSSConfig;
-import com.eagleoj.web.service.SettingService;
-import com.eagleoj.web.config.OSSConfig;
-import com.eagleoj.web.service.SettingService;
+import com.eagleoj.web.setting.SettingKeyMapper;
+import com.eagleoj.web.setting.SettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.UUID;
@@ -23,9 +22,7 @@ import java.util.UUID;
 @Component
 public class FileUtil {
 
-    private Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
-
-    private String BUCKET;
+    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private OSSClient ossClient;
 
@@ -35,7 +32,7 @@ public class FileUtil {
         this.settingService = settingService;
     }
 
-    public String uploadCode(LanguageEnum lang, String code) {
+    public String uploadCode(LanguageEnum lang, String code) throws Exception {
         InputStream is = new ByteArrayInputStream(code.getBytes());
         StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
         switch (lang) {
@@ -55,28 +52,24 @@ public class FileUtil {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("text/plain");
         String filePath = generateFilePath(fileName.toString());
-        try {
-            getOSSClient().putObject(BUCKET, filePath, is, metadata);
-            return "/"+filePath;
-        } catch (Exception e) {
 
-            return null;
-        }
+        getOSSClient().putObject(settingService.getSetting(SettingKeyMapper.OSS_BUCKET), filePath, is, metadata);
+        return "/"+filePath;
     }
 
     public String uploadAvatar(InputStream is, String postfix) throws Exception {
         String file = UUID.randomUUID().toString()+"."+postfix;
         String filePath = generateFilePath(file);
-        getOSSClient().putObject(BUCKET, filePath, is);
+        getOSSClient().putObject(settingService.getSetting(SettingKeyMapper.OSS_BUCKET), filePath, is);
         return "/"+filePath;
     }
 
     private OSSClient getOSSClient() {
         if (ossClient == null) {
-            OSSConfig ossConfig = settingService.getSystemConfig().getOssConfig();
-            BUCKET = ossConfig.getBUCKET();
-            ossClient = new OSSClient(ossConfig.getEND_POINT(),
-                    ossConfig.getACCESS_KEY(), ossConfig.getSECRET_KEY());
+            ossClient = new OSSClient(
+                    settingService.getSetting(SettingKeyMapper.OSS_END_POINT),
+                    settingService.getSetting(SettingKeyMapper.OSS_ACCESS_KEY),
+                    settingService.getSetting(SettingKeyMapper.OSS_SECRET_KEY));
             return ossClient;
         } else {
             return ossClient;

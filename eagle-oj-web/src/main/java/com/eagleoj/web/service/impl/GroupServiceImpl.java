@@ -71,6 +71,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<GroupEntity> listAll() {
+        return groupMapper.listAll();
+    }
+
+    @Override
     public boolean updateGroupByGid(int gid, String name, String password) {
         GroupEntity entity = new GroupEntity();
         entity.setName(name);

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eagleoj.web.dao.JudgerMapper">
+
+    <insert id="save">
+        INSERT IGNORE judger (url, port, add_time) VALUES (#{url}, #{port}, #{addTime})
+    </insert>
+
+    <select id="listAll" resultMap="judgerMap">
+        SELECT * FROM judger
+    </select>
+
+    <update id="updateByJid">
+        UPDATE `judger`
+        <set>
+            <if test="data.url != null">url = #{data.url},</if>
+            <if test="data.port != null">port = #{data.port},</if>
+        </set>
+        WHERE jid = #{jid}
+    </update>
+
+    <delete id="deleteByJid">
+        DELETE FROM `judger` WHERE jid=#{jid}
+    </delete>
+
+    <resultMap id="judgerMap" type="JudgerEntity">
+        <id column="jid" property="jid"/>
+        <result column="url" property="url"/>
+        <result column="port" property="port"/>
+        <result column="add_time" property="addTime"/>
+    </resultMap>
+</mapper>

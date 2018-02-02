@@ -2,6 +2,7 @@ package com.eagleoj.web.controller.format.index;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -9,81 +10,28 @@ import javax.validation.constraints.NotNull;
  * @author Smith
  **/
 public class UpdateSettingFormat {
-    @NotNull
-    @Length(max = 20)
-    private String title;
 
     @NotNull
-    private String accessKey;
+    @NotBlank
+    private String key;
 
     @NotNull
-    private String secretKey;
+    @NotBlank
+    private String value;
 
-    @NotNull
-    private String endPoint;
-
-    @NotNull
-    private String bucket;
-
-    @NotNull
-    private String url;
-
-    @NotNull
-    private String judgerUrl;
-
-    public String getTitle() {
-        return title;
+    public String getKey() {
+        return key;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public String getAccessKey() {
-        return accessKey;
+    public String getValue() {
+        return value;
     }
 
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public String getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(String endPoint) {
-        this.endPoint = endPoint;
-    }
-
-    public String getBucket() {
-        return bucket;
-    }
-
-    public void setBucket(String bucket) {
-        this.bucket = bucket;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getJudgerUrl() {
-        return judgerUrl;
-    }
-
-    public void setJudgerUrl(String judgerUrl) {
-        this.judgerUrl = judgerUrl;
+    public void setValue(String value) {
+        this.value = value;
     }
 }

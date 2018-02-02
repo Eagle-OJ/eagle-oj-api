@@ -35,12 +35,6 @@ public interface ProblemMapper {
 
     List<ProblemEntity> listByUid(int uid);
 
-    int updateDescriptionByPid(@Param("pid") int pid, @Param("data") ProblemEntity data);
-
-    int updateSettingByPid(@Param("pid") int pid, @Param("data") ProblemEntity data);
-
-    int updateTimesByPid(@Param("pid") int pid, @Param("data") ProblemEntity data);
-
     int refuseByPid(int pid);
 
     int acceptByPid(int pid);

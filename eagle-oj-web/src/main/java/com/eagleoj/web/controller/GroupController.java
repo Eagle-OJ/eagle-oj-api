@@ -54,7 +54,7 @@ public class GroupController {
     private ContestService contestService;
 
     @Autowired
-    private TaskQueue messageQueue;
+    private TaskQueue taskQueue;
 
     @ApiOperation("获取小组的信息")
     @GetMapping("/{gid}")
@@ -106,6 +106,7 @@ public class GroupController {
         GroupEntity groupEntity = groupService.getGroup(gid);
         accessToEditGroup(groupEntity);
         groupService.deleteGroup(gid);
+        // todo 删除小组发送消息
         return new ResponseEntity("小组解散成功");
     }
 

@@ -20,6 +20,8 @@ public interface UserService {
 
     UserEntity getUserByEmail(String email);
 
+    List<UserEntity> listAll();
+
     void updateUserProfile(Integer uid, String nickname, String motto, Integer gender);
 
     void updateUser(int uid, UserEntity userEntity);

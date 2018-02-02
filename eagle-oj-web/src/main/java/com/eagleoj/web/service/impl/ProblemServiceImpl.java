@@ -207,4 +207,9 @@ public class ProblemServiceImpl implements ProblemService {
     public List<ProblemEntity> listProblemsForContest(int uid) {
         return problemMapper.listProblemsForContest(uid);
     }
+
+    @Override
+    public List<ProblemEntity> listAllProblems() {
+        return problemMapper.listAll();
+    }
 }
