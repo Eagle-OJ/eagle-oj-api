@@ -3,12 +3,11 @@ package com.eagleoj.web.postman.task;
 /**
  * @author Smith
  **/
-public class CloseNormalContestTask extends BaseTask {
+public class CloseNormalContestTask implements BaseTask {
     private int cid;
 
-    public CloseNormalContestTask(int cid, int type) {
+    public CloseNormalContestTask(int cid) {
         this.cid = cid;
-        this.type = type;
     }
 
     public int getCid() {

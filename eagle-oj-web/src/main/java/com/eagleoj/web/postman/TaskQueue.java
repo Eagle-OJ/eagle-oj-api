@@ -1,7 +1,6 @@
 package com.eagleoj.web.postman;
 
 import com.eagleoj.web.postman.task.BaseTask;
-import com.eagleoj.web.postman.task.BaseTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

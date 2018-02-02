@@ -1,7 +1,5 @@
 package com.eagleoj.web.service.async;
 
-import com.eagleoj.web.postman.task.BaseTask;
-
 /**
  * @author Smith
  **/

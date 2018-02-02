@@ -3,7 +3,7 @@ package com.eagleoj.web.postman.task;
 /**
  * @author Smith
  **/
-public class SendProblemRefusedMessageTask extends BaseTask {
+public class SendProblemRefusedMessageTask implements BaseTask {
     private String title;
 
     private int pid;

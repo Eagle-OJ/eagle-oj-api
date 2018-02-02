@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.entity.GroupUserEntity;
 import com.eagleoj.web.postman.MessageTemplate;
+import com.eagleoj.web.postman.MessageTypeEnum;
 import com.eagleoj.web.postman.task.*;
 import com.eagleoj.web.postman.TaskQueue;
 import com.eagleoj.web.service.*;
@@ -64,28 +65,16 @@ public class PostmanRunner {
 
         @Override
         public void run() {
-            int type = baseTask.getType();
-            switch (type) {
-                case 1:
-                    closeContest((CloseNormalContestTask) baseTask, false);
-                    break;
-                case 2:
-                    closeOfficialContest((CloseOfficialContestTask) baseTask);
-                    break;
-                case 3:
-                    pullGroupUserIntoContest((PullGroupUserIntoContestTask) baseTask);
-                    break;
-                case 4:
-                    sendGroupUserMessage((SendGroupUserMessageTask) baseTask);
-                    break;
-                case 5:
-                    sendProblemAcceptedMessage((SendProblemAcceptedMessageTask) baseTask);
-                    break;
-                case 6:
-                    sendProblemRefusedMessage((SendProblemRefusedMessageTask) baseTask);
-                    break;
-                default:
-                    LOGGER.error("Invalid postman task type:"+type);
+            if (baseTask instanceof CloseNormalContestTask) {
+                closeContest((CloseNormalContestTask) baseTask, false);
+            } else if (baseTask instanceof CloseOfficialContestTask) {
+                closeOfficialContest((CloseOfficialContestTask) baseTask);
+            } else if (baseTask instanceof  SendGroupUserMessageTask) {
+                sendGroupUserMessage((SendGroupUserMessageTask) baseTask);
+            } else if (baseTask instanceof SendProblemAcceptedMessageTask) {
+                sendProblemAcceptedMessage((SendProblemAcceptedMessageTask) baseTask);
+            } else if (baseTask instanceof SendProblemRefusedMessageTask) {
+                sendProblemRefusedMessage((SendProblemRefusedMessageTask) baseTask);
             }
         }
 
@@ -113,7 +102,7 @@ public class PostmanRunner {
                     jsonObject.put("nickname", leaderboard.get(i).get("nickname"));
                     rankList.add(jsonObject);
                 }
-                messageService.save(0, 2, "",
+                messageService.save(0, MessageTypeEnum.GLOBAL_CONTEST.getNumber(), "",
                         MessageTemplate.generateOfficialContestClosedMessage(cid, name, rankList));
             }
 
@@ -121,25 +110,10 @@ public class PostmanRunner {
 
         // type = 2 发送Official比赛结束的全局消息
         private void closeOfficialContest(CloseOfficialContestTask task) {
-            CloseNormalContestTask newTask = new CloseNormalContestTask(task.getCid(), task.getType());
+            CloseNormalContestTask newTask = new CloseNormalContestTask(task.getCid());
             closeContest(newTask, true);
         }
 
-        // type = 3 将小组成员拉入比赛
-        private void pullGroupUserIntoContest(PullGroupUserIntoContestTask task) {
-            List<GroupUserEntity> users = groupUserService.listGroupMembers(task.getGid());
-            for (GroupUserEntity user: users) {
-                int uid = user.getUid();
-                try {
-                    contestUserService.joinContest(task.getCid(), uid, task.getPassword());
-                } catch (Exception e) {
-                    continue;
-                }
-                sendNormalMessage(uid,
-                            MessageTemplate.generateUserPulledIntoContestMessage(task.getContestName(),
-                            task.getCid(), task.getGroupName(), task.getGid()));
-            }
-        }
 
         // type = 4 给小组成员发送通知
         private void sendGroupUserMessage(SendGroupUserMessageTask task) {
@@ -166,7 +140,7 @@ public class PostmanRunner {
         }
 
         private void sendNormalMessage(int uid, String message) {
-            messageService.save(uid, 0, message, null);
+            messageService.save(uid, MessageTypeEnum.NORMAL.getNumber(), message, null);
         }
     }
 }

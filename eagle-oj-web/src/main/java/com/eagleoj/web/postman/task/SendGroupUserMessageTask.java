@@ -3,7 +3,7 @@ package com.eagleoj.web.postman.task;
 /**
  * @author Smith
  **/
-public class SendGroupUserMessageTask extends BaseTask {
+public class SendGroupUserMessageTask implements BaseTask {
     private int gid;
 
     private String groupName;

@@ -17,13 +17,13 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
 
     @Override
     public void closeNormalContest(int cid) {
-        CloseNormalContestTask task = new CloseNormalContestTask(cid, 1);
+        CloseNormalContestTask task = new CloseNormalContestTask(cid);
         taskQueue.addTask(task);
     }
 
     @Override
     public void closeOfficialContest(int cid) {
-        CloseOfficialContestTask task = new CloseOfficialContestTask(cid, 2);
+        CloseOfficialContestTask task = new CloseOfficialContestTask(cid);
         taskQueue.addTask(task);
     }
 
@@ -31,7 +31,6 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
     public void sendGroupMessage(String message, String groupName, int gid) {
         SendGroupUserMessageTask task = new SendGroupUserMessageTask(gid, groupName,
                 message);
-        task.setType(4);
         taskQueue.addTask(task);
     }
 
@@ -41,7 +40,6 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
         task.setTitle(title);
         task.setUid(owner);
         task.setPid(pid);
-        task.setType(5);
         addTask(task);
     }
 
@@ -51,7 +49,6 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
         task.setTitle(title);
         task.setUid(owner);
         task.setPid(pid);
-        task.setType(6);
         addTask(task);
     }
 
