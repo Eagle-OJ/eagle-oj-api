@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eagleoj.web.dao.UserMapper">
 
-    <insert id="save" parameterType="UserEntity" useGeneratedKeys="true" keyProperty="uid">
+    <insert id="save" parameterType="UserEntity">
         INSERT INTO `user` (`email`,`nickname`,`password`,`permission`,`register_time`)
         VALUES (#{email}, #{nickname}, #{password}, #{permission}, #{registerTime})
     </insert>

@@ -48,12 +48,8 @@ public class IndexController {
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
         // 注册用户
-        int uid = userService.register(format.getEmail(), format.getNickname(),
-                new Md5Hash(format.getPassword()).toString());
-        if (uid == 0) {
-            throw new WebErrorException("注册失败");
-        }
-        return new ResponseEntity("注册成功", uid);
+        userService.register(format.getEmail(), format.getNickname(), format.getPassword());
+        return new ResponseEntity("注册成功");
     }
 
     @ApiOperation("用户登入")

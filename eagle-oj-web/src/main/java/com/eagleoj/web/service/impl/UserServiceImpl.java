@@ -35,11 +35,19 @@ public class UserServiceImpl implements UserService {
     private AttachmentService attachmentService;
 
     @Override
-    public int register(String email, String nickname, String password) throws WebErrorException {
+    public void register(String email, String nickname, String password) throws WebErrorException {
         UserEntity userEntity = getUserByEmail(email);
         WebUtil.assertNull(userEntity, "邮箱已被注册");
 
-        return save(email, nickname, password);
+        UserEntity newUserEntity = new UserEntity();
+        newUserEntity.setEmail(email);
+        newUserEntity.setNickname(nickname);
+        newUserEntity.setPassword(new Md5Hash(password).toString());
+        newUserEntity.setPermission(new JSONArray());
+        newUserEntity.setRegisterTime(System.currentTimeMillis());
+
+        boolean flag = userMapper.save(newUserEntity) == 1;
+        WebUtil.assertIsSuccess(flag, "用户注册失败");
     }
 
     @Override

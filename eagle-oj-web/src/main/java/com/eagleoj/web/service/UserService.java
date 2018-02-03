@@ -12,7 +12,7 @@ import java.util.Map;
  **/
 public interface UserService {
 
-    int register(String email, String nickname, String password);
+    void register(String email, String nickname, String password);
 
     UserEntity login(String email, String password);
 
