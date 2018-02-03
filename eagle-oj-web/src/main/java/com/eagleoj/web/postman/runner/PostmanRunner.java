@@ -37,12 +37,6 @@ public class PostmanRunner {
     private MessageService messageService;
 
     @Autowired
-    private ContestUserService contestUserService;
-
-    @Autowired
-    private ContestService contestService;
-
-    @Autowired
     private GroupUserService groupUserService;
 
     public PostmanRunner(TaskQueue messageQueue) {
@@ -71,10 +65,8 @@ public class PostmanRunner {
                 closeOfficialContest((CloseOfficialContestTask) baseTask);
             } else if (baseTask instanceof  SendGroupUserMessageTask) {
                 sendGroupUserMessage((SendGroupUserMessageTask) baseTask);
-            } else if (baseTask instanceof SendProblemAcceptedMessageTask) {
-                sendProblemAcceptedMessage((SendProblemAcceptedMessageTask) baseTask);
-            } else if (baseTask instanceof SendProblemRefusedMessageTask) {
-                sendProblemRefusedMessage((SendProblemRefusedMessageTask) baseTask);
+            } else if (baseTask instanceof SendProblemAuditingMessageTask) {
+                sendProblemAuditingMessage((SendProblemAuditingMessageTask) baseTask);
             }
         }
 
@@ -126,17 +118,14 @@ public class PostmanRunner {
         }
 
         // type = 5
-        private void sendProblemAcceptedMessage(SendProblemAcceptedMessageTask task) {
+        private void sendProblemAuditingMessage(SendProblemAuditingMessageTask task) {
             int uid = task.getUid();
-            sendNormalMessage(uid, MessageTemplate.generateSendProblemAcceptedMessage(task.getTitle(),
-                    task.getPid()));
-        }
-
-        // type = 6
-        private void sendProblemRefusedMessage(SendProblemRefusedMessageTask task) {
-            int uid = task.getUid();
-            sendNormalMessage(uid, MessageTemplate.generateSendProblemRefusedMessage(task.getTitle(),
-                    task.getPid()));
+            boolean isAccepted = task.isAccepted();
+            String title = task.getTitle();
+            int pid = task.getPid();
+            String message = isAccepted? MessageTemplate.generateSendProblemAcceptedMessage(title, pid):
+                    MessageTemplate.generateSendProblemRefusedMessage(title, pid);
+            sendNormalMessage(uid, message);
         }
 
         private void sendNormalMessage(int uid, String message) {

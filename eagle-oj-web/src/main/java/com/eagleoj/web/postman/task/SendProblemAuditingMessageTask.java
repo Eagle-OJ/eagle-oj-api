@@ -3,12 +3,14 @@ package com.eagleoj.web.postman.task;
 /**
  * @author Smith
  **/
-public class SendProblemAcceptedMessageTask implements BaseTask {
+public class SendProblemAuditingMessageTask implements BaseTask {
     private String title;
 
     private int pid;
 
     private int uid;
+
+    private boolean isAccepted;
 
     public String getTitle() {
         return title;
@@ -32,5 +34,13 @@ public class SendProblemAcceptedMessageTask implements BaseTask {
 
     public void setUid(int uid) {
         this.uid = uid;
+    }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
     }
 }

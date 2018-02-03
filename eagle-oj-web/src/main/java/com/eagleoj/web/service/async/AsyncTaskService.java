@@ -9,9 +9,7 @@ public interface AsyncTaskService {
 
     void closeNormalContest(int cid);
 
-    void sendAcceptAuditingProblem(String title, int owner, int pid);
-
-    void sendRefuseAuditingProblem(String title, int owner, int pid);
+    void sendProblemAuditingMessage(String title, int owner, int pid, boolean isAccepted);
 
     void sendGroupMessage(String message, String groupName, int gid);
 }

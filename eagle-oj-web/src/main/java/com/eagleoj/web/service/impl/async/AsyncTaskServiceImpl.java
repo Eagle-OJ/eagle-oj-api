@@ -35,20 +35,12 @@ public class AsyncTaskServiceImpl implements AsyncTaskService {
     }
 
     @Override
-    public void sendAcceptAuditingProblem(String title, int owner, int pid) {
-        SendProblemAcceptedMessageTask task = new SendProblemAcceptedMessageTask();
+    public void sendProblemAuditingMessage(String title, int owner, int pid, boolean isAccepted) {
+        SendProblemAuditingMessageTask task = new SendProblemAuditingMessageTask();
         task.setTitle(title);
         task.setUid(owner);
         task.setPid(pid);
-        addTask(task);
-    }
-
-    @Override
-    public void sendRefuseAuditingProblem(String title, int owner, int pid) {
-        SendProblemAcceptedMessageTask task = new SendProblemAcceptedMessageTask();
-        task.setTitle(title);
-        task.setUid(owner);
-        task.setPid(pid);
+        task.setAccepted(isAccepted);
         addTask(task);
     }
 

@@ -176,14 +176,14 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     public void acceptProblem(ProblemEntity problemEntity) {
         WebUtil.assertIsSuccess(problemMapper.acceptByPid(problemEntity.getPid()) == 1, "审核失败");
-        asyncTaskService.sendAcceptAuditingProblem(problemEntity.getTitle(), problemEntity.getOwner(), problemEntity.getPid());
+        asyncTaskService.sendProblemAuditingMessage(problemEntity.getTitle(), problemEntity.getOwner(), problemEntity.getPid(), true);
     }
 
     @Transactional
     @Override
     public void refuseProblem(ProblemEntity problemEntity) {
         WebUtil.assertIsSuccess(problemMapper.refuseByPid(problemEntity.getPid()) == 1, "审核失败");
-        asyncTaskService.sendRefuseAuditingProblem(problemEntity.getTitle(), problemEntity.getOwner(), problemEntity.getPid());
+        asyncTaskService.sendProblemAuditingMessage(problemEntity.getTitle(), problemEntity.getOwner(), problemEntity.getPid(), false);
     }
 
     @Override
