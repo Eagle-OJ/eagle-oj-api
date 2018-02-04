@@ -5,7 +5,9 @@ import com.eagleoj.web.dao.GroupUserMapper;
 import com.eagleoj.web.entity.GroupEntity;
 import com.eagleoj.web.entity.GroupUserEntity;
 import com.eagleoj.web.entity.UserEntity;
-import com.eagleoj.web.security.SessionHelper;
+import com.eagleoj.web.postman.TaskQueue;
+import com.eagleoj.web.postman.task.SendGroupUserKickedMessageTask;
+import com.eagleoj.web.postman.task.SendGroupUserMessageTask;
 import com.eagleoj.web.service.GroupService;
 import com.eagleoj.web.service.GroupUserService;
 import com.eagleoj.web.service.UserService;
@@ -30,6 +32,9 @@ public class GroupUserServiceImpl implements GroupUserService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TaskQueue taskQueue;
 
     @Override
     public List<Map<String, Object>> listUserJoinedGroups(int uid) {

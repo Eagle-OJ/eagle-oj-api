@@ -17,6 +17,8 @@ public class MessageTemplate {
 
     private final static String SEND_PROBLEM_REFUSED_MESSAGE = "您的<a href=\"/#/problem/[%pid%]\">[%title%]</a>题目审核不通过，请修改后再次申请审核";
 
+    private final static String GROUP_USER_KICKED_MESSAGE = "你已经被<a href=\"/#/group/[%gid%]\">[%groupName%]</a>小组组长踢出";
+
     public static String generateCloseContestMessage(int cid, String name, int rank) {
         return CLOSE_CONTEST
                 .replace("[%cid%]", String.valueOf(cid))

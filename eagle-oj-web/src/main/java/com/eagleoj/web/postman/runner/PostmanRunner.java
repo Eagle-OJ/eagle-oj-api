@@ -67,6 +67,8 @@ public class PostmanRunner {
                 sendGroupUserMessage((SendGroupUserMessageTask) baseTask);
             } else if (baseTask instanceof SendProblemAuditingMessageTask) {
                 sendProblemAuditingMessage((SendProblemAuditingMessageTask) baseTask);
+            } else if (baseTask instanceof SendGroupUserKickedMessageTask) {
+
             }
         }
 
@@ -126,6 +128,10 @@ public class PostmanRunner {
             String message = isAccepted? MessageTemplate.generateSendProblemAcceptedMessage(title, pid):
                     MessageTemplate.generateSendProblemRefusedMessage(title, pid);
             sendNormalMessage(uid, message);
+        }
+
+        private void sendGroupUserKickedMessage(SendGroupUserKickedMessageTask task) {
+
         }
 
         private void sendNormalMessage(int uid, String message) {

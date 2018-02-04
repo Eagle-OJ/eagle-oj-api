@@ -50,7 +50,7 @@ public class UserController {
     private ContestUserService contestUserService;
 
     @ApiOperation("获取用户的所有信息")
-    @GetMapping("/info")
+    @GetMapping
     @RequiresAuthentication
     public ResponseEntity getUserInfo() {
         int uid = SessionHelper.get().getUid();
@@ -60,8 +60,8 @@ public class UserController {
     }
 
     @ApiOperation("更新用户的信息")
-    @PostMapping("/profile/edit")
     @RequiresAuthentication
+    @PostMapping("/profile/edit")
     public ResponseEntity updateUserProfile(@Valid @RequestBody UpdateUserProfileFormat format) {
         int uid = SessionHelper.get().getUid();
         userService.updateUserProfile(uid, format.getNickname(), format.getMotto(), format.getGender());
@@ -70,38 +70,16 @@ public class UserController {
 
     @ApiOperation("更新用户的密码")
     @RequiresAuthentication
-    @PutMapping("/password")
+    @PutMapping("/profile/password")
     public ResponseEntity updateUserPassword(@Valid @RequestBody UpdateUserPasswordFormat format) {
         int uid = SessionHelper.get().getUid();
         userService.updateUserPassword(uid, format.getOriginPassword(), format.getNewPassword());
         return new ResponseEntity("密码更新成功");
     }
 
-    @ApiOperation("获取用户参加的比赛")
-    @RequiresAuthentication
-    @GetMapping("/contests")
-    public ResponseEntity getUserContests(@RequestParam(name = "page") int page,
-                                          @RequestParam(name = "page_size") int pageSize) {
-        Page pager = PageHelper.startPage(page, pageSize);
-        int uid = SessionHelper.get().getUid();
-        List<Map<String, Object>> list = contestUserService.listUserJoinedContests(uid);
-        return new ResponseEntity(WebUtil.generatePageData(pager, list));
-    }
-
-    @ApiOperation("获取用户参加的小组")
-    @RequiresAuthentication
-    @GetMapping("/groups")
-    public ResponseEntity getUserGroups(@RequestParam(name = "page") int page,
-                                        @RequestParam(name = "page_size") int pageSize) {
-        Page pager = PageHelper.startPage(page, pageSize);
-        int uid = SessionHelper.get().getUid();
-        List<Map<String, Object>> list = groupUserService.listUserJoinedGroups(uid);
-        return new ResponseEntity(WebUtil.generatePageData(pager, list));
-    }
-
     @ApiOperation("头像上传")
-    @PostMapping("/profile/avatar")
     @RequiresAuthentication
+    @PostMapping("/profile/avatar")
     public ResponseEntity uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
 
         int uid = SessionHelper.get().getUid();
@@ -116,5 +94,27 @@ public class UserController {
 
         userService.uploadUserAvatar(uid, file);
         return new ResponseEntity("头像更新成功");
+    }
+
+    @ApiOperation("获取用户参加的比赛")
+    @RequiresAuthentication
+    @GetMapping("/joined_contests")
+    public ResponseEntity getUserContests(@RequestParam(name = "page") int page,
+                                          @RequestParam(name = "page_size") int pageSize) {
+        Page pager = PageHelper.startPage(page, pageSize);
+        int uid = SessionHelper.get().getUid();
+        List<Map<String, Object>> list = contestUserService.listUserJoinedContests(uid);
+        return new ResponseEntity(WebUtil.generatePageData(pager, list));
+    }
+
+    @ApiOperation("获取用户参加的小组")
+    @RequiresAuthentication
+    @GetMapping("/joined_groups")
+    public ResponseEntity getUserGroups(@RequestParam(name = "page") int page,
+                                        @RequestParam(name = "page_size") int pageSize) {
+        Page pager = PageHelper.startPage(page, pageSize);
+        int uid = SessionHelper.get().getUid();
+        List<Map<String, Object>> list = groupUserService.listUserJoinedGroups(uid);
+        return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 }

@@ -1,5 +1,6 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.controller.exception.ForbiddenException;
 import com.eagleoj.web.controller.exception.UnauthorizedException;
 import com.eagleoj.web.controller.format.user.AddContestProblemFormat;
 import com.eagleoj.web.controller.format.user.CreateContestFormat;
@@ -61,16 +62,20 @@ public class ContestController {
     private LeaderboardService leaderboardService;
 
     @ApiOperation("获取某个比赛信息")
+    @RequiresAuthentication
     @GetMapping("/{cid}")
-    public ResponseEntity getContest(@PathVariable("cid") int cid,
-                                     @RequestParam(name = "is_detail", required = false, defaultValue = "false") boolean isDetail) {
+    public ResponseEntity getContest(@PathVariable("cid") int cid) {
         ContestEntity contestEntity = contestService.getContest(cid);
-        if (isDetail && SecurityUtils.getSubject().isAuthenticated()) {
-            accessToEditContest(contestEntity);
-        } else {
-            if (contestEntity.getPassword()!=null) {
-                contestEntity.setPassword("You can't see it");
-            }
+        accessToEditContest(contestEntity);
+        return new ResponseEntity(contestEntity);
+    }
+
+    @ApiOperation("获取某个比赛的公开信息")
+    @GetMapping("/{cid}/info")
+    public ResponseEntity getContestInfo(@PathVariable("cid") int cid) {
+        ContestEntity contestEntity = contestService.getContest(cid);
+        if (contestEntity.getPassword() != null) {
+            contestEntity.setPassword("You can't see it");
         }
         return new ResponseEntity(contestEntity);
     }
@@ -248,10 +253,15 @@ public class ContestController {
 
     @ApiOperation("获取本人在某个比赛中的状况+题目列表")
     @RequiresAuthentication
-    @GetMapping("/{cid}/data")
+    @GetMapping("/{cid}/user_data")
     public ResponseEntity getContestUserInfo(@PathVariable("cid") int cid) {
         int uid = SessionHelper.get().getUid();
-        ContestUserEntity info = contestUserService.get(cid, uid);
+        ContestUserEntity info;
+        try {
+            info = contestUserService.get(cid, uid);
+        } catch (Exception e) {
+            return new ResponseEntity(null);
+        }
 
         Map<String, Object> map = new HashMap<>(3);
         map.put("meta", leaderboardService.getUserMetaInContest(uid, cid));
@@ -286,6 +296,6 @@ public class ContestController {
             return;
         }
 
-        throw new UnauthorizedException();
+        throw new ForbiddenException();
     }
 }

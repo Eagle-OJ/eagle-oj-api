@@ -56,28 +56,28 @@ public class GroupController {
     @Autowired
     private TaskQueue taskQueue;
 
-    @ApiOperation("获取小组的信息")
-    @GetMapping("/{gid}")
-    public ResponseEntity getGroup(@PathVariable("gid") int gid,
+    @ApiOperation("获取小组的公共信息")
+    @GetMapping("/{gid}/info")
+    public ResponseEntity getGroupInfo(@PathVariable("gid") int gid,
                                    @RequestParam(name = "is_detail", defaultValue = "false", required = false) boolean isDetail) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         UserEntity userEntity = userService.getUserByUid(groupEntity.getOwner());
         String json = JSON.toJSONString(groupEntity);
         JSONObject jsonObject = JSON.parseObject(json);
         jsonObject.put("leader", userEntity.getNickname());
-
-        if (isDetail && SecurityUtils.getSubject().isAuthenticated()) {
-            int uid = SessionHelper.get().getUid();
-            if (uid != userEntity.getUid()) {
-                throw new UnauthorizedException();
-            }
-        } else {
-            // 对非本人创建小组屏蔽password
-            if (jsonObject.containsKey("password")) {
-                jsonObject.replace("password", "You can't see it!");
-            }
+        if (jsonObject.containsKey("password")) {
+            jsonObject.replace("password", "You can't see it!");
         }
         return new ResponseEntity(jsonObject);
+    }
+
+    @ApiOperation("获取小组信息")
+    @RequiresAuthentication
+    @GetMapping("/{gid}")
+    public ResponseEntity getGroup(@PathVariable("gid") int gid) {
+        GroupEntity groupEntity = groupService.getGroup(gid);
+        accessToEditGroup(groupEntity);
+        return new ResponseEntity(groupEntity);
     }
 
     @ApiOperation("获取用户在小组中的信息")

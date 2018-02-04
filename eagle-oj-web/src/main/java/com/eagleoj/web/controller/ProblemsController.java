@@ -47,7 +47,7 @@ public class ProblemsController {
     }
 
     @ApiOperation("获取公开题目列表-否是附带用户提交状态")
-    @GetMapping
+    @GetMapping("/opened")
     public ResponseEntity getProblems(@RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
                                       @RequestParam(name = "difficult", defaultValue = "-1", required = false) Integer difficult,
                                       @RequestParam(name = "uid", defaultValue = "-1", required = false) Integer uid,
@@ -84,7 +84,7 @@ public class ProblemsController {
     @ApiOperation("获取所有题目")
     @RequiresAuthentication
     @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity getAllProblems(@RequestParam("page") int page,
                                               @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
