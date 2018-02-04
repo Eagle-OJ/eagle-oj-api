@@ -24,15 +24,15 @@ import java.util.Map;
  **/
 @RestController
 @Validated
-@RequestMapping(value = "/message", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class MessageController {
+@RequestMapping(value = "/messages", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+public class MessagesController {
 
     @Autowired
     private MessageService messageService;
 
-    @GetMapping
+    @GetMapping("/user")
     @RequiresAuthentication
-    public ResponseEntity getMessage(@RequestParam("page") int page,
+    public ResponseEntity getMessages(@RequestParam("page") int page,
                                      @RequestParam("page_size") int pageSize) {
         int owner = SessionHelper.get().getUid();
         Page pager = PageHelper.startPage(page, pageSize);

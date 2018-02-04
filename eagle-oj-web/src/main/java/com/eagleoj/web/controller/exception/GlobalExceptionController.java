@@ -7,6 +7,7 @@ import com.eagleoj.web.entity.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,42 +29,49 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handle(MethodArgumentNotValidException e) {
         FieldError error = e.getBindingResult().getFieldError();
-        return new ResponseEntity(400, error.getField()+": "+error.getDefaultMessage(), null);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST.value(), error.getField()+": "+error.getDefaultMessage(), null);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handle(ConstraintViolationException e) {
         String s = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toList()).get(0);
-        return new ResponseEntity(400, s, null);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST.value(), s, null);
     }
 
     @ExceptionHandler(ShiroException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity handleShiro(HttpServletRequest request, Throwable ex) {
         LOGGER.info(ex.getMessage());
-        return new ResponseEntity(401, "Unauthorized", null);
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), null);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity handle(HttpServletRequest request, Throwable ex) {
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity handleForbidden(HttpServletRequest request, Throwable ex) {
         LOGGER.info(ex.getMessage());
-        return new ResponseEntity(401, ex.getMessage(), null);
+        return new ResponseEntity(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase(), null);
     }
 
     @ExceptionHandler(WebErrorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleErrorException(HttpServletRequest request, Throwable ex) {
         LOGGER.info(ex.getMessage());
-        return new ResponseEntity(400, ex.getMessage(), null);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(ServletRequestBindingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity handleBindErrorException(HttpServletRequest request, Throwable ex) {
+        LOGGER.info(ex.getMessage());
+        return new ResponseEntity(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity globalException(HttpServletRequest request, Throwable ex) {
         LOGGER.info(ex.getMessage(), ex);
-        return new ResponseEntity(500, ex.getMessage(), null);
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), null);
     }
 
     /*private HttpStatus getStatus(HttpServletRequest request) {

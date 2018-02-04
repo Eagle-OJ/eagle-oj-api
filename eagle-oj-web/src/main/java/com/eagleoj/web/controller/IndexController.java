@@ -1,21 +1,10 @@
 package com.eagleoj.web.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.index.IndexLoginFormat;
-import com.eagleoj.web.controller.format.index.IndexRegisterFormat;
 import com.eagleoj.web.setting.SettingKeyMapper;
 import com.eagleoj.web.setting.SettingService;
-import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.crypto.hash.Md5Hash;
-import org.ehcache.Cache;
-import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.entity.AttachmentEntity;
 import com.eagleoj.web.entity.ResponseEntity;
-import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.service.AttachmentService;
-import com.eagleoj.web.service.UserService;
-import com.eagleoj.web.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,9 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
 
 /**
  * @author Smith
@@ -36,38 +23,10 @@ import java.util.*;
 public class IndexController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private AttachmentService attachmentService;
 
     @Autowired
     private SettingService settingService;
-
-    @ApiOperation("用户注册")
-    @PostMapping(value = "/register")
-    public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
-        // 注册用户
-        userService.register(format.getEmail(), format.getNickname(), format.getPassword());
-        return new ResponseEntity("注册成功");
-    }
-
-    @ApiOperation("用户登入")
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid IndexLoginFormat format) {
-        UserEntity userEntity = userService.login(format.getEmail(), format.getPassword());
-        JSONArray array = userEntity.getPermission();
-        Iterator<Object> it = array.iterator();
-        Set<String> permission = new HashSet<>();
-        while (it.hasNext()) {
-            permission.add(it.next().toString());
-        }
-        String token = JWTUtil.sign(userEntity.getUid(), userEntity.getRole(), permission, userEntity.getPassword());
-        Cache<String, String> authCache = CacheController.getAuthCache();
-        authCache.put(token, userEntity.getPassword());
-
-        return new ResponseEntity("登入成功", token);
-    }
 
     @GetMapping("/avatar")
     public void getAvatar(@RequestParam("aid") int aid,

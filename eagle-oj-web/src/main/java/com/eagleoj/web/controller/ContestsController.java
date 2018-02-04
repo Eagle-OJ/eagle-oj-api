@@ -35,7 +35,7 @@ public class ContestsController {
     private ContestService contestService;
 
     @ApiOperation("获取开启的比赛列表-不包含小组赛")
-    @GetMapping
+    @GetMapping("/opened")
     public ResponseEntity listOpenedContests(@RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);

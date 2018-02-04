@@ -1,9 +1,11 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.controller.exception.ForbiddenException;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.eagleoj.web.entity.ResponseEntity;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,14 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    /*@Autowired
-    private Test testService;
 
-    @GetMapping("/test")
+
+    @GetMapping("/test1")
     public ResponseEntity test1() {
-        Page page = PageHelper.startPage(1, 10);
-        Object data = testService.getUser(1);
-        return new ResponseEntity(page.getTotal());
-    }*/
+        return new ResponseEntity("authorized");
+    }
+
+    @GetMapping("/test2")
+    @RequiresAuthentication
+    public ResponseEntity test2() {
+        return new ResponseEntity("role");
+    }
+
+    @GetMapping("/test3")
+    public ResponseEntity test3() {
+        int a = 4;
+        if (a == 4)
+            throw new ForbiddenException();
+        return new ResponseEntity("role");
+    }
 
 }

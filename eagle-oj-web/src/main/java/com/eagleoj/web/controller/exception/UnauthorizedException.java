@@ -5,7 +5,7 @@ package com.eagleoj.web.controller.exception;
  **/
 public class UnauthorizedException extends RuntimeException {
     public UnauthorizedException() {
-        super("非法操作");
+        super("未被授权");
     }
 
     public UnauthorizedException(String msg) {
