@@ -30,7 +30,7 @@ public class UserLogController {
     public ResponseEntity getUserLog(@RequestParam("uid") int uid,
                                      @RequestParam("time") String time) {
         List<UserLogEntity> tempList;
-        int timeLength = 0;
+        int timeLength;
         if (time.equals("week")) {
             tempList = userLogService.listUserLogInWeek(uid);
             timeLength = 7;

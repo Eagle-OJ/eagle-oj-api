@@ -1,5 +1,6 @@
 package com.eagleoj.web.controller;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import com.eagleoj.web.controller.exception.WebErrorException;
@@ -25,7 +26,7 @@ public class AnnouncementController {
     private AnnouncementService announcementService;
 
     @RequiresAuthentication
-    @RequiresRoles("9")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @PostMapping
     public ResponseEntity add(@RequestBody @Valid AddAnnouncementFormat format) {
         announcementService.saveAnnouncement(format.getTitle(), format.getContent());
@@ -33,7 +34,7 @@ public class AnnouncementController {
     }
 
     @RequiresAuthentication
-    @RequiresRoles("9")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @PutMapping("/{aid}")
     public ResponseEntity update(@PathVariable int aid,
                                  @RequestBody @Valid AddAnnouncementFormat format) {
@@ -42,7 +43,7 @@ public class AnnouncementController {
     }
 
     @RequiresAuthentication
-    @RequiresRoles("9")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @DeleteMapping("/{aid}")
     public ResponseEntity delete(@PathVariable int aid) {
         announcementService.deleteAnnouncement(aid);

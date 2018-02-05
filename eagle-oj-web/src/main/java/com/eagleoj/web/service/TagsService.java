@@ -15,8 +15,6 @@ public interface TagsService {
 
     void deleteTag(int tid);
 
-    void updateTag(int tid, String name);
-
     List<TagEntity> listAll();
 
     void addUsedTimes(int tid);

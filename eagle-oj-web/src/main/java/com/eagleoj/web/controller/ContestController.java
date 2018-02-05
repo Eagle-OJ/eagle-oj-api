@@ -177,21 +177,10 @@ public class ContestController {
     @ApiOperation("获取比赛的题目列表")
     @RequiresAuthentication
     @GetMapping("/{cid}/problems")
-    public ResponseEntity getContestProblems(@PathVariable("cid") int cid,
-                                             @RequestParam(name = "is_detail", required = false, defaultValue = "false") boolean isDetail) {
+    public ResponseEntity getContestProblems(@PathVariable("cid") int cid) {
         ContestEntity contestEntity = contestService.getContest(cid);
-        List<Map<String, Object>> list;
-        if (isDetail) {
-            // 后台显示题目列表
-            accessToEditContest(contestEntity);
-            list = contestProblemService.listContestProblems(cid);
-        } else {
-            // 前台显示题目列表，附带用户提交信息
-            int uid = SessionHelper.get().getUid();
-            // 检验是否加入了比赛
-            contestUserService.get(cid, uid);
-            list = contestProblemService.listContestProblems(cid, uid);
-        }
+        accessToEditContest(contestEntity);
+        List<Map<String, Object>> list = contestProblemService.listContestProblems(cid);
         return new ResponseEntity(list);
     }
 

@@ -47,11 +47,6 @@ public class TagsServiceImpl implements TagsService {
     }
 
     @Override
-    public void updateTag(int tid, String name) {
-
-    }
-
-    @Override
     public List<TagEntity> listAll() {
         return tagsMapper.listAll();
     }
@@ -65,9 +60,12 @@ public class TagsServiceImpl implements TagsService {
     }
 
     public void updateTagName(int tid, String name) {
-        TagEntity tagEntity = new TagEntity();
-        tagEntity.setName(name);
-        boolean flag = tagsMapper.updateByTid(tid, tagEntity) == 1;
+        TagEntity tagEntity = getByName(name);
+        WebUtil.assertNull(tagEntity, "已经存在此标签");
+
+        TagEntity newTagEntity = new TagEntity();
+        newTagEntity.setName(name);
+        boolean flag = tagsMapper.updateByTid(tid, newTagEntity) == 1;
         WebUtil.assertIsSuccess(flag, "更新标签名称失败");
     }
 }

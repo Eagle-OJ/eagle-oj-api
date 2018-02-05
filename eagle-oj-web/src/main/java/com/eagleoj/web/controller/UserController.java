@@ -3,12 +3,14 @@ package com.eagleoj.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.controller.exception.WebErrorException;
+import com.eagleoj.web.controller.format.user.UpdateUserFormat;
 import com.eagleoj.web.controller.format.user.UpdateUserPasswordFormat;
 import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
@@ -21,6 +23,8 @@ import com.eagleoj.web.service.GroupUserService;
 import com.eagleoj.web.service.UserService;
 import com.eagleoj.web.util.FileUtil;
 import com.eagleoj.web.util.WebUtil;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +53,7 @@ public class UserController {
     @Autowired
     private ContestUserService contestUserService;
 
-    @ApiOperation("获取用户的所有信息")
+    @ApiOperation("获取当前用户的所有信息")
     @GetMapping
     @RequiresAuthentication
     public ResponseEntity getUserInfo() {
@@ -57,6 +61,38 @@ public class UserController {
         UserEntity userEntity = userService.getUserByUid(uid);
         userEntity.setPassword(null);
         return new ResponseEntity(userEntity);
+    }
+
+    @ApiOperation("获取指定用户的所有信息")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
+    @GetMapping("/{uid}")
+    public ResponseEntity getUserInfo(@PathVariable int uid) {
+        UserEntity userEntity = userService.getUserByUid(uid);
+        return new ResponseEntity(userEntity);
+    }
+
+    @ApiOperation("更新用户的信息")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
+    @PutMapping("/{uid}")
+    public ResponseEntity updateUserInfo(@PathVariable int uid,
+                                         @RequestBody @Valid UpdateUserFormat format) {
+        if (format.getRole() != null) {
+            int role = SessionHelper.get().getRole();
+            if (format.getRole() > role) {
+                throw new WebErrorException("你丫想上天");
+            }
+        }
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(format.getEmail());
+        userEntity.setNickname(format.getNickname());
+        if (format.getPassword() != null) {
+            userEntity.setPassword(new Md5Hash(format.getPassword()).toString());
+        }
+        userEntity.setRole(format.getRole());
+        userEntity.setGender(format.getGender());
+        userEntity.setMotto(format.getMotto());
+        userService.updateUser(uid, userEntity);
+        return new ResponseEntity("更新成功");
     }
 
     @ApiOperation("更新用户的信息")
