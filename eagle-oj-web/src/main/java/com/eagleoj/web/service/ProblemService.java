@@ -17,6 +17,8 @@ public interface ProblemService {
 
     int countProblems();
 
+    int getRandomPid(Integer uid);
+
     void deleteProblem(int pid);
 
     void updateProblem(int pid, JSONArray tags, ProblemEntity problemEntity);

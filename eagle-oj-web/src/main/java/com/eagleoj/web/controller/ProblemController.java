@@ -11,6 +11,7 @@ import com.eagleoj.web.data.status.ProblemStatus;
 import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.service.ProblemModeratorService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import com.eagleoj.web.entity.*;
@@ -46,6 +47,16 @@ public class ProblemController {
 
     @Autowired
     private TestCasesService testCasesService;
+
+    @ApiOperation("随机获取一个题目ID")
+    @GetMapping("/random")
+    public ResponseEntity getRandomProblem() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            return new ResponseEntity(problemService.getRandomPid(SessionHelper.get().getUid()));
+        } else {
+            return new ResponseEntity(problemService.getRandomPid(null));
+        }
+    }
 
 
     @ApiOperation("获取指定题目的信息")

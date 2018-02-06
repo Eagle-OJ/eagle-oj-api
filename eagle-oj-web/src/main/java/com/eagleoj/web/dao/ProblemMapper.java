@@ -18,6 +18,8 @@ public interface ProblemMapper {
 
     int count();
 
+    int getRandomPid(Integer uid);
+
     ProblemEntity getByPid(int pid);
 
     List<Map<String, Object>> listProblemTagsByPid(int pid);

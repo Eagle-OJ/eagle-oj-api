@@ -97,6 +97,11 @@ public class ProblemServiceImpl implements ProblemService {
         return problemMapper.count();
     }
 
+    @Override
+    public int getRandomPid(Integer uid) {
+        return problemMapper.getRandomPid(uid);
+    }
+
     @Transactional
     @Override
     public void deleteProblem(int pid) {
