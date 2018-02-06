@@ -67,6 +67,11 @@ public class ContestServiceImpl implements ContestService {
         return contestMapper.countByGid(gid);
     }
 
+    @Override
+    public int countContests() {
+        return contestMapper.count();
+    }
+
     @Transactional
     @Override
     public void deleteContest(int cid) {

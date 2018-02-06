@@ -16,6 +16,10 @@
         SELECT count(*) FROM contest WHERE `group`=#{gid}
     </select>
 
+    <select id="count" resultType="Integer">
+        SELECT count(*) FROM contest
+    </select>
+
     <select id="listValid" resultType="HashMap">
         SELECT
             contest.*,

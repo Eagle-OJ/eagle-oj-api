@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int countUsers() {
+        return userMapper.count();
+    }
+
+    @Override
     public UserEntity login(String email, String password) throws WebErrorException{
         UserEntity data = userMapper.getByEmailPassword(email, new Md5Hash(password).toString());
         if (data == null) {

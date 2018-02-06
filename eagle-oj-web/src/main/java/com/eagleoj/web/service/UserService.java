@@ -14,6 +14,8 @@ public interface UserService {
 
     void register(String email, String nickname, String password);
 
+    int countUsers();
+
     UserEntity login(String email, String password);
 
     UserEntity getUserByUid(Integer uid);

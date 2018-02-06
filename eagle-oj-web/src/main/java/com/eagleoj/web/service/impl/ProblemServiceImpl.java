@@ -92,6 +92,11 @@ public class ProblemServiceImpl implements ProblemService {
         return pid;
     }
 
+    @Override
+    public int countProblems() {
+        return problemMapper.count();
+    }
+
     @Transactional
     @Override
     public void deleteProblem(int pid) {

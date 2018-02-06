@@ -13,6 +13,8 @@ import java.util.List;
 public interface GroupMapper {
     int save(GroupEntity groupEntity);
 
+    int count();
+
     GroupEntity getGroupByGid(int gid);
 
     List<GroupEntity> listGroupsByOwner(int owner);

@@ -15,6 +15,8 @@ public interface ProblemService {
     int save(JSONArray tags, int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
              int difficult, JSONArray samples, int time, int memory);
 
+    int countProblems();
+
     void deleteProblem(int pid);
 
     void updateProblem(int pid, JSONArray tags, ProblemEntity problemEntity);

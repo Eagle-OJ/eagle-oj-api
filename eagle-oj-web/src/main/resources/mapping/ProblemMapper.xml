@@ -10,6 +10,10 @@
         #{difficult}, #{samples}, #{time}, #{memory}, #{status}, #{createTime})
     </insert>
 
+    <select id="count" resultType="Integer">
+        SELECT count(*) FROM problem
+    </select>
+
     <select id="getByPid" resultMap="problemResultMap">
         SELECT * from `problem` WHERE `pid` = #{pid}
     </select>

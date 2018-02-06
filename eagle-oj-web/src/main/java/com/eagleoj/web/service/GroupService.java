@@ -11,6 +11,8 @@ public interface GroupService {
 
     int saveGroup(int owner, String name, String password);
 
+    int countGroups();
+
     void deleteGroup(int gid);
 
     GroupEntity getGroup(int gid);

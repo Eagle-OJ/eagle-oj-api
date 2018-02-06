@@ -16,6 +16,8 @@ public interface ContestService {
 
     int countGroupContests(int gid);
 
+    int countContests();
+
     void deleteContest(int cid);
 
     List<ContestEntity> listUserContests(int uid);

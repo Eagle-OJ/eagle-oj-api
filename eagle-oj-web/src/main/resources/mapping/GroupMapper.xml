@@ -9,6 +9,10 @@
             (#{owner},#{name},#{password},#{createTime})
     </insert>
 
+    <select id="count" resultType="Integer">
+        SELECT count(*) FROM `group`
+    </select>
+
     <select id="listAll" resultMap="groupMap">
         SELECT * FROM `group` ORDER BY create_time DESC
     </select>

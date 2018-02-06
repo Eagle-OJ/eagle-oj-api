@@ -16,6 +16,8 @@ public interface ProblemMapper {
 
     int updateByPid(@Param("pid") int pid, @Param("data") ProblemEntity data);
 
+    int count();
+
     ProblemEntity getByPid(int pid);
 
     List<Map<String, Object>> listProblemTagsByPid(int pid);

@@ -14,6 +14,10 @@
                 VALUES (#{uid}, #{email}, #{nickname}, #{password}, #{permission}, #{role}, #{registerTime})
     </insert>
 
+    <select id="count" resultType="Integer">
+        SELECT count(*) FROM user
+    </select>
+
     <select id="listAll" resultMap="userEntityResultMap">
         SELECT * FROM user ORDER BY register_time DESC
     </select>

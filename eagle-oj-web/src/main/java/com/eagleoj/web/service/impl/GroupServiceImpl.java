@@ -43,6 +43,11 @@ public class GroupServiceImpl implements GroupService {
         return groupEntity.getGid();
     }
 
+    @Override
+    public int countGroups() {
+        return groupMapper.count();
+    }
+
     @Transactional
     @Override
     public void deleteGroup(int gid) {

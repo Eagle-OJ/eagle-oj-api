@@ -17,6 +17,8 @@ public interface UserMapper {
 
     int saveRoot(UserEntity userEntity);
 
+    int count();
+
     List<UserEntity> listUserRank();
 
     UserEntity getByUid(int uid);
