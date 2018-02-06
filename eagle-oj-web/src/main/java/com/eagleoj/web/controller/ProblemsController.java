@@ -51,9 +51,11 @@ public class ProblemsController {
     public ResponseEntity getProblems(@RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
                                       @RequestParam(name = "difficult", defaultValue = "-1", required = false) Integer difficult,
                                       @RequestParam(name = "uid", defaultValue = "-1", required = false) Integer uid,
+                                      @RequestParam(name = "query", defaultValue = "null", required = false) String query,
                                       @RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
+
         if (tag.equals("null")) {
             tag = null;
         }
@@ -67,7 +69,11 @@ public class ProblemsController {
             uid = null;
         }
 
-        data = problemService.listSharedProblems(tag, difficult, uid);
+        if (query.equals("null")) {
+            query = null;
+        }
+
+        data = problemService.listSharedProblems(tag, difficult, uid, query);
         return new ResponseEntity(WebUtil.generatePageData(pager, data));
     }
 

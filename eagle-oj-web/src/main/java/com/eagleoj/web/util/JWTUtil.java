@@ -28,7 +28,7 @@ public class JWTUtil {
             int uid = decodedJWT.getClaim("uid").asInt();
             int role = decodedJWT.getClaim("role").asInt();
             Set<String> permission = new HashSet<>(decodedJWT.getClaim("permission").asList(String.class));
-            SessionHelper.init(uid, role, permission);
+            SessionHelper.init(token, uid, role, permission);
             return true;
         } catch (Exception e) {
             return false;

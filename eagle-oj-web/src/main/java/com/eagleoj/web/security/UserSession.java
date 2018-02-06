@@ -7,6 +7,8 @@ import java.util.Set;
  **/
 public class UserSession {
 
+    private String token;
+
     private int uid;
 
     private int role;
@@ -35,5 +37,13 @@ public class UserSession {
 
     public void setPermission(Set<String> permission) {
         this.permission = permission;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

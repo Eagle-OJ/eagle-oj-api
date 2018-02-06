@@ -2,6 +2,7 @@ package com.eagleoj.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.UpdateUserFormat;
 import com.eagleoj.web.controller.format.user.UpdateUserPasswordFormat;
@@ -92,6 +93,7 @@ public class UserController {
         userEntity.setGender(format.getGender());
         userEntity.setMotto(format.getMotto());
         userService.updateUser(uid, userEntity);
+        CacheController.getAuthCache().remove(SessionHelper.get().getToken());
         return new ResponseEntity("更新成功");
     }
 
@@ -110,6 +112,7 @@ public class UserController {
     public ResponseEntity updateUserPassword(@Valid @RequestBody UpdateUserPasswordFormat format) {
         int uid = SessionHelper.get().getUid();
         userService.updateUserPassword(uid, format.getOriginPassword(), format.getNewPassword());
+        CacheController.getAuthCache().remove(SessionHelper.get().getToken());
         return new ResponseEntity("密码更新成功");
     }
 

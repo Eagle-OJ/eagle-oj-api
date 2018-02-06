@@ -1,7 +1,9 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.setting.SettingKeyMapper;
 import com.eagleoj.web.setting.SettingService;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -60,7 +62,6 @@ public class SettingController {
         return new ResponseEntity(settingMap);
     }
 
-    @RequiresAuthentication
     @RequiresRoles("9")
     @PutMapping
     public ResponseEntity updateSetting(@RequestBody @Valid UpdateSettingFormat format) {
@@ -103,5 +104,25 @@ public class SettingController {
                 format.getBucket(), format.getUrl());
         settingService.refresh();
         return new ResponseEntity("安装成功");
+    }
+
+    @ApiOperation("刷新系统缓存")
+    @RequiresRoles("9")
+    @PutMapping("/cache")
+    public ResponseEntity refreshCache(@RequestParam String type) {
+        switch (type) {
+            case "user":
+                CacheController.getAuthCache().clear();
+                break;
+            case "submission":
+                CacheController.getSubmissionCache().clear();
+                break;
+            case "leaderboard":
+                CacheController.getLeaderboard().clear();
+                break;
+            default:
+                throw new WebErrorException("非法操作类型");
+        }
+        return new ResponseEntity("缓存刷新成功");
     }
 }

@@ -24,7 +24,8 @@ public interface ProblemMapper {
 
     List<Map<String, Object>> listShared(@Param("uid") Integer uid,
                                          @Param("difficult") Integer difficult,
-                                         @Param("tag") String tag);
+                                         @Param("tag") String tag,
+                                         @Param("query") String query);
 
     List<ProblemEntity> listProblemsForContest(int uid);
 

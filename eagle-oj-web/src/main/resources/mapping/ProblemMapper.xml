@@ -39,6 +39,9 @@
         <if test="tag != null">
             AND problem.pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
         </if>
+        <if test="query != null">
+            AND title LIKE '%${query}%'
+        </if>
         ORDER BY pid ASC
     </select>
 

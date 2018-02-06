@@ -33,7 +33,7 @@ public interface ProblemService {
 
     List<Map<String, Object>> listProblemTags(int pid);
 
-    List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid);
+    List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid, String query);
 
     List<ProblemEntity> listProblemsForContest(int uid);
 
