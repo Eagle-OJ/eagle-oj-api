@@ -7,8 +7,12 @@ import com.github.pagehelper.PageHelper;
 import com.eagleoj.web.entity.ResponseEntity;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -16,25 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    @Value("${spring.datasource.url}")
+    private String url;
 
+    @Value("${spring.datasource.username}")
+    private String username;
 
-    @GetMapping("/test1")
+    @Value("${spring.datasource.password}")
+    private String password;
+
+    @GetMapping("/test")
     public ResponseEntity test1() {
-        return new ResponseEntity("authorized");
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url);
+        map.put("username", username);
+        map.put("password", password);
+        return new ResponseEntity(map);
     }
 
-    @GetMapping("/test2")
-    @RequiresAuthentication
-    public ResponseEntity test2() {
-        return new ResponseEntity("role");
-    }
 
-    @GetMapping("/test3")
-    public ResponseEntity test3() {
-        int a = 4;
-        if (a == 4)
-            throw new ForbiddenException();
-        return new ResponseEntity("role");
-    }
 
 }
