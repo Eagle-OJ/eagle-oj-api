@@ -17,7 +17,7 @@ public interface ProblemService {
 
     int countProblems();
 
-    int getRandomPid(Integer uid);
+    int getRandomPid();
 
     void deleteProblem(int pid);
 

@@ -51,13 +51,8 @@ public class ProblemController {
     @ApiOperation("随机获取一个题目ID")
     @GetMapping("/random")
     public ResponseEntity getRandomProblem() {
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            return new ResponseEntity(problemService.getRandomPid(SessionHelper.get().getUid()));
-        } else {
-            return new ResponseEntity(problemService.getRandomPid(null));
-        }
+        return new ResponseEntity(problemService.getRandomPid());
     }
-
 
     @ApiOperation("获取指定题目的信息")
     @GetMapping("/{pid}")

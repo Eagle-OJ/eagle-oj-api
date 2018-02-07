@@ -98,8 +98,8 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public int getRandomPid(Integer uid) {
-        return problemMapper.getRandomPid(uid);
+    public int getRandomPid() {
+        return problemMapper.getRandomPid();
     }
 
     @Transactional

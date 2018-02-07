@@ -16,13 +16,7 @@
 
     <select id="getRandomPid" resultType="Integer">
         SELECT problem.pid FROM problem
-        <if test="uid != null">
-            LEFT JOIN problem_user ON problem.pid=problem_user.pid
-        </if>
         WHERE problem.status=2
-        <if test="uid != null">
-            AND problem_user.status!='AC'
-        </if>
         ORDER BY rand() LIMIT 1
     </select>
 
