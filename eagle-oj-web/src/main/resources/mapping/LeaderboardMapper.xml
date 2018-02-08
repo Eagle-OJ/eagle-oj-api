@@ -6,48 +6,38 @@
 
     <select id="listOIRankByCid" resultType="HashMap">
         SELECT
-            contest_problem_user.uid,
+            contest_user.uid,
             contest_user.submit_times,
             contest_user.ac_times,
             contest_user.finished_problems,
-            SUM(score) AS score,
-            SUM(used_time) AS used_time,
+            contest_user.total_score,
+            contest_user.total_used_time,
             nickname,
             avatar
-        FROM
-            contest_problem_user
-            LEFT JOIN
-            user ON contest_problem_user.uid = user.uid
-            LEFT JOIN
-            contest_user ON contest_problem_user.uid = contest_user.uid
-                            AND contest_problem_user.cid = contest_user.cid
-        WHERE
-            contest_problem_user.cid = 10
-        GROUP BY contest_problem_user.uid
-        ORDER BY score DESC , used_time ASC
+        FROM contest_user
+            LEFT JOIN user ON contest_user.uid = user.uid
+        WHERE cid = #{cid}
+        ORDER BY total_score DESC , total_used_time ASC
     </select>
 
     <select id="listACMRankByCid" resultType="HashMap">
         SELECT
-            contest_problem_user.uid,
+            contest_user.uid,
             contest_user.submit_times,
             contest_user.ac_times,
             contest_user.finished_problems,
-            SUM(score) AS score,
-            SUM(used_time) AS used_time,
-            (contest_user.submit_times - contest_user.ac_times) * 60 * 1000 * #{penalty} AS penalty_time,
+            contest_user.total_score,
+            contest_user.total_used_time,
+            contest_user.total_wrong_times,
+            total_wrong_times * 60 * 1000 * #{penalty} AS penalty_time,
             nickname,
             avatar
         FROM
-            contest_problem_user
+            contest_user
             LEFT JOIN
-            user ON contest_problem_user.uid = user.uid
-            LEFT JOIN
-            contest_user ON contest_problem_user.cid = contest_user.cid
-                            AND contest_problem_user.uid = contest_user.uid
+            user ON contest_user.uid = user.uid
         WHERE
-            contest_problem_user.cid = #{cid}
-        GROUP BY contest_problem_user.uid
-        ORDER BY score DESC , (used_time + penalty_time) ASC
+            contest_user.cid = #{cid}
+        ORDER BY total_score DESC , (total_used_time + penalty_time) ASC
     </select>
 </mapper>

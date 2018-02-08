@@ -43,6 +43,9 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
         entity.setCid(cid);
         entity.setPid(pid);
         entity.setUid(uid);
+        if (status != ResultEnum.AC) {
+            entity.setWrongTimes(1);
+        }
         entity.setScore(score);
         entity.setStatus(status);
         entity.setSolvedTime(solvedTimes);
@@ -55,6 +58,9 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
     public boolean update(int cid, int pid, int uid, int score, ResultEnum status,
                           long solvedTime, long usedTime) {
         ContestProblemUserEntity entity = new ContestProblemUserEntity();
+        if (status != ResultEnum.AC) {
+            entity.setWrongTimes(1);
+        }
         entity.setScore(score);
         entity.setStatus(status);
         entity.setSolvedTime(solvedTime);

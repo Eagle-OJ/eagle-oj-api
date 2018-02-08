@@ -156,7 +156,7 @@ public class JudgeServiceImpl implements JudgeService {
         }
 
         updateContestProblemTimes(cid, pid, result);
-        updateContestUserTimes(cid, owner, result);
+        updateContestUserTimes(cid, owner, usedTime, score, result);
         updateProblemTimes(pid, result);
 
         if (task.getContestEntity().getOfficial() == 1) {
@@ -278,24 +278,30 @@ public class JudgeServiceImpl implements JudgeService {
         contestProblemService.updateContestProblemTimes(cid, pid, contestProblemEntity);
     }
 
-    private void updateContestUserTimes(int cid, int uid, ResultEnum result) {
+    private void updateContestUserTimes(int cid, int uid, long usedTime, int score, ResultEnum result) {
         ContestUserEntity contestUserEntity = new ContestUserEntity();
         contestUserEntity.setSubmitTimes(1);
         switch (result) {
             case AC:
+                contestUserEntity.setTotalUsedTime(usedTime);
+                contestUserEntity.setTotalScore(score);
                 contestUserEntity.setFinishedProblems(1);
                 contestUserEntity.setACTimes(1);
                 break;
             case TLE:
+                contestUserEntity.setTotalWrongTimes(1);
                 contestUserEntity.setTLETimes(1);
                 break;
             case RTE:
+                contestUserEntity.setTotalWrongTimes(1);
                 contestUserEntity.setRTETimes(1);
                 break;
             case WA:
+                contestUserEntity.setTotalWrongTimes(1);
                 contestUserEntity.setWATimes(1);
                 break;
             case CE:
+                contestUserEntity.setTotalWrongTimes(1);
                 contestUserEntity.setCETimes(1);
                 break;
         }

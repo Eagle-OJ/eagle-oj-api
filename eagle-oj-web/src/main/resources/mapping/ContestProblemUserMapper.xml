@@ -6,8 +6,8 @@
 
     <insert id="save">
         INSERT INTO `contest_problem_user`
-            (`cid`,`pid`,`uid`,`score`,`status`,`solved_time`,`used_time`)
-        VALUES (#{cid},#{pid}, #{uid},#{score},#{status},#{solvedTime},#{usedTime})
+            (`cid`,`pid`,`uid`,`wrong_times`,`score`,`status`,`solved_time`,`used_time`)
+        VALUES (#{cid},#{pid}, #{uid},#{wrongTimes},#{score},#{status},#{solvedTime},#{usedTime})
     </insert>
 
     <select id="getByCidPidUid" resultMap="contestProblemUserMap">
@@ -37,6 +37,9 @@
     <update id="updateByCidPidUid">
         UPDATE `contest_problem_user`
         <set>
+            <if test="data.wrongTimes != null">
+                wrong_times = wrong_times + 1,
+            </if>
             <if test="data.score != null">
                 score = #{data.score},
             </if>
@@ -57,6 +60,7 @@
         <id column="cid" property="cid"/>
         <id column="pid" property="pid"/>
         <id column="uid" property="uid"/>
+        <result column="wrong_times" property="wrongTimes"/>
         <result column="score" property="score"/>
         <result column="status" property="status"/>
         <result column="solved_time" property="solvedTime"/>

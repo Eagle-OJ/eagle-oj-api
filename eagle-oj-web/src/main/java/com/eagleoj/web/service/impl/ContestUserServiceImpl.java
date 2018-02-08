@@ -69,8 +69,11 @@ public class ContestUserServiceImpl implements ContestUserService {
         WebUtil.assertNull(contestUserEntity, "你已经加入比赛");
 
         ContestEntity contestEntity = contestService.getContest(cid);
-        if (contestEntity.getStatus() != ContestStatus.USING.getNumber()) {
-            throw new WebErrorException("当前比赛不得加入");
+        if (contestEntity.getStatus() == ContestStatus.EDITING.getNumber()) {
+            throw new WebErrorException("当前比赛尚未开启");
+        }
+        if (contestEntity.getStatus() == ContestStatus.CLOSED.getNumber()) {
+            throw new WebErrorException("当前比赛已经关闭");
         }
         if (contestEntity.getGroup() > 0) {
             // 小组赛

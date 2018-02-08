@@ -1,5 +1,6 @@
 package com.eagleoj.web.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.eagleoj.judge.ResultEnum;
 
 /**
@@ -11,6 +12,9 @@ public class ContestProblemUserEntity {
     private Integer pid;
 
     private Integer uid;
+
+    @JSONField(name = "wrong_times")
+    private Integer wrongTimes;
 
     private Integer score;
 
@@ -74,5 +78,13 @@ public class ContestProblemUserEntity {
 
     public void setUsedTime(Long usedTime) {
         this.usedTime = usedTime;
+    }
+
+    public Integer getWrongTimes() {
+        return wrongTimes;
+    }
+
+    public void setWrongTimes(Integer wrongTimes) {
+        this.wrongTimes = wrongTimes;
     }
 }

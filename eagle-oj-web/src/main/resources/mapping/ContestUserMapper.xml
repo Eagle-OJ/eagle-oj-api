@@ -29,6 +29,15 @@
     <update id="updateByCidUid">
         UPDATE contest_user
         <set>
+            <if test="data.totalUsedTime != null">
+                total_used_time = total_used_time + #{data.totalUsedTime},
+            </if>
+            <if test="data.totalScore != null">
+                total_score = total_score + #{data.totalScore},
+            </if>
+            <if test="data.totalWrongTimes != null">
+                total_wrong_times = total_wrong_times + #{data.totalWrongTimes},
+            </if>
             <if test="data.submitTimes != null">
                 submit_times = submit_times + 1,
             </if>
@@ -57,6 +66,9 @@
     <resultMap id="contestUserMap" type="ContestUserEntity">
         <id column="cid" property="cid"/>
         <id column="uid" property="uid"/>
+        <result column="total_used_time" property="totalUsedTime"/>
+        <result column="total_score" property="totalScore"/>
+        <result column="total_wrong_times" property="totalWrongTimes"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="finished_problems" property="finishedProblems"/>
         <result column="ac_times" property="ACTimes"/>

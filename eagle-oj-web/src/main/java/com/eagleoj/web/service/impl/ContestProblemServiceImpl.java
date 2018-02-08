@@ -50,8 +50,11 @@ public class ContestProblemServiceImpl implements ContestProblemService {
 
     @Override
     public void saveContestProblem(int cid, int pid, int displayId, int score) {
-        ProblemEntity problemEntity = problemService.getProblem(cid);
-        WebUtil.assertNotNull(problemEntity, "题目不存在");
+        try {
+            ProblemEntity problemEntity = problemService.getProblem(pid);
+        } catch (Exception e) {
+            throw new WebErrorException("不存在此题目");
+        }
 
         boolean flag = displayIdIsDuplicate(cid, displayId);
         if (flag) {

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Smith
@@ -87,7 +88,12 @@ public class GroupController {
                                     @PathVariable("uid") int uid) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         accessToEditOwnInfo(uid, groupEntity);
-        return new ResponseEntity(groupUserService.getGroupUserInfo(gid, uid));
+        try {
+            Map<String, Object> groupUser = groupUserService.getGroupUserInfo(gid, uid);
+            return new ResponseEntity(groupUser);
+        } catch (Exception e) {
+            return new ResponseEntity(null);
+        }
     }
 
     @ApiOperation("创建小组")

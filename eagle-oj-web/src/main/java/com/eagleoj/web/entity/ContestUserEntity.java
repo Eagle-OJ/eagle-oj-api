@@ -10,6 +10,15 @@ public class ContestUserEntity {
 
     private Integer uid;
 
+    @JSONField(name = "total_used_time")
+    private Long totalUsedTime;
+
+    @JSONField(name = "total_score")
+    private Integer totalScore;
+
+    @JSONField(name = "total_wrong_times")
+    private Integer totalWrongTimes;
+
     @JSONField(name = "submit_times")
     private Integer submitTimes;
 
@@ -112,5 +121,29 @@ public class ContestUserEntity {
 
     public void setJoinTime(Long joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public Long getTotalUsedTime() {
+        return totalUsedTime;
+    }
+
+    public void setTotalUsedTime(Long totalUsedTime) {
+        this.totalUsedTime = totalUsedTime;
+    }
+
+    public Integer getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public Integer getTotalWrongTimes() {
+        return totalWrongTimes;
+    }
+
+    public void setTotalWrongTimes(Integer totalWrongTimes) {
+        this.totalWrongTimes = totalWrongTimes;
     }
 }
