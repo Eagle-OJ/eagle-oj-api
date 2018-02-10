@@ -2,87 +2,111 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="problem">
-    <insert id="insertProblem" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
+<mapper namespace="com.eagleoj.web.dao.ProblemMapper">
+    <insert id="save" parameterType="ProblemEntity" useGeneratedKeys="true" keyProperty="pid">
         INSERT INTO `problem` (owner, title, lang, description,
-                               input_format, output_format, difficult, samples, time, memory, moderators, status, create_time) VALUES
+                               input_format, output_format, difficult, samples, time, memory, status, create_time) VALUES
         (#{owner}, #{title}, #{lang}, #{description},#{inputFormat}, #{outputFormat},
-        #{difficult}, #{samples}, #{time}, #{memory}, #{moderators}, #{status}, #{createTime})
+        #{difficult}, #{samples}, #{time}, #{memory}, #{status}, #{createTime})
     </insert>
 
-    <select id="getProblemByPid" resultMap="problemResultMap">
+    <select id="count" resultType="Integer">
+        SELECT count(*) FROM problem
+    </select>
+
+    <select id="getRandomPid" resultType="Integer">
+        SELECT problem.pid FROM problem
+        WHERE problem.status=2
+        ORDER BY rand() LIMIT 1
+    </select>
+
+    <select id="getByPid" resultMap="problemResultMap">
         SELECT * from `problem` WHERE `pid` = #{pid}
     </select>
 
-    <select id="getProblemTags" resultType="HashMap">
+    <select id="listProblemTagsByPid" resultType="HashMap">
         SELECT tag_problem.tid, tag_problem.pid,tags.name, tags.used
         FROM tag_problem LEFT JOIN tags ON tag_problem.tid = tags.tid WHERE tag_problem.pid = #{pid}
     </select>
 
-    <select id="getAllProblem" resultMap="problemResultMap">
-        SELECT * FROM `problem`
-    </select>
-
-    <select id="getSharedProblems" resultType="HashMap" parameterType="HashMap">
-        SELECT problem.pid, title, difficult, submit_times, ac_times FROM problem
-        WHERE status=2
-        <if test="difficult != -1">
-          AND difficult=#{difficult}
+    <select id="listShared" resultType="HashMap" parameterType="HashMap">
+        SELECT
+            problem.pid,
+            title, difficult,
+            submit_times,
+            ac_times
+        <if test="uid != null">
+            , problem_user.status
         </if>
-        <if test="tag != null">
-            AND pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
+        FROM problem
+        <if test="uid != null">
+            LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
         </if>
-        ORDER BY pid ASC
-    </select>
-
-    <select id="getSharedProblemsWithStatus" resultType="HashMap" parameterType="HashMap">
-        SELECT problem.pid, title, difficult, submit_times, ac_times, problem_user.status FROM problem
-        LEFT JOIN problem_user ON problem.pid=problem_user.pid AND problem_user.uid=#{uid}
         WHERE problem.status=2
-        <if test="difficult != -1">
-            AND difficult=#{difficult}
+        <if test="difficult != null">
+          AND difficult=#{difficult}
         </if>
         <if test="tag != null">
             AND problem.pid IN (SELECT pid FROM tag_problem INNER JOIN tags on tag_problem.tid=tags.tid WHERE tags.name=#{tag})
         </if>
+        <if test="query != null">
+            AND title LIKE '%${query}%'
+        </if>
         ORDER BY pid ASC
     </select>
 
-    <select id="getProblemsByUid" resultMap="problemResultMap">
+    <select id="listProblemsForContest" resultType="HashMap">
+        SELECT * FROM problem WHERE status=2 OR owner=#{uid}
+    </select>
+
+    <select id="listAuditing" resultMap="problemResultMap">
+        SELECT * FROM problem WHERE status=1 ORDER BY create_time DESC
+    </select>
+
+    <select id="listByUid" resultMap="problemResultMap">
         SELECT * FROM `problem` WHERE owner=#{uid} ORDER BY create_time DESC
     </select>
 
-    <update id="updateProblemModerators">
-        UPDATE problem SET moderators=#{moderators} WHERE pid=#{pid}
-    </update>
+    <select id="listAll" resultMap="problemResultMap">
+        SELECT * FROM problem ORDER BY create_time DESC
+    </select>
 
-    <update id="updateProblemStatus">
-        UPDATE problem SET status=#{status} WHERE pid = #{pid}
-    </update>
-
-    <update id="updateProblemDescription" parameterType="ProblemEntity">
-        UPDATE `problem` SET `title`=#{title}, `description`=#{description}, `input_format`=#{inputFormat},
-            `output_format`=#{outputFormat}, `samples`=#{samples}, `difficult`=#{difficult}
-        WHERE `pid`=#{pid}
-    </update>
-
-    <update id="updateProblemSetting">
-        UPDATE problem SET lang=#{lang}, time=#{time}, memory=#{memory} WHERE pid = #{pid}
-    </update>
-
-    <update id="updateProblemTimes">
+    <update id="updateByPid">
         UPDATE problem
         <set>
-            <if test="submitTimes > 0">submit_times = submit_times+1,</if>
-            <if test="usedTimes > 0">used_times = used_times+1,</if>
-            <if test="ACTimes > 0">ac_times = ac_times+1,</if>
-            <if test="WATimes > 0">wa_times = wa_times+1,</if>
-            <if test="RTETimes > 0">rte_times = rte_times+1,</if>
-            <if test="TLETimes > 0">tle_times = tle_times+1,</if>
-            <if test="CETimes > 0"> ce_times = ce_times+1,</if>
+            <if test="data.owner != null">owner = #{data.owner},</if>
+            <if test="data.title != null">title = #{data.title},</if>
+            <if test="data.lang != null">lang = #{data.lang},</if>
+            <if test="data.description != null">description = #{data.description},</if>
+            <if test="data.difficult != null">difficult = #{data.difficult},</if>
+            <if test="data.inputFormat != null">input_format = #{data.inputFormat},</if>
+            <if test="data.outputFormat != null">output_format = #{data.outputFormat},</if>
+            <if test="data.samples != null">samples = #{data.samples},</if>
+            <if test="data.time != null">`time` = #{data.time},</if>
+            <if test="data.memory != null">`memory` = #{data.memory},</if>
+            <if test="data.submitTimes != null">submit_times = submit_times+1,</if>
+            <if test="data.usedTimes != null">used_times = used_times+1,</if>
+            <if test="data.ACTimes != null">ac_times = ac_times+1,</if>
+            <if test="data.WATimes != null">wa_times = wa_times+1,</if>
+            <if test="data.RTETimes != null">rte_times = rte_times+1,</if>
+            <if test="data.TLETimes != null">tle_times = tle_times+1,</if>
+            <if test="data.CETimes != null"> ce_times = ce_times+1,</if>
+            <if test="data.status != null">`status` = #{data.status},</if>
         </set>
-        WHERE pid=#{pid}
+        WHERE pid = #{pid}
     </update>
+
+    <update id="refuseByPid">
+        UPDATE problem SET status = 0 WHERE pid=#{pid}
+    </update>
+
+    <update id="acceptByPid">
+        UPDATE problem SET status = 2 WHERE pid=#{pid}
+    </update>
+
+    <delete id="deleteByPid">
+        DELETE FROM problem WHERE pid=#{pid}
+    </delete>
 
     <resultMap id="problemResultMap" type="ProblemEntity">
         <id column="pid" property="pid"/>
@@ -95,7 +119,6 @@
         <result column="samples" property="samples"/>
         <result column="time" property="time"/>
         <result column="memory" property="memory"/>
-        <result column="moderators" property="moderators"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="used_times" property="usedTimes"/>
         <result column="ac_times" property="ACTimes"/>
@@ -106,4 +129,5 @@
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
+
 </mapper>

@@ -2,36 +2,65 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="contestProblemUser">
+<mapper namespace="com.eagleoj.web.dao.ContestProblemUserMapper">
 
-    <insert id="insert">
-        INSERT INTO `contest_problem_user` (`cid`,`pid`,`uid`,`score`,`status`,`solved_time`,`used_time`) VALUES (#{cid},#{pid},
-        #{uid},#{score},#{status},#{solvedTime},#{usedTime})
+    <insert id="save">
+        INSERT INTO `contest_problem_user`
+            (`cid`,`pid`,`uid`,`wrong_times`,`score`,`status`,`solved_time`,`used_time`)
+        VALUES (#{cid},#{pid}, #{uid},#{wrongTimes},#{score},#{status},#{solvedTime},#{usedTime})
     </insert>
 
-    <select id="select" resultMap="contestProblemUserMap">
-        SELECT * FROM `contest_problem_user` WHERE `cid`=#{cid} AND `pid`=#{pid} AND `uid`=#{uid}
+    <select id="getByCidPidUid" resultMap="contestProblemUserMap">
+        SELECT *
+        FROM `contest_problem_user`
+        WHERE `cid`=#{cid} AND `pid`=#{pid} AND `uid`=#{uid}
     </select>
 
-    <select id="getNormalContestRank" resultType="HashMap">
-        SELECT contest_problem_user.uid,user.nickname,SUM(score) AS score, SUM(used_time) AS used_time FROM contest_problem_user
-            LEFT JOIN user ON contest_problem_user.uid=user.uid
-        where cid=#{cid} group by uid order by SUM(score) DESC, SUM(used_time) DESC
+    <select id="listByCidUid" resultType="HashMap">
+        SELECT
+            contest_problem_user.*, contest_problem.display_id
+        FROM
+            contest_problem_user
+            LEFT JOIN
+            contest_problem ON contest_problem_user.pid = contest_problem.pid
+                               AND contest_problem_user.cid = contest_problem.cid
+        WHERE
+            contest_problem_user.cid = #{cid}
+            AND contest_problem_user.uid = #{uid}
+        ORDER BY display_id ASC
     </select>
 
-    <select id="selectAll" resultMap="contestProblemUserMap">
+    <select id="listAllByCid" resultMap="contestProblemUserMap">
         SELECT * FROM contest_problem_user WHERE cid=#{cid}
     </select>
 
-    <update id="update">
-        UPDATE `contest_problem_user` SET `score` = #{score}, `status` = #{status}, solved_time = #{solvedTime}, used_time=#{usedTime}
-        WHERE `cid` = #{cid} AND `pid` = #{pid} AND `uid` = #{uid}
+    <update id="updateByCidPidUid">
+        UPDATE `contest_problem_user`
+        <set>
+            <if test="data.wrongTimes != null">
+                wrong_times = wrong_times + 1,
+            </if>
+            <if test="data.score != null">
+                score = #{data.score},
+            </if>
+            <if test="data.status != null">
+                status = #{data.status},
+            </if>
+            <if test="data.solvedTime != null">
+                solved_time = #{data.solvedTime},
+            </if>
+            <if test="data.usedTime != null">
+                used_time = #{data.usedTime},
+            </if>
+        </set>
+        WHERE cid = #{cid} AND pid = #{pid} AND uid = #{uid}
     </update>
 
     <resultMap id="contestProblemUserMap" type="ContestProblemUserEntity">
         <id column="cid" property="cid"/>
         <id column="pid" property="pid"/>
         <id column="uid" property="uid"/>
+        <result column="wrong_times" property="wrongTimes"/>
         <result column="score" property="score"/>
         <result column="status" property="status"/>
         <result column="solved_time" property="solvedTime"/>

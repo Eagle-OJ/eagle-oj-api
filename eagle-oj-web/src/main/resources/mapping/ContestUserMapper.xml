@@ -2,61 +2,62 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="contestUser">
+<mapper namespace="com.eagleoj.web.dao.ContestUserMapper">
 
-    <select id="select" resultMap="contestUserMap">
+    <insert id="save">
+        INSERT IGNORE INTO `contest_user`(`cid`,`uid`,`join_time`)
+        VALUES (#{cid},#{uid},#{joinTime})
+    </insert>
+
+    <select id="getByCidUid" resultMap="contestUserMap">
         SELECT * FROM `contest_user` WHERE `cid` = #{cid} AND `uid` = #{uid}
     </select>
 
-    <select id="getNormalContestRankList" resultType="HashMap">
-        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
-            score, used_time, contest_user.ac_times,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
-        WHERE contest_user.cid=#{cid} ORDER BY score DESC, used_time ASC
+    <select id="listUserJoinedContestsByUid" resultType="HashMap">
+        SELECT contest_user.*, contest.name
+        FROM contest_user
+            LEFT JOIN contest
+                ON contest_user.cid=contest.cid
+        WHERE uid=#{uid}
+        ORDER BY join_time DESC
     </select>
 
-    <select id="getACMContestRankList" resultType="HashMap">
-        SELECT cid, contest_user.uid, contest_user.submit_times, contest_user.finished_problems,
-            score, contest_user.ac_times,
-            #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times) as penalty,
-            (used_time + #{penalty}*60000*(contest_user.wa_times+contest_user.rte_times+contest_user.ce_times+contest_user.tle_times)) as used_time
-            ,nickname FROM contest_user LEFT JOIN user ON contest_user.uid=user.uid
-        WHERE contest_user.cid=#{cid} ORDER BY contest_user.finished_problems DESC, used_time ASC
+    <select id="countByCid" resultType="Integer">
+        SELECT count(*) FROM contest_user WHERE cid=#{cid}
     </select>
 
-    <insert id="insert">
-        INSERT INTO `contest_user`(`cid`,`uid`,`join_time`)
-            VALUES (#{cid},#{uid},#{joinTime})
-    </insert>
-
-    <update id="updateTimesAndData">
+    <update id="updateByCidUid">
         UPDATE contest_user
         <set>
-            <if test="submitTimes > 0">
+            <if test="data.totalUsedTime != null">
+                total_used_time = total_used_time + #{data.totalUsedTime},
+            </if>
+            <if test="data.totalScore != null">
+                total_score = total_score + #{data.totalScore},
+            </if>
+            <if test="data.totalWrongTimes != null">
+                total_wrong_times = total_wrong_times + #{data.totalWrongTimes},
+            </if>
+            <if test="data.submitTimes != null">
                 submit_times = submit_times + 1,
             </if>
-            <if test="finishedProblems > 0">
+            <if test="data.finishedProblems != null">
                 finished_problems = finished_problems + 1,
             </if>
-            <if test="ACTimes > 0">
+            <if test="data.ACTimes != null">
                 ac_times = ac_times + 1,
             </if>
-            <if test="WATimes > 0">
+            <if test="data.WATimes != null">
                 wa_times = wa_times + 1,
             </if>
-            <if test="RTETimes > 0">
+            <if test="data.RTETimes != null">
                 rte_times = rte_times + 1,
             </if>
-            <if test="TLETimes > 0">
+            <if test="data.TLETimes != null">
                 tle_times = tle_times + 1,
             </if>
-            <if test="CETimes > 0">
+            <if test="data.CETimes != null">
                 ce_times = ce_times + 1,
-            </if>
-            <if test="score > 0">
-                score = score + #{score},
-            </if>
-            <if test="usedTime > 0">
-                used_time = used_time + #{usedTime}
             </if>
         </set>
         WHERE `cid` = #{cid} AND `uid` = #{uid}
@@ -65,6 +66,9 @@
     <resultMap id="contestUserMap" type="ContestUserEntity">
         <id column="cid" property="cid"/>
         <id column="uid" property="uid"/>
+        <result column="total_used_time" property="totalUsedTime"/>
+        <result column="total_score" property="totalScore"/>
+        <result column="total_wrong_times" property="totalWrongTimes"/>
         <result column="submit_times" property="submitTimes"/>
         <result column="finished_problems" property="finishedProblems"/>
         <result column="ac_times" property="ACTimes"/>
@@ -72,8 +76,6 @@
         <result column="rte_times" property="RTETimes"/>
         <result column="tle_times" property="TLETimes"/>
         <result column="ce_times" property="CETimes"/>
-        <result column="score" property="score"/>
-        <result column="used_time" property="usedTime"/>
         <result column="join_time" property="joinTime"/>
     </resultMap>
 </mapper>

@@ -2,14 +2,31 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="tags">
+<mapper namespace="com.eagleoj.web.dao.TagsMapper">
 
-    <select id="get" resultMap="tagMap">
+    <select id="getByName" resultMap="tagMap">
+        SELECT * FROM tags WHERE name=#{name}
+    </select>
+
+    <insert id="save">
+        INSERT INTO tags (name) VALUE (#{name})
+    </insert>
+
+    <delete id="deleteByTid">
+        DELETE FROM tags WHERE tid = #{tid}
+    </delete>
+
+    <select id="listAll" resultMap="tagMap">
         SELECT * FROM `tags`
     </select>
 
-    <update id="addUsedTimes">
-        UPDATE `tags` SET `used`=`used`+1 WHERE `tid`=#{tid}
+    <update id="updateByTid">
+        UPDATE tags
+        <set>
+            <if test="data.name != null">name = #{data.name},</if>
+            <if test="data.used != null">used = used + 1,</if>
+        </set>
+        WHERE tid = #{tid}
     </update>
 
     <resultMap id="tagMap" type="TagEntity">

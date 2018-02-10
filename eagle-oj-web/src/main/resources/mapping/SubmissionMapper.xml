@@ -2,15 +2,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="submission">
+<mapper namespace="com.eagleoj.web.dao.SubmissionMapper">
 
-    <insert id="insertSubmission" parameterType="SubmissionEntity" useGeneratedKeys="true" keyProperty="sid">
-        INSERT INTO `submission` (`owner`, `pid`, `cid`, `source_code`, `lang`,
+    <insert id="save" parameterType="SubmissionEntity">
+        INSERT INTO `submission` (`owner`, `pid`, `cid`, `gid`, `source_code`, `lang`,
                                   `time`, `memory`, `status`, `submit_time`)
-        VALUES (#{owner}, #{pid}, #{cid}, #{sourceCode}, #{lang}, #{time}, #{memory}, #{status}, #{submitTime})
+        VALUES (#{owner}, #{pid}, #{cid}, #{gid}, #{sourceCode}, #{lang}, #{time}, #{memory}, #{status}, #{submitTime})
     </insert>
 
-    <select id="getSubmissions" resultType="HashMap">
+    <select id="countByPid" resultType="Integer">
+        SELECT count(*) FROM submission WHERE pid = #{pid}
+    </select>
+
+    <select id="listSubmissionsByOwnerPidCid" resultType="HashMap">
         SELECT * FROM submission LEFT JOIN attachment ON submission.source_code=attachment.aid
         WHERE submission.owner=#{owner} AND pid=#{pid}
         <if test="cid != 0">
@@ -24,6 +28,7 @@
         <result column="owner" property="owner"/>
         <result column="pid" property="pid" />
         <result column="cid" property="cid"/>
+        <result column="gid" property="gid"/>
         <result column="source_code" property="sourceCode" />
         <result column="lang" property="lang" />
         <result column="time" property="time"/>

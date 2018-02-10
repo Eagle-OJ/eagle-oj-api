@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eagleoj.web.dao.SettingMapper">
+
+    <select id="listAll" resultMap="settingMap">
+        SELECT * FROM setting
+    </select>
+
+    <update id="updateByKey">
+        UPDATE setting SET value=#{value} WHERE `key`=#{key}
+    </update>
+
+    <insert id="batchSave">
+        INSERT setting (`key`, value) VALUES
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.key}, #{item.value})
+        </foreach>
+    </insert>
+
+    <resultMap id="settingMap" type="SettingEntity">
+        <id column="key" property="key"/>
+        <result column="value" property="value"/>
+    </resultMap>
+</mapper>

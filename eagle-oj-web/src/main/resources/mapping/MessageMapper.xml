@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eagleoj.web.dao.MessageMapper">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="mid">
+        INSERT INTO message (owner, type, content, json_content, create_time)
+        VALUES (#{owner}, #{type}, #{content}, #{jsonContent}, #{createTime})
+    </insert>
+
+    <select id="listMessagesByOwner" resultMap="messageMap">
+        SELECT * FROM message WHERE owner=#{owner} OR owner=0 ORDER BY create_time DESC
+    </select>
+
+    <resultMap id="messageMap" type="MessageEntity">
+        <id column="mid" property="mid"/>
+        <result column="owner" property="owner"/>
+        <result column="type" property="type"/>
+        <result column="content" property="content"/>
+        <result column="json_content" property="jsonContent"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+</mapper>

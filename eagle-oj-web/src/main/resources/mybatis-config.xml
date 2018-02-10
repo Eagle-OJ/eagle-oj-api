@@ -5,20 +5,20 @@
 <configuration>
     
     <typeAliases>
-        <package name="org.inlighting.oj.web.entity"/>
+        <package name="com.eagleoj.web.entity"/>
     </typeAliases>
 
     <typeHandlers>
-<!--        <typeHandler handler="org.inlighting.oj.web.data.ProblemStatusTypeHandler"
-                     javaType="org.inlighting.oj.judge.config.ProblemStatusEnum" jdbcType="VARCHAR"/>
+<!--        <typeHandler handler="com.eagleoj.web.data.ProblemStatusTypeHandler"
+                     javaType="com.eagleoj.judge.config.ProblemStatusEnum" jdbcType="VARCHAR"/>
 
-        <typeHandler handler="org.inlighting.oj.web.data.CodeLanguageTypeHandler"
-                     javaType="org.inlighting.oj.judge.config.CodeLanguageEnum" jdbcType="VARCHAR"/>-->
+        <typeHandler handler="com.eagleoj.web.data.CodeLanguageTypeHandler"
+                     javaType="com.eagleoj.judge.config.CodeLanguageEnum" jdbcType="VARCHAR"/>-->
 
-        <typeHandler handler="org.inlighting.oj.web.data.JsonArrayTypeHandler"
+        <typeHandler handler="com.eagleoj.web.data.JsonArrayTypeHandler"
                      javaType="com.alibaba.fastjson.JSONArray" jdbcType="VARCHAR"/>
 
-        <typeHandler handler="org.inlighting.oj.web.data.JsonObjectTypeHandler"
+        <typeHandler handler="com.eagleoj.web.data.JsonObjectTypeHandler"
                      javaType="com.alibaba.fastjson.JSONObject" jdbcType="VARCHAR"/>
     </typeHandlers>
 
@@ -32,7 +32,7 @@
         </plugin>
     </plugins>
 
-    <mappers>
+    <!--<mappers>
         <mapper resource="mapping/UserMapper.xml"/>
         <mapper resource="mapping/ProblemMapper.xml"/>
         <mapper resource="mapping/ContestProblemMapper.xml"/>
@@ -41,12 +41,15 @@
         <mapper resource="mapping/ContestUserMapper.xml"/>
         <mapper resource="mapping/AttachmentMapper.xml"/>
         <mapper resource="mapping/GroupMapper.xml" />
-        <mapper resource="mapping/GroupUserInfoMapper.xml"/>
+        <mapper resource="mapping/GroupUserMapper.xml"/>
         <mapper resource="mapping/SubmissionMapper.xml"/>
         <mapper resource="mapping/ContestProblemUserMapper.xml"/>
         <mapper resource="mapping/TagsMapper.xml"/>
         <mapper resource="mapping/TagProblemMapper.xml"/>
         <mapper resource="mapping/ProblemUserMapper.xml"/>
         <mapper resource="mapping/UserLogMapper.xml"/>
-    </mappers>
+        <mapper resource="mapping/MessageMapper.xml"/>
+        <mapper resource="mapping/ProblemModeratorMapper.xml"/>
+        <mapper resource="mapping/SettingMapper.xml"/>
+    </mappers>-->
 </configuration>
