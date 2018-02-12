@@ -15,11 +15,23 @@
     </select>
 
     <select id="listSubmissionsByOwnerPidCid" resultType="HashMap">
-        SELECT * FROM submission LEFT JOIN attachment ON submission.source_code=attachment.aid
-        WHERE submission.owner=#{owner} AND pid=#{pid}
-        <if test="cid != 0">
-            AND cid=#{cid}
+        SELECT submission.*, attachment.url
+        <if test="owner == null">
+            , user.nickname
         </if>
+        FROM submission
+          LEFT JOIN attachment ON submission.source_code=attachment.aid
+        <if test="owner == null">
+          LEFT JOIN user on submission.owner=user.uid
+        </if>
+        WHERE pid=#{pid}
+        <if test="owner != null">
+            AND submission.owner = #{owner}
+        </if>
+        <if test="cid != null">
+            AND cid = #{cid}
+        </if>
+
         ORDER BY submit_time DESC
     </select>
 

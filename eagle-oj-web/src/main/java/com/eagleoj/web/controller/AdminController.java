@@ -42,11 +42,12 @@ public class AdminController {
     @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @GetMapping("/overview")
     public ResponseEntity getOverview() {
-        Map<String, Integer> data = new HashMap<>(4);
+        Map<String, Integer> data = new HashMap<>(5);
         data.put("contests", contestService.countContests());
         data.put("users", userService.countUsers());
         data.put("groups", groupService.countGroups());
         data.put("problems", problemService.countProblems());
+        data.put("auditing_problems", problemService.countAuditingProblems());
         return new ResponseEntity(data);
     }
 }

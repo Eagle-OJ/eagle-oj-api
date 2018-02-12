@@ -17,7 +17,7 @@ public interface SubmissionMapper {
 
     int countByPid(int pid);
 
-    List<Map<String, Object>> listSubmissionsByOwnerPidCid(@Param("owner") int owner,
-                                                              @Param("pid") int pid,
-                                                              @Param("cid") int cid);
+    List<Map<String, Object>> listSubmissionsByOwnerPidCid(@Param("owner") Integer owner,
+                                                              @Param("pid") Integer pid,
+                                                              @Param("cid") Integer cid);
 }

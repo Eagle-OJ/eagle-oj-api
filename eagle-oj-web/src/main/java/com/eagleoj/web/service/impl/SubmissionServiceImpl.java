@@ -47,7 +47,12 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public List<Map<String, Object>> listSubmissions(int owner, int pid, int cid) {
+    public List<Map<String, Object>> listOwnSubmissions(Integer owner, Integer pid, Integer cid) {
         return submissionMapper.listSubmissionsByOwnerPidCid(owner, pid, cid);
+    }
+
+    @Override
+    public List<Map<String, Object>> listProblemSubmissions(Integer pid, Integer cid) {
+        return submissionMapper.listSubmissionsByOwnerPidCid(null, pid, cid);
     }
 }

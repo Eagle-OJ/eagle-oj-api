@@ -2,6 +2,10 @@ package com.eagleoj.web.controller;
 
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.entity.ResponseEntity;
+import com.eagleoj.web.service.ProblemUserService;
+import com.eagleoj.web.util.WebUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
 import com.eagleoj.web.entity.UserLogEntity;
 import com.eagleoj.web.service.UserLogService;
@@ -25,8 +29,11 @@ public class UserLogController {
     @Autowired
     private UserLogService userLogService;
 
-    @ApiOperation("获取用户近期记录")
-    @GetMapping
+    @Autowired
+    private ProblemUserService problemUserService;
+
+    @ApiOperation("获取用户敲代码近期记录")
+    @GetMapping("coding_frequency")
     public ResponseEntity getUserLog(@RequestParam("uid") int uid,
                                      @RequestParam("time") String time) {
         List<UserLogEntity> tempList;
@@ -65,5 +72,15 @@ public class UserLogController {
             }
         }
         return new ResponseEntity(finalList);
+    }
+
+    @ApiOperation("获取最近用户做题记录")
+    @GetMapping("problem_history")
+    public ResponseEntity getProblemUser(@RequestParam("uid") int uid,
+                                         @RequestParam("page") int page,
+                                         @RequestParam("page_size") int pageSize) {
+        Page pager = PageHelper.startPage(page, pageSize);
+        List<Map<String, Object>> list = problemUserService.listUserProblemHistory(uid);
+        return new ResponseEntity(WebUtil.generatePageData(pager, list));
     }
 }

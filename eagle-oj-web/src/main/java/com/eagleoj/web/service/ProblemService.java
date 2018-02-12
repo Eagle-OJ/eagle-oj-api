@@ -17,6 +17,8 @@ public interface ProblemService {
 
     int countProblems();
 
+    int countAuditingProblems();
+
     int getRandomPid();
 
     void deleteProblem(int pid);

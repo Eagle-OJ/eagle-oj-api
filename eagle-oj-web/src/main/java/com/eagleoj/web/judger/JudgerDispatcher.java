@@ -14,10 +14,10 @@ import java.util.Random;
 @Service
 public class JudgerDispatcher {
 
-    private List<JudgerEntity> judgerList;
-
     @Autowired
     private JudgerService judgerService;
+
+    private List<JudgerEntity> judgerList;
 
     public void refresh() {
         judgerList = judgerService.listJudger();

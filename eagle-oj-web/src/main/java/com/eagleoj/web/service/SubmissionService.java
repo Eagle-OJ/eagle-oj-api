@@ -16,5 +16,7 @@ public interface SubmissionService {
 
     int countProblemSubmissions(int pid);
 
-    List<Map<String, Object>> listSubmissions(int owner, int pid, int cid);
+    List<Map<String, Object>> listOwnSubmissions(Integer owner, Integer pid, Integer cid);
+
+    List<Map<String, Object>> listProblemSubmissions(Integer pid, Integer cid);
 }

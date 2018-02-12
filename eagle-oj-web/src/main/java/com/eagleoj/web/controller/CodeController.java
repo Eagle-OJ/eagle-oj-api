@@ -71,7 +71,7 @@ public class CodeController {
         int owner = SessionHelper.get().getUid();
         String id;
         if (gid != 0 && cid != 0) {
-            id = asyncJudgeService.addGroupJudge(sourceCode, lang, owner, pid, cid);
+            id = asyncJudgeService.addGroupJudge(sourceCode, lang, owner, pid, cid, gid);
         } else if (cid != 0) {
             id = asyncJudgeService.addContestJudge(sourceCode, lang, owner, pid, cid);
         } else {

@@ -120,7 +120,8 @@ public class AsyncJudgeServiceImpl implements AsyncJudgeService {
     @Override
     public String addGroupJudge(String sourceCode, LanguageEnum lang,
                                 int owner, int pid,
-                                int cid) {
+                                int cid,
+                                int gid) {
         ProblemEntity problemEntity = problemService.getProblem(pid);
         containLang(lang, problemEntity);
         ContestEntity contestEntity = contestService.getContest(cid);
@@ -134,8 +135,8 @@ public class AsyncJudgeServiceImpl implements AsyncJudgeService {
         ContestProblemEntity contestProblemEntity = contestProblemService.getContestProblem(cid, pid);
 
         // 检查是否为小组比赛
-        int gid = contestEntity.getGroup();
-        if (gid == 0) {
+        int tempGid = contestEntity.getGroup();
+        if (tempGid != gid) {
             throw new WebErrorException("本场比赛不属于该小组");
         }
         // 检查用户是否在小组中

@@ -35,6 +35,8 @@ public class ProfileController {
         UserEntity userEntity = userService.getUserByUid(uid);
         userEntity.setPassword(null);
         userEntity.setEmail(null);
+        userEntity.setRole(null);
+        userEntity.setPermission(null);
         return new ResponseEntity(userEntity);
     }
 }

@@ -18,6 +18,8 @@ public interface ProblemMapper {
 
     int count();
 
+    int countAuditing();
+
     int getRandomPid();
 
     ProblemEntity getByPid(int pid);

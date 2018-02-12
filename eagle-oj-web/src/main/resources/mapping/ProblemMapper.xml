@@ -14,6 +14,10 @@
         SELECT count(*) FROM problem
     </select>
 
+    <select id="countAuditing" resultType="Integer">
+        SELECT count(*) FROM problem WHERE status=1
+    </select>
+
     <select id="getRandomPid" resultType="Integer">
         SELECT problem.pid FROM problem
         WHERE problem.status=2

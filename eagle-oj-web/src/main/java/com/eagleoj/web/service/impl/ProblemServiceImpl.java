@@ -98,6 +98,11 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
+    public int countAuditingProblems() {
+        return problemMapper.countAuditing();
+    }
+
+    @Override
     public int getRandomPid() {
         return problemMapper.getRandomPid();
     }
