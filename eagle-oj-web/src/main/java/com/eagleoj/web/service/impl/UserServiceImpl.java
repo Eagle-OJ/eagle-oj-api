@@ -6,6 +6,7 @@ import com.eagleoj.web.dao.UserMapper;
 import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.service.AttachmentService;
 import com.eagleoj.web.service.UserService;
+import com.eagleoj.web.setting.SettingService;
 import com.eagleoj.web.util.FileUtil;
 import com.eagleoj.web.util.WebUtil;
 import org.apache.shiro.crypto.hash.Md5Hash;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AttachmentService attachmentService;
+
+    @Autowired
+    private SettingService settingService;
 
     @Override
     public void register(String email, String nickname, String password) throws WebErrorException {
@@ -100,6 +104,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void uploadUserAvatar(Integer uid, MultipartFile file) {
+        if (! settingService.isOpenStorage()) {
+            throw new WebErrorException("未开启存储功能，无法上传");
+        }
         try {
             String filePath = fileUtil.uploadAvatar(file.getInputStream(), "jpg");
             int aid = attachmentService.save(uid, filePath);

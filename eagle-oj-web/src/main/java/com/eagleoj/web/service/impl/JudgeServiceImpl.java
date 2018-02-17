@@ -13,6 +13,7 @@ import com.eagleoj.web.judger.task.ContestJudgeTask;
 import com.eagleoj.web.judger.task.GroupJudgeTask;
 import com.eagleoj.web.judger.task.ProblemJudgeTask;
 import com.eagleoj.web.service.*;
+import com.eagleoj.web.setting.SettingService;
 import com.eagleoj.web.util.FileUtil;
 import com.eagleoj.web.util.WebUtil;
 import org.slf4j.Logger;
@@ -64,6 +65,9 @@ public class JudgeServiceImpl implements JudgeService {
 
     @Autowired
     private GroupUserService groupUserService;
+
+    @Autowired
+    private SettingService settingService;
 
     @Override
     public JudgeResult getJudgeResult(String id) {
@@ -166,14 +170,17 @@ public class JudgeServiceImpl implements JudgeService {
 
     private void saveSubmission(String sourceCode, LanguageEnum lang, double time, int memory, ResultEnum result,
                                 int owner, int pid, int cid, int gid) {
-        String uploadURL = null;
-        try {
-            uploadURL = fileUtil.uploadCode(lang, sourceCode);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new WebErrorException("保存代码记录失败");
+        int aid = 0;
+        if (settingService.isOpenStorage()) {
+            String uploadURL = null;
+            try {
+                uploadURL = fileUtil.uploadCode(lang, sourceCode);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+                throw new WebErrorException("保存代码记录失败");
+            }
+            aid = attachmentService.save(owner, uploadURL);
         }
-        int aid = attachmentService.save(owner, uploadURL);
         submissionService.save(owner, pid, cid, gid, aid, lang, time, memory, result);
     }
 

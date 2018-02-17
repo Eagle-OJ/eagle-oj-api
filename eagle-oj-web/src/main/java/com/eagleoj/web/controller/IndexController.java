@@ -32,8 +32,8 @@ public class IndexController {
     public void getAvatar(@RequestParam("aid") int aid,
                           HttpServletResponse response) throws IOException {
         AttachmentEntity entity = attachmentService.getAvatar(aid);
-        String OSS_URL = settingService.getSetting(SettingKeyMapper.OSS_URL);
-        response.sendRedirect(OSS_URL+entity.getUrl());
+        //String OSS_URL = settingService.getSetting(SettingKeyMapper.OSS_URL);
+        //response.sendRedirect(OSS_URL+entity.getUrl());
     }
 
     @RequestMapping("/401")

@@ -7,6 +7,7 @@ import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.UpdateUserFormat;
 import com.eagleoj.web.controller.format.user.UpdateUserPasswordFormat;
 import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
+import com.eagleoj.web.setting.SettingService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
@@ -53,6 +54,9 @@ public class UserController {
 
     @Autowired
     private ContestUserService contestUserService;
+
+    @Autowired
+    private SettingService settingService;
 
     @ApiOperation("获取当前用户的所有信息")
     @GetMapping

@@ -1,11 +1,10 @@
 package com.eagleoj.web.util;
 
-import com.aliyun.oss.ClientException;
+import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.eagleoj.judge.LanguageEnum;
-import com.eagleoj.web.setting.SettingKeyMapper;
+import com.eagleoj.web.setting.SettingEnum;
 import com.eagleoj.web.setting.SettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,23 @@ public class FileUtil {
         this.settingService = settingService;
     }
 
+    public boolean test(String accessKey, String secretKey, String endPoint, String bucket) {
+        try {
+            ClientConfiguration config = new ClientConfiguration();
+            config.setConnectionTimeout(1000);
+            config.setMaxErrorRetry(1);
+            OSSClient tempClient = new OSSClient(endPoint, accessKey, secretKey);
+            String s = "hello world";
+            final String key = "eagle-oj-test";
+            tempClient.putObject(bucket, key, new ByteArrayInputStream(s.getBytes()));
+            tempClient.deleteObject(bucket, key);
+            return true;
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+            return false;
+        }
+    }
+
     public String uploadCode(LanguageEnum lang, String code) throws Exception {
         InputStream is = new ByteArrayInputStream(code.getBytes());
         StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
@@ -53,27 +69,31 @@ public class FileUtil {
         metadata.setContentType("text/plain");
         String filePath = generateFilePath(fileName.toString());
 
-        getOSSClient().putObject(settingService.getSetting(SettingKeyMapper.OSS_BUCKET), filePath, is, metadata);
+        getOSSClient().putObject(settingService.getSetting(SettingEnum.OSS_BUCKET), filePath, is, metadata);
         return "/"+filePath;
     }
 
     public String uploadAvatar(InputStream is, String postfix) throws Exception {
         String file = UUID.randomUUID().toString()+"."+postfix;
         String filePath = generateFilePath(file);
-        getOSSClient().putObject(settingService.getSetting(SettingKeyMapper.OSS_BUCKET), filePath, is);
+        getOSSClient().putObject(settingService.getSetting(SettingEnum.OSS_BUCKET), filePath, is);
         return "/"+filePath;
     }
 
     private OSSClient getOSSClient() {
         if (ossClient == null) {
             ossClient = new OSSClient(
-                    settingService.getSetting(SettingKeyMapper.OSS_END_POINT),
-                    settingService.getSetting(SettingKeyMapper.OSS_ACCESS_KEY),
-                    settingService.getSetting(SettingKeyMapper.OSS_SECRET_KEY));
+                    settingService.getSetting(SettingEnum.OSS_END_POINT),
+                    settingService.getSetting(SettingEnum.OSS_ACCESS_KEY),
+                    settingService.getSetting(SettingEnum.OSS_SECRET_KEY));
             return ossClient;
         } else {
             return ossClient;
         }
+    }
+
+    public void refresh() {
+        this.ossClient = null;
     }
 
     private String generateFilePath(String fileName) {

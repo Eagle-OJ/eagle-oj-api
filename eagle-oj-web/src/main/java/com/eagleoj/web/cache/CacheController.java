@@ -27,6 +27,8 @@ public class CacheController {
 
     private static Cache<Integer, Object> leaderboardCache;
 
+    private static Cache<String, String> settingCache;
+
     static {
         CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
         authCache = cacheManager
@@ -52,6 +54,16 @@ public class CacheController {
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(20, MemoryUnit.MB))
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(DefaultConfig.LEADERBOARD_REFRESH_TIME, TimeUnit.MINUTES)))
                 .build());
+
+        settingCache = cacheManager
+                .createCache("settingCache",
+                        CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                                String.class,
+                                String.class,
+                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
+                                .build()
+
+                        );
     }
 
     public static Cache<String, String> getAuthCache() {
@@ -62,5 +74,9 @@ public class CacheController {
 
     public static Cache<Integer, Object> getLeaderboard() {
         return leaderboardCache;
+    }
+
+    public static Cache<String, String> getSettingCache() {
+        return settingCache;
     }
 }

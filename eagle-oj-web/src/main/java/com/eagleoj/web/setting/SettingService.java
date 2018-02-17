@@ -17,6 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Smith
@@ -30,9 +35,112 @@ public class SettingService {
     @Autowired
     private UserMapper userMapper;
 
-    private Map<String, String> settingMap;
+    private ConcurrentHashMap<String, String> settingMap;
 
-    public synchronized String getSetting(String key) {
+    public SettingService() {
+        this.settingMap = new ConcurrentHashMap<>();
+    }
+
+    public void saveSetting(SettingEnum settingEnum, String value) {
+        SettingEntity settingEntity = new SettingEntity(settingEnum.getName(), value);
+        boolean flag = settingMapper.save(settingEntity) == 1;
+        WebUtil.assertIsSuccess(flag, "保存设置失败");
+        refresh(settingEnum);
+    }
+
+    public void saveSettings(List<SettingEnum> settingEnums, List<String> values) {
+        int size = settingEnums.size();
+        List<SettingEntity> list = new ArrayList<>(size);
+        for (int i=0; i<size; i++) {
+            list.add(new SettingEntity(settingEnums.get(i).getName(), values.get(i)));
+        }
+        boolean flag = settingMapper.saveList(list) > 0;
+        WebUtil.assertIsSuccess(flag, "批量保存设置失败");
+        refreshList(settingEnums);
+    }
+
+    public String getSetting(SettingEnum settingEnum) {
+        if (settingMap.contains(settingEnum.getName())) {
+            return settingMap.get(settingEnum.getName());
+        } else {
+            SettingEntity settingEntity = settingMapper.getByKey(settingEnum.getName());
+            WebUtil.assertNotNull(settingEntity, "不存在此设置");
+            settingMap.put(settingEntity.getKey(), settingEntity.getValue());
+            return settingEntity.getValue();
+        }
+    }
+
+    public List<String> listSettings(List<SettingEnum> settingEnums) {
+        int size = settingEnums.size();
+        List<String> resultList = new ArrayList<>(size);
+        List<String> keyList = new ArrayList<>(size);
+        for (SettingEnum settingEnum: settingEnums) {
+            if (settingMap.contains(settingEnum.getName())) {
+                resultList.add(settingMap.get(settingEnum.getName()));
+            } else {
+                keyList.add(settingEnum.getName());
+            }
+        }
+        List<SettingEntity> list = settingMapper.listByKeys(keyList);
+        for (SettingEntity entity: list) {
+            resultList.add(entity.getValue());
+            settingMap.put(entity.getKey(), entity.getValue());
+        }
+        return resultList;
+    }
+
+    public void updateSetting(SettingEnum settingEnum, String value) {
+        boolean flag = settingMapper.updateByKey(settingEnum.getName(), value) == 1;
+        WebUtil.assertIsSuccess(flag, "更新设置失败");
+        refresh(settingEnum);
+    }
+
+    public void updateSettings(List<SettingEnum> settingEnums, List<String> values) {
+        int size = settingEnums.size();
+        List<SettingEntity> list = new ArrayList<>(size);
+        for (int i=0; i<settingEnums.size(); i++) {
+            list.add(new SettingEntity(settingEnums.get(i).getName(), values.get(i)));
+        }
+        boolean flag = settingMapper.updateByKeys(list) > 0;
+        WebUtil.assertIsSuccess(flag, "批量更新设置失败");
+        refreshList(settingEnums);
+    }
+
+    public boolean isInstalled() {
+        try {
+            String s = getSetting(SettingEnum.IS_INSTALLED);
+            return Boolean.valueOf(s);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isOpenStorage() {
+        try {
+            String s = getSetting(SettingEnum.IS_OPEN_STORAGE);
+            return Boolean.valueOf(s);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void refresh(SettingEnum settingEnum) {
+        if (settingMap.contains(settingEnum.getName())) {
+            settingMap.remove(settingEnum.getName());
+            getSetting(settingEnum);
+        }
+    }
+
+    private void refreshList(List<SettingEnum> settingEnums) {
+        for (SettingEnum settingEnum: settingEnums) {
+            if (settingMap.contains(settingEnum.getName())) {
+                settingMap.remove(settingEnum.getName());
+            }
+        }
+        listSettings(settingEnums);
+    }
+
+   /* public synchronized String getSetting(String key) {
         if (settingMap == null) {
             refresh();
         }
@@ -70,11 +178,13 @@ public class SettingService {
         }
         return lang;
     }
-
+*/
     @Transactional
-    public void installWeb(String email, String nickname, String password,
-                           String title, String accessKey, String secretKey,
-                           String endPoint, String bucket, String url) {
+    public void installWeb(String email, String nickname, String password, String title) {
+        if (isInstalled()) {
+            throw new WebErrorException("网站已经安装过了");
+        }
+
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
         userEntity.setNickname(nickname);
@@ -86,20 +196,12 @@ public class SettingService {
         boolean flag = userMapper.saveRoot(userEntity) == 1;
         WebUtil.assertIsSuccess(flag, "管理员注册失败");
 
-        List<SettingEntity> list = new ArrayList<>();
-        SettingEntity settingEntity1 = new SettingEntity(SettingKeyMapper.WEB_TITLE, title);
-        SettingEntity settingEntity2 = new SettingEntity(SettingKeyMapper.OSS_ACCESS_KEY, accessKey);
-        SettingEntity settingEntity3 = new SettingEntity(SettingKeyMapper.OSS_SECRET_KEY, secretKey);
-        SettingEntity settingEntity4 = new SettingEntity(SettingKeyMapper.OSS_END_POINT, endPoint);
-        SettingEntity settingEntity5 = new SettingEntity(SettingKeyMapper.OSS_BUCKET, bucket);
-        SettingEntity settingEntity6 = new SettingEntity(SettingKeyMapper.OSS_URL, url);
-        list.add(settingEntity1);
-        list.add(settingEntity2);
-        list.add(settingEntity3);
-        list.add(settingEntity4);
-        list.add(settingEntity5);
-        list.add(settingEntity6);
-        flag = settingMapper.batchSave(list) == 6;
-        WebUtil.assertIsSuccess(flag, "网站安装失败");
+        List<SettingEnum> keys = new ArrayList<>(2);
+        List<String> values = new ArrayList<>(2);
+        keys.add(SettingEnum.IS_INSTALLED);
+        values.add("true");
+        keys.add(SettingEnum.WEB_TITLE);
+        values.add(title);
+        saveSettings(keys, values);
     }
 }
