@@ -19,8 +19,4 @@ public interface SettingMapper {
     SettingEntity getByKey(String key);
 
     List<SettingEntity> listByKeys(List<String> keys);
-
-    int updateByKey(@Param("key") String key, @Param("value") String value);
-
-    int updateByKeys(List<SettingEntity> entities);
 }

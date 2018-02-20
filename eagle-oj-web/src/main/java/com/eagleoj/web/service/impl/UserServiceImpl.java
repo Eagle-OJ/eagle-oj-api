@@ -4,18 +4,23 @@ import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.UserMapper;
 import com.eagleoj.web.entity.UserEntity;
+import com.eagleoj.web.file.FileService;
 import com.eagleoj.web.service.AttachmentService;
 import com.eagleoj.web.service.UserService;
 import com.eagleoj.web.setting.SettingService;
 import com.eagleoj.web.util.FileUtil;
 import com.eagleoj.web.util.WebUtil;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +31,13 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
-    private FileUtil fileUtil;
+    private FileService fileService;
 
     @Autowired
     private AttachmentService attachmentService;
@@ -104,20 +111,18 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void uploadUserAvatar(Integer uid, MultipartFile file) {
-        if (! settingService.isOpenStorage()) {
-            throw new WebErrorException("未开启存储功能，无法上传");
-        }
+        InputStream is = null;
         try {
-            String filePath = fileUtil.uploadAvatar(file.getInputStream(), "jpg");
-            int aid = attachmentService.save(uid, filePath);
-            UserEntity userEntity = new UserEntity();
-            userEntity.setAvatar(aid);
-            boolean flag = userMapper.updateByUid(uid, userEntity) == 1;
-            WebUtil.assertIsSuccess(flag, "头像更新失败");
-        } catch (Exception e) {
-            throw new WebErrorException("头像更新失败");
+            is = file.getInputStream();
+        } catch (IOException e) {
+            throw new WebErrorException(e.getMessage());
         }
-
+        String filePath = fileService.uploadAvatar(is, "jpg");
+        int aid = attachmentService.save(uid, filePath);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setAvatar(aid);
+        boolean flag = userMapper.updateByUid(uid, userEntity) == 1;
+        WebUtil.assertIsSuccess(flag, "头像更新失败");
     }
 
     @Override

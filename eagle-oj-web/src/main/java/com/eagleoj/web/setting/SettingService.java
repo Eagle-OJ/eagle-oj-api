@@ -90,7 +90,8 @@ public class SettingService {
     }
 
     public void updateSetting(SettingEnum settingEnum, String value) {
-        boolean flag = settingMapper.updateByKey(settingEnum.getName(), value) == 1;
+        SettingEntity settingEntity = new SettingEntity(settingEnum.getName(), value);
+        boolean flag = settingMapper.save(settingEntity) > 0;
         WebUtil.assertIsSuccess(flag, "更新设置失败");
         refresh(settingEnum);
     }
@@ -101,7 +102,7 @@ public class SettingService {
         for (int i=0; i<settingEnums.size(); i++) {
             list.add(new SettingEntity(settingEnums.get(i).getName(), values.get(i)));
         }
-        boolean flag = settingMapper.updateByKeys(list) > 0;
+        boolean flag = settingMapper.saveList(list) > 0;
         WebUtil.assertIsSuccess(flag, "批量更新设置失败");
         refreshList(settingEnums);
     }
@@ -124,6 +125,15 @@ public class SettingService {
         }
     }
 
+    public boolean isOpenMail() {
+        try {
+            String s= getSetting(SettingEnum.IS_OPEN_MAIL);
+            return Boolean.valueOf(s);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private void refresh(SettingEnum settingEnum) {
         if (settingMap.contains(settingEnum.getName())) {
             settingMap.remove(settingEnum.getName());
@@ -140,45 +150,6 @@ public class SettingService {
         listSettings(settingEnums);
     }
 
-   /* public synchronized String getSetting(String key) {
-        if (settingMap == null) {
-            refresh();
-        }
-        return settingMap.get(key);
-    }
-
-    public synchronized void refresh() {
-        settingMap = new HashMap<>();
-        List<SettingEntity> list = settingMapper.listAll();
-        for (SettingEntity entity: list) {
-            settingMap.put(entity.getKey(), entity.getValue());
-        }
-    }
-
-    public void updateSetting(String key, String value) {
-        boolean flag = settingMapper.updateByKey(key, value) == 1;
-        WebUtil.assertIsSuccess(flag, "网站设置更新失败");
-    }
-
-    public boolean isInstalled() {
-        if (settingMap == null) {
-            refresh();
-        }
-
-        if (settingMap == null) {
-            return false;
-        }
-        return settingMap.size() > 0;
-    }
-
-    public Map<LanguageEnum, String> getLangMap() {
-        Map<LanguageEnum, String> lang = new HashMap<>();
-        for (LanguageEnum languageEnum: LanguageEnum.values()) {
-            lang.put(languageEnum, languageEnum.getName());
-        }
-        return lang;
-    }
-*/
     @Transactional
     public void installWeb(String email, String nickname, String password, String title) {
         if (isInstalled()) {

@@ -80,6 +80,15 @@
             <version>2.3.0</version>
         </dependency>
         <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.eagleoj</groupId>
             <artifactId>eagle-oj-judge</artifactId>
             <version>1.0</version>

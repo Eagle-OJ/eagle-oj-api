@@ -5,11 +5,11 @@
 <mapper namespace="com.eagleoj.web.dao.SettingMapper">
 
     <insert id="save">
-        INSERT IGNORE INTO setting VALUE (#{key}, #{value})
+        REPLACE INTO setting VALUE (#{key}, #{value})
     </insert>
 
     <insert id="saveList">
-        INSERT IGNORE setting (`key`, value) VALUES
+        REPLACE INTO setting (`key`, value) VALUES
         <foreach item="item" index="index" collection="list" separator=",">
             (#{item.key}, #{item.value})
         </foreach>
@@ -31,17 +31,6 @@
         </foreach>
         )
     </select>
-
-    <update id="updateByKey">
-        UPDATE setting SET value=#{value} WHERE `key`=#{key}
-    </update>
-
-    <update id="updateByKeys">
-        REPLACE INTO setting VALUES
-        <foreach collection="list" item="item" separator=",">
-            (#{item.key}, #{item.value})
-        </foreach>
-    </update>
 
     <resultMap id="settingMap" type="SettingEntity">
         <id column="key" property="key"/>

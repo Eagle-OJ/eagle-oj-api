@@ -8,6 +8,7 @@ import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.data.status.ContestTypeStatus;
 import com.eagleoj.web.data.status.ProblemStatus;
 import com.eagleoj.web.entity.*;
+import com.eagleoj.web.file.FileService;
 import com.eagleoj.web.judger.JudgeResult;
 import com.eagleoj.web.judger.task.ContestJudgeTask;
 import com.eagleoj.web.judger.task.GroupJudgeTask;
@@ -34,7 +35,7 @@ public class JudgeServiceImpl implements JudgeService {
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private FileUtil fileUtil;
+    private FileService fileService;
 
     @Autowired
     private SubmissionService submissionService;
@@ -174,7 +175,7 @@ public class JudgeServiceImpl implements JudgeService {
         if (settingService.isOpenStorage()) {
             String uploadURL = null;
             try {
-                uploadURL = fileUtil.uploadCode(lang, sourceCode);
+                uploadURL = fileService.uploadCode(lang, sourceCode);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
                 throw new WebErrorException("保存代码记录失败");

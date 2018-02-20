@@ -48,36 +48,46 @@ public class FileUtil {
         }
     }
 
-    public String uploadCode(LanguageEnum lang, String code) throws Exception {
-        InputStream is = new ByteArrayInputStream(code.getBytes());
-        StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
-        switch (lang) {
-            case JAVA8:
-                fileName.append(".java");
-                break;
-            case C:
-                fileName.append(".c");
-                break;
-            case CPP:
-                fileName.append(".cpp");
-                break;
-            default:
-                fileName.append(".py");
-                break;
-        }
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType("text/plain");
-        String filePath = generateFilePath(fileName.toString());
+    public String uploadCode(LanguageEnum lang, String code) {
+        try {
+            InputStream is = new ByteArrayInputStream(code.getBytes());
+            StringBuilder fileName = new StringBuilder(UUID.randomUUID().toString());
+            switch (lang) {
+                case JAVA8:
+                    fileName.append(".java");
+                    break;
+                case C:
+                    fileName.append(".c");
+                    break;
+                case CPP:
+                    fileName.append(".cpp");
+                    break;
+                default:
+                    fileName.append(".py");
+                    break;
+            }
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType("text/plain");
+            String filePath = generateFilePath(fileName.toString());
 
-        getOSSClient().putObject(settingService.getSetting(SettingEnum.OSS_BUCKET), filePath, is, metadata);
-        return "/"+filePath;
+            getOSSClient().putObject(settingService.getSetting(SettingEnum.OSS_BUCKET), filePath, is, metadata);
+            return "/"+filePath;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return null;
+        }
     }
 
-    public String uploadAvatar(InputStream is, String postfix) throws Exception {
-        String file = UUID.randomUUID().toString()+"."+postfix;
-        String filePath = generateFilePath(file);
-        getOSSClient().putObject(settingService.getSetting(SettingEnum.OSS_BUCKET), filePath, is);
-        return "/"+filePath;
+    public String uploadAvatar(InputStream is, String postfix) {
+        try {
+            String file = UUID.randomUUID().toString()+"."+postfix;
+            String filePath = generateFilePath(file);
+            getOSSClient().putObject(settingService.getSetting(SettingEnum.OSS_BUCKET), filePath, is);
+            return "/"+filePath;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return null;
+        }
     }
 
     private OSSClient getOSSClient() {

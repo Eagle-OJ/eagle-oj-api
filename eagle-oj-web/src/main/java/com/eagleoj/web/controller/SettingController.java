@@ -2,8 +2,11 @@ package com.eagleoj.web.controller;
 
 import com.eagleoj.judge.LanguageEnum;
 import com.eagleoj.web.cache.CacheController;
+import com.eagleoj.web.controller.format.admin.AddMailFormat;
 import com.eagleoj.web.controller.format.admin.UpdateGlobalSettingFormat;
 import com.eagleoj.web.controller.format.admin.UpdateStorageSettingFormat;
+import com.eagleoj.web.file.FileService;
+import com.eagleoj.web.mail.MailService;
 import com.eagleoj.web.setting.SettingEnum;
 import com.eagleoj.web.setting.SettingService;
 import com.eagleoj.web.util.FileUtil;
@@ -37,7 +40,10 @@ public class SettingController {
     private SettingService settingService;
 
     @Autowired
-    private FileUtil fileUtil;
+    private FileService fileService;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     public ResponseEntity getSetting() {
@@ -120,16 +126,10 @@ public class SettingController {
             }
 
             // 进行客户端测试
-            if (! fileUtil.test(format.getAccessKey(), format.getSecretKey(), format.getEndPoint(), format.getBucket())) {
+            if (! fileService.test(format.getAccessKey(), format.getSecretKey(), format.getEndPoint(), format.getBucket())) {
                 throw new WebErrorException("你填写的参数无效");
             }
 
-            boolean isAlready = true;
-            try {
-                settingService.getSetting(SettingEnum.OSS_BUCKET);
-            } catch (Exception e) {
-                isAlready = false;
-            }
             List<SettingEnum> keys = new ArrayList<>(6);
             List<String> values = new ArrayList<>(6);
             keys.add(SettingEnum.IS_OPEN_STORAGE);
@@ -144,53 +144,88 @@ public class SettingController {
             values.add(format.getBucket());
             keys.add(SettingEnum.OSS_URL);
             values.add(format.getUrl());
-            if (isAlready) {
-                // update
-                settingService.updateSettings(keys, values);
-            } else {
-                // save
-                settingService.saveSettings(keys, values);
-            }
-            fileUtil.refresh();
+            settingService.updateSettings(keys, values);
+            fileService.refresh();
         } else {
-            try {
-                settingService.updateSetting(SettingEnum.IS_OPEN_STORAGE, "false");
-            } catch (Exception e) {
-                settingService.saveSetting(SettingEnum.IS_OPEN_STORAGE, "false");
-            }
+            settingService.updateSetting(SettingEnum.IS_OPEN_STORAGE, "false");
         }
         return new ResponseEntity("更新设置成功");
     }
 
+    @ApiOperation("获取邮件设置")
     @RequiresRoles("9")
-    @PutMapping
-    public ResponseEntity updateSetting(@RequestBody @Valid UpdateSettingFormat format) {
-        /*String key = format.getKey();
-        String value = format.getValue();
-        switch (key) {
-            case "title":
-                settingService.updateSetting(SettingKeyMapper.WEB_TITLE, value);
-                break;
-            case "accessKey":
-                settingService.updateSetting(SettingKeyMapper.OSS_ACCESS_KEY, value);
-                break;
-            case "secretKey":
-                settingService.updateSetting(SettingKeyMapper.OSS_SECRET_KEY, value);
-                break;
-            case "bucket":
-                settingService.updateSetting(SettingKeyMapper.OSS_BUCKET, value);
-                break;
-            case "endPoint":
-                settingService.updateSetting(SettingKeyMapper.OSS_END_POINT, value);
-                break;
-            case "url":
-                settingService.updateSetting(SettingKeyMapper.OSS_URL, value);
-                break;
-            default:
-                throw new WebErrorException("不存在此key");
+    @GetMapping("/mail")
+    public ResponseEntity getMailSetting() {
+        Map<String, String> map = new HashMap<>();
+        if (settingService.isOpenMail()) {
+            map.put(SettingEnum.IS_OPEN_MAIL.getName(), "true");
+            List<SettingEnum> keys = new ArrayList<>(4);;
+            keys.add(SettingEnum.MAIL_HOST);
+            keys.add(SettingEnum.MAIL_PORT);
+            keys.add(SettingEnum.MAIL_USERNAME);
+            keys.add(SettingEnum.MAIL_PASSWORD);
+            List<String> values = settingService.listSettings(keys);
+            for (int i=0; i<keys.size(); i++) {
+                map.put(keys.get(i).getName(), values.get(i));
+            }
+        } else {
+            map.put(SettingEnum.IS_OPEN_MAIL.getName(), "false");
         }
-        settingService.refresh();*/
-        return new ResponseEntity("网站配置更新成功");
+        return new ResponseEntity(map);
+    }
+
+    @ApiOperation("更新")
+    @RequiresRoles("9")
+    @PostMapping("/mail")
+    public ResponseEntity addMailSetting(@RequestBody @Valid AddMailFormat format) {
+        Boolean isOpenMail = format.getOpenMail();
+        String host = format.getHost();
+        Integer port = format.getPort();
+        String username = format.getUsername();
+        String password = format.getPassword();
+
+        if (isOpenMail) {
+            if (host == null || port == null || username == null || password == null) {
+                throw new WebErrorException("邮件信息不完整");
+            }
+
+            List<SettingEnum> keys = new ArrayList<>(5);
+            List<String> values = new ArrayList<>(5);
+            keys.add(SettingEnum.IS_OPEN_MAIL);
+            values.add("true");
+            keys.add(SettingEnum.MAIL_HOST);
+            values.add(host);
+            keys.add(SettingEnum.MAIL_PORT);
+            values.add(String.valueOf(port));
+            keys.add(SettingEnum.MAIL_USERNAME);
+            values.add(username);
+            keys.add(SettingEnum.MAIL_PASSWORD);
+            values.add(password);
+            settingService.updateSettings(keys, values);
+        } else {
+            settingService.updateSetting(SettingEnum.IS_OPEN_MAIL, "false");
+        }
+        return new ResponseEntity("更新设置成功");
+    }
+
+    @ApiOperation("测试邮件发送")
+    @RequiresRoles("9")
+    @PostMapping("/mail/test")
+    public ResponseEntity testMailSetting(@RequestBody @Valid AddMailFormat format) {
+        String host = format.getHost();
+        Integer port = format.getPort();
+        String username = format.getUsername();
+        String password = format.getPassword();
+        String receiver = format.getTestMailAddress();
+        if (host == null || port == null || username == null ||
+                password == null || receiver == null) {
+            throw new WebErrorException("邮件信息不完整");
+        }
+
+        if (! mailService.testMail(host, port, username, password, receiver)) {
+            throw new WebErrorException("邮件发送失败");
+        }
+        return new ResponseEntity("邮件发送成功，请查看收件箱");
     }
 
     @PostMapping("/install")

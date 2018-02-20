@@ -12,7 +12,6 @@
     <modules>
         <module>eagle-oj-web</module>
         <module>eagle-oj-judge</module>
-        <module>eagle-oj-mail</module>
     </modules>
 
     <dependencyManagement>
