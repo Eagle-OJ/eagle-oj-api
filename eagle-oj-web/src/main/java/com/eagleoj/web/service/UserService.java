@@ -31,4 +31,10 @@ public interface UserService {
     void uploadUserAvatar(Integer uid, MultipartFile file);
 
     void updateUserPassword(int uid, String oldPassword, String newPassword);
+
+    void updateUserEmail(int uid, String email);
+
+    void verifyUserEmail(int uid, String code);
+
+    void resetUserPassword(String email, String password, String code);
 }

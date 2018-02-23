@@ -29,7 +29,6 @@ public class ProblemModeratorServiceImpl implements ProblemModeratorService {
     @Override
     public void addProblemModerator(int pid, String email) {
         UserEntity userEntity = userService.getUserByEmail(email);
-        WebUtil.assertNotNull(userEntity, "不存在此用户");
         int uid = userEntity.getUid();
         if (uid == SessionHelper.get().getUid()) {
             throw new WebErrorException("不能添加自己");

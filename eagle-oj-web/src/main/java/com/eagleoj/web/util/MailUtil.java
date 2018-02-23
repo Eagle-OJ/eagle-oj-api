@@ -31,12 +31,16 @@ public class MailUtil {
 
     public boolean send(MailEntity entity) {
         try {
-            MimeMessageHelper helper = getHelper();
+            JavaMailSenderImpl sender = getSender();
+            MimeMessage message = sender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setFrom(sender.getUsername());
             helper.setTo(entity.getReceiver());
             helper.setSubject(entity.getTitle());
-            helper.setText(entity.getText());
+            helper.setText(entity.getText(), true);
+            sender.send(message);
             return true;
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
             return false;
         }
@@ -58,12 +62,13 @@ public class MailUtil {
             helper.setTo(receiver);
             sender.send(message);
             return true;
-        } catch (MessagingException e) {
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             return false;
         }
     }
 
-    private MimeMessageHelper getHelper() throws MessagingException {
+    private JavaMailSenderImpl getSender() throws MessagingException {
         List<SettingEnum> keys = new ArrayList<>(4);
         keys.add(SettingEnum.MAIL_HOST);
         keys.add(SettingEnum.MAIL_PORT);
@@ -79,9 +84,6 @@ public class MailUtil {
         sender.setPort(port);
         sender.setUsername(username);
         sender.setPassword(password);
-        MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper =  new MimeMessageHelper(message);
-        helper.setFrom(username);
-        return helper;
+        return sender;
     }
 }

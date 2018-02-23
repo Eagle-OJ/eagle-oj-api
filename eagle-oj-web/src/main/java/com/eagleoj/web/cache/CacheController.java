@@ -27,7 +27,7 @@ public class CacheController {
 
     private static Cache<Integer, Object> leaderboardCache;
 
-    private static Cache<String, String> settingCache;
+    private static Cache<String, String> captchaCache;
 
     static {
         CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
@@ -55,14 +55,14 @@ public class CacheController {
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(DefaultConfig.LEADERBOARD_REFRESH_TIME, TimeUnit.MINUTES)))
                 .build());
 
-        settingCache = cacheManager
-                .createCache("settingCache",
+        captchaCache = cacheManager
+                .createCache("captchaCache",
                         CacheConfigurationBuilder.newCacheConfigurationBuilder(
                                 String.class,
                                 String.class,
-                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
+                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(5, MemoryUnit.MB))
+                                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(DefaultConfig.CAPTCHA_EXPIRED_TIME, TimeUnit.MINUTES)))
                                 .build()
-
                         );
     }
 
@@ -76,7 +76,7 @@ public class CacheController {
         return leaderboardCache;
     }
 
-    public static Cache<String, String> getSettingCache() {
-        return settingCache;
+    public static Cache<String, String> getCaptchaCache() {
+        return captchaCache;
     }
 }

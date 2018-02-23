@@ -1,10 +1,13 @@
 package com.eagleoj.web.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.UserMapper;
 import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.file.FileService;
+import com.eagleoj.web.mail.MailService;
+import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.AttachmentService;
 import com.eagleoj.web.service.UserService;
 import com.eagleoj.web.setting.SettingService;
@@ -43,12 +46,15 @@ public class UserServiceImpl implements UserService {
     private AttachmentService attachmentService;
 
     @Autowired
-    private SettingService settingService;
+    private MailService mailService;
 
     @Override
     public void register(String email, String nickname, String password) throws WebErrorException {
-        UserEntity userEntity = getUserByEmail(email);
-        WebUtil.assertNull(userEntity, "邮箱已被注册");
+        UserEntity origin = null;
+        try {
+            origin = getUserByEmail(email);
+        } catch (Exception e) {}
+        WebUtil.assertNull(origin, "邮箱已被注册");
 
         UserEntity newUserEntity = new UserEntity();
         newUserEntity.setEmail(email);
@@ -84,7 +90,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserByEmail(String email) {
-        return userMapper.getByEmail(email);
+        UserEntity userEntity = userMapper.getByEmail(email);
+        WebUtil.assertNotNull(userEntity, "不存在此用户");
+        return userEntity;
     }
 
     @Override
@@ -136,17 +144,46 @@ public class UserServiceImpl implements UserService {
         newUserEntity.setPassword(new Md5Hash(newPassword).toString());
         boolean flag = userMapper.updateByUid(uid, newUserEntity) == 1;
         WebUtil.assertIsSuccess(flag, "密码更新失败");
+        CacheController.getAuthCache().remove(SessionHelper.get().getToken());
     }
 
-    private int save(String email, String nickname, String password) {
+    @Override
+    public void updateUserEmail(int uid, String email) {
+        UserEntity origin = null;
+        try {
+            origin = getUserByEmail(email);
+        } catch (Exception e) {}
+        WebUtil.assertNull(origin, "邮箱已被使用");
+
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(email);
-        userEntity.setNickname(nickname);
-        userEntity.setPassword(new Md5Hash(password).toString());
-        userEntity.setPermission(new JSONArray());
-        userEntity.setRegisterTime(System.currentTimeMillis());
+        userEntity.setVerified(0);
+        updateUser(uid, userEntity);
+        CacheController.getAuthCache().remove(SessionHelper.get().getToken());
+    }
 
-        boolean result = userMapper.save(userEntity) == 1;
-        return result ? userEntity.getUid() : 0;
+    @Override
+    public void verifyUserEmail(int uid, String code) {
+        UserEntity userEntity = getUserByUid(uid);
+        String rightCode = new Md5Hash(userEntity.getUid()+userEntity.getEmail()+userEntity.getPassword()).toString();
+        if (! rightCode.equals(code)) {
+            throw new WebErrorException("邮箱验证失败");
+        }
+
+        UserEntity update = new UserEntity();
+        update.setVerified(1);
+        updateUser(uid, update);
+    }
+
+    public void resetUserPassword(String email, String password, String code) {
+        UserEntity userEntity = getUserByEmail(email);
+        String secret = new Md5Hash(userEntity.getUid()+userEntity.getEmail()+userEntity.getPassword()).toString();
+        if (! code.equals(secret)) {
+            throw new WebErrorException("密钥错误，无法重置密码");
+        }
+
+        UserEntity newUserEntity = new UserEntity();
+        newUserEntity.setPassword(new Md5Hash(password).toString());
+        updateUser(userEntity.getUid(), newUserEntity);
     }
 }

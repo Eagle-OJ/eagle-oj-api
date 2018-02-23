@@ -1,29 +1,21 @@
 package com.eagleoj.web.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.controller.exception.WebErrorException;
-import com.eagleoj.web.controller.format.user.UpdateUserFormat;
-import com.eagleoj.web.controller.format.user.UpdateUserPasswordFormat;
-import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
-import com.eagleoj.web.setting.SettingService;
+import com.eagleoj.web.controller.format.user.*;
+import com.eagleoj.web.mail.MailService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.user.UpdateUserProfileFormat;
 import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.security.SessionHelper;
-import com.eagleoj.web.service.AttachmentService;
 import com.eagleoj.web.service.ContestUserService;
 import com.eagleoj.web.service.GroupUserService;
 import com.eagleoj.web.service.UserService;
-import com.eagleoj.web.util.FileUtil;
 import com.eagleoj.web.util.WebUtil;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.crypto.hash.Md5Hash;
@@ -56,7 +48,7 @@ public class UserController {
     private ContestUserService contestUserService;
 
     @Autowired
-    private SettingService settingService;
+    private MailService mailService;
 
     @ApiOperation("获取当前用户的所有信息")
     @GetMapping
@@ -110,13 +102,49 @@ public class UserController {
         return new ResponseEntity("更新成功");
     }
 
+    @ApiOperation("发送邮箱确认邮件")
+    @RequiresAuthentication
+    @PostMapping("/mail/check")
+    public ResponseEntity checkUserEmail(@RequestBody @Valid SendMailFormat format) {
+        if (format.getUrl() == null || format.getUrl().length() == 0) {
+            throw new WebErrorException("url地址不得为空");
+        }
+
+        UserEntity userEntity = userService.getUserByUid(SessionHelper.get().getUid());
+        if (! mailService.sendConfirmMessage(format.getUrl(), userEntity)) {
+            throw new WebErrorException("邮件发送失败");
+        }
+        return new ResponseEntity("邮件发送成功");
+    }
+
+    @ApiOperation("进行邮箱确认")
+    @RequiresAuthentication
+    @PostMapping("/mail/verify")
+    public ResponseEntity verifyUserEmail(@RequestBody @Valid VerifyUserEmailFormat format) {
+        String code = format.getCode();
+        userService.verifyUserEmail(SessionHelper.get().getUid(), code);
+        return new ResponseEntity("邮箱验证成功");
+    }
+
+    @ApiOperation("更新邮箱")
+    @RequiresAuthentication
+    @PutMapping("/mail")
+    public ResponseEntity updateUserEmail(@RequestBody @Valid SendMailFormat format) {
+        String email = format.getMail();
+        if (email == null || email.length() == 0) {
+            throw new WebErrorException("邮箱不得为空");
+        }
+
+        userService.updateUserEmail(SessionHelper.get().getUid(), email);
+        return new ResponseEntity("邮箱更新成功");
+    }
+
     @ApiOperation("更新用户的密码")
     @RequiresAuthentication
     @PutMapping("/profile/password")
     public ResponseEntity updateUserPassword(@Valid @RequestBody UpdateUserPasswordFormat format) {
         int uid = SessionHelper.get().getUid();
         userService.updateUserPassword(uid, format.getOriginPassword(), format.getNewPassword());
-        CacheController.getAuthCache().remove(SessionHelper.get().getToken());
         return new ResponseEntity("密码更新成功");
     }
 

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>邮箱确认</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="content" style="max-width: 1000px; margin: 0 auto">
+    <p style="font-size: 20px; color: #80848f">Dear <span th:text="${nickname}"></span></p>
+    <p>你现在进行邮箱验证，如果点击无效可以自己复制地址进行访问：<a target="_blank" th:href="${url}" th:text="${url}"></a></p>
+</div>
+</body>
+</html>

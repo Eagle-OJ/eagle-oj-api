@@ -15,4 +15,7 @@ public class DefaultConfig {
 
     // ACM模式罚时 ms
     public static final int ACM_PENALTY_TIME = 20;
+
+    // 验证码过期时间 min
+    public static final int CAPTCHA_EXPIRED_TIME = 5;
 }

@@ -2,10 +2,14 @@ package com.eagleoj.web.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.web.cache.CacheController;
+import com.eagleoj.web.controller.exception.WebErrorException;
+import com.eagleoj.web.controller.format.index.ForgetPasswordFormat;
 import com.eagleoj.web.controller.format.index.IndexLoginFormat;
 import com.eagleoj.web.controller.format.index.IndexRegisterFormat;
+import com.eagleoj.web.controller.format.index.ResetPasswordFormat;
 import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.entity.UserEntity;
+import com.eagleoj.web.mail.MailService;
 import com.eagleoj.web.service.UserService;
 import com.eagleoj.web.util.JWTUtil;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +38,9 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MailService mailService;
+
     @ApiOperation("用户注册")
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody @Valid IndexRegisterFormat format) {
@@ -57,5 +64,22 @@ public class AccountController {
         authCache.put(token, userEntity.getPassword());
 
         return new ResponseEntity("登入成功", token);
+    }
+
+    @ApiOperation("忘记密码")
+    @PostMapping("/forget_password")
+    public ResponseEntity forgetPassword(@RequestBody @Valid ForgetPasswordFormat format) {
+        UserEntity userEntity = userService.getUserByEmail(format.getEmail());
+        if (! mailService.sendForgetPasswordMessage(format.getUrl(), userEntity)) {
+            throw new WebErrorException("邮件发送失败");
+        }
+        return new ResponseEntity("邮件发送成功");
+    }
+
+    @ApiOperation("重设密码")
+    @PostMapping("/reset_password")
+    public ResponseEntity resetPassword(@RequestBody @Valid ResetPasswordFormat format) {
+        userService.resetUserPassword(format.getEmail(), format.getPassword(), format.getCode());
+        return new ResponseEntity("密码重置成功");
     }
 }
