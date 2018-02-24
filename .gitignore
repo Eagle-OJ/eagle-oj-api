@@ -1,3 +1,5 @@
+# web static
+eagle-oj-web/src/main/resources/public/
 # idea
 *.iml
 .idea/
