@@ -1,8 +1,13 @@
 FROM openjdk:8u151-jre-alpine3.7
 
+LABEL "version"="1.0"
+LABEL "maintainer"="chendingchao1@126.com"
+
 WORKDIR /eagle-oj
 
 COPY ./eagle-oj-web/target/eagle-oj-web-1.0.jar /eagle-oj
+
+VOLUME ["/eagle-oj/log"]
 
 # ENV MYSQL_URL=101.132.164.120:3306 MYSQL_DATABASE=eagle_oj MYSQL_USERNAME=root MYSQL_PASSWORD=eagle_oj
 
