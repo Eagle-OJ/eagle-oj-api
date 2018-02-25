@@ -1,5 +1,6 @@
-# web static
-eagle-oj-web/src/main/resources/public/
+# web create temporary data
+/data/
+
 # idea
 *.iml
 .idea/

@@ -9,14 +9,22 @@ import com.eagleoj.web.dao.TagProblemMapper;
 import com.eagleoj.web.dao.TagsMapper;
 import com.eagleoj.web.entity.ProblemEntity;
 import com.eagleoj.web.entity.TagProblemEntity;
+import com.eagleoj.web.entity.TestCaseEntity;
 import com.eagleoj.web.service.*;
 import com.eagleoj.web.service.async.AsyncTaskService;
 import com.eagleoj.web.util.WebUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +34,8 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class ProblemServiceImpl implements ProblemService {
+
+    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ProblemMapper problemMapper;
@@ -226,5 +236,78 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     public List<ProblemEntity> listAllProblems() {
         return problemMapper.listAll();
+    }
+
+    @Override
+    public boolean exportProblems(JSONArray pidList) {
+        JSONArray data = new JSONArray();
+        for (int i=0; i<pidList.size(); i++) {
+            int pid = pidList.getInteger(i);
+            JSONObject obj = new JSONObject();
+            ProblemEntity problemEntity = problemMapper.getByPid(pid);
+            obj.put("title", problemEntity.getTime());
+            obj.put("description", problemEntity.getDescription());
+            obj.put("input_format", problemEntity.getInputFormat());
+            obj.put("output_format", problemEntity.getOutputFormat());
+            obj.put("difficult", problemEntity.getDifficult());
+            obj.put("samples", problemEntity.getSamples());
+            obj.put("time", problemEntity.getTime());
+            obj.put("memory", problemEntity.getMemory());
+            List<TestCaseEntity> testCases = testCasesService.listProblemTestCases(pid);
+            JSONArray testCaseArray = new JSONArray(testCases.size());
+            for (TestCaseEntity entity: testCases) {
+                JSONObject tempObj = new JSONObject();
+                tempObj.put("stdin", entity.getStdin());
+                tempObj.put("stdout", entity.getStdout());
+                tempObj.put("strength", entity.getStrength());
+                testCaseArray.add(tempObj);
+            }
+            obj.put("test_cases", testCaseArray);
+            data.add(obj);
+        }
+        FileOutputStream fileOutputStream = null;
+        try {
+            Calendar calendar = Calendar.getInstance();
+            String filename = calendar.get(Calendar.YEAR)+"-"
+                    +calendar.get(Calendar.MONTH)+"-"
+                    +calendar.get(Calendar.DAY_OF_MONTH)+"-"
+                    +calendar.get(Calendar.HOUR_OF_DAY)+"-"
+                    +calendar.get(Calendar.MINUTE)+"-"
+                    +calendar.get(Calendar.SECOND)+".json";
+
+            File parent = new File("data");
+            if (! parent.exists()) {
+                if (! parent.mkdir()) {
+                    throw new IOException("create dictionary failed");
+                }
+            }
+
+            File file = new File("data/"+filename);
+            if (! file.exists()) {
+                if (! file.createNewFile()) {
+                    throw new IOException("create file failed");
+                }
+            }
+            fileOutputStream = new FileOutputStream(file, false);
+            fileOutputStream.write(data.toJSONString().getBytes("utf-8"));
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+            return false;
+        } finally {
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
+        }
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean importProblems(JSONArray list) {
+        return false;
     }
 }

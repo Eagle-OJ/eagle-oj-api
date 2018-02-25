@@ -1,5 +1,8 @@
 package com.eagleoj.web.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.eagleoj.web.controller.exception.WebErrorException;
+import com.eagleoj.web.controller.format.index.ImportProblemsFormat;
 import com.eagleoj.web.data.status.RoleStatus;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -16,11 +19,9 @@ import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,6 @@ public class ProblemsController {
     }
 
     @ApiOperation("获取所有题目")
-    @RequiresAuthentication
     @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @GetMapping
     public ResponseEntity getAllProblems(@RequestParam("page") int page,
@@ -98,12 +98,33 @@ public class ProblemsController {
     }
 
     @ApiOperation("获取待审核的题目列表")
-    @RequiresAuthentication
     @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @GetMapping("/auditing")
     public ResponseEntity getAuditingProblems(@RequestParam("page") int page,
                                               @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
         return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listAuditingProblems()));
+    }
+
+    @ApiOperation("导出题目")
+    @RequiresRoles("9")
+    @PostMapping("/export")
+    public ResponseEntity exportProblems(@RequestBody @Valid ImportProblemsFormat format) {
+        JSONArray pidList = format.getPidList();
+        if (pidList.size() == 0) {
+            throw new WebErrorException("列表不得为空");
+        }
+        if (! problemService.exportProblems(pidList)) {
+            throw new WebErrorException("题目导出失败");
+        }
+        return new ResponseEntity("题目导出成功");
+    }
+
+    @ApiOperation("导入题目")
+    @RequiresRoles("9")
+    @PostMapping("/import")
+    public ResponseEntity importProblems() {
+        // todo
+        return null;
     }
 }

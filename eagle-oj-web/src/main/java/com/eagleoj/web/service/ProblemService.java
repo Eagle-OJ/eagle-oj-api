@@ -45,4 +45,7 @@ public interface ProblemService {
 
     List<ProblemEntity> listAllProblems();
 
+    boolean exportProblems(JSONArray list);
+
+    boolean importProblems(JSONArray list);
 }
