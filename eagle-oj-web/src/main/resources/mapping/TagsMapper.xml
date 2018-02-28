@@ -8,7 +8,7 @@
         SELECT * FROM tags WHERE name=#{name}
     </select>
 
-    <insert id="save">
+    <insert id="save" useGeneratedKeys="true" keyProperty="tid">
         INSERT INTO tags (name) VALUE (#{name})
     </insert>
 

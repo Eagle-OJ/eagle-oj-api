@@ -2,6 +2,7 @@ package com.eagleoj.web.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eagleoj.web.data.status.ProblemStatus;
 import com.eagleoj.web.entity.ProblemEntity;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Map;
 public interface ProblemService {
 
     int save(JSONArray tags, int owner, String title, JSONObject description, JSONObject inputFormat, JSONObject outputFormat,
-             int difficult, JSONArray samples, int time, int memory);
+             int difficult, JSONArray samples, int time, int memory, ProblemStatus status);
 
     int countProblems();
 
@@ -47,5 +48,5 @@ public interface ProblemService {
 
     boolean exportProblems(JSONArray list);
 
-    boolean importProblems(JSONArray list);
+    boolean importProblems(int uid, JSONArray list);
 }

@@ -24,16 +24,24 @@ public class TagsServiceImpl implements TagsService {
     private TagProblemService tagProblemService;
 
     @Override
-    public void save(String name) {
-        TagEntity tagEntity = getByName(name);
+    public int save(String name) {
+        TagEntity tagEntity = null;
+        try {
+            tagEntity = getByName(name);
+        } catch (Exception e) { }
         WebUtil.assertNull(tagEntity, "已经存在此标签");
-        boolean flag = tagsMapper.save(name) == 1;
+        TagEntity newEntity = new TagEntity();
+        newEntity.setName(name);
+        boolean flag = tagsMapper.save(newEntity) == 1;
         WebUtil.assertIsSuccess(flag, "保存标签失败");
+        return newEntity.getTid();
     }
 
     @Override
     public TagEntity getByName(String name) {
-        return tagsMapper.getByName(name);
+        TagEntity tagEntity = tagsMapper.getByName(name);
+        WebUtil.assertNotNull(tagEntity, "不存在此标签");
+        return tagEntity;
     }
 
     @Override
@@ -60,7 +68,10 @@ public class TagsServiceImpl implements TagsService {
     }
 
     public void updateTagName(int tid, String name) {
-        TagEntity tagEntity = getByName(name);
+        TagEntity tagEntity = null;
+        try {
+            tagEntity = getByName(name);
+        } catch (Exception e) { }
         WebUtil.assertNull(tagEntity, "已经存在此标签");
 
         TagEntity newTagEntity = new TagEntity();

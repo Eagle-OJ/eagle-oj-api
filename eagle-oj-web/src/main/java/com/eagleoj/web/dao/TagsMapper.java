@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface TagsMapper {
 
-    int save(String name);
+    int save(TagEntity tagEntity);
 
     TagEntity getByName(String name);
 

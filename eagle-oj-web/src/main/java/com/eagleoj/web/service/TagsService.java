@@ -11,7 +11,7 @@ public interface TagsService {
 
     TagEntity getByName(String name);
 
-    void save(String name);
+    int save(String name);
 
     void deleteTag(int tid);
 

@@ -7,7 +7,9 @@ import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.dao.ProblemMapper;
 import com.eagleoj.web.dao.TagProblemMapper;
 import com.eagleoj.web.dao.TagsMapper;
+import com.eagleoj.web.data.status.ProblemStatus;
 import com.eagleoj.web.entity.ProblemEntity;
+import com.eagleoj.web.entity.TagEntity;
 import com.eagleoj.web.entity.TagProblemEntity;
 import com.eagleoj.web.entity.TestCaseEntity;
 import com.eagleoj.web.service.*;
@@ -65,7 +67,7 @@ public class ProblemServiceImpl implements ProblemService {
     @Override
     public int save(JSONArray tags, int owner, String title, JSONObject description,
                     JSONObject inputFormat, JSONObject outputFormat,
-                          int difficult, JSONArray samples, int time, int memory) {
+                    int difficult, JSONArray samples, int time, int memory, ProblemStatus status) {
         // 保存tag标签并且添加tag标签使用次数
         List<Integer> tagList = new ArrayList<>(tags.size());
         for(int i=0; i<tags.size(); i++) {
@@ -89,7 +91,7 @@ public class ProblemServiceImpl implements ProblemService {
         problemEntity.setSamples(samples);
         problemEntity.setTime(time);
         problemEntity.setMemory(memory);
-        problemEntity.setStatus(0);
+        problemEntity.setStatus(status.getNumber());
         problemEntity.setCreateTime(System.currentTimeMillis());
         boolean flag = problemMapper.save(problemEntity) == 1;
         WebUtil.assertIsSuccess(flag, "题目添加失败");
@@ -244,8 +246,9 @@ public class ProblemServiceImpl implements ProblemService {
         for (int i=0; i<pidList.size(); i++) {
             int pid = pidList.getInteger(i);
             JSONObject obj = new JSONObject();
+            // add problem
             ProblemEntity problemEntity = problemMapper.getByPid(pid);
-            obj.put("title", problemEntity.getTime());
+            obj.put("title", problemEntity.getTitle());
             obj.put("description", problemEntity.getDescription());
             obj.put("input_format", problemEntity.getInputFormat());
             obj.put("output_format", problemEntity.getOutputFormat());
@@ -253,6 +256,7 @@ public class ProblemServiceImpl implements ProblemService {
             obj.put("samples", problemEntity.getSamples());
             obj.put("time", problemEntity.getTime());
             obj.put("memory", problemEntity.getMemory());
+            // add test cases
             List<TestCaseEntity> testCases = testCasesService.listProblemTestCases(pid);
             JSONArray testCaseArray = new JSONArray(testCases.size());
             for (TestCaseEntity entity: testCases) {
@@ -263,6 +267,13 @@ public class ProblemServiceImpl implements ProblemService {
                 testCaseArray.add(tempObj);
             }
             obj.put("test_cases", testCaseArray);
+            // add tags
+            List<Map<String, Object>> tagsList = listProblemTags(pid);
+            JSONArray tags = new JSONArray(tagsList.size());
+            for (Map<String, Object> tag: tagsList) {
+                tags.add(tag.get("name"));
+            }
+            obj.put("tags", tags);
             data.add(obj);
         }
         FileOutputStream fileOutputStream = null;
@@ -307,7 +318,34 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Transactional
     @Override
-    public boolean importProblems(JSONArray list) {
-        return false;
+    public boolean importProblems(int uid, JSONArray list) {
+        for (int i=0; i<list.size(); i++) {
+            JSONObject obj = list.getJSONObject(i);
+            JSONArray tags = obj.getJSONArray("tags");
+            JSONArray tagsList = new JSONArray(tags.size());
+            for (int j=0; j<tags.size(); j++) {
+                String tagName = tags.getString(j);
+                TagEntity tagEntity = null;
+                try {
+                    tagEntity = tagsService.getByName(tagName);
+                } catch (Exception e) {}
+                if (tagEntity == null) {
+                    tagsList.add(tagsService.save(tagName));
+                } else {
+                    tagsList.add(tagEntity.getTid());
+                }
+            }
+
+            String title = obj.getString("title");
+            JSONObject description = obj.getJSONObject("description");
+            JSONObject inputFormat = obj.getJSONObject("input_format");
+            JSONObject outputFormat = obj.getJSONObject("output_format");
+            int difficult = obj.getInteger("difficult");
+            JSONArray samples = obj.getJSONArray("samples");
+            int time = obj.getInteger("time");
+            int memory = obj.getInteger("memory");
+            save(tagsList, uid, title, description, inputFormat, outputFormat, difficult, samples, time, memory, ProblemStatus.SHARING);
+        }
+        return true;
     }
 }

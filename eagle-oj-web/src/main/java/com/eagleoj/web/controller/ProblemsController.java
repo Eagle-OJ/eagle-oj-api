@@ -1,5 +1,6 @@
 package com.eagleoj.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.eagleoj.web.controller.exception.WebErrorException;
 import com.eagleoj.web.controller.format.index.ImportProblemsFormat;
@@ -16,12 +17,16 @@ import com.eagleoj.web.entity.ResponseEntity;
 import com.eagleoj.web.security.SessionHelper;
 import com.eagleoj.web.service.ProblemService;
 import com.eagleoj.web.util.WebUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +38,8 @@ import java.util.Map;
 @Validated
 @RequestMapping(value = "/problems", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ProblemsController {
+
+    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ProblemService problemService;
@@ -123,8 +130,24 @@ public class ProblemsController {
     @ApiOperation("导入题目")
     @RequiresRoles("9")
     @PostMapping("/import")
-    public ResponseEntity importProblems() {
-        // todo
-        return null;
+    public ResponseEntity importProblems(@RequestParam("file") MultipartFile uploadFile) {
+        try {
+            InputStream is = uploadFile.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String temp = reader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
+            while (temp != null) {
+                stringBuilder.append(temp);
+                temp = reader.readLine();
+            }
+            int uid = SessionHelper.get().getUid();
+            if (! problemService.importProblems(uid, JSON.parseArray(stringBuilder.toString()))) {
+                throw new WebErrorException("题目导入失败");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw  new WebErrorException("题目上传失败");
+        }
+        return new ResponseEntity("题目导入成功");
     }
 }

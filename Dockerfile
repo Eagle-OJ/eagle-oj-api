@@ -33,7 +33,7 @@ RUN apt update && \
 	rm -rf /root/.m2 && \
 	rm -rf /root/.npm
 
-VOLUME ["/eagle-oj/log"]
+VOLUME ["/eagle-oj/data"]
 
 # ENV MYSQL_URL=101.132.164.120:3306 MYSQL_DATABASE=eagle_oj MYSQL_USERNAME=root MYSQL_PASSWORD=eagle_oj
 

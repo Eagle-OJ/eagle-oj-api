@@ -83,7 +83,7 @@ public class ProblemController {
 
         int pid = problemService.save(format.getTags(), owner, format.getTitle(), format.getDescription(), format.getInputFormat(),
                 format.getOutputFormat(), format.getDifficult(), format.getSamples(),
-                DefaultConfig.PROGRAM_USED_TIME, DefaultConfig.PROGRAM_USED_MEMORY);
+                DefaultConfig.PROGRAM_USED_TIME, DefaultConfig.PROGRAM_USED_MEMORY, ProblemStatus.EDITING);
 
         return new ResponseEntity("题目添加成功", pid);
     }
