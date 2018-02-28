@@ -18,7 +18,7 @@ RUN apt update && \
 	cd eagle-oj-web && \
 	npm install && \
 	npm run build && \
-	mv dist/ ../eagle-oj-api/eagle-oj-web/src/main/resources/public/ && \
+	mv dist/* ../eagle-oj-api/eagle-oj-web/src/main/resources/public/ && \
 	cd ../eagle-oj-api && \
 	mvn clean package && \
 	mv eagle-oj-web/target/eagle-oj-web-1.0.jar /eagle-oj && \
