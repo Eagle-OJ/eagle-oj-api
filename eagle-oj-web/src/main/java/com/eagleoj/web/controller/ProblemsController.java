@@ -141,8 +141,6 @@ public class ProblemsController {
                 temp = reader.readLine();
             }
             int uid = SessionHelper.get().getUid();
-            System.out.println(stringBuilder.toString());
-            System.out.println(JSON.parseArray(stringBuilder.toString()).toJSONString());
             if (! problemService.importProblems(uid, JSON.parseArray(stringBuilder.toString()))) {
                 throw new WebErrorException("题目导入失败");
             }
