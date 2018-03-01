@@ -133,7 +133,7 @@ public class ProblemsController {
     public ResponseEntity importProblems(@RequestParam("file") MultipartFile uploadFile) {
         try {
             InputStream is = uploadFile.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String temp = reader.readLine();
             StringBuilder stringBuilder = new StringBuilder();
             while (temp != null) {
@@ -141,6 +141,8 @@ public class ProblemsController {
                 temp = reader.readLine();
             }
             int uid = SessionHelper.get().getUid();
+            System.out.println(stringBuilder.toString());
+            System.out.println(JSON.parseArray(stringBuilder.toString()).toJSONString());
             if (! problemService.importProblems(uid, JSON.parseArray(stringBuilder.toString()))) {
                 throw new WebErrorException("题目导入失败");
             }
