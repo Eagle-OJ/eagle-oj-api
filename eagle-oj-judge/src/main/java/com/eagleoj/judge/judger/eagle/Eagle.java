@@ -14,13 +14,19 @@ import com.eagleoj.judge.judger.JudgerApi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Smith
  **/
 public class Eagle implements JudgerApi {
 
-    private final OkHttpClient CLIENT = new OkHttpClient();
+    private final OkHttpClient CLIENT = new OkHttpClient()
+            .newBuilder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build();
 
     private String REQUEST_URL;
 
