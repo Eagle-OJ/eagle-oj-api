@@ -114,7 +114,7 @@ public class ProblemsController {
     }
 
     @ApiOperation("导出题目")
-    @RequiresRoles("9")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @PostMapping("/export")
     public ResponseEntity exportProblems(@RequestBody @Valid ImportProblemsFormat format) {
         JSONArray pidList = format.getPidList();
@@ -128,7 +128,7 @@ public class ProblemsController {
     }
 
     @ApiOperation("导入题目")
-    @RequiresRoles("9")
+    @RequiresRoles(value = {"8", "9"}, logical = Logical.OR)
     @PostMapping("/import")
     public ResponseEntity importProblems(@RequestParam("file") MultipartFile uploadFile) {
         try {

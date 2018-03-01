@@ -344,7 +344,14 @@ public class ProblemServiceImpl implements ProblemService {
             JSONArray samples = obj.getJSONArray("samples");
             int time = obj.getInteger("time");
             int memory = obj.getInteger("memory");
-            save(tagsList, uid, title, description, inputFormat, outputFormat, difficult, samples, time, memory, ProblemStatus.SHARING);
+            int pid = save(tagsList, uid, title, description, inputFormat, outputFormat, difficult, samples, time, memory, ProblemStatus.SHARING);
+            // save test cases
+            JSONArray testCases = obj.getJSONArray("test_cases");
+            for (int j=0; j<testCases.size(); j++) {
+                JSONObject testCase = testCases.getJSONObject(j);
+                testCasesService.save(pid, testCase.getString("stdin"), testCase.getString("stdout"),
+                        testCase.getInteger("strength"));
+            }
         }
         return true;
     }

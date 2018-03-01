@@ -27,8 +27,6 @@ public class CacheController {
 
     private static Cache<Integer, Object> leaderboardCache;
 
-    private static Cache<String, String> captchaCache;
-
     static {
         CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
         authCache = cacheManager
@@ -43,8 +41,9 @@ public class CacheController {
                         CacheConfigurationBuilder.newCacheConfigurationBuilder(
                                 String.class,
                                 JudgeResult.class,
-                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(10, MemoryUnit.MB))
+                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(100, MemoryUnit.MB))
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(1, TimeUnit.HOURS)))
+                                .withSizeOfMaxObjectGraph(5000)
                                 .build());
         leaderboardCache = cacheManager
                 .createCache("leaderboardCache",
@@ -54,16 +53,6 @@ public class CacheController {
                                 ResourcePoolsBuilder.newResourcePoolsBuilder().heap(20, MemoryUnit.MB))
                                 .withExpiry(Expirations.timeToLiveExpiration(Duration.of(DefaultConfig.LEADERBOARD_REFRESH_TIME, TimeUnit.MINUTES)))
                 .build());
-
-        captchaCache = cacheManager
-                .createCache("captchaCache",
-                        CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                                String.class,
-                                String.class,
-                                ResourcePoolsBuilder.newResourcePoolsBuilder().heap(5, MemoryUnit.MB))
-                                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(DefaultConfig.CAPTCHA_EXPIRED_TIME, TimeUnit.MINUTES)))
-                                .build()
-                        );
     }
 
     public static Cache<String, String> getAuthCache() {
@@ -76,7 +65,4 @@ public class CacheController {
         return leaderboardCache;
     }
 
-    public static Cache<String, String> getCaptchaCache() {
-        return captchaCache;
-    }
 }
