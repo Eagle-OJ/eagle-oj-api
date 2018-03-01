@@ -12,12 +12,12 @@ import javax.validation.constraints.NotNull;
 public class AddProblemTestCaseFormat {
 
     @NotNull
-    @Length(max = 1000)
+    @Length(max = 65535)
     private String stdin;
 
     @NotNull
     @NotBlank
-    @Length(max = 1000)
+    @Length(max = 65535)
     private String stdout;
 
     @NotNull
