@@ -23,7 +23,9 @@
     </select>
 
     <select id="listUserRank" resultMap="userEntityResultMap">
-        SELECT uid, nickname, avatar, ac_times, finished_problems, submit_times FROM user ORDER BY finished_problems DESC, ac_times DESC, submit_times DESC
+        SELECT uid, nickname, avatar, ac_times, finished_problems, submit_times FROM user
+            WHERE user.role NOT IN (#{admin}, #{root})
+        ORDER BY finished_problems DESC, ac_times DESC, submit_times DESC
     </select>
 
     <select id="getByUid" resultMap="userEntityResultMap">

@@ -5,6 +5,7 @@ import com.eagleoj.web.cache.CacheController;
 import com.eagleoj.web.dao.LeaderboardMapper;
 import com.eagleoj.web.dao.UserMapper;
 import com.eagleoj.web.data.status.ContestTypeStatus;
+import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.entity.ContestEntity;
 import com.eagleoj.web.entity.UserEntity;
 import com.eagleoj.web.service.ContestProblemUserService;
@@ -56,10 +57,10 @@ public class LeaderboardServiceImpl implements LeaderboardService {
         if (type == ContestTypeStatus.OI_CONTEST_NORMAL_TIME.getNumber()
                 || type == ContestTypeStatus.OI_CONTEST_LIMIT_TIME.getNumber()) {
             // OI比赛
-            list = leaderboardMapper.listOIRankByCid(cid);
+            list = leaderboardMapper.listOIRankByCid(cid, contestEntity.getOwner());
         } else {
             // ACM
-            list = leaderboardMapper.listACMRankByCid(cid, DefaultConfig.ACM_PENALTY_TIME);
+            list = leaderboardMapper.listACMRankByCid(cid, DefaultConfig.ACM_PENALTY_TIME, contestEntity.getOwner());
             isACM = true;
         }
         // 存放本次生成的基本信息
@@ -101,7 +102,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
 
     @Override
     public List<UserEntity> getLeaderboard() {
-        return userMapper.listUserRank();
+        return userMapper.listUserRank(RoleStatus.ADMIN.getNumber(), RoleStatus.ROOT.getNumber());
     }
 
     @Override

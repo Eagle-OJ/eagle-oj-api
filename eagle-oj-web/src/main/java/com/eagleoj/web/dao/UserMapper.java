@@ -19,7 +19,7 @@ public interface UserMapper {
 
     int count();
 
-    List<UserEntity> listUserRank();
+    List<UserEntity> listUserRank(@Param("admin") int admin, @Param("root") int root);
 
     UserEntity getByUid(int uid);
 

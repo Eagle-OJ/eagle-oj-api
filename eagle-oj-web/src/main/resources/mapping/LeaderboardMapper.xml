@@ -16,7 +16,7 @@
             avatar
         FROM contest_user
             LEFT JOIN user ON contest_user.uid = user.uid
-        WHERE cid = #{cid}
+        WHERE cid = #{cid} AND contest_user.uid != #{except}
         ORDER BY total_score DESC , total_used_time ASC
     </select>
 
@@ -37,7 +37,7 @@
             LEFT JOIN
             user ON contest_user.uid = user.uid
         WHERE
-            contest_user.cid = #{cid}
+            contest_user.cid = #{cid} AND contest_user.uid != #{except}
         ORDER BY total_score DESC , (total_used_time + penalty_time) ASC
     </select>
 </mapper>
