@@ -12,11 +12,23 @@
             contest_user.finished_problems,
             contest_user.total_score,
             contest_user.total_used_time,
-            nickname,
-            avatar
+            <if test="gid == 0">
+                user.nickname
+            </if>
+            <if test="gid > 0">
+                group_user.group_name as nickname
+            </if>
         FROM contest_user
-            LEFT JOIN user ON contest_user.uid = user.uid
+            <if test="gid == 0">
+                LEFT JOIN user ON contest_user.uid = user.uid
+            </if>
+            <if test="gid > 0">
+                LEFT JOIN group_user ON contest_user.uid = group_user.uid
+            </if>
         WHERE cid = #{cid} AND contest_user.uid != #{except}
+        <if test="gid > 0">
+            AND group_user.gid=#{gid}
+        </if>
         ORDER BY total_score DESC , total_used_time ASC
     </select>
 
@@ -30,14 +42,23 @@
             contest_user.total_used_time,
             contest_user.total_wrong_times,
             total_wrong_times * 60 * 1000 * #{penalty} AS penalty_time,
-            nickname,
-            avatar
-        FROM
-            contest_user
-            LEFT JOIN
-            user ON contest_user.uid = user.uid
-        WHERE
-            contest_user.cid = #{cid} AND contest_user.uid != #{except}
+            <if test="gid == 0">
+                user.nickname
+            </if>
+            <if test="gid > 0">
+                group_user.group_name as nickname
+            </if>
+        FROM contest_user
+            <if test="gid == 0">
+                LEFT JOIN user ON contest_user.uid = user.uid
+            </if>
+            <if test="gid > 0">
+                LEFT JOIN group_user ON contest_user.uid = group_user.uid
+            </if>
+        WHERE contest_user.cid = #{cid} AND contest_user.uid != #{except}
+        <if test="gid > 0">
+            AND group_user.gid=#{gid}
+        </if>
         ORDER BY total_score DESC , (total_used_time + penalty_time) ASC
     </select>
 </mapper>

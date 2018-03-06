@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Smith
@@ -100,6 +101,9 @@ public class GroupUserServiceImpl implements GroupUserService {
         GroupEntity groupEntity = groupService.getGroup(gid);
         // 密码校对
         if (groupEntity.getPassword() != null) {
+            if (password == null) {
+                throw new WebErrorException("密码不得为空");
+            }
             if (! password.equals(groupEntity.getPassword())) {
                 throw new WebErrorException("密码错误");
             }

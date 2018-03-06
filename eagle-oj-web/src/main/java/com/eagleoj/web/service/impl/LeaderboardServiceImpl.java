@@ -48,6 +48,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     public List<Map<String, Object>> getContestLeaderboard(int cid) {
         ContestEntity contestEntity = contestService.getContest(cid);
         int type = contestEntity.getType();
+        int gid = contestEntity.getGroup();
         boolean isACM = false;
         Cache<Integer, Object> leaderboard = CacheController.getLeaderboard();
         List<Map<String, Object>> list = (List<Map<String, Object>>) leaderboard.get(cid);
@@ -57,10 +58,10 @@ public class LeaderboardServiceImpl implements LeaderboardService {
         if (type == ContestTypeStatus.OI_CONTEST_NORMAL_TIME.getNumber()
                 || type == ContestTypeStatus.OI_CONTEST_LIMIT_TIME.getNumber()) {
             // OI比赛
-            list = leaderboardMapper.listOIRankByCid(cid, contestEntity.getOwner());
+            list = leaderboardMapper.listOIRankByCid(cid, gid,contestEntity.getOwner());
         } else {
             // ACM
-            list = leaderboardMapper.listACMRankByCid(cid, DefaultConfig.ACM_PENALTY_TIME, contestEntity.getOwner());
+            list = leaderboardMapper.listACMRankByCid(cid,DefaultConfig.ACM_PENALTY_TIME, gid,contestEntity.getOwner());
             isACM = true;
         }
         // 存放本次生成的基本信息

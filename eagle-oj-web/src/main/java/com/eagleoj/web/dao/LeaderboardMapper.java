@@ -11,7 +11,7 @@ import java.util.Map;
  **/
 @Repository
 public interface LeaderboardMapper {
-    List<Map<String, Object>> listOIRankByCid(@Param("cid") int cid, @Param("except") int exceptUser);
+    List<Map<String, Object>> listOIRankByCid(@Param("cid") int cid, @Param("gid") int groupId, @Param("except") int exceptUser);
 
-    List<Map<String, Object>> listACMRankByCid(@Param("cid") int cid, @Param("penalty") int penalty, @Param("except") int exceptUser);
+    List<Map<String, Object>> listACMRankByCid(@Param("cid") int cid, @Param("penalty") int penalty,@Param("gid") int groupId ,@Param("except") int exceptUser);
 }

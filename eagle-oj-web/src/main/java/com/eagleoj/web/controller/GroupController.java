@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Smith
@@ -157,7 +158,6 @@ public class GroupController {
     @PostMapping("/{gid}/enter")
     public ResponseEntity enterGroup(@PathVariable("gid") int gid,
                                      @RequestBody @Valid EnterGroupFormat format) {
-
         groupUserService.joinGroup(gid, SessionHelper.get().getUid(), format.getPassword());
         return new ResponseEntity("小组加入成功");
     }
