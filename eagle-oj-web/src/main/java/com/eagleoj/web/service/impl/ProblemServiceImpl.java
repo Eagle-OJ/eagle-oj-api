@@ -231,8 +231,8 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public List<ProblemEntity> listProblemsForContest(int uid) {
-        return problemMapper.listProblemsForContest(uid);
+    public List<ProblemEntity> listProblemsForContest(int uid, String query) {
+        return problemMapper.listProblemsForContest(uid, query);
     }
 
     @Override

@@ -60,7 +60,15 @@
     </select>
 
     <select id="listProblemsForContest" resultType="HashMap">
-        SELECT * FROM problem WHERE status=2 OR owner=#{uid}
+        SELECT * FROM problem WHERE
+            status=2
+                <if test="query != null">
+                    AND title LIKE '%${query}%'
+                </if>
+            OR owner=#{uid}
+                <if test="query != null">
+                    AND title LIKE '%${query}%'
+                </if>
     </select>
 
     <select id="listAuditing" resultMap="problemResultMap">

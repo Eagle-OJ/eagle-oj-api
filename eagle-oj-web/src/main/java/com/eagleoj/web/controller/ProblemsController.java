@@ -89,10 +89,12 @@ public class ProblemsController {
     @RequiresAuthentication
     @GetMapping("/contest")
     public ResponseEntity listContestProblemsForAdding(@RequestParam("page") int page,
-                                                       @RequestParam("page_size") int pageSize) {
+                                                       @RequestParam("page_size") int pageSize,
+                                                       @RequestParam(name = "query", required = false, defaultValue = "null") String query) {
         int uid = SessionHelper.get().getUid();
         Page pager = PageHelper.startPage(page, pageSize);
-        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listProblemsForContest(uid)));
+        query = query.equals("null")? null: query;
+        return new ResponseEntity(WebUtil.generatePageData(pager, problemService.listProblemsForContest(uid, query)));
     }
 
     @ApiOperation("获取所有题目")

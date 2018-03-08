@@ -33,7 +33,7 @@ public interface ProblemMapper {
                                          @Param("tag") String tag,
                                          @Param("query") String query);
 
-    List<ProblemEntity> listProblemsForContest(int uid);
+    List<ProblemEntity> listProblemsForContest(@Param("uid") int uid, @Param("query") String query);
 
     List<ProblemEntity> listAuditing();
 

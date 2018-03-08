@@ -42,7 +42,7 @@ public interface ProblemService {
 
     List<Map<String, Object>> listSharedProblems(String tag, Integer difficult, Integer uid, String query);
 
-    List<ProblemEntity> listProblemsForContest(int uid);
+    List<ProblemEntity> listProblemsForContest(int uid, String query);
 
     List<ProblemEntity> listAllProblems();
 
