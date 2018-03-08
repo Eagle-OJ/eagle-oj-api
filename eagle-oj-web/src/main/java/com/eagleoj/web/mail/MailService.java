@@ -38,7 +38,7 @@ public class MailService {
         final Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("nickname", userEntity.getNickname());
         ctx.setVariable("url", url+secret);
-        String html = templateEngine.process("/mail/confirm", ctx);
+        String html = templateEngine.process("mail/confirm", ctx);
         MailEntity mailEntity = new MailEntity();
         mailEntity.setReceiver(userEntity.getEmail());
         mailEntity.setText(html);
@@ -53,7 +53,7 @@ public class MailService {
         final Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("email", userEntity.getEmail());
         ctx.setVariable("url", url+secret);
-        String html = templateEngine.process("/mail/forget_password", ctx);
+        String html = templateEngine.process("mail/forget_password", ctx);
         MailEntity mailEntity = new MailEntity();
         mailEntity.setReceiver(userEntity.getEmail());
         mailEntity.setText(html);
