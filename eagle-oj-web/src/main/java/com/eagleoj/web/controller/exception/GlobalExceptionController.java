@@ -70,7 +70,7 @@ public class GlobalExceptionController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity globalException(HttpServletRequest request, Throwable ex) {
-        LOGGER.info(ex.getMessage(), ex);
+        LOGGER.error(ex.getMessage(), ex);
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), null);
     }
 

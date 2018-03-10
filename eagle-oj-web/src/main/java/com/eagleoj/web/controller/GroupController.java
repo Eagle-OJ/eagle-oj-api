@@ -3,6 +3,7 @@ package com.eagleoj.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eagleoj.web.controller.format.user.SendGroupUserMessageFormat;
+import com.eagleoj.web.data.status.ContestStatus;
 import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.postman.task.SendGroupUserMessageTask;
 import com.eagleoj.web.service.ContestService;
@@ -147,10 +148,20 @@ public class GroupController {
     @ApiOperation("获取小组的小组赛")
     @RequiresAuthentication
     @GetMapping("/{gid}/contests")
-    public ResponseEntity getGroupContests(@PathVariable int gid) {
+    public ResponseEntity getGroupContests(@PathVariable int gid,
+                                           @RequestParam("page") int page,
+                                           @RequestParam("page_size") int pageSize,
+                                           @RequestParam("is_valid") boolean isValid) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         accessToViewGroup(groupEntity);
-        return new ResponseEntity(contestService.listGroupContests(gid));
+        Page pager = PageHelper.startPage(page, pageSize);
+        ContestStatus status;
+        if (isValid) {
+            status = ContestStatus.USING;
+        } else {
+            status = null;
+        }
+        return new ResponseEntity(WebUtil.generatePageData(pager, contestService.listGroupContests(gid, status)));
     }
 
     @ApiOperation("加入小组")

@@ -1,5 +1,6 @@
 package com.eagleoj.web.service;
 
+import com.eagleoj.web.data.status.ContestStatus;
 import com.eagleoj.web.entity.ContestEntity;
 
 import java.util.List;
@@ -32,5 +33,5 @@ public interface ContestService {
 
     List<Map<String, Object>> listAllContests();
 
-    List<ContestEntity> listGroupContests(int gid);
+    List<ContestEntity> listGroupContests(int gid, ContestStatus status);
 }

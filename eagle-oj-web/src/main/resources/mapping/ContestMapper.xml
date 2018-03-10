@@ -41,7 +41,10 @@
     </select>
 
     <select id="listContestsByGid" resultMap="contestMap">
-        SELECT * FROM contest WHERE status != 0 AND `group`=#{group}
+        SELECT * FROM contest WHERE `group`=#{gid}
+            <if test="status != null">
+                AND status=#{status}
+            </if>
         ORDER BY create_time DESC
     </select>
 

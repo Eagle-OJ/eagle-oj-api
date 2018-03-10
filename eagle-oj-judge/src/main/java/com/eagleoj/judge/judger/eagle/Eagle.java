@@ -63,7 +63,7 @@ public class Eagle implements JudgerApi {
         JSONObject obj = JSON.parseObject(json);
         ResultEnum result = convertStringToResult(obj.getString("result"));
         if (result.equals(ResultEnum.SE)) {
-            throw new Exception("远程判卷错误："+obj.getString("error_message"));
+            throw new Exception("Remote judge error:"+obj.getString("error_message"));
         }
 
         JSONArray testCases = obj.getJSONArray("test_cases");

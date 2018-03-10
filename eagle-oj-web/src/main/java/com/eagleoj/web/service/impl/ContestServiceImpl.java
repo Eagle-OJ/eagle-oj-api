@@ -116,8 +116,9 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public List<ContestEntity> listGroupContests(int gid) {
-        return contestMapper.listContestsByGid(gid);
+    public List<ContestEntity> listGroupContests(int gid, ContestStatus status) {
+        Integer i = status==null? null: status.getNumber();
+        return contestMapper.listContestsByGid(gid, i);
     }
 
     @Override
