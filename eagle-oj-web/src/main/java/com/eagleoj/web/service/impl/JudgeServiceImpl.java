@@ -122,13 +122,17 @@ public class JudgeServiceImpl implements JudgeService {
     @Override
     public void saveGroupContestCode(GroupJudgeTask task, ResponseEntity response) {
         int gid = task.getGid();
-        saveContestCode(task, response, gid);
+        boolean isAC = saveContestCode(task, response, gid);
 
+        if (isAC) {
+            return;
+        }
         // 更新组内用户记录
         updateGroupUserTimes(task.getGid(), task.getOwner(), response.getResult());
     }
 
-    private void saveContestCode(ContestJudgeTask task, ResponseEntity response, int gid) {
+    // 返回是否已经AC
+    private boolean saveContestCode(ContestJudgeTask task, ResponseEntity response, int gid) {
         int pid = task.getPid();
         int cid = task.getCid();
         int owner = task.getOwner();
@@ -157,7 +161,7 @@ public class JudgeServiceImpl implements JudgeService {
         }
 
         if (isAC) {
-            return;
+            return true;
         }
 
         updateContestProblemTimes(cid, pid, result);
@@ -167,6 +171,7 @@ public class JudgeServiceImpl implements JudgeService {
         if (task.getContestEntity().getOfficial() == 1) {
             updateUserTimes(owner, result);
         }
+        return false;
     }
 
     private void saveSubmission(String sourceCode, LanguageEnum lang, double time, int memory, ResultEnum result,
