@@ -22,7 +22,7 @@
     </select>
 
     <select id="listGroupsByOwner" resultMap="groupMap">
-        SELECT * FROM `group` WHERE owner = #{owner}
+        SELECT * FROM `group` WHERE owner = #{owner} ORDER BY create_time DESC
     </select>
 
     <update id="updateByGid">

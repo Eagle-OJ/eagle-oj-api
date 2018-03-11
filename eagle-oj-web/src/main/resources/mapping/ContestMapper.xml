@@ -48,8 +48,8 @@
         ORDER BY create_time DESC
     </select>
 
-    <select id="listByUid" resultMap="contestMap">
-        SELECT * FROM contest WHERE owner = #{uid} ORDER BY create_time DESC
+    <select id="listByUidGid" resultMap="contestMap">
+        SELECT * FROM contest WHERE owner = #{uid} AND `group` = #{gid} ORDER BY create_time DESC
     </select>
 
     <delete id="deleteByCid">

@@ -45,6 +45,8 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
         entity.setUid(uid);
         if (status != ResultEnum.AC) {
             entity.setWrongTimes(1);
+        } else {
+            entity.setWrongTimes(0);
         }
         entity.setScore(score);
         entity.setStatus(status);

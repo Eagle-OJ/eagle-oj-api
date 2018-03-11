@@ -21,8 +21,6 @@ public interface ContestService {
 
     void deleteContest(int cid);
 
-    List<ContestEntity> listUserContests(int uid);
-
     ContestEntity getContest(int cid);
 
 
@@ -34,4 +32,6 @@ public interface ContestService {
     List<Map<String, Object>> listAllContests();
 
     List<ContestEntity> listGroupContests(int gid, ContestStatus status);
+
+    List<ContestEntity> listUserContests(int uid, int gid);
 }

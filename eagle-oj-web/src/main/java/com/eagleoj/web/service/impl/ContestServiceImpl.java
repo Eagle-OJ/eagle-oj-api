@@ -89,15 +89,6 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public List<ContestEntity> listUserContests(int uid) {
-        List<ContestEntity> list = contestMapper.listByUid(uid);
-        for (ContestEntity each: list) {
-            checkContestValid(each);
-        }
-        return list;
-    }
-
-    @Override
     public List<Map<String, Object>> listOpenedContests() {
         List<Map<String, Object>> list = contestMapper.listContests(false);
         for (Map<String, Object> each: list) {
@@ -118,7 +109,20 @@ public class ContestServiceImpl implements ContestService {
     @Override
     public List<ContestEntity> listGroupContests(int gid, ContestStatus status) {
         Integer i = status==null? null: status.getNumber();
-        return contestMapper.listContestsByGid(gid, i);
+        List<ContestEntity> list = contestMapper.listContestsByGid(gid, i);
+        for (ContestEntity entity: list) {
+            checkContestValid(entity);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ContestEntity> listUserContests(int uid, int gid) {
+        List<ContestEntity> list = contestMapper.listByUidGid(uid, gid);
+        for (ContestEntity each: list) {
+            checkContestValid(each);
+        }
+        return list;
     }
 
     @Override
