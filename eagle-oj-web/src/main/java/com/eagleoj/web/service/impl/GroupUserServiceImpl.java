@@ -84,6 +84,10 @@ public class GroupUserServiceImpl implements GroupUserService {
         return groupUserMapper.listGroupMembersByGid(gid);
     }
 
+    public List<Map<String, Object>> listGroupMembersRank(int gid) {
+        return groupUserMapper.listGroupMembersRankByGid(gid);
+    }
+
     @Override
     public void deleteGroupMember(int gid, int uid) {
         boolean flag = groupUserMapper.deleteByGidUid(gid, uid) == 1;

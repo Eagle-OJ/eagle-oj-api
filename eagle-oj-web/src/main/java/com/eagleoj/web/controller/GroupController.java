@@ -56,18 +56,14 @@ public class GroupController {
     @Autowired
     private ContestService contestService;
 
-    @Autowired
-    private TaskQueue taskQueue;
-
     @ApiOperation("获取小组的公共信息")
     @GetMapping("/{gid}/info")
-    public ResponseEntity getGroupInfo(@PathVariable("gid") int gid,
-                                   @RequestParam(name = "is_detail", defaultValue = "false", required = false) boolean isDetail) {
+    public ResponseEntity getGroupInfo(@PathVariable("gid") int gid) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         UserEntity userEntity = userService.getUserByUid(groupEntity.getOwner());
         String json = JSON.toJSONString(groupEntity);
         JSONObject jsonObject = JSON.parseObject(json);
-        jsonObject.put("leader", userEntity.getNickname());
+        jsonObject.put("nickname", userEntity.getNickname());
         if (jsonObject.containsKey("password")) {
             jsonObject.replace("password", "You can't see it!");
         }
@@ -88,14 +84,8 @@ public class GroupController {
     @GetMapping("/{gid}/user/{uid}")
     public ResponseEntity getMeInfo(@PathVariable("gid") int gid,
                                     @PathVariable("uid") int uid) {
-        GroupEntity groupEntity = groupService.getGroup(gid);
-        accessToEditOwnInfo(uid, groupEntity);
-        try {
-            Map<String, Object> groupUser = groupUserService.getGroupUserInfo(gid, uid);
-            return new ResponseEntity(groupUser);
-        } catch (Exception e) {
-            return new ResponseEntity(null);
-        }
+        Map<String, Object> groupUser = groupUserService.getGroupUserInfo(gid, uid);
+        return new ResponseEntity(groupUser);
     }
 
     @ApiOperation("创建小组")
@@ -137,12 +127,16 @@ public class GroupController {
     @GetMapping("/{gid}/members")
     public ResponseEntity getGroupMembers(@PathVariable("gid") int gid,
                                           @RequestParam("page") int page,
-                                          @RequestParam("page_size") int pageSize) {
+                                          @RequestParam("page_size") int pageSize,
+                                          @RequestParam(name = "rank", required = false, defaultValue = "False") boolean withRank) {
         GroupEntity groupEntity = groupService.getGroup(gid);
         accessToViewGroup(groupEntity);
         Page pager = PageHelper.startPage(page, pageSize);
-        List<GroupUserEntity> list = groupUserService.listGroupMembers(gid);
-        return new ResponseEntity(WebUtil.generatePageData(pager, list));
+        if (withRank) {
+            return new ResponseEntity(WebUtil.generatePageData(pager, groupUserService.listGroupMembersRank(gid)));
+        } else {
+            return new ResponseEntity(WebUtil.generatePageData(pager, groupUserService.listGroupMembers(gid)));
+        }
     }
 
     @ApiOperation("获取小组的小组赛")

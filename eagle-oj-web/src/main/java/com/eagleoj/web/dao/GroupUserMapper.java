@@ -26,6 +26,8 @@ public interface GroupUserMapper {
 
     List<GroupUserEntity> listGroupMembersByGid(int gid);
 
+    List<Map<String, Object>> listGroupMembersRankByGid(int gid);
+
     int deleteByGidUid(@Param("gid") int gid, @Param("uid") int uid);
 
     int deleteByGid(int gid);

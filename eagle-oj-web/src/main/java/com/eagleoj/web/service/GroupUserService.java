@@ -27,6 +27,8 @@ public interface GroupUserService {
 
     List<GroupUserEntity> listGroupMembers(int gid);
 
+    List<Map<String, Object>> listGroupMembersRank(int gid);
+
     void deleteGroupMember(int gid, int uid);
 
     void deleteGroupMembers(int gid);

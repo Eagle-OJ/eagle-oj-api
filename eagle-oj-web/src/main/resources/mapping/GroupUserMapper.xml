@@ -64,6 +64,12 @@
         SELECT * FROM group_user WHERE gid=#{gid}
     </select>
 
+    <select id="listGroupMembersRankByGid" resultType="HashMap">
+        SELECT group_user.*, avatar FROM group_user
+        LEFT JOIN user ON group_user.uid=user.uid
+        WHERE gid=#{gid} ORDER BY finished_problems DESC
+    </select>
+
     <delete id="deleteByGidUid">
         DELETE FROM group_user WHERE gid=#{gid} AND uid=#{uid}
     </delete>
