@@ -84,8 +84,11 @@ public class GroupController {
     @GetMapping("/{gid}/user/{uid}")
     public ResponseEntity getMeInfo(@PathVariable("gid") int gid,
                                     @PathVariable("uid") int uid) {
-        Map<String, Object> groupUser = groupUserService.getGroupUserInfo(gid, uid);
-        return new ResponseEntity(groupUser);
+        try {
+            return new ResponseEntity(groupUserService.getGroupUserInfo(gid, uid));
+        } catch (Exception e) {
+            return new ResponseEntity(null);
+        }
     }
 
     @ApiOperation("创建小组")
