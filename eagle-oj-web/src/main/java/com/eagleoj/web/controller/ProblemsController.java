@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageRowBounds;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -55,33 +56,55 @@ public class ProblemsController {
     }
 
     @ApiOperation("获取公开题目列表-否是附带用户提交状态")
-    @GetMapping("/opened")
+    @GetMapping("/shared")
     public ResponseEntity getProblems(@RequestParam(name = "tag", defaultValue = "null", required = false) String tag,
                                       @RequestParam(name = "difficult", defaultValue = "-1", required = false) Integer difficult,
-                                      @RequestParam(name = "uid", defaultValue = "-1", required = false) Integer uid,
                                       @RequestParam(name = "query", defaultValue = "null", required = false) String query,
+                                      @RequestParam(name = "sort", defaultValue = "null", required = false) String sort,
                                       @RequestParam("page") int page,
                                       @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
+        List<Map<String, Object>> data;
 
         if (tag.equals("null")) {
             tag = null;
         }
-        List<Map<String, Object>> data;
 
         if (difficult == -1) {
             difficult = null;
-        }
-
-        if (uid == -1) {
-            uid = null;
         }
 
         if (query.equals("null")) {
             query = null;
         }
 
-        data = problemService.listSharedProblems(tag, difficult, uid, query);
+        Integer uid = null;
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            uid = SessionHelper.get().getUid();
+        }
+
+        Integer iSort = null;
+        switch (sort) {
+            case "pid.desc":
+                iSort = 0;
+                break;
+            case "submit_times.desc":
+                iSort = 1;
+                break;
+            case "submit_times.asc":
+                iSort = 2;
+                break;
+            case "ac_rate.desc":
+                iSort = 3;
+                break;
+            case "ac_rate.asc":
+                iSort = 4;
+                break;
+            default:
+                iSort = null;
+        }
+
+        data = problemService.listSharedProblems(tag, difficult, uid, query, iSort);
         return new ResponseEntity(WebUtil.generatePageData(pager, data));
     }
 

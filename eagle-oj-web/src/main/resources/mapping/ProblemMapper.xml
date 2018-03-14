@@ -56,7 +56,26 @@
         <if test="query != null">
             AND title LIKE '%${query}%'
         </if>
-        ORDER BY pid ASC
+        <choose>
+            <when test="sort == 0">
+                ORDER BY problem.pid DESC
+            </when>
+            <when test="sort == 1">
+                ORDER BY problem.submit_times DESC
+            </when>
+            <when test="sort == 2">
+                ORDER BY problem.submit_times ASC
+            </when>
+            <when test="sort == 3">
+                ORDER BY (problem.ac_times/problem.submit_times) DESC
+            </when>
+            <when test="sort == 4">
+                ORDER BY (problem.ac_times/problem.submit_times) ASC
+            </when>
+            <otherwise>
+                ORDER BY problem.pid ASC
+            </otherwise>
+        </choose>
     </select>
 
     <select id="listProblemsForContest" resultType="HashMap">
