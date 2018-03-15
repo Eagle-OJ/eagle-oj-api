@@ -1,5 +1,6 @@
 package com.eagleoj.web.controller;
 
+import com.eagleoj.judge.LanguageEnum;
 import com.eagleoj.judge.ResultEnum;
 import com.eagleoj.web.data.status.RoleStatus;
 import com.eagleoj.web.entity.ContestEntity;
@@ -52,6 +53,9 @@ public class SubmissionsController {
     @GetMapping
     public ResponseEntity getUserSubmissions(@RequestParam("pid") int pid,
                                              @RequestParam("cid") Integer cid,
+                                             @RequestParam(name = "lang", required = false) LanguageEnum lang,
+                                             @RequestParam(name = "result", required = false) ResultEnum result,
+                                             @RequestParam(name = "sort", required = false, defaultValue = "null") String sort,
                                              @RequestParam("page") int page,
                                              @RequestParam("page_size") int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
@@ -59,8 +63,14 @@ public class SubmissionsController {
         if (cid == 0) {
             cid = null;
         }
+        Integer iSort = null;
+        switch (sort) {
+            case "submit_time.asc":
+                iSort = 1;
+                break;
+        }
         return new ResponseEntity(WebUtil.generatePageData(pager,
-                submissionService.listOwnSubmissions(owner, pid, cid)));
+                submissionService.listOwnSubmissions(owner, pid, cid, lang, result, iSort)));
     }
 
     @ApiOperation("获取本题的所有代码")
@@ -68,6 +78,10 @@ public class SubmissionsController {
     @GetMapping("/all")
     public ResponseEntity getProblemSubmissions(@RequestParam("pid") int pid,
                                                 @RequestParam("cid") int cid,
+                                                @RequestParam(name = "lang", required = false) LanguageEnum lang,
+                                                @RequestParam(name = "result", required = false) ResultEnum result,
+                                                @RequestParam(name = "sort", required = false, defaultValue = "null") String sort,
+                                                @RequestParam(name = "nickname", required = false) String nickname,
                                                 @RequestParam("page") int page,
                                                 @RequestParam("page_size") int pageSize) {
         int uid = SessionHelper.get().getUid();
@@ -78,35 +92,35 @@ public class SubmissionsController {
             ContestEntity contestEntity = contestService.getContest(cid);
             // 比赛管理者可以查看当前比赛此题的提交
             if (contestEntity.getOwner() == uid) {
-                return returnAllSubmissions(pid, cid, page, pageSize);
+                return returnAllSubmissions(pid, cid, lang, result, sort, nickname, page, pageSize);
             }
 
             // admin
             if (role == RoleStatus.ADMIN.getNumber() || role == RoleStatus.ROOT.getNumber()) {
-                return returnAllSubmissions(pid, cid, page, pageSize);
+                return returnAllSubmissions(pid, cid, lang, result, sort, nickname, page, pageSize);
             }
 
             // AC
             try {
                 if (contestProblemUserService.getByCidPidUid(cid, pid, uid).getStatus() == ResultEnum.AC) {
-                    return returnAllSubmissions(pid, cid, page, pageSize);
+                    return returnAllSubmissions(pid, cid, lang, result, sort, nickname, page, pageSize);
                 }
             } catch (Exception e) { }
         } else {
             // 出题者可以直接看
             if (problemEntity.getOwner() == uid) {
-                return returnAllSubmissions(pid, 0, page, pageSize);
+                return returnAllSubmissions(pid, cid, lang, result, sort, nickname, page, pageSize);
             }
 
             // admin
             if (role == RoleStatus.ADMIN.getNumber() || role == RoleStatus.ROOT.getNumber()) {
-                return returnAllSubmissions(pid, 0, page, pageSize);
+                return returnAllSubmissions(pid, cid, lang, result, sort, nickname, page, pageSize);
             }
 
             // AC
             try {
                 if (problemUserService.get(pid, uid).getStatus() == ResultEnum.AC) {
-                    return returnAllSubmissions(pid, 0, page, pageSize);
+                    return returnAllSubmissions(pid, cid, lang, result, sort, nickname, page, pageSize);
                 }
             } catch (Exception e) {}
         }
@@ -114,8 +128,14 @@ public class SubmissionsController {
         return new ResponseEntity("你暂时没有资格查看", null);
     }
 
-    private ResponseEntity returnAllSubmissions(int pid, int cid, int page, int pageSize) {
+    private ResponseEntity returnAllSubmissions(int pid, int cid, LanguageEnum lang, ResultEnum result, String sort, String nickname, int page, int pageSize) {
         Page pager = PageHelper.startPage(page, pageSize);
-        return new ResponseEntity(WebUtil.generatePageData(pager, submissionService.listProblemSubmissions(pid, cid)));
+        Integer iSort = null;
+        switch (sort) {
+            case "submit_time.asc":
+                iSort = 1;
+                break;
+        }
+        return new ResponseEntity(WebUtil.generatePageData(pager, submissionService.listProblemSubmissions(pid, cid, lang, result, iSort, nickname)));
     }
 }

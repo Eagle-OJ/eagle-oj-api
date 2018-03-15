@@ -31,8 +31,23 @@
         <if test="cid != null">
             AND cid = #{cid}
         </if>
-
-        ORDER BY submit_time DESC
+        <if test="lang != null">
+            AND lang = #{lang}
+        </if>
+        <if test="status != null">
+            AND submission.status = #{status}
+        </if>
+        <if test="nickname != null">
+            AND nickname LIKE '%${nickname}%'
+        </if>
+        <choose>
+            <when test="sort == 1">
+                ORDER BY submit_time ASC
+            </when>
+            <otherwise>
+                ORDER BY submit_time DESC
+            </otherwise>
+        </choose>
     </select>
 
     <resultMap id="submissionMap" type="SubmissionEntity">

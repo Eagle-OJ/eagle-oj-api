@@ -47,12 +47,12 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public List<Map<String, Object>> listOwnSubmissions(Integer owner, Integer pid, Integer cid) {
-        return submissionMapper.listSubmissionsByOwnerPidCid(owner, pid, cid);
+    public List<Map<String, Object>> listOwnSubmissions(Integer owner, Integer pid, Integer cid, LanguageEnum lang, ResultEnum result, Integer sort) {
+        return submissionMapper.listSubmissionsByOwnerPidCid(owner, pid, cid, lang, result, sort, null);
     }
 
     @Override
-    public List<Map<String, Object>> listProblemSubmissions(Integer pid, Integer cid) {
-        return submissionMapper.listSubmissionsByOwnerPidCid(null, pid, cid);
+    public List<Map<String, Object>> listProblemSubmissions(Integer pid, Integer cid, LanguageEnum lang, ResultEnum result, Integer sort, String nickname) {
+        return submissionMapper.listSubmissionsByOwnerPidCid(null, pid, cid, lang, result, sort, nickname);
     }
 }
