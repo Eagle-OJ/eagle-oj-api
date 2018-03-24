@@ -5,6 +5,7 @@ import com.eagleoj.web.dao.ContestProblemMapper;
 import com.eagleoj.web.entity.ContestProblemEntity;
 import com.eagleoj.web.entity.ProblemEntity;
 import com.eagleoj.web.service.ContestProblemService;
+import com.eagleoj.web.service.ContestProblemUserService;
 import com.eagleoj.web.service.ProblemService;
 import com.eagleoj.web.util.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class ContestProblemServiceImpl implements ContestProblemService {
 
     @Autowired
     private ContestProblemMapper contestProblemMapper;
+
+    @Autowired
+    private ContestProblemUserService contestProblemUserService;
 
     @Autowired
     private ProblemService problemService;
@@ -88,6 +92,14 @@ public class ContestProblemServiceImpl implements ContestProblemService {
             }
         }
 
+        if (contestProblemEntity.getScore() != score) {
+            // 检查该题目下是否有用户做过，如果做过则不能改变分数
+            int users = contestProblemUserService.countContestProblemUser(cid, pid);
+            if (users > 0) {
+                throw new WebErrorException("该题目已经有用户做过，不能修改分值");
+            }
+        }
+
         ContestProblemEntity data = new ContestProblemEntity();
         data.setDisplayId(displayId);
         data.setScore(score);
@@ -105,6 +117,10 @@ public class ContestProblemServiceImpl implements ContestProblemService {
 
     @Override
     public void deleteContestProblem(int cid, int pid) {
+        int users = contestProblemUserService.countContestProblemUser(cid, pid);
+        if (users > 0) {
+            throw new WebErrorException("该题目已经有人做过，无法删除");
+        }
         boolean flag = contestProblemMapper.deleteByCidPid(cid, pid) == 1;
         WebUtil.assertIsSuccess(flag, "删除比赛题目失败");
     }

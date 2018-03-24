@@ -10,6 +10,10 @@
         VALUES (#{cid},#{pid}, #{uid},#{wrongTimes},#{score},#{status},#{solvedTime},#{usedTime})
     </insert>
 
+    <select id="countByCidPid" resultType="Integer">
+        SELECT count(*) FROM contest_problem_user WHERE cid=#{cid} AND pid=#{pid}
+    </select>
+
     <select id="getByCidPidUid" resultMap="contestProblemUserMap">
         SELECT *
         FROM `contest_problem_user`

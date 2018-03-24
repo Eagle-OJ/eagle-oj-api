@@ -69,4 +69,9 @@ public class ContestProblemUserServiceImpl implements ContestProblemUserService 
         entity.setUsedTime(usedTime);
         return contestProblemUserMapper.updateByCidPidUid(cid, pid, uid, entity) == 1;
     }
+
+    @Override
+    public int countContestProblemUser(int cid, int pid) {
+        return contestProblemUserMapper.countByCidPid(cid, pid);
+    }
 }

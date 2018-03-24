@@ -23,4 +23,5 @@ public interface ContestProblemUserService {
     boolean update(int cid, int pid, int uid, int score, ResultEnum status,
                    long solvedTime, long usedTime);
 
+    int countContestProblemUser(int cid, int pid);
 }
